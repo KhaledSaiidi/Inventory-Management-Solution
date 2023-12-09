@@ -1,0 +1,26 @@
+{
+  "realm" : "master",
+  "users" : [ {
+    "id" : "f1dd5015-908d-41af-b87b-786976ffc9e5",
+    "createdTimestamp" : 1702069102572,
+    "username" : "admin",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "credentials" : [ {
+      "id" : "af720716-cd96-4f2d-bef4-27b9d14f693a",
+      "type" : "password",
+      "createdDate" : 1702069104233,
+      "secretData" : "{\"value\":\"GklNveJxpiWHfyTAbBg6w+MVFZOWLB5RN/3A2c3ozNg=\",\"salt\":\"CSBjCurHwpCdDUJpLXL19A==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-master", "admin" ],
+    "clientRoles" : {
+      "phoenixstock-realm" : [ "view-realm", "manage-events", "manage-users", "manage-authorization", "query-users", "query-realms", "manage-realm", "query-groups", "manage-identity-providers", "view-events", "create-client", "manage-clients", "view-authorization", "view-users", "view-identity-providers", "view-clients", "query-clients" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}

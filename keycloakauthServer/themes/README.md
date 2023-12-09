@@ -18,7 +18,7 @@ Overriding the built-in templates
 ---------------------------------
 
 While creating custom themes, especially when overriding templates, it may be useful to use the built-in templates as
-a reference. These can be found within the theme directory of `../lib/lib/main/org.keycloak.keycloak-themes-23.0.1.jar`, which can be opened using any
+a reference. These can be found within the theme directory of `../lib/lib/main/org.keycloak.keycloak-themes-21.1.1.jar`, which can be opened using any
 standard ZIP archive tool.
 
 **Built-in themes should not be modified directly, instead a custom theme should be created.**
