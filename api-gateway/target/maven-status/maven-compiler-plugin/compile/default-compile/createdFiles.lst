@@ -1,0 +1,5 @@
+com\Sofrecom\apigateway\utils\TokenUtils.class
+com\Sofrecom\apigateway\config\SecurityConfig.class
+com\Sofrecom\apigateway\config\UserHeaderFilter.class
+com\Sofrecom\apigateway\UserandNotificationdto\UserInfo.class
+com\Sofrecom\apigateway\ApiGatewayApplication.class
