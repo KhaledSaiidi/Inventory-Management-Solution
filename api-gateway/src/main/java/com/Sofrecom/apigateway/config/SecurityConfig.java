@@ -31,7 +31,7 @@ private final TokenUtils tokenUtils;
 
     @Bean
     public ReactiveJwtDecoder reactiveJwtDecoder() {
-        return ReactiveJwtDecoders.fromIssuerLocation("http://localhost:8181/realms/SofManagers");
+        return ReactiveJwtDecoders.fromIssuerLocation("http://localhost:8181/realms/phoenixstock");
     }
 
     @Bean
