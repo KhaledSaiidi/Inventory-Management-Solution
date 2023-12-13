@@ -1,0 +1,14 @@
+.dashboard-container {
+    position: absolute;
+    top: 50px;
+    left: 260px; /* adjust this value to match the width of your side nav bar */
+    width: calc(100% - 260px); /* adjust this value to account for the side nav bar */
+    height: 100%;
+  }
+  
+  .red-arrow {
+    color: red;
+  }
+  .green-arrow{
+    color: green;
+  }

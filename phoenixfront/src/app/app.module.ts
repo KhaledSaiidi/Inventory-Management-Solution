@@ -11,9 +11,11 @@ import { AuthGuard } from './guards/security.guard';
 import { SecurityService } from './services/security.service'
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DashboardComponent } from './component/dashboard/dashboard.component';
 
 const appRoute: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/base' },
+  { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
+  {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'base', component: BaseComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }}
 ]
 
@@ -44,7 +46,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
 @NgModule({
   declarations: [
     AppComponent,
-    BaseComponent
+    BaseComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
