@@ -8,9 +8,37 @@ import Chart from 'chart.js/auto';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit{
+  slides = [
+    {
+      image: '../../../assets/img/phoenix.png',
+      title: 'Optimize with PhoenixStock Keeper',
+      description: 'A powerful platform for efficient and strategic inventory management.'
+    },
+    {
+      image: '../../../assets/img/stocks.jpg',
+      title: 'Track Your Inventory with Precision',
+      description: 'Efficiently monitor and manage your inventory with PhoenixStock Keeper\'s advanced tracking capabilities.'
+    },
+    {
+      image: '../../../assets/img/dashboards.png',
+      title: 'Empower Your Decisions with Insightful Dashboards',
+      description: 'PhoenixStock Keeper takes inventory management to the next level with dynamic and insightful dashboards.'
+    }
+  ];
+  activeIndex = 0;
+  nextSlide() {
+    this.activeIndex = (this.activeIndex + 1) % this.slides.length;
+  }
+  prevSlide() {
+    this.activeIndex = (this.activeIndex - 1 + this.slides.length) % this.slides.length;
+  }
 
   ngOnInit() {
    this.initializeChart();
+   setInterval(() => {
+    this.nextSlide();
+  }, 2000);
+
   }
 
   initializeChart(): void {

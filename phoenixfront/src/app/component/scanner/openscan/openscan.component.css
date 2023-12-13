@@ -1,0 +1,42 @@
+.appform-container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 50%;
+    width: 50%;
+  }
+
+  app-dashboard {
+      opacity: 0.3 !important;
+    }
+
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      width: 80%;
+      max-width: 400px;
+      background: #fff;
+    }
+
+    .card-header {
+      background-color: #3498db;
+      color: #fff;
+      border-radius: 10px 10px 0 0;
+      padding: 15px;
+      text-align: center;
+    }
+    .card-body {
+      padding: 20px;
+    }
+    .btn-lg {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    /* Additional styles for responsiveness */
+@media (max-width: 576px) {
+  .card {
+    width: 90%;
+  }
+}

@@ -1,0 +1,50 @@
+<div class="popup-container">
+    <div class="shadowed" (click)="handleCancel()">
+      <app-dashboard></app-dashboard>
+    </div>
+    <div class="appform-container">
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-md-8 mx-auto">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center justify-content-center">
+                  <p class="mb-0">Choose the type of operation</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div *ngIf="!showCamera">
+                  <div class="text-center">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="triggerSnapshot('sell')">Scan to sell</button>
+                  </div>
+    
+                  <div class="text-center mt-3">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="triggerSnapshot('return')">Scan to return</button>
+                  </div>
+    
+                  <div class="text-center mt-3">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="triggerSnapshot('add')">Scan to add</button>
+                  </div>
+                </div>
+                
+                <div *ngIf="showCamera" class="mt-3">
+                    <webcam
+                    [style.height]="containerHeight === 'auto' ? containerHeight : containerHeight + 'px'"
+                    [style.width]="containerWidth === 'auto' ? containerWidth : containerWidth + 'px'"
+                    [trigger]="triggerObservable"
+                    (imageCapture)="handleImage($event)"
+                    (initError)="handleInitError($event)"
+                                    ></webcam>
+                  
+                  <div class="text-center mt-3">
+                    <button class="btn btn-danger btn-lg" type="button" (click)="handleCancel()">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

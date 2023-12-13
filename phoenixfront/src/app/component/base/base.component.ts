@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { SecurityService } from 'src/app/services/security.service';
   styleUrls: ['./base.component.css']
 })
 export class BaseComponent implements OnInit{
-constructor (public securityService: SecurityService) { 
+constructor (public securityService: SecurityService, private router: Router) { 
 }
 public ngOnInit() {
   if (this.securityService.profile) {
@@ -17,5 +18,9 @@ public ngOnInit() {
 
   onLogout() {
     this.securityService.kcService.logout(window.location.origin);
+  }
+
+  navigateToscan() {
+    this.router.navigate(['/toscan']);
   }
 }
