@@ -10,17 +10,17 @@ import Chart from 'chart.js/auto';
 export class DashboardComponent implements OnInit{
   slides = [
     {
-      image: '../../../assets/img/phoenix.png',
+      image: '../../../assets/img/phoenixres.png',
       title: 'Optimize with PhoenixStock Keeper',
       description: 'A powerful platform for efficient and strategic inventory management.'
     },
     {
-      image: '../../../assets/img/stocks.jpg',
+      image: '../../../assets/img/trackback.jpg',
       title: 'Track Your Inventory with Precision',
       description: 'Efficiently monitor and manage your inventory with PhoenixStock Keeper\'s advanced tracking capabilities.'
     },
     {
-      image: '../../../assets/img/dashboards.png',
+      image: '../../../assets/img/kpis.jpg',
       title: 'Empower Your Decisions with Insightful Dashboards',
       description: 'PhoenixStock Keeper takes inventory management to the next level with dynamic and insightful dashboards.'
     }
@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit{
    this.initializeChart();
    setInterval(() => {
     this.nextSlide();
-  }, 2000);
+  }, 4000);
 
   }
 
