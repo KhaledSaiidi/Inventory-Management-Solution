@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit{
       data: {
       labels: ["Jan", "Fev", "Mar", "Avr", "May", "Juin", "Jul", "Aout", "Sep", "Oct", "Nov", "Dec"],
       datasets: [{
-        label: "Nombre de jours d'absence",
+        label: "Number of products sold",
         tension: 0.4,
         pointRadius: 0,
         borderColor: "#5e72e4",

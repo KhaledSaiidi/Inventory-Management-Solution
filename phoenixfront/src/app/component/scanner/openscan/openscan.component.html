@@ -1,50 +1,35 @@
-<div class="popup-container">
-    <div class="shadowed" (click)="handleCancel()">
-      <app-dashboard></app-dashboard>
+<app-dashboard></app-dashboard>
+<div class="popup-overlay" (click)="navigateToDashboard()">
+  <div class="shadowed" (click)="navigateToDashboard()"></div>
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <h2>Barcode Scanning Options</h2>
     </div>
-    <div class="appform-container">
-      <div class="container-fluid py-4">
-        <div class="row">
-          <div class="col-md-8 mx-auto">
-            <div class="card">
-              <div class="card-header pb-0">
-                <div class="d-flex align-items-center justify-content-center">
-                  <p class="mb-0">Choose the type of operation</p>
-                </div>
-              </div>
-              <div class="card-body">
-                <div *ngIf="!showCamera">
-                  <div class="text-center">
-                    <button class="btn btn-primary btn-lg" type="button" (click)="triggerSnapshot('sell')">Scan to sell</button>
-                  </div>
-    
-                  <div class="text-center mt-3">
-                    <button class="btn btn-primary btn-lg" type="button" (click)="triggerSnapshot('return')">Scan to return</button>
-                  </div>
-    
-                  <div class="text-center mt-3">
-                    <button class="btn btn-primary btn-lg" type="button" (click)="triggerSnapshot('add')">Scan to add</button>
-                  </div>
-                </div>
-                
-                <div *ngIf="showCamera" class="mt-3">
-                    <webcam
-                    [style.height]="containerHeight === 'auto' ? containerHeight : containerHeight + 'px'"
-                    [style.width]="containerWidth === 'auto' ? containerWidth : containerWidth + 'px'"
-                    [trigger]="triggerObservable"
-                    (imageCapture)="handleImage($event)"
-                    (initError)="handleInitError($event)"
-                                    ></webcam>
-                  
-                  <div class="text-center mt-3">
-                    <button class="btn btn-danger btn-lg" type="button" (click)="handleCancel()">Cancel</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="popup-body">
+      <!-- Webcam placeholder -->
+      <div *ngIf="!showCamera">
+        <div class="webcam-placeholder-off">
+          <p>Camera is off. Please enable it or choose an option to proceed.</p>
+          <!-- You can add a loading spinner or any other content here -->
         </div>
+      </div>
+      <div *ngIf="showCamera" class="webcam-container mt-3">
+        <webcam
+          [trigger]="triggerObservable"
+          (imageCapture)="handleImage($event)"
+          (initError)="handleInitError($event)"
+        ></webcam>
+
+        <div class="text-center mt-3">
+          <button class="btn btn-danger btn-lg" type="button" (click)="handleCancel()">Cancel</button>
+        </div>
+      </div>
+      <div *ngIf="!showCamera">
+        <p class="action-text">Select an action: </p>
+        <button class="btn scan-btn add-btn" (click)="triggerSnapshot('add')">Register Product</button>
+        <button class="btn scan-btn sell-btn" (click)="triggerSnapshot('sell')">Confirm Sale</button>
+        <button class="btn scan-btn return-btn" (click)="triggerSnapshot('return')">Process Return</button>
       </div>
     </div>
   </div>
-  
+</div>
