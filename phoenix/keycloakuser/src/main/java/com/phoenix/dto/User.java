@@ -2,6 +2,8 @@ package com.phoenix.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Getter
 @Setter
@@ -13,5 +15,6 @@ public class User {
     private String email;
     private String userName;
     private String password;
+    private List<String> realmRoles;
 
 }
