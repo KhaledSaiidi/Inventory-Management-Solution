@@ -80,7 +80,7 @@
     left: 30px;
     transform: translateY(-50%);
     white-space: nowrap;
-    font-size: 20px;
+    font-size: 16px;
     opacity: 0;
     transition: opacity 1.2s; /* Updated transition duration to 1.2s */
   }
@@ -88,7 +88,7 @@
   .icon-container:hover,
   .icon-container.unhover {
     color: #fff;
-    width: 200px;
+    width: 150px;
     transition: width 1s; /* Updated transition duration to 1s */
   }
   
