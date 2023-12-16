@@ -1,28 +1,25 @@
 package com.phoenix.controller;
 
 import com.phoenix.config.KeycloakSecurityUtil;
-import com.phoenix.dto.User;
+import com.phoenix.dto.UserMysqldto;
+import com.phoenix.dto.Userdto;
 import com.phoenix.mapper.IMapper;
-import com.phoenix.mapper.UserMapper;
 import com.phoenix.services.IUserServices;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.common.util.CollectionUtil;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/people")
+@CrossOrigin("*")
 public class Controller {
     @Autowired
     KeycloakSecurityUtil keycloakUtil;
@@ -37,7 +34,7 @@ public class Controller {
 
     @GetMapping
     @RequestMapping("/users")
-    public List<User> getUsers() {
+    public List<Userdto> getUsers() {
         Keycloak keycloak = keycloakUtil.getKeycloakInstance();
         List<UserRepresentation> userRepresentations =
                 keycloak.realm(realm).users().list();
@@ -48,19 +45,31 @@ public class Controller {
     }
 
     @PostMapping
-    @RequestMapping("/user")
-    public Response createUser(@RequestBody User user) {
-        List<String> realmRoles = user.getRealmRoles();
-        UserRepresentation userRep = iMapper.mapUserRep(user);
+    @RequestMapping("/adduserdto")
+    public Response createUser(@RequestBody Userdto userdto) {
+        List<String> realmRoles = userdto.getRealmRoles();
+        UserRepresentation userRep = iMapper.mapUserRep(userdto);
         Keycloak keycloak = keycloakUtil.getKeycloakInstance();
         keycloak.realm(realm).users().create(userRep);
+        iUserServices.addUser(userdto);
+        // Assign realm roles to the created userdto
+        String userId = keycloak.realm(realm).users().search(userdto.getUserName()).get(0).getId();
+        iUserServices.assignRoles(userId, userdto.getRealmRoles());
 
-        // Assign realm roles to the created user
-        String userId = keycloak.realm(realm).users().search(user.getUserName()).get(0).getId();
-        iUserServices.assignRoles(userId, user.getRealmRoles());
-
-        return Response.ok(user).build();
+        return Response.ok(userdto).build();
     }
+
+    @GetMapping("userdetails/{username}")
+    public ResponseEntity<UserMysqldto> getUserByUsername(@PathVariable String username) {
+        UserMysqldto userDto = iUserServices.getUserByUsername(username);
+
+        if (userDto != null) {
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
 

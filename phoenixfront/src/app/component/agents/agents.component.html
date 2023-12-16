@@ -1,0 +1,175 @@
+<app-base></app-base>
+<div class="listeequipes-container"> 
+  
+  <a class="btn-primary btn" style="color: white; margin-right: 10px;" (click)="toggleColMd4()" href="#">
+    <span class="icon-container">
+      <i class="fas fa-bars fa-lg"></i>
+      <span class="tooltip-text">&nbsp; Liste des groupes</span>
+    </span>
+  </a>
+  <a href="/addtalent" class="btn-primary btn" style="color: white;">
+      <span class="">&nbsp; Nouveau Talent</span>
+  </a>
+
+<div class="listetalents-container" [hidden]="showColMd4">
+    <div class="col-12">
+        <div class="card mb-4 ">
+          <div class="card-header pb-0" >
+            <h6 class="text-center">Liste des Talents</h6>
+          </div>
+    <div class="card-body px-0 pt-0 pb-2">
+      <div class="table-responsive p-0">
+        <table class="table align-items-center justify-content-center mb-0">
+          <thead>
+            <tr>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 8%;">Code</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 10%;">Nom</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 19%;">Email</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 10%;">Poste</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 8%;">Equipe</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" >Application</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 8%;">Absences Anuelles</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 8%;">Plus de détails</th>
+  
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="word-wrap: break-word; white-space: normal;">mehdi </td>
+              <td style="word-wrap: break-word; white-space: normal;">mehdi</td>
+              <td style="word-wrap: break-word; white-space: normal;">mehdi@phoenix</td>
+              <td style="word-wrap: break-word; white-space: normal;">manager</td>
+              <td style="word-wrap: break-word; white-space: normal;">groupe 2</td>
+              <td style="word-wrap: break-word; white-space: normal;">
+                <div style="max-height: 50px; overflow-y: auto;">
+                  <ul style="list-style-type: none;">
+                    <li>app2</li>
+                    <li>app3</li>
+                  </ul>
+                </div>
+              </td>                     
+              <td style="word-wrap: break-word; white-space: normal;">5</td>
+              <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" >Profil</td>
+  
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+  
+  
+    
+    </div>
+  </div>
+    </div>
+</div>
+
+<div class="containerofboth">
+  
+    <div class="wrapper">
+      <div class="fixed-part">
+      <div class="poss col-md-4"   [hidden]="!showColMd4">
+        <div class="card card-profile">
+          <img src="../../../assets/img/agents.jpg" class="card-img-top" style="max-height: 40%;">
+          <div style="display: flex; gap: 10px;">
+          <button  class="btn btn-primary" style="width: 170px; position: relative; top: 10px; left: 10px;">Nouveau groupe</button>
+          <button class="btn btn-primary" style="width: 170px; position: relative; top: 10px; left: 10px;">Nouveau Manager</button>
+        </div>
+          <div class="card-body pt-0" style="margin-top: 15px;">
+            <div class="row">
+              <div class="col">
+                <div class="d-flex justify-content-center">
+                  <div class="d-grid text-center">
+                    <span class="text-lg font-weight-bolder">20</span>
+                    <span class="text-sm opacity-8">Talents</span>
+                  </div>
+                  <div class="d-grid text-center mx-4">
+                    <span class="text-lg font-weight-bolder">2</span>
+                    <span class="text-sm opacity-8">Groupes</span>
+                  </div>
+                  <div class="d-grid text-center">
+                    <span class="text-lg font-weight-bolder">5</span>
+                    <span class="text-sm opacity-8">Team Leads</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+<div class="equipe-container">
+              <h5>Liste des groupes</h5>
+    <table class="table">
+      <thead>
+        <tr>
+          <th >Nom</th>
+          <th >Manager</th>
+          <th >Ancienneté</th>
+          <th >Séniorité</th>
+        </tr>
+      </thead>
+      <tbody style="text-align: center;">
+        <tr>
+
+          <td style="cursor: pointer;">equipe 1</td>
+          <td >mehdi</td>
+          <td>0</td>
+          <td>0</td>
+          </tr>      
+      </tbody>
+    </table>
+   
+</div>
+
+          </div>
+          
+        </div>
+        
+      </div>
+    </div>
+    <div class="listetalents-containershown" style="cursor: pointer;"  [hidden]="!showColMd4">
+        <div class="col-12">
+         <div class="card mb-4 ">
+                 <div class="card-header pb-0" >
+                   <h6 class="text-center">Liste des Talents</h6>
+                 </div>
+                 <div class="card-body px-0 pt-0 pb-2">
+             <div class="table-responsive p-0">
+               <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+                 <thead>
+                   <tr>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 15%;">Code</th>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 25%;">Nom</th>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Application</th>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 10%;">Plus de détails</th>
+         
+         
+         
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr>
+                     <td style="word-wrap: break-word; white-space: normal;">mehdi</td>
+                     <td style="word-wrap: break-word; white-space: normal;">mehdi</td>
+                     <td style="word-wrap: break-word; white-space: normal;">
+                      <div style="max-height: 50px; overflow-y: auto;">
+                        <ul style="list-style-type: none;">
+                              <li>mehdi
+                              </li>
+                                                  
+                        </ul>
+                      </div>
+                    </td>        
+                     <td style="cursor: pointer; word-wrap: break-word; white-space: normal;">Profil</td>
+                   </tr>
+                 
+                 </tbody>
+               </table>
+             </div>
+                 </div>
+         </div>
+        </div>
+       </div>
+
+</div>
+</div>
+
+
+</div>

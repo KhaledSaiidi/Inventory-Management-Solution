@@ -1,12 +1,17 @@
 package com.phoenix.mapper;
 
-import com.phoenix.dto.User;
+import com.phoenix.dto.UserMysqldto;
+import com.phoenix.dto.Userdto;
+import com.phoenix.model.UserMysql;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.util.List;
 
 public interface IMapper {
-    List<User> mapUsers(List<UserRepresentation> userRepresentations);
-    User mapUser(UserRepresentation userRep);
-    UserRepresentation mapUserRep(User user);
+    List<Userdto> mapUsers(List<UserRepresentation> userRepresentations);
+    Userdto mapUser(UserRepresentation userRep);
+    UserRepresentation mapUserRep(Userdto userdto);
+    Userdto mapUserMysqlToDto(UserMysql userMysql);
+    UserMysql mapDtoToUserMysql(Userdto userDto);
+    UserMysqldto mapUserMysqlToUserMysqlDto(UserMysql userMysql);
 }

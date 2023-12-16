@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserMysql {
     @jakarta.persistence.Id
     private String username;
     private String firstName;
@@ -31,7 +31,6 @@ public class User {
     private Date dateDebutContrat;
     @Temporal(TemporalType.DATE)
     private Date dateFinContrat;
-    private List<String> realmRoles;
 
 
 }
