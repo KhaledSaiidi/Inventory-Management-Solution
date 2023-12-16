@@ -9,4 +9,5 @@ public interface IUserServices {
     void assignRoles(String userId, List<String> realmRoles);
     Userdto addUser(Userdto userDto);
     UserMysqldto getUserByUsername(String username);
+    List<Userdto> getallUsers();
 }

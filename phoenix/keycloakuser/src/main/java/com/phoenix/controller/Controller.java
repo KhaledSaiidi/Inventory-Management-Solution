@@ -70,7 +70,16 @@ public class Controller {
         }
     }
 
-
+    @GetMapping
+    @RequestMapping("/allusers")
+    public ResponseEntity<List<Userdto>> getallUsers() {
+        List<Userdto> userdtos = iUserServices.getallUsers();
+        if (userdtos != null) {
+            return new ResponseEntity<>(userdtos, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }

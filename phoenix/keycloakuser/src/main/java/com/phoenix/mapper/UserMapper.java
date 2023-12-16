@@ -72,6 +72,11 @@ public class UserMapper implements IMapper {
         userDto.setLastName(userMysql.getLastName());
         userDto.setEmail(userMysql.getEmail());
         userDto.setUserName(userMysql.getUsername());
+        userDto.setPhone(userMysql.getPhone());
+        userDto.setJobTitle(userMysql.getJobTitle());
+        userDto.setDateDebutContrat(userMysql.getDateDebutContrat());
+        userDto.setDateFinContrat(userMysql.getDateFinContrat());
+        userDto.setRealmRoles(userMysql.getRealmRoles());
         return userDto;
     }
     @Override
@@ -84,6 +89,7 @@ public class UserMapper implements IMapper {
         userMysql.setLastName(userDto.getLastName());
         userMysql.setEmail(userDto.getEmail());
         userMysql.setUsername(userDto.getUserName());
+        userMysql.setRealmRoles(userDto.getRealmRoles());
         return userMysql;
     }
 
@@ -102,6 +108,7 @@ public class UserMapper implements IMapper {
         userMysqlDto.setJobTitle(userMysql.getJobTitle());
         userMysqlDto.setDateDebutContrat(userMysql.getDateDebutContrat());
         userMysqlDto.setDateFinContrat(userMysql.getDateFinContrat());
+        userMysqlDto.setRealmRoles(userMysql.getRealmRoles());
         return userMysqlDto;
     }
 

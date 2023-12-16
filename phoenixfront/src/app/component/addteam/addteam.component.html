@@ -6,11 +6,6 @@
     <div class="container-fluid py-4" style="width: 100%;">
         <div class="row" style="width: 100%;">
           <div class="col-md-8" style="width: 100%;">
-  
-  
-  
-  
-  
             <div class="card">
               <div class="card-header pb-0">
                 <div class="d-flex align-items-center">
@@ -19,12 +14,12 @@
               </div>
               <div class="card-body">
                 <p class="text-uppercase text-sm">Member Information</p>
-                <form>
+                <form [formGroup]="teamForm" (ngSubmit)="onSubmit()">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                          <label for="code">Username</label>
-                          <input class="form-control mt-2" formControlName="username" type="text" id="code" placeholder="Please enter a valid Username">                   
+                          <label for="userName">Username</label>
+                          <input class="form-control mt-2" formControlName="userName" type="text" id="userName" placeholder="Please enter a valid Username" required>                   
                         </div>
                       </div>
                       
@@ -32,7 +27,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="password">Password</label>
-                      <input type="password" formControlName="password" class="form-control mt-2" id="nom" placeholder="Please enter a temporary password">
+                      <input type="password" formControlName="password" class="form-control mt-2" id="nom" placeholder="Please enter a temporary password" required>
                       
                     </div>
                   </div>
@@ -40,32 +35,33 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="firstname">FirstName</label>
-                        <input class="form-control mt-2" type="text" formControlName="firstname" id="firstname" placeholder="Please enter a valid Firstname" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+                        <label for="firstName">FirstName</label>
+                        <input class="form-control mt-2" type="text" formControlName="firstName" id="firstName" placeholder="Please enter a valid Firstname" required>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="jobTitle">LastName</label>
-                        <input type="text"  class="form-control mt-2" id="lastname" formControlName="lastname" placeholder="Please enter a valid Lastname">
+                        <label for="lastName">LastName</label>
+                        <input type="text"  class="form-control mt-2" id="lastName" formControlName="lastName" placeholder="Please enter a valid Lastname">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="email">Email</label>
-                        <input class="form-control mt-2" type="email" formControlName="email" id="email" placeholder="member-email@phoenixmas.com" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+                        <input class="form-control mt-2" type="email" formControlName="email" id="email" placeholder="member-email@phoenixmas.com" required>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input type="tel" class="form-control mt-2" id="phone" formControlName="phone" placeholder = "Please enter the member phone number"pattern="[0-9]{2}-[0-9]{3}-[0-9]{3}" required>
+                        <input type="tel" class="form-control mt-2" id="phone" formControlName="phone" placeholder = "Please enter the member phone number">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="role">Role</label>
-                        <select class="form-control mt-2" formControlName="role" id="role"  required>
+                        <label for="realmRoles">Role</label>
+                        <select class="form-control mt-2" formControlName="realmRoles" id="realmRoles" required
+                        (ngModelChange)="updateRoles($event)">
                           <option value="" disabled selected>Please select a proper role</option>
                           <option value="IMANAGER">Inventory Manager</option>
                           <option value="MANAGER">Manager</option>
@@ -73,7 +69,7 @@
                         </select>
                       </div>
                     </div>
-                    
+                                        
                       <div class="col-md-6">
                         
                         <div class="form-group">
@@ -93,8 +89,8 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="dateDebutContrat" class="form-control-label">Contract end date</label>
-                        <input class="form-control mt-2" formControlName="datefinContrat" type="date"  id="datefinContrat">
+                        <label for="dateFinContrat" class="form-control-label">Contract end date</label>
+                        <input class="form-control mt-2" formControlName="dateFinContrat" type="date"  id="dateFinContrat">
                       </div>
                     </div>
                   </div>

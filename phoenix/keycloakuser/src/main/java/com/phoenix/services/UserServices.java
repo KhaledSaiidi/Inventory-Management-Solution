@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ public class UserServices implements IUserServices {
         userMysql.setJobTitle(userDto.getJobTitle());
         userMysql.setDateDebutContrat(userDto.getDateDebutContrat());
         userMysql.setDateFinContrat(userDto.getDateFinContrat());
+        userMysql.setRealmRoles(userDto.getRealmRoles());
         UserMysql savedUser = userRepository.save(userMysql);
         return iMapper.mapUserMysqlToDto(savedUser);
     }
@@ -66,6 +68,23 @@ public class UserServices implements IUserServices {
         }
         return null;
     }
+
+    @Override
+    public List<Userdto> getallUsers() {
+        List<UserMysql> users = userRepository.findAll();
+        List<Userdto> usersdtos = new ArrayList<>();
+        if (!users.isEmpty()) {
+            for (UserMysql userMysql : users) {
+                Userdto userdto = new Userdto();
+                userdto = iMapper.mapUserMysqlToDto(userMysql);
+                usersdtos.add(userdto);
+            }
+
+        return usersdtos;
+    }
+        return null;
+    }
+
 
 
 

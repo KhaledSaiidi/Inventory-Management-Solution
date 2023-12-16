@@ -3,6 +3,8 @@ package com.phoenix.dto;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
+
 @Data
 @Getter
 @Setter
@@ -18,4 +20,6 @@ public class UserMysqldto {
     private String jobTitle;
     private Date dateDebutContrat;
     private Date dateFinContrat;
+    private List<String> realmRoles;
+
 }

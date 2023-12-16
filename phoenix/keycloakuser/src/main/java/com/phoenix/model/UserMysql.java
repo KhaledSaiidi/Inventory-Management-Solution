@@ -22,7 +22,7 @@ public class UserMysql {
 
     private String lastName;
     @Lob
-    @Column(name = "image")
+    @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image;
     private String email;
     private Long phone;
@@ -31,6 +31,8 @@ public class UserMysql {
     private Date dateDebutContrat;
     @Temporal(TemporalType.DATE)
     private Date dateFinContrat;
+    private List<String> realmRoles;
+
 
 
 }
