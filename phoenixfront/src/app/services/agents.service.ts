@@ -30,5 +30,15 @@ getagents() {
     })
   );
 }
+getuserbycode(code: string){
+  return this.http.get(this.apiUrl + '/userdetails/' + code)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+
+}
 
 }

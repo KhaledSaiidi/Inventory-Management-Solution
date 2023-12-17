@@ -16,6 +16,7 @@ import { OpenscanComponent } from './component/scanner/openscan/openscan.compone
 import { WebcamModule } from 'ngx-webcam';
 import { AgentsComponent } from './component/agents/agents.component';
 import { AddteamComponent } from './component/addteam/addteam.component';
+import { UserInfoComponent } from './component/user-info/user-info.component';
 
 
 const appRoute: Routes = [
@@ -23,7 +24,9 @@ const appRoute: Routes = [
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'toscan', component: OpenscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
-  {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }}
+  {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
+  {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }}
+
 
 ]
 
@@ -58,7 +61,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     DashboardComponent,
     OpenscanComponent,
     AgentsComponent,
-    AddteamComponent
+    AddteamComponent,
+    UserInfoComponent
   ],
   imports: [
     BrowserModule,

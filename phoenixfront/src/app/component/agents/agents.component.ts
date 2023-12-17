@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentsService } from 'src/app/services/agents.service';
 
@@ -8,7 +9,7 @@ import { AgentsService } from 'src/app/services/agents.service';
   styleUrls: ['./agents.component.css']
 })
 export class AgentsComponent implements OnInit {
-  constructor(private agentsService: AgentsService) {}
+  constructor(private agentsService: AgentsService,private router: Router) {}
   allmembers: Userdto[] = [];
   agentList: Userdto[] = [];
   managerList: Userdto[] = [];
@@ -35,6 +36,16 @@ export class AgentsComponent implements OnInit {
       }
     );
   }
-  
 
+  navigateToUserInfos(userName?: string) {
+    if (userName === undefined) {
+      console.log('Invalid Username');
+      return;
+    }
+    this.router.navigate(['/userinfos'], { queryParams: { id: userName } });      
+  }
+
+  navigateToaddTeam(){
+    this.router.navigate(['/addteam']);      
+  }
 }

@@ -7,7 +7,7 @@
       <span class="tooltip-text">&nbsp; Managers List</span>
     </span>
   </a>
-  <a href="/addteam" class="btn-primary btn" style="color: white;">
+  <a (click) = "navigateToaddTeam()" class="btn-primary btn" style="color: white;">
       <span class="">&nbsp; New Member</span>
   </a>
 
@@ -42,12 +42,12 @@
                 <div style="max-height: 50px; overflow-y: auto;">
                   <ul style="list-style-type: none;">
                     <li>campaing1</li>
-                    <li>campaign2</li>
+                    <li>{{agent.userName}}</li>
                   </ul>
                 </div>
               </td>                     
               <td style="word-wrap: break-word; white-space: normal;">5</td>
-              <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" >Profil</td>
+              <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.userName)" >Profil</td>
   
             </tr>
           </tbody>
@@ -147,13 +147,13 @@
                      <td style="word-wrap: break-word; white-space: normal;">
                       <div style="max-height: 50px; overflow-y: auto;">
                         <ul style="list-style-type: none;">
-                              <li>mehdi
+                              <li>mehdi 
                               </li>
                                                   
                         </ul>
                       </div>
                     </td>        
-                     <td style="cursor: pointer; word-wrap: break-word; white-space: normal;">Profil</td>
+                     <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.userName)">Profil</td>
                    </tr>
                  
                  </tbody>
