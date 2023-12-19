@@ -11,11 +11,14 @@
                   <ul class="navbar-nav  justify-content-end">
                 
                     
-                    <li class="nav-item d-flex align-items-center">
+                    <li class="nav-item d-flex align-items-center" style="cursor: pointer;">
+                      <a  (click) = "navigateToUserdetails(securityService.profile?.username)" class="nav-link text-white p-0 position-relative">
                       <i class="fa fa-user me-sm-1" style="color: white; font-size: 24px;"></i>
+                    
                       <ng-container *ngIf="securityService.profile">
-                        <span class="d-sm-inline d-none" style="color: white; font-size: 24px; margin-left: 5px;"> {{securityService.profile.firstName}} {{securityService.profile.lastName}}</span>
+                        <span class="d-sm-inline d-none" style="color: white; font-size: 24px; margin-left: 5px;"> {{securityService.profile.firstName}} {{securityService.profile.lastName}} </span>
                       </ng-container>
+                    </a>
                       </li>
                     
                     <li class="nav-item px-3 d-flex align-items-center">
@@ -37,9 +40,6 @@
                             
                           </ul>
                         </div>
-                        <ng-template #noNotifications>
-                          <div class="empty-notification">Pas de nouvelles notifications.</div>
-                        </ng-template>
                       </div>
                      </li>
                   </ul>

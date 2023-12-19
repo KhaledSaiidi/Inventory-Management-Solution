@@ -17,16 +17,17 @@ import { WebcamModule } from 'ngx-webcam';
 import { AgentsComponent } from './component/agents/agents.component';
 import { AddteamComponent } from './component/addteam/addteam.component';
 import { UserInfoComponent } from './component/user-info/user-info.component';
+import { UserdetailsComponent } from './component/userdetails/userdetails.component';
 
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
-  {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
+  {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ,"AGENT"] }},
   {path:'toscan', component: OpenscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
-  {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }}
-
+  {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
+  {path:'userdetails', component: UserdetailsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
 
 ]
 
@@ -62,7 +63,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     OpenscanComponent,
     AgentsComponent,
     AddteamComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    UserdetailsComponent
   ],
   imports: [
     BrowserModule,

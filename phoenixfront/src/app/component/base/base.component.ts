@@ -23,4 +23,13 @@ public ngOnInit() {
   navigateToscan() {
     this.router.navigate(['/toscan']);
   }
+
+  
+  navigateToUserdetails(userName?: string) {
+    if (userName === undefined) {
+      console.log('Invalid Username');
+      return;
+    }
+    this.router.navigate(['/userdetails'], { queryParams: { id: userName } });      
+  }
 }
