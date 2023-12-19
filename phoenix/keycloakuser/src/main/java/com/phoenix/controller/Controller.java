@@ -6,6 +6,7 @@ import com.phoenix.dto.Userdto;
 import com.phoenix.mapper.IMapper;
 import com.phoenix.services.IUserServices;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,6 +83,74 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping
+    @RequestMapping("/updateUser/{username}")
+    public Response updateUser(@PathVariable("username") String username, @RequestBody Userdto user) {
+        try {
+            Keycloak keycloak = keycloakUtil.getKeycloakInstance();
+            List<UserRepresentation> users = keycloak.realm(realm).users().search(username);
+            if (users.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+            }
+            UserRepresentation updatedUser = iMapper.mapUserRep(user);
+            keycloak.realm(realm).users().get(users.get(0).getId()).update(updatedUser);
+
+            iUserServices.UpdateUser(username, user);
+
+            return Response.ok(updatedUser).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+
+            // Return a more detailed error response
+            String errorMessage = "Error updating user: " + e.getMessage();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
+        }
+    }
+
+    @DeleteMapping
+    @RequestMapping("/deleteUser/{username}")
+    public Response deleteUser(@PathVariable("username") String username) {
+        Keycloak keycloak = keycloakUtil.getKeycloakInstance();
+        String id = keycloak.realm(realm).users().search(username).get(0).getId();
+        keycloak.realm(realm).users().delete(id);
+        iUserServices.DeleteUser(username);
+        return Response.ok().build();
+
+    }
+
+    @PutMapping
+    @RequestMapping("/updatePassword/{username}")
+    public Response updatePassword(@PathVariable("username") String username,
+                                   @RequestParam("currentPassword") String currentPassword,
+                                   @RequestParam("newPassword") String newPassword){
+        Keycloak keycloak = keycloakUtil.getKeycloakInstance();
+        List<UserRepresentation> users = keycloak.realm(realm).users().search(username);
+        if (users.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+        }
+        UserRepresentation updatedUser = users.get(0);
+
+        boolean isCurrentPasswordValid = iUserServices.checkCurrentPassword(updatedUser, currentPassword);
+
+        if (!isCurrentPasswordValid) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid current password").build();
+        }
+
+        List<CredentialRepresentation> creds = new ArrayList<>();
+        CredentialRepresentation cred = new CredentialRepresentation();
+        cred.setValue(newPassword);
+        creds.add(cred);
+        updatedUser.setCredentials(creds);
+        keycloak.realm(realm).users().get(users.get(0).getId()).update(updatedUser);
+
+
+        return Response.ok(updatedUser).build();
+    }
+
 
 
 }

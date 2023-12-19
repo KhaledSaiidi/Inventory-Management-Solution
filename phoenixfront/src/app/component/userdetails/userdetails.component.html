@@ -118,32 +118,40 @@
                 </div>
               </div>
             </form>
-            <a style="margin-left: 20px; cursor: pointer;" (click)="openSecurity()">Security</a>
-           <ng-container *ngIf="securityTab">
-            <div style="margin-left: 30%;">
-            <div class="col-md-6">
-                <div class="form-group">
-                  <label  class="form-control-label" for="phone">Current Password</label>
-                  <input class="form-control" formControlName="phone" id="phone" type="password" >
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label  class="form-control-label" for="phone">New Password</label>
-                  <input class="form-control" formControlName="phone" id="phone" type="password" >
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label  class="form-control-label" for="phone">Confirm Password</label>
-                  <input class="form-control" formControlName="phone" id="phone" type="password" >
-                </div>
-              </div>
-              <div style="display: flex; margin-left: 10%;" >
-                <button class="btn btn-primary btn-sm" style="width: 150px;" type="submit">Change Password</button>
+            <div class="access-control-header" style="margin-left: 20px;">
+              <p class="text-uppercase text-sm" (click)="openSecurity()">
+                <a style="cursor: pointer;">
+                  <i class="fas fa-shield-alt"></i>&nbsp; Access Control 
+                </a>
+              </p>
             </div>
-            </div>
-        </ng-container>
+                        <ng-container *ngIf="securityTab">
+              <div class="password-change-container">
+                <div class="password-change-form">
+                  <div class="form-group text-center">
+                    <label class="form-control-label" for="currentPassword">Current Password</label>
+                    <input class="form-control mx-auto" formControlName="currentPassword" id="currentPassword" type="password" style="width: 300px;">
+                  </div>
+            
+                  <div class="form-group text-center">
+                    <label class="form-control-label" for="newPassword">New Password</label>
+                    <input class="form-control mx-auto" formControlName="newPassword" id="newPassword" type="password" style="width: 300px;">
+                  </div>
+            
+                  <div class="form-group text-center">
+                    <label class="form-control-label" for="confirmPassword">Confirm Password</label>
+                    <input class="form-control mx-auto" formControlName="confirmPassword" id="confirmPassword" type="password" style="width: 300px;">
+                  </div>
+            
+                  <div class="form-group text-center">
+                    <button class="btn btn-primary btn-sm" style="width: 30%;" type="submit">Update Password</button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            
+            
+            
             </div>
           </div>
           <div class="col-lg-4">

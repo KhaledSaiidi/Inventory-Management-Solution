@@ -14,4 +14,5 @@ public interface IMapper {
     Userdto mapUserMysqlToDto(UserMysql userMysql);
     UserMysql mapDtoToUserMysql(Userdto userDto);
     UserMysqldto mapUserMysqlToUserMysqlDto(UserMysql userMysql);
+
 }

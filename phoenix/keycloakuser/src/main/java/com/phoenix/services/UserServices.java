@@ -9,7 +9,9 @@ import com.phoenix.model.UserMysql;
 import com.phoenix.repository.UserMysqlRepository;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -85,7 +87,64 @@ public class UserServices implements IUserServices {
         return null;
     }
 
+    @Override
+    public Userdto UpdateUser(String userId, Userdto userDto) {
+        System.out.println("service:" + userId);
+        UserMysql user = userRepository.findByUsername(userId).orElse(null);
+        if (user == null) {
+            return null;
+        }
 
+        if (userDto.getFirstName() != null) {
+            user.setFirstName(userDto.getFirstName());
+        }
+        if (userDto.getLastName() != null) {
+            user.setLastName(userDto.getLastName());
+        }
+        if (userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail());
+        }
+        if(userDto.getImage() != null){
+            user.setImage(userDto.getImage());
+
+        }
+        if (userDto.getPhone() != null) {
+            user.setPhone(userDto.getPhone());
+        }
+        if (userDto.getJobTitle() != null) {
+            user.setJobTitle(userDto.getJobTitle());
+        }
+        if (userDto.getRealmRoles() != null) {
+            user.setRealmRoles(userDto.getRealmRoles());
+        }
+
+        if (userDto.getDateDebutContrat() != null) {
+            user.setDateDebutContrat(userDto.getDateDebutContrat());
+        }
+        if (userDto.getDateFinContrat() != null) {
+            user.setDateFinContrat(userDto.getDateFinContrat());
+        }
+        UserMysql saveduser = userRepository.save(user);
+        return userDto;
+    }
+
+    @Override
+    public void DeleteUser(String userId) {
+        Optional<UserMysql> userOptional = userRepository.findByUsername(userId);
+        userOptional.ifPresent(userRepository::delete);
+        }
+
+
+    @Override
+    public boolean checkCurrentPassword(UserRepresentation user, String currentPassword) {
+        for (CredentialRepresentation userCredential : user.getCredentials()) {
+            if (userCredential.getType().equals(CredentialRepresentation.PASSWORD)
+                    && userCredential.getValue().equals(currentPassword)) {
+                return true; // Passwords match
+            }
+        }
+        return false; // Passwords do not match
+    }
 
 
 }

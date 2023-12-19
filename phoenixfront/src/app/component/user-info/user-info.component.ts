@@ -132,4 +132,27 @@ getuserinfos(code : string){
       onSubmit(){
         
       }
+      confirmDeletion(): void {
+        const message = 'Etes vous sûr que vous voulez supprimer: ' + this.user.firstName + ' ' + this.user.lastName;
+        const confirmation = confirm(message);
+        if (confirmation) {
+          this.deleteUser();
+        }
+      }
+      deleteUser(): void {
+        this.agentsService.deleteUser(this.userName).subscribe(
+          () => {
+            console.log('User deleted successfully.');
+            this.navigatetoAgents();
+          },
+          (error) => {
+            console.error('Error deleting user:', error);
+          }
+        );
+      }
+
+      navigatetoAgents(){
+        this.router.navigate(['/agents']);
+      }
+      
 }

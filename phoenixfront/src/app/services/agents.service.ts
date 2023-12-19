@@ -41,4 +41,16 @@ getuserbycode(code: string){
 
 }
 
+deleteUser(username: string): Observable<any> {
+  return this.http.delete(this.apiUrl + '/deleteUser/' + username)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+
+}
+
+
 }
