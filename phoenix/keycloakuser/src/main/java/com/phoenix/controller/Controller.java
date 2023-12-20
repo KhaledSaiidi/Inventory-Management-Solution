@@ -125,7 +125,6 @@ public class Controller {
     @PutMapping
     @RequestMapping("/updatePassword/{username}")
     public Response updatePassword(@PathVariable("username") String username,
-                                   @RequestParam("currentPassword") String currentPassword,
                                    @RequestParam("newPassword") String newPassword){
         Keycloak keycloak = keycloakUtil.getKeycloakInstance();
         List<UserRepresentation> users = keycloak.realm(realm).users().search(username);
@@ -133,13 +132,6 @@ public class Controller {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
         }
         UserRepresentation updatedUser = users.get(0);
-
-        boolean isCurrentPasswordValid = iUserServices.checkCurrentPassword(updatedUser, currentPassword);
-
-        if (!isCurrentPasswordValid) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid current password").build();
-        }
-
         List<CredentialRepresentation> creds = new ArrayList<>();
         CredentialRepresentation cred = new CredentialRepresentation();
         cred.setValue(newPassword);

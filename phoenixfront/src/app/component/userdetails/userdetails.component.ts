@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentsService } from 'src/app/services/agents.service';
@@ -11,6 +11,7 @@ import { AgentsService } from 'src/app/services/agents.service';
 })
 export class UserdetailsComponent implements OnInit{
   selectedTab = 0;
+  passwordForm!: FormGroup;
   securityTab: boolean = false;
   isEditable: boolean = false;
   toggleEditable(){
@@ -65,7 +66,50 @@ selectedImage: File | null = null;
       lastName: [{value: this.user.lastName, disabled: this.isCodeDisabled }],
       userName: [{value:this.userName, disabled: this.isCodeDisabled }]
     });
+    this.initForm();
+  }
 
+  private initForm(): void {
+    this.passwordForm = this.formBuilder.group({
+      newPassword: [''],
+      confirmPassword: [''],
+    });
+  }
+  passwordNotValid: boolean = false;
+  private checkPasswordValidity(password: string): boolean {
+    // Define criteria for password complexity
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialCharacter = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+    // Update passwordNotValid based on the criteria
+    const isPasswordValid = hasUppercase && hasLowercase && hasNumber && hasSpecialCharacter;
+    this.passwordNotValid = !isPasswordValid;
+  
+    return isPasswordValid;
+  }
+  
+  passwordNotMatch: boolean = false;
+  updatePassword(): void {
+    const username = this.userName;
+    const newPassword = this.passwordForm.get('newPassword')?.value;
+    console.log('newPassword:', newPassword);
+    const confPassword = this.passwordForm.get('confirmPassword')?.value;
+    if (this.checkPasswordValidity(newPassword)) {
+    if (newPassword === confPassword) {
+    this.agentsService.updatePassword(username, newPassword).subscribe(
+      (response) => {
+        console.log('Password updated successfully:', response);
+        window.location.reload();
+      },
+      (error) => {
+        console.error('Error updating password:', error);
+      }
+    );
+  } else {
+    this.passwordNotMatch = true;
+  } }
   }
 
 
@@ -130,8 +174,48 @@ getuserinfos(code : string){
         jobTitle: new FormControl('')
       });
       
-      onSubmit(){
-        
+      onSubmit(): void{
+        const userdto: Userdto = {
+          firstName: this.userForm.get('firstName')?.value || this.user.firstName,
+          lastName: this.userForm.get('lastName')?.value || this.user.lastName,
+          email: this.userForm.get('email')?.value || this.user.email,
+          phone: this.userForm.get('phone')?.value || this.user.phone,
+        };
+        if (this.selectedImage) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64String = reader.result as string;
+            const base64Content = base64String.split(',')[1];
+            userdto.image = base64Content;
+
+            if (this.userName !== null) {
+              this.agentsService.updateUser(this.userName, userdto).subscribe(
+                response => {
+                  console.log('Agent updated successfully:', response);
+                  window.location.reload();
+                },
+                error => {
+                  console.log('Error updating Agent:', error);
+                }
+              );
+            }
+          };
+          reader.readAsDataURL(this.selectedImage);
+        } else {
+          if (this.userName !== null) {
+            this.agentsService.updateUser(this.userName, userdto).subscribe(
+              response => {
+                console.log('Agent updated successfully:', response);
+                // Reset the form
+                window.location.reload();
+
+              },
+              error => {
+                console.log('Error updating Agent:', error);
+              }
+            );
+          }
+        }
       }
 
       openSecurity(){

@@ -33,6 +33,13 @@ public class UserMysql {
     private Date dateFinContrat;
     private List<String> realmRoles;
 
+    private boolean usertypemanager;
+    @OneToMany(mappedBy = "manager")
+    private List<UserMysql> subordinates;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_username")
+    private UserMysql manager;
 
 
 }

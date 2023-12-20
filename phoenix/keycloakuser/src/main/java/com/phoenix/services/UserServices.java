@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -57,6 +58,7 @@ public class UserServices implements IUserServices {
         userMysql.setDateDebutContrat(userDto.getDateDebutContrat());
         userMysql.setDateFinContrat(userDto.getDateFinContrat());
         userMysql.setRealmRoles(userDto.getRealmRoles());
+        userMysql.setUsertypemanager(userDto.isUsertypemanager());
         UserMysql savedUser = userRepository.save(userMysql);
         return iMapper.mapUserMysqlToDto(savedUser);
     }
@@ -124,7 +126,9 @@ public class UserServices implements IUserServices {
         if (userDto.getDateFinContrat() != null) {
             user.setDateFinContrat(userDto.getDateFinContrat());
         }
-        UserMysql saveduser = userRepository.save(user);
+        if (userDto.getManager() != null) {
+            user.setManager(userDto.getManager());
+        }        UserMysql saveduser = userRepository.save(user);
         return userDto;
     }
 
@@ -133,18 +137,5 @@ public class UserServices implements IUserServices {
         Optional<UserMysql> userOptional = userRepository.findByUsername(userId);
         userOptional.ifPresent(userRepository::delete);
         }
-
-
-    @Override
-    public boolean checkCurrentPassword(UserRepresentation user, String currentPassword) {
-        for (CredentialRepresentation userCredential : user.getCredentials()) {
-            if (userCredential.getType().equals(CredentialRepresentation.PASSWORD)
-                    && userCredential.getValue().equals(currentPassword)) {
-                return true; // Passwords match
-            }
-        }
-        return false; // Passwords do not match
-    }
-
 
 }

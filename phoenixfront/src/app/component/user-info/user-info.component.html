@@ -110,14 +110,15 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="form-control-label" >Manager</label>
-                        <select class="form-control mt-2"  [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                        <select formControlName="manager"  class="form-control mt-2"  [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
                           <ng-container *ngIf="!isCodeDisabled">
-                            <option>Mehdi Machout</option>
-                              <option >other Manageer</option>
-                              <option >other Manageer</option>
-                          </ng-container>
+                            
+                            <option *ngFor="let manager of managerList" [ngValue]="manager.userName">
+                              {{manager.firstName}} {{manager.lastName}}
+                            </option>
+                            </ng-container>
                           <ng-container *ngIf="isCodeDisabled">
-                            <option>Mehdi Machhout</option>
+                            <option></option>
                           </ng-container>
                         </select>
                       </div>

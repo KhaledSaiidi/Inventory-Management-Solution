@@ -38,14 +38,18 @@ export class AddteamComponent implements OnInit{
       dateFinContrat: [null]
     });
   }
+  userismanager: boolean = false;
+  
   updateRoles(event: any): void {
     const selectedRole = event;
     switch (selectedRole) {
       case 'IMANAGER':
         this.teamForm.get('realmRoles')?.setValue(['IMANAGER']);
+        this.userismanager = true;
         break;
       case 'MANAGER':
         this.teamForm.get('realmRoles')?.setValue(['MANAGER']);
+        this.userismanager = true;
         break;
       case 'AGENT':
         this.teamForm.get('realmRoles')?.setValue(['AGENT']);
@@ -65,6 +69,7 @@ export class AddteamComponent implements OnInit{
           const base64String = reader.result as string;
           const base64Content = base64String.split(',')[1];
           userdto.image = base64Content;
+          userdto.usertypemanager = this.userismanager;
           console.log(userdto);
           this.submitAgent(userdto);
         };

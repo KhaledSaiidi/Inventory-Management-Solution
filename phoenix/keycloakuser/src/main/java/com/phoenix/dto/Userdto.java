@@ -1,5 +1,9 @@
 package com.phoenix.dto;
 
+import com.phoenix.model.UserMysql;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.util.Date;
@@ -23,6 +27,10 @@ public class Userdto {
     private String jobTitle;
     private Date dateDebutContrat;
     private Date dateFinContrat;
+    private boolean usertypemanager;
+    private List<UserMysql> subordinates;
+
+    private UserMysql manager;
 
 
 }

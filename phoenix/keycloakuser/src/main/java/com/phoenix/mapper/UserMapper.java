@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -53,13 +54,12 @@ public class UserMapper implements IMapper {
         userRep.setEmailVerified(false);
         List<CredentialRepresentation> creds = new ArrayList<>();
         CredentialRepresentation cred = new CredentialRepresentation();
-        cred.setTemporary(true);
         cred.setValue(userdto.getPassword());
         creds.add(cred);
         userRep.setCredentials(creds);
         // Set realm roles
         userRep.setRealmRoles(userdto.getRealmRoles());
-
+        userRep.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
         return userRep;
     }
     @Override

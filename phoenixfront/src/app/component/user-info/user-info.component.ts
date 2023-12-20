@@ -30,7 +30,8 @@ selectedImage: File | null = null;
     phone: 0,
     jobTitle: '',
     dateDebutContrat: new Date(),
-    dateFinContrat:new Date()
+    dateFinContrat:new Date(),
+    manager: {}
   };
   constructor(private agentsService: AgentsService, 
     private route: ActivatedRoute,
@@ -62,9 +63,10 @@ selectedImage: File | null = null;
       dateFinContrat: new FormControl({ value: this.user.dateFinContrat, disabled: this.isCodeDisabled }),
       realmRoles: new FormControl({ value: this.user.realmRoles , disabled: this.isCodeDisabled }),
       lastName: [{value: this.user.lastName, disabled: this.isCodeDisabled }],
-      userName: [{value:this.userName, disabled: this.isCodeDisabled }]
+      userName: [{value:this.userName, disabled: this.isCodeDisabled }],
+      manager: [{value:this.user.manager?.userName, disabled: this.isCodeDisabled }],
     });
-
+  this.getUserscategorized();
   }
 
 
@@ -101,8 +103,11 @@ getuserinfos(code : string){
         dateDebutContrat:  this.user.dateDebutContrat,
         dateFinContrat:  this.user.dateFinContrat,
         realmRoles:  this.user.realmRoles,
-        jobTitle: this.user.jobTitle
-    })
+        jobTitle: this.user.jobTitle,
+        manager: this.user.manager
+        ? `${this.user.manager.firstName} ${this.user.manager.lastName}`
+        : 'Not assigned yet',
+          })
       },
       (error) => {console.error(error);}
       );
@@ -129,8 +134,53 @@ getuserinfos(code : string){
         jobTitle: new FormControl('')
       });
       
-      onSubmit(){
-        
+      onSubmit(): void{
+        const userdto: Userdto = {
+          firstName: this.userForm.get('firstName')?.value || this.user.firstName,
+          lastName: this.userForm.get('lastName')?.value || this.user.lastName,
+          email: this.userForm.get('email')?.value || this.user.email,
+          phone: this.userForm.get('phone')?.value || this.user.phone,
+          dateDebutContrat: this.userForm.get('dateDebutContrat')?.value || this.user.dateDebutContrat,
+          dateFinContrat: this.userForm.get('dateFinContrat')?.value || this.user.dateFinContrat,
+          jobTitle: this.userForm.get('jobTitle')?.value || this.user.jobTitle,
+        };
+        if (this.selectedImage) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64String = reader.result as string;
+            const base64Content = base64String.split(',')[1];
+            userdto.image = base64Content;
+
+            if (this.userName !== null) {
+              this.agentsService.updateUser(this.userName, userdto).subscribe(
+                response => {
+                  console.log('Agent updated successfully:', response);
+                  window.location.reload();
+                },
+                error => {
+                  console.log('Error updating Agent:', error);
+                }
+              );
+            }
+          };
+          reader.readAsDataURL(this.selectedImage);
+        } else {
+          if (this.userName !== null) {
+            this.agentsService.updateUser(this.userName, userdto).subscribe(
+              response => {
+                console.log('Agent updated successfully:', response);
+                // Reset the form
+                window.location.reload();
+
+              },
+              error => {
+                console.log('Error updating Agent:', error);
+              }
+            );
+          }
+        }
+            
+    
       }
       confirmDeletion(): void {
         const message = 'Etes vous sûr que vous voulez supprimer: ' + this.user.firstName + ' ' + this.user.lastName;
@@ -154,5 +204,20 @@ getuserinfos(code : string){
       navigatetoAgents(){
         this.router.navigate(['/agents']);
       }
+      
+      allmembers: Userdto[] = [];
+      managerList: Userdto[] = [];
+      getUserscategorized() {
+        this.agentsService.getagents().subscribe(
+          (data) => {
+            this.allmembers = data as Userdto[];
+            this.managerList = this.allmembers.filter(user => user.realmRoles?.includes('MANAGER'));
+          },
+          (error: any) => {
+            console.error('Error fetching agents:', error);
+          }
+        );
+      }
+    
       
 }

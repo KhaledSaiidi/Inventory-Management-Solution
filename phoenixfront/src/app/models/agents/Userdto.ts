@@ -10,4 +10,7 @@ export interface Userdto {
     jobTitle?: string;
     dateDebutContrat?: Date;
     dateFinContrat?: Date;
+    usertypemanager?: boolean;
+    subordinates?: Userdto[] | null;
+    manager?: Userdto;
 }

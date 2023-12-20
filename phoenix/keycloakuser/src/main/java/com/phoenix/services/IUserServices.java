@@ -13,5 +13,4 @@ public interface IUserServices {
     List<Userdto> getallUsers();
     Userdto UpdateUser(String userId, Userdto userDto);
     void DeleteUser(String userId);
-    boolean checkCurrentPassword(UserRepresentation user, String currentPassword);
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Userdto } from '../models/agents/Userdto';
 import { Observable, catchError, throwError } from 'rxjs';
@@ -52,5 +52,20 @@ deleteUser(username: string): Observable<any> {
 
 }
 
+updatePassword(username: string, newPassword: string): Observable<any> {
+  const url = `${this.apiUrl}/updatePassword/${username}`;
+  const params = new HttpParams().set('newPassword', newPassword);
+  return this.http.put(url, null, { params });
+}
+
+updateUser(username: string, userdto: Userdto): Observable<number> {
+  return this.http.put<number>(this.apiUrl + '/updateUser/'+ username , userdto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
 
 }

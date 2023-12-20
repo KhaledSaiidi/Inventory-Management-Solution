@@ -125,27 +125,29 @@
                 </a>
               </p>
             </div>
-                        <ng-container *ngIf="securityTab">
+              <ng-container *ngIf="securityTab">
               <div class="password-change-container">
                 <div class="password-change-form">
-                  <div class="form-group text-center">
-                    <label class="form-control-label" for="currentPassword">Current Password</label>
-                    <input class="form-control mx-auto" formControlName="currentPassword" id="currentPassword" type="password" style="width: 300px;">
-                  </div>
-            
+                  <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
                   <div class="form-group text-center">
                     <label class="form-control-label" for="newPassword">New Password</label>
                     <input class="form-control mx-auto" formControlName="newPassword" id="newPassword" type="password" style="width: 300px;">
+                    <div *ngIf="passwordNotValid" style="color: red;">
+                      The password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character !
+                    </div>
                   </div>
-            
                   <div class="form-group text-center">
                     <label class="form-control-label" for="confirmPassword">Confirm Password</label>
                     <input class="form-control mx-auto" formControlName="confirmPassword" id="confirmPassword" type="password" style="width: 300px;">
+                    <div *ngIf="passwordNotMatch" style="color: red;">
+                      Passwords do not match
+                    </div>
                   </div>
-            
                   <div class="form-group text-center">
                     <button class="btn btn-primary btn-sm" style="width: 30%;" type="submit">Update Password</button>
                   </div>
+                
+                </form>
                 </div>
               </div>
             </ng-container>
@@ -199,9 +201,6 @@
                   
                 </ul>
               </div>
-              <div class="centered-content">
-              <button  class="supprimerc btn btn-primary btn-sm" style="margin-bottom: 20px; width: 30%;">Delete</button>
-            </div>
             </div>
             
           </div>
