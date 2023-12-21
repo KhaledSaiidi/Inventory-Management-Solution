@@ -42,12 +42,12 @@
                 <div style="max-height: 50px; overflow-y: auto;">
                   <ul style="list-style-type: none;">
                     <li>campaing1</li>
-                    <li>{{agent.userName}}</li>
+                    <li>{{agent.username}}</li>
                   </ul>
                 </div>
               </td>                     
               <td style="word-wrap: break-word; white-space: normal;">5</td>
-              <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.userName)" >Profil</td>
+              <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.username)" >Profil</td>
   
             </tr>
           </tbody>
@@ -103,7 +103,7 @@
       <tbody style="text-align: center;">
         <tr *ngFor="let manager of managerList">
 
-          <td style="cursor: pointer;">{{manager.firstName}} {{manager.lastName}} </td>
+          <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
           <td >20</td>
           <td>7</td>
           </tr>      
@@ -153,7 +153,7 @@
                         </ul>
                       </div>
                     </td>        
-                     <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.userName)">Profil</td>
+                     <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.username)">Profil</td>
                    </tr>
                  
                  </tbody>

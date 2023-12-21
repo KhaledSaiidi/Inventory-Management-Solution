@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, map } from 'rxjs';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentsService } from 'src/app/services/agents.service';
 
@@ -19,39 +20,29 @@ export class UserInfoComponent implements OnInit{
 
 
 selectedImage: File | null = null;
-  user: Userdto = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    userName: '',
-    password: '',
-    realmRoles: [],
-    image: '',
-    phone: 0,
-    jobTitle: '',
-    dateDebutContrat: new Date(),
-    dateFinContrat:new Date(),
-    manager: {}
-  };
+  user: Userdto = {};
   constructor(private agentsService: AgentsService, 
     private route: ActivatedRoute,
     private formBuilder: FormBuilder, 
     private router: Router) {}
-  userName!: string;
+  username!: string;
   get isCodeDisabled(): boolean {
     return !this.isEditable;
     
   }
+  userForm!: FormGroup;
+
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
       if(id != null){
-      this.userName = id;
-      console.log(this.userName);
+      this.username = id;
+      console.log(this.username);
       }
     });
-    this.getuserinfos(this.userName);
+    this.getuserinfos(this.username);
     this.selectedTab = history.state.selectedTab || 0;
+
 
     this.userForm = this.formBuilder.group({
       firstName: new FormControl({ value: this.user.firstName, disabled: this.isCodeDisabled }),
@@ -63,10 +54,14 @@ selectedImage: File | null = null;
       dateFinContrat: new FormControl({ value: this.user.dateFinContrat, disabled: this.isCodeDisabled }),
       realmRoles: new FormControl({ value: this.user.realmRoles , disabled: this.isCodeDisabled }),
       lastName: [{value: this.user.lastName, disabled: this.isCodeDisabled }],
-      userName: [{value:this.userName, disabled: this.isCodeDisabled }],
-      manager: [{value:this.user.manager?.userName, disabled: this.isCodeDisabled }],
+      username: [{value:this.username, disabled: this.isCodeDisabled }],
+      manager:  this.formBuilder.group({
+        username: [{value:this.user.manager?.username, disabled: this.isCodeDisabled }]
+      }),
+
     });
   this.getUserscategorized();
+
   }
 
 
@@ -87,53 +82,46 @@ handleFileInput(event: any) {
   }
   console.log(this.selectedImage);
 }
-
+isManager: boolean = false;
 getuserinfos(code : string){
   if(code != null)
   this.agentsService.getuserbycode(code).subscribe((data) => {
-    // handle the retrieved data here
     this.user = data as Userdto;
     console.log(this.user);
+    if(this.user.usertypemanager == true) {
+      this.isManager = true;
+    }
+    console.log(this.isManager);
     this.userForm.patchValue({
-      firstName:  this.user.firstName,
+        firstName:  this.user.firstName,
         lastName:  this.user.lastName,
         email:  this.user.email,
         phone:  this.user.phone,
-        userName:  this.user.userName,
+        username:  this.user.username,
         dateDebutContrat:  this.user.dateDebutContrat,
         dateFinContrat:  this.user.dateFinContrat,
         realmRoles:  this.user.realmRoles,
         jobTitle: this.user.jobTitle,
-        manager: this.user.manager
-        ? `${this.user.manager.firstName} ${this.user.manager.lastName}`
-        : 'Not assigned yet',
-          })
+        manager: {
+          username: this.user.manager?.username || 'Not assigned yet',
+        },
+          });
       },
       (error) => {console.error(error);}
       );
     }
 
       selectedTabProf(){
-        this.getuserinfos(this.userName);
+        this.getuserinfos(this.username);
         this.selectedTab = 0;
       }
       selectedTabMessages() {
         this.selectedTab = 1;
       }
   
-      userForm: FormGroup= new FormGroup({
-        firstName: new FormControl(''),
-        lastName: new FormControl(''),
-        email: new FormControl(''),
-        phone: new FormControl(''),
-        userName: new FormControl(''),
-        dateDebutContrat: new FormControl(''),
-        dateFinContrat: new FormControl(''),
-        realmRoles: new FormControl(''),
-        image: new FormControl(''),
-        jobTitle: new FormControl('')
-      });
-      
+   
+            
+
       onSubmit(): void{
         const userdto: Userdto = {
           firstName: this.userForm.get('firstName')?.value || this.user.firstName,
@@ -143,7 +131,13 @@ getuserinfos(code : string){
           dateDebutContrat: this.userForm.get('dateDebutContrat')?.value || this.user.dateDebutContrat,
           dateFinContrat: this.userForm.get('dateFinContrat')?.value || this.user.dateFinContrat,
           jobTitle: this.userForm.get('jobTitle')?.value || this.user.jobTitle,
+          manager: {
+            username: this.userForm.get('manager')?.get('username')?.value || this.user.manager?.username
+          }
         };
+        
+        
+        console.log(userdto);
         if (this.selectedImage) {
           const reader = new FileReader();
           reader.onload = () => {
@@ -151,8 +145,8 @@ getuserinfos(code : string){
             const base64Content = base64String.split(',')[1];
             userdto.image = base64Content;
 
-            if (this.userName !== null) {
-              this.agentsService.updateUser(this.userName, userdto).subscribe(
+            if (this.username !== null) {
+              this.agentsService.updateUser(this.username, userdto).subscribe(
                 response => {
                   console.log('Agent updated successfully:', response);
                   window.location.reload();
@@ -165,11 +159,11 @@ getuserinfos(code : string){
           };
           reader.readAsDataURL(this.selectedImage);
         } else {
-          if (this.userName !== null) {
-            this.agentsService.updateUser(this.userName, userdto).subscribe(
+          if (this.username !== null) {
+            this.agentsService.updateUser(this.username, userdto).subscribe(
               response => {
                 console.log('Agent updated successfully:', response);
-                // Reset the form
+
                 window.location.reload();
 
               },
@@ -180,7 +174,7 @@ getuserinfos(code : string){
           }
         }
             
-    
+      
       }
       confirmDeletion(): void {
         const message = 'Etes vous sûr que vous voulez supprimer: ' + this.user.firstName + ' ' + this.user.lastName;
@@ -190,7 +184,7 @@ getuserinfos(code : string){
         }
       }
       deleteUser(): void {
-        this.agentsService.deleteUser(this.userName).subscribe(
+        this.agentsService.deleteUser(this.username).subscribe(
           () => {
             console.log('User deleted successfully.');
             this.navigatetoAgents();
@@ -207,17 +201,21 @@ getuserinfos(code : string){
       
       allmembers: Userdto[] = [];
       managerList: Userdto[] = [];
+      filteredmanagerList: Userdto[] = [];
+
       getUserscategorized() {
         this.agentsService.getagents().subscribe(
           (data) => {
             this.allmembers = data as Userdto[];
             this.managerList = this.allmembers.filter(user => user.realmRoles?.includes('MANAGER'));
+          
           },
           (error: any) => {
             console.error('Error fetching agents:', error);
           }
         );
       }
+      
     
       
 }

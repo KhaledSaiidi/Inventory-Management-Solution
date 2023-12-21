@@ -58,8 +58,8 @@ updatePassword(username: string, newPassword: string): Observable<any> {
   return this.http.put(url, null, { params });
 }
 
-updateUser(username: string, userdto: Userdto): Observable<number> {
-  return this.http.put<number>(this.apiUrl + '/updateUser/'+ username , userdto)
+updateUser(username: string, userdto: Userdto): Observable<Userdto> {
+  return this.http.put<Userdto>(this.apiUrl + '/updateUser/'+ username , userdto)
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);

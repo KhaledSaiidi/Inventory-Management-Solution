@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserMysql {
     @jakarta.persistence.Id
+    @Column(name = "username")
     private String username;
     private String firstName;
 
@@ -34,8 +35,6 @@ public class UserMysql {
     private List<String> realmRoles;
 
     private boolean usertypemanager;
-    @OneToMany(mappedBy = "manager")
-    private List<UserMysql> subordinates;
 
     @ManyToOne
     @JoinColumn(name = "manager_username")

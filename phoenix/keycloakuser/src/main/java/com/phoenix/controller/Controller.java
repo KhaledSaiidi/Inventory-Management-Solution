@@ -56,7 +56,7 @@ public class Controller {
         keycloak.realm(realm).users().create(userRep);
         iUserServices.addUser(userdto);
         // Assign realm roles to the created userdto
-        String userId = keycloak.realm(realm).users().search(userdto.getUserName()).get(0).getId();
+        String userId = keycloak.realm(realm).users().search(userdto.getUsername()).get(0).getId();
         iUserServices.assignRoles(userId, userdto.getRealmRoles());
 
         return Response.ok(userdto).build();

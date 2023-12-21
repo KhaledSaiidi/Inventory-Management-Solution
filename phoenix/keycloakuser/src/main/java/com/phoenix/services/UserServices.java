@@ -48,8 +48,8 @@ public class UserServices implements IUserServices {
     }
     @Override
     public Userdto addUser(Userdto userDto) {
-        if (userRepository.existsByUsername(userDto.getUserName())) {
-            throw new DataIntegrityViolationException("Username already exists: " + userDto.getUserName());
+        if (userRepository.existsByUsername(userDto.getUsername())) {
+            throw new DataIntegrityViolationException("Username already exists: " + userDto.getUsername());
         }
         UserMysql userMysql = iMapper.mapDtoToUserMysql(userDto);
         userMysql.setImage(userDto.getImage());
@@ -81,6 +81,10 @@ public class UserServices implements IUserServices {
             for (UserMysql userMysql : users) {
                 Userdto userdto = new Userdto();
                 userdto = iMapper.mapUserMysqlToDto(userMysql);
+                userdto.setImage(null);
+                if(userdto.getManager() != null) {
+                    userdto.getManager().setImage(null);
+                }
                 usersdtos.add(userdto);
             }
 
@@ -126,9 +130,14 @@ public class UserServices implements IUserServices {
         if (userDto.getDateFinContrat() != null) {
             user.setDateFinContrat(userDto.getDateFinContrat());
         }
-        if (userDto.getManager() != null) {
-            user.setManager(userDto.getManager());
-        }        UserMysql saveduser = userRepository.save(user);
+        UserMysql manager = null;
+        if (userDto.getManager() != null && userDto.getManager().getUsername() != null) {
+
+            manager = userRepository.findByUsername(userDto.getManager().getUsername()).orElse(null);
+            user.setManager(manager);
+        }
+
+        UserMysql saveduser = userRepository.save(user);
         return userDto;
     }
 

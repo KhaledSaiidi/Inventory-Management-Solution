@@ -89,8 +89,8 @@
                   <div class="col-md-4">
                     <div class="form-group">
                       
-                      <label  class="form-control-label" >Username:</label>
-                      <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4);"> {{userName}} </span>
+                      <label  class="form-control-label" >username:</label>
+                      <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4);"> {{username}} </span>
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -102,25 +102,23 @@
                   <div class="col-md-4">
                     <div class="form-group">
                       <label  class="form-control-label" for="lastName">LastName</label>
-                      <input class="form-control" formControlName="lastName" id="lastName" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="text" >
+                      <input class="form-control"  formControlName="lastName" id="lastName" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="text" >
                     </div>
                   </div>
+                  
+                  
+                  
                  
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="form-control-label" >Manager</label>
-                        <select formControlName="manager"  class="form-control mt-2"  [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
-                          <ng-container *ngIf="!isCodeDisabled">
-                            
-                            <option *ngFor="let manager of managerList" [ngValue]="manager.userName">
-                              {{manager.firstName}} {{manager.lastName}}
-                            </option>
-                            </ng-container>
-                          <ng-container *ngIf="isCodeDisabled">
-                            <option></option>
-                          </ng-container>
+                        <div formGroupName="manager">
+                        <label class="form-control-label" for="manager-username">Manager</label>
+                        <select class="form-control" formControlName="username" id="username" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                          <option *ngIf="!user.manager" disabled selected>Not assigned yet</option>
+                          <option *ngFor="let manager of managerList" [value]="manager.username">  {{manager.firstName?.toUpperCase()}} {{manager.lastName?.toUpperCase()}}  </option>
                         </select>
+                        </div>
                       </div>
                     </div>
                   <div class="col-md-6" style="margin-top: 7px;">
@@ -183,7 +181,7 @@
               <div class="card-header pb-0 p-3">
                 <div class="row">
                   <div class="col-6 d-flex align-items-center">
-                    <h6 class="mb-0">Last sells</h6>
+                    <h6 class="mb-0">Last Product sells</h6>
                   </div>
                   <div class="col-6 text-end">
                     <button class="btn btn-outline-primary btn-sm mb-0">View All</button>
@@ -204,7 +202,7 @@
               <div class="card-header pb-0 p-3">
                 <div class="row">
                   <div class="col-6 d-flex align-items-center">
-                    <h6 class="mb-0">Last returns</h6>
+                    <h6 class="mb-0">Last Product returns</h6>
                   </div>
                   <div class="col-6 text-end">
                     <button class="btn btn-outline-primary btn-sm mb-0">View All</button>

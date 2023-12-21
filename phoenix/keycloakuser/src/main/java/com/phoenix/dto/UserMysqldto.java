@@ -1,5 +1,6 @@
 package com.phoenix.dto;
 
+import com.phoenix.model.UserMysql;
 import lombok.*;
 
 import java.util.Date;
@@ -21,5 +22,8 @@ public class UserMysqldto {
     private Date dateDebutContrat;
     private Date dateFinContrat;
     private List<String> realmRoles;
+    private boolean usertypemanager;
+
+    private UserMysql manager;
 
 }

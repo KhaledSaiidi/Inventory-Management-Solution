@@ -28,7 +28,7 @@ export class AddteamComponent implements OnInit{
       firstName: [''],
       lastName: [''],
       email: [''],
-      userName: [''],
+      username: [''],
       password: [''],
       realmRoles: [['']],
       image: [null],
@@ -77,7 +77,7 @@ export class AddteamComponent implements OnInit{
       } else {
         this.submitAgent(userdto);
       }
-      this.navigateToAppagents();
+       this.navigateToAppagents();
     
   }
 

@@ -39,14 +39,14 @@ public class UserMapper implements IMapper {
         userdto.setFirstName(userRep.getFirstName());
         userdto.setLastName(userRep.getLastName());
         userdto.setEmail(userRep.getEmail());
-        userdto.setUserName(userRep.getUsername());
+        userdto.setUsername(userRep.getUsername());
         return userdto;
     }
 
     @Override
     public UserRepresentation mapUserRep(Userdto userdto){
         UserRepresentation userRep = new UserRepresentation();
-        userRep.setUsername(userdto.getUserName());
+        userRep.setUsername(userdto.getUsername());
         userRep.setFirstName(userdto.getFirstName());
         userRep.setLastName(userdto.getLastName());
         userRep.setEmail(userdto.getEmail());
@@ -71,12 +71,13 @@ public class UserMapper implements IMapper {
         userDto.setFirstName(userMysql.getFirstName());
         userDto.setLastName(userMysql.getLastName());
         userDto.setEmail(userMysql.getEmail());
-        userDto.setUserName(userMysql.getUsername());
+        userDto.setUsername(userMysql.getUsername());
         userDto.setPhone(userMysql.getPhone());
         userDto.setJobTitle(userMysql.getJobTitle());
         userDto.setDateDebutContrat(userMysql.getDateDebutContrat());
         userDto.setDateFinContrat(userMysql.getDateFinContrat());
         userDto.setRealmRoles(userMysql.getRealmRoles());
+        userDto.setManager(userMysql.getManager());
         return userDto;
     }
     @Override
@@ -88,7 +89,7 @@ public class UserMapper implements IMapper {
         userMysql.setFirstName(userDto.getFirstName());
         userMysql.setLastName(userDto.getLastName());
         userMysql.setEmail(userDto.getEmail());
-        userMysql.setUsername(userDto.getUserName());
+        userMysql.setUsername(userDto.getUsername());
         userMysql.setRealmRoles(userDto.getRealmRoles());
         return userMysql;
     }
@@ -109,6 +110,8 @@ public class UserMapper implements IMapper {
         userMysqlDto.setDateDebutContrat(userMysql.getDateDebutContrat());
         userMysqlDto.setDateFinContrat(userMysql.getDateFinContrat());
         userMysqlDto.setRealmRoles(userMysql.getRealmRoles());
+        userMysqlDto.setManager(userMysql.getManager());
+        userMysqlDto.setUsertypemanager(userMysql.isUsertypemanager());
         return userMysqlDto;
     }
 

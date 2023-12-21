@@ -2,7 +2,7 @@ export interface Userdto {
     firstName?: string;
     lastName?: string;
     email?: string;
-    userName?: string;
+    username?: string;
     password?: string;
     realmRoles?: string[] | null;
     image?: string | null;
@@ -11,6 +11,5 @@ export interface Userdto {
     dateDebutContrat?: Date;
     dateFinContrat?: Date;
     usertypemanager?: boolean;
-    subordinates?: Userdto[] | null;
     manager?: Userdto;
 }

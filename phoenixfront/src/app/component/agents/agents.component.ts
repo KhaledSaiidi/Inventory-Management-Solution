@@ -37,12 +37,12 @@ export class AgentsComponent implements OnInit {
     );
   }
 
-  navigateToUserInfos(userName?: string) {
-    if (userName === undefined) {
-      console.log('Invalid Username');
+  navigateToUserInfos(username?: string) {
+    if (username === undefined) {
+      console.log('Invalid username');
       return;
     }
-    this.router.navigate(['/userinfos'], { queryParams: { id: userName } });      
+    this.router.navigate(['/userinfos'], { queryParams: { id: username } });      
   }
 
   navigateToaddTeam(){

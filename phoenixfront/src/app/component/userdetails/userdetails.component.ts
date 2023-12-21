@@ -25,7 +25,7 @@ selectedImage: File | null = null;
     firstName: '',
     lastName: '',
     email: '',
-    userName: '',
+    username: '',
     password: '',
     realmRoles: [],
     image: '',
@@ -38,7 +38,7 @@ selectedImage: File | null = null;
     private route: ActivatedRoute,
     private formBuilder: FormBuilder, 
     private router: Router) {}
-  userName!: string;
+  username!: string;
   get isCodeDisabled(): boolean {
     return !this.isEditable;
     
@@ -47,11 +47,11 @@ selectedImage: File | null = null;
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
       if(id != null){
-      this.userName = id;
-      console.log(this.userName);
+      this.username = id;
+      console.log(this.username);
       }
     });
-    this.getuserinfos(this.userName);
+    this.getuserinfos(this.username);
     this.selectedTab = history.state.selectedTab || 0;
 
     this.userForm = this.formBuilder.group({
@@ -64,7 +64,7 @@ selectedImage: File | null = null;
       dateFinContrat: new FormControl({ value: this.user.dateFinContrat, disabled: this.isCodeDisabled }),
       realmRoles: new FormControl({ value: this.user.realmRoles , disabled: this.isCodeDisabled }),
       lastName: [{value: this.user.lastName, disabled: this.isCodeDisabled }],
-      userName: [{value:this.userName, disabled: this.isCodeDisabled }]
+      username: [{value:this.username, disabled: this.isCodeDisabled }]
     });
     this.initForm();
   }
@@ -92,7 +92,7 @@ selectedImage: File | null = null;
   
   passwordNotMatch: boolean = false;
   updatePassword(): void {
-    const username = this.userName;
+    const username = this.username;
     const newPassword = this.passwordForm.get('newPassword')?.value;
     console.log('newPassword:', newPassword);
     const confPassword = this.passwordForm.get('confirmPassword')?.value;
@@ -142,7 +142,7 @@ getuserinfos(code : string){
         lastName:  this.user.lastName,
         email:  this.user.email,
         phone:  this.user.phone,
-        userName:  this.user.userName,
+        username:  this.user.username,
         dateDebutContrat:  this.user.dateDebutContrat,
         dateFinContrat:  this.user.dateFinContrat,
         realmRoles:  this.user.realmRoles,
@@ -154,7 +154,7 @@ getuserinfos(code : string){
     }
 
       selectedTabProf(){
-        this.getuserinfos(this.userName);
+        this.getuserinfos(this.username);
         this.selectedTab = 0;
       }
       selectedTabMessages() {
@@ -166,7 +166,7 @@ getuserinfos(code : string){
         lastName: new FormControl(''),
         email: new FormControl(''),
         phone: new FormControl(''),
-        userName: new FormControl(''),
+        username: new FormControl(''),
         dateDebutContrat: new FormControl(''),
         dateFinContrat: new FormControl(''),
         realmRoles: new FormControl(''),
@@ -188,8 +188,8 @@ getuserinfos(code : string){
             const base64Content = base64String.split(',')[1];
             userdto.image = base64Content;
 
-            if (this.userName !== null) {
-              this.agentsService.updateUser(this.userName, userdto).subscribe(
+            if (this.username !== null) {
+              this.agentsService.updateUser(this.username, userdto).subscribe(
                 response => {
                   console.log('Agent updated successfully:', response);
                   window.location.reload();
@@ -202,8 +202,8 @@ getuserinfos(code : string){
           };
           reader.readAsDataURL(this.selectedImage);
         } else {
-          if (this.userName !== null) {
-            this.agentsService.updateUser(this.userName, userdto).subscribe(
+          if (this.username !== null) {
+            this.agentsService.updateUser(this.username, userdto).subscribe(
               response => {
                 console.log('Agent updated successfully:', response);
                 // Reset the form

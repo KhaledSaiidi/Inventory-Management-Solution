@@ -18,7 +18,7 @@ public class Userdto {
     private String firstName;
     private String lastName;
     private String email;
-    private String userName;
+    private String username;
     private String password;
     private List<String> realmRoles;
     private byte[] image;
@@ -28,7 +28,6 @@ public class Userdto {
     private Date dateDebutContrat;
     private Date dateFinContrat;
     private boolean usertypemanager;
-    private List<UserMysql> subordinates;
 
     private UserMysql manager;
 
