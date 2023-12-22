@@ -1,9 +1,13 @@
 package com.phoenix.controller;
 
 import com.phoenix.config.KeycloakSecurityUtil;
+import com.phoenix.dto.Campaigndto;
+import com.phoenix.dto.Clientdto;
 import com.phoenix.dto.UserMysqldto;
 import com.phoenix.dto.Userdto;
 import com.phoenix.mapper.IMapper;
+import com.phoenix.services.ICampaignServices;
+import com.phoenix.services.IClientServices;
 import com.phoenix.services.IUserServices;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -30,6 +34,10 @@ public class Controller {
     IMapper iMapper;
     @Autowired
     IUserServices iUserServices;
+    @Autowired
+    ICampaignServices icampaignService;
+    @Autowired
+    IClientServices iClientServices;
 
 
     @Value("${realm}")
@@ -138,9 +146,24 @@ public class Controller {
         creds.add(cred);
         updatedUser.setCredentials(creds);
         keycloak.realm(realm).users().get(users.get(0).getId()).update(updatedUser);
-
-
         return Response.ok(updatedUser).build();
+    }
+
+    @PostMapping("/addCampaign")
+    public ResponseEntity<String> addCampaign(@RequestBody Campaigndto campaigndto) {
+        icampaignService.addCampaign(campaigndto);
+        return ResponseEntity.ok("Campaign added successfully");
+    }
+    @GetMapping("/getCampaigns")
+    public ResponseEntity<List<Campaigndto>> getCampaigns() {
+        List<Campaigndto> campaigns = icampaignService.getCampaigns();
+        return ResponseEntity.ok(campaigns);
+    }
+
+    @PostMapping("/addClient")
+    public ResponseEntity<String> addClient(@RequestBody Clientdto clientdto) {
+        iClientServices.addClient(clientdto);
+        return ResponseEntity.ok("Client added successfully");
     }
 
 

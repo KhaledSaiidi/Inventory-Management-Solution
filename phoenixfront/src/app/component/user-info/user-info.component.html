@@ -110,6 +110,7 @@
                   
                  
                   <div class="row">
+                   <ng-container *ngIf="!isManager">
                     <div class="col-md-6">
                       <div class="form-group">
                         <div formGroupName="manager">
@@ -121,13 +122,15 @@
                         </div>
                       </div>
                     </div>
+
                   <div class="col-md-6" style="margin-top: 7px;">
                     <div class="form-group">
                       <label  class="form-control-label" >Campaign </label>
                       <input class="form-control" placeholder="Orange"  [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="text" >
                     </div>
                   </div>
-                  
+                </ng-container>
+
                   </div>
                 </div>
                 <hr class="horizontal dark">

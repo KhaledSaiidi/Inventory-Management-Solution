@@ -1,0 +1,9 @@
+.listeequipes-container{
+    position: absolute;
+    top: 130px;
+      left: 290px; /* adjust this value to match the width of your side nav bar */
+      width: calc(100% - 300px); /* adjust this value to account for the side nav bar */
+      height: 100%;
+      
+    }
+  

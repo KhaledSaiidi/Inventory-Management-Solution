@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Userdto } from '../models/agents/Userdto';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Clientdto } from '../models/agents/Clientdto';
+import { Campaigndto } from '../models/agents/Campaigndto';
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +62,36 @@ updatePassword(username: string, newPassword: string): Observable<any> {
 
 updateUser(username: string, userdto: Userdto): Observable<Userdto> {
   return this.http.put<Userdto>(this.apiUrl + '/updateUser/'+ username , userdto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+addClient(clientdto: Clientdto): Observable<number> {
+  return this.http.post<number>(this.apiUrl + '/addClient', clientdto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+addCampaign(campaigndto: Campaigndto): Observable<number> {
+  return this.http.post<number>(this.apiUrl + '/addCampaign', campaigndto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+getCampaigns() {
+  return this.http.get(this.apiUrl + '/getCampaigns')
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);
