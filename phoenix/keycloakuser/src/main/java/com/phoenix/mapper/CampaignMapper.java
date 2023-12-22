@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 @Service
 public class CampaignMapper implements ICampaignMapper{
 
-    @Autowired
-    IClientMapper iClientMapper;
     @Override
     public Campaigndto mapCampaignToCampaigndto(Campaign campaign) {
         Campaigndto campaigndto = new Campaigndto();
@@ -22,7 +20,6 @@ public class CampaignMapper implements ICampaignMapper{
         campaigndto.setStartDate(campaign.getStartDate());
         campaigndto.setCampaignDescription(campaign.getCampaignDescription());
         // Assuming ClientMapper has a similar manual mapping method
-        campaigndto.setClient(iClientMapper.mapClientToClientdto(campaign.getClient()));
         return campaigndto;
     }
 
@@ -40,7 +37,6 @@ public class CampaignMapper implements ICampaignMapper{
         campaign.setProducts(campaigndto.getProducts());
         campaign.setStartDate(campaigndto.getStartDate());
         campaign.setCampaignDescription(campaigndto.getCampaignDescription());
-        campaign.setClient(iClientMapper.mapClientdtoToClient(campaigndto.getClient()));
         return campaign;
     }
     @Override

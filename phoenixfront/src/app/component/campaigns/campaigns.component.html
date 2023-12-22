@@ -3,7 +3,7 @@
     <a  (click) = "navigateToaddClient()" class="btn-primary btn" style="color: white;">
         <span class="">&nbsp; Add Client</span>
     </a> &nbsp;
-    <a  class="btn-primary btn" style="color: white;">
+    <a (click) = "navigateToaddCampaign()" class="btn-primary btn" style="color: white;">
         <span class="">&nbsp; Run Campaign</span>
     </a>
     
@@ -29,13 +29,19 @@
                        </tr>
                      </thead>
                      <tbody>
-                       <tr>
-                         <td style="word-wrap: break-word; white-space: normal;"> kkk </td>
-                         <td style="word-wrap: break-word; white-space: normal;">kkk</td>
-                         <td style="word-wrap: break-word; white-space: normal;">kkk</td>
-                         <td style="word-wrap: break-word; white-space: normal;">kkk</td> 
-                         <td style="word-wrap: break-word; white-space: normal;"> kkk </td>
-                         <td style="word-wrap: break-word; white-space: normal;">kkk</td>
+                       <tr *ngFor="let onecamp of campaigns">
+                         <td style="word-wrap: break-word; white-space: normal;"> {{onecamp.reference}} </td>
+                         <td style="word-wrap: break-word; white-space: normal;">{{onecamp.campaignName}}</td>
+                         <td style="word-wrap: break-word; white-space: normal;">
+                          <div style="max-height: 70px; overflow-y: auto;">
+                            <ul *ngFor="let product of onecamp.products">
+                              <li>{{product}}</li>
+                            </ul>
+                          </div>
+                        </td>
+                         <td style="word-wrap: break-word; white-space: normal;">{{onecamp.client?.companyName}}</td> 
+                         <td style="word-wrap: break-word; white-space: normal;"> {{ onecamp.startDate | date: 'medium' | slice: 0:12 }}</td>
+                         <td style="word-wrap: break-word; white-space: normal;">10,000$</td>
                          <td style="word-wrap: break-word; white-space: normal;">update</td>
                          <td style="word-wrap: break-word; white-space: normal;">end</td>         
                        </tr>

@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClientMapper implements IClientMapper {
-    @Autowired
-    ICampaignMapper iCampaignMapper;
+
 
     @Override
     public  Clientdto mapClientToClientdto(Client client) {
@@ -24,7 +23,6 @@ public class ClientMapper implements IClientMapper {
         clientdto.setReferentlastName(client.getReferentlastName());
         clientdto.setReferentemail(client.getReferentemail());
         clientdto.setReferentphone(client.getReferentphone());
-        clientdto.setCampaigns(iCampaignMapper.mapCampaignsToCampaigndtos(client.getCampaigns()));
         return clientdto;
     }
 
@@ -46,7 +44,6 @@ public class ClientMapper implements IClientMapper {
         client.setReferentlastName(clientdto.getReferentlastName());
         client.setReferentemail(clientdto.getReferentemail());
         client.setReferentphone(clientdto.getReferentphone());
-        client.setCampaigns(iCampaignMapper.mapCampaigndtosToCampaigns(clientdto.getCampaigns()));
         return client;
     }
 

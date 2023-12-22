@@ -9,6 +9,6 @@ export interface Clientdto {
     referentlastName?:string;
     referentemail?:string;
     referentphone?: number;
-    campaigns : Campaigndto[];
+    campaigns?: Campaigndto[];
 
 }

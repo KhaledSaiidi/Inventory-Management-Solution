@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Clientdto } from 'src/app/models/agents/Clientdto';
 import { AgentsService } from 'src/app/services/agents.service';
 
 @Component({
@@ -31,6 +32,21 @@ export class AddClientComponent implements OnInit{
  navigateToCampaigns(){
     this.router.navigate(['/camapigns']);
   }
-
+  
+  onSubmit(): void {
+    const clientdto: Clientdto= this.clientForm.value;
+    this.agentsService.addClient(clientdto).subscribe(
+      (response) => {
+        console.log('Client added successfully:', response);
+        this.clientForm.reset();
+        this.navigateToCampaigns();
+      },
+      (error) => {
+        console.error('Failed to add team:', error);
+      }
+    );
+  }
 
 }
+
+

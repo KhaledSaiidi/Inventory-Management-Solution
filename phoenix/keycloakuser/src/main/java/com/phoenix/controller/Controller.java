@@ -150,9 +150,9 @@ public class Controller {
     }
 
     @PostMapping("/addCampaign")
-    public ResponseEntity<String> addCampaign(@RequestBody Campaigndto campaigndto) {
+    public ResponseEntity<Campaigndto> addCampaign(@RequestBody Campaigndto campaigndto) {
         icampaignService.addCampaign(campaigndto);
-        return ResponseEntity.ok("Campaign added successfully");
+        return ResponseEntity.ok(campaigndto);
     }
     @GetMapping("/getCampaigns")
     public ResponseEntity<List<Campaigndto>> getCampaigns() {
@@ -161,11 +161,14 @@ public class Controller {
     }
 
     @PostMapping("/addClient")
-    public ResponseEntity<String> addClient(@RequestBody Clientdto clientdto) {
+    public ResponseEntity<Clientdto> addClient(@RequestBody Clientdto clientdto) {
         iClientServices.addClient(clientdto);
-        return ResponseEntity.ok("Client added successfully");
+        return ResponseEntity.ok(clientdto);
     }
 
-
-
+    @GetMapping("/getClients")
+    public ResponseEntity<List<Clientdto>> getClients() {
+        List<Clientdto> clientdtos = iClientServices.getClients();
+        return ResponseEntity.ok(clientdtos);
+    }
 }

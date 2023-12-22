@@ -70,8 +70,8 @@ updateUser(username: string, userdto: Userdto): Observable<Userdto> {
   );
 }
 
-addClient(clientdto: Clientdto): Observable<number> {
-  return this.http.post<number>(this.apiUrl + '/addClient', clientdto)
+addClient(clientdto: Clientdto): Observable<Clientdto> {
+  return this.http.post<Clientdto>(this.apiUrl + '/addClient', clientdto)
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);
@@ -80,8 +80,8 @@ addClient(clientdto: Clientdto): Observable<number> {
   );
 }
 
-addCampaign(campaigndto: Campaigndto): Observable<number> {
-  return this.http.post<number>(this.apiUrl + '/addCampaign', campaigndto)
+addCampaign(campaigndto: Campaigndto): Observable<Campaigndto> {
+  return this.http.post<Campaigndto>(this.apiUrl + '/addCampaign', campaigndto)
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);
@@ -90,8 +90,18 @@ addCampaign(campaigndto: Campaigndto): Observable<number> {
   );
 }
 
-getCampaigns() {
-  return this.http.get(this.apiUrl + '/getCampaigns')
+getCampaigns(): Observable<Campaigndto[]> {
+  return this.http.get<Campaigndto[]>(this.apiUrl + '/getCampaigns')
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+getClients(): Observable<Clientdto[]> {
+  return this.http.get<Clientdto[]>(this.apiUrl + '/getClients')
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);
