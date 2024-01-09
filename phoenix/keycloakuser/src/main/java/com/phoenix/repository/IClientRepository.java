@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface IClientRepository extends JpaRepository<Client, String> {
     Optional<Client> findByReference(String reference);
+    Optional<Client> findByCompanyName(String companyName);
 }

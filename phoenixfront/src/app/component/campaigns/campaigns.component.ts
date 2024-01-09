@@ -10,7 +10,8 @@ import { AgentsService } from 'src/app/services/agents.service';
 })
 export class CampaignsComponent implements OnInit {
   constructor(private agentsService: AgentsService,private router: Router) {}
-  
+  selectedRowIndex: number | null = null;
+
   campaigns: Campaigndto[] = [];
   ngOnInit(): void {
       this.getcampaigns();
@@ -37,4 +38,22 @@ export class CampaignsComponent implements OnInit {
     this.router.navigate(['/addcampaign']);      
   }
 
+  
+  navigateToClient(companyName: string | undefined): void {
+    if (companyName) {
+      this.router.navigate(['/client', { companyName: companyName }]);
+    }
+  }
+  isDescriptionVisible = false;
+
+  enable: boolean = false;
+  campaigndto?: Campaigndto;
+  showTooltip(campaigndto: Campaigndto) {
+    this.enable=true;
+      this.campaigndto = campaigndto;
+  }
+  hideTooltip() {
+    this.enable=false;
+   }
+ 
 }

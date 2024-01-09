@@ -8,5 +8,7 @@ import java.util.List;
 public interface IClientServices {
     void addClient(Clientdto clientdto);
     List<Clientdto> getClients();
+    Clientdto getClientByName(String clientName);
+    Clientdto UpdateClient(String reference, Clientdto clientdto);
 
 }

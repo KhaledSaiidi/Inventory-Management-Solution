@@ -9,6 +9,7 @@ import com.phoenix.mapper.IMapper;
 import com.phoenix.services.ICampaignServices;
 import com.phoenix.services.IClientServices;
 import com.phoenix.services.IUserServices;
+import jakarta.persistence.EntityNotFoundException;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -171,4 +172,28 @@ public class Controller {
         List<Clientdto> clientdtos = iClientServices.getClients();
         return ResponseEntity.ok(clientdtos);
     }
+
+    @GetMapping("/getClientByName/{clientName}")
+    public ResponseEntity<Clientdto> getClientByName(@PathVariable String clientName) {
+        try {
+            Clientdto clientdto = iClientServices.getClientByName(clientName);
+            return ResponseEntity.ok(clientdto);
+        } catch (EntityNotFoundException e) {
+            // Handle the case where the client with the given name is not found
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @PutMapping("/updateClient/{reference}")
+    public ResponseEntity<Clientdto> updateClient(@PathVariable("reference") String reference, @RequestBody Clientdto clientdto) {
+        Clientdto updatedClientDto = iClientServices.UpdateClient(reference, clientdto);
+        if (updatedClientDto != null) {
+            return ResponseEntity.ok(updatedClientDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

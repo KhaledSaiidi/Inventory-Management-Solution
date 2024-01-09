@@ -110,4 +110,26 @@ getClients(): Observable<Clientdto[]> {
   );
 }
 
+getclientbycompanyName(companyName: string){
+  return this.http.get(this.apiUrl + '/getClientByName/' + companyName)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+updateClient(reference: string, clientdto: Clientdto): Observable<Clientdto> {
+  return this.http.put<Clientdto>(this.apiUrl + '/updateClient/'+ reference , clientdto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
+
 }
