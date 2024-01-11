@@ -161,5 +161,14 @@ archiveCampaign(campaignReference: string): Observable<any> {
 
 }
 
+getArchivedCampaigns(): Observable<Campaigndto[]> {
+  return this.http.get<Campaigndto[]>(this.apiUrl + '/getCampaignsarchived')
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
 
 }

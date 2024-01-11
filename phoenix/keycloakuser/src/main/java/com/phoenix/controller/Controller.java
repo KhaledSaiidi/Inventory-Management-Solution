@@ -222,4 +222,10 @@ public class Controller {
         return Response.ok().build();
     }
 
+    @GetMapping("/getCampaignsarchived")
+    public ResponseEntity<List<Campaigndto>> getCampaignsarchived() {
+        List<Campaigndto> campaigns = icampaignService.getArchivedCampaigns();
+        return ResponseEntity.ok(campaigns);
+    }
+
 }

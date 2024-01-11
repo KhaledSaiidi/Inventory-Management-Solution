@@ -19,5 +19,15 @@ public class CampaignArchiveMapper implements ICampaignArchiveMapper{
         campaignArchive.setClient(campaign.getClient());
         return campaignArchive;
     }
+    @Override
+    public Campaigndto mapCampaignArchiveToCampaigndto(CampaignArchive campaignArchive) {
+        Campaigndto campaigndto = new Campaigndto();
+        campaigndto.setReference(campaignArchive.getReference());
+        campaigndto.setCampaignName(campaignArchive.getCampaignName());
+        campaigndto.setProducts(campaignArchive.getProducts());
+        campaigndto.setStartDate(campaignArchive.getStartDate());
+        campaigndto.setCampaignDescription(campaignArchive.getCampaignDescription());
+        return campaigndto;
+    }
 
 }

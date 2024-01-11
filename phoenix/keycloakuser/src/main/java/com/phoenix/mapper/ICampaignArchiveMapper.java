@@ -6,5 +6,5 @@ import com.phoenix.model.CampaignArchive;
 
 public interface ICampaignArchiveMapper {
     CampaignArchive mapCampaignToCampaignArchive(Campaign campaign);
-
+    Campaigndto mapCampaignArchiveToCampaigndto(CampaignArchive campaignArchive);
 }

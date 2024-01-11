@@ -108,4 +108,20 @@ public class CampaignServices implements ICampaignServices{
         }
     }
 
+    @Override
+    public List<Campaigndto> getArchivedCampaigns(){
+        List<CampaignArchive> campaigns = iCampaignArchiveRepository.findAll();
+        List<Campaigndto> campaignsdto = new ArrayList<>();
+        if(!campaigns.isEmpty()) {
+            for (CampaignArchive campaignArchive: campaigns) {
+                Clientdto clientdto = iClientMapper.mapClientToClientdto(campaignArchive.getClient());
+                Campaigndto campaigndto = iCampaignArchiveMapper.mapCampaignArchiveToCampaigndto(campaignArchive);
+                campaigndto.setClient(clientdto);
+                campaignsdto.add(campaigndto);
+            }
+        }
+        return campaignsdto;
+    }
+
+
 }
