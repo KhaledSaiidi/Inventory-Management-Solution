@@ -56,4 +56,9 @@ export class CampaignsComponent implements OnInit {
     this.enable=false;
    }
  
+   navigateToCampaign(reference: string | undefined): void {
+    if (reference) {
+      this.router.navigate(['/updatecamapign', { reference: reference }]);
+    }
+  }
 }

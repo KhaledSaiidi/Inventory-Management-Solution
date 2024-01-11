@@ -195,5 +195,25 @@ public class Controller {
         }
     }
 
+    @PutMapping("/updateCampaign/{reference}")
+    public ResponseEntity<Campaigndto> updateCampaign(@PathVariable("reference") String reference, @RequestBody Campaigndto campaigndto) {
+        Campaigndto updatedCampaigndto = icampaignService.UpdateCampaign(reference, campaigndto);
+        if (updatedCampaigndto != null) {
+            return ResponseEntity.ok(updatedCampaigndto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getCampaignByReference/{reference}")
+    public ResponseEntity<Campaigndto> getCampaignByReference(@PathVariable String reference) {
+        try {
+            Campaigndto campaigndto = icampaignService.getCampaignByReference(reference);
+            return ResponseEntity.ok(campaigndto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

@@ -7,4 +7,7 @@ import java.util.List;
 public interface ICampaignServices {
     void addCampaign(Campaigndto campaigndto);
     List<Campaigndto> getCampaigns();
+
+    Campaigndto UpdateCampaign(String reference, Campaigndto campaigndto);
+    Campaigndto getCampaignByReference(String reference);
 }

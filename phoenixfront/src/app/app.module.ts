@@ -22,6 +22,7 @@ import { CampaignsComponent } from './component/campaigns/campaigns.component';
 import { AddClientComponent } from './component/add-client/add-client.component';
 import { AddcampaignComponent } from './component/addcampaign/addcampaign.component';
 import { ClientComponent } from './component/client/client.component';
+import { UpdateCampaignComponent } from './component/update-campaign/update-campaign.component';
 
 
 const appRoute: Routes = [
@@ -35,7 +36,8 @@ const appRoute: Routes = [
   {path:'camapigns', component: CampaignsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addclient', component: AddClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addcampaign', component: AddcampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'client', component: ClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
+  {path:'client', component: ClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'updatecamapign', component: UpdateCampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
 
 ]
 
@@ -76,7 +78,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     CampaignsComponent,
     AddClientComponent,
     AddcampaignComponent,
-    ClientComponent
+    ClientComponent,
+    UpdateCampaignComponent
   ],
   imports: [
     BrowserModule,

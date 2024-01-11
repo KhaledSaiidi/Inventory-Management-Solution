@@ -130,6 +130,23 @@ updateClient(reference: string, clientdto: Clientdto): Observable<Clientdto> {
   );
 }
 
+updateCampaign(reference: string, campaigndto: Campaigndto): Observable<Campaigndto> {
+  return this.http.put<Campaigndto>(this.apiUrl + '/updateCampaign/'+ reference , campaigndto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
 
-
+getcampaignbyreference(reference: string){
+  return this.http.get(this.apiUrl + '/getCampaignByReference/' + reference)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
 }

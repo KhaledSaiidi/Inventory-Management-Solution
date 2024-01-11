@@ -8,6 +8,7 @@ import com.phoenix.model.Campaign;
 import com.phoenix.model.Client;
 import com.phoenix.repository.ICampaignRepository;
 import com.phoenix.repository.IClientRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,4 +55,33 @@ public class CampaignServices implements ICampaignServices{
         return campaignsdto;
     }
 
+    @Override
+    public Campaigndto UpdateCampaign(String reference, Campaigndto campaigndto) {
+        Campaign campaign = iCampaignRepository.findByReference(reference).orElse(null);
+        if (campaign == null) {return null;}
+        if (campaigndto.getCampaignName() != null) {
+            campaign.setCampaignName(campaigndto.getCampaignName());}
+        if (campaigndto.getProducts() != null) {
+            campaign.setProducts(campaigndto.getProducts());}
+        if (campaigndto.getStartDate() != null) {
+            campaign.setStartDate(campaigndto.getStartDate());}
+        if(campaigndto.getCampaignDescription() != null){
+            campaign.setCampaignDescription(campaigndto.getCampaignDescription());}
+        if(campaigndto.getClient() != null){
+            campaign.setClient(iClientMapper.mapClientdtoToClient(campaigndto.getClient()));}
+        Campaign savedclient = iCampaignRepository.save(campaign);
+        return campaigndto;
+    }
+
+    @Override
+    public Campaigndto getCampaignByReference(String reference) {
+        Optional<Campaign> optionalCampaign = iCampaignRepository.findByReference(reference);
+        if (optionalCampaign.isPresent()) {
+            Campaign campaign = optionalCampaign.get();
+            Campaigndto campaigndto = iCampaignMapper.mapCampaignToCampaigndto(campaign);
+            return campaigndto;
+        } else {
+            throw new EntityNotFoundException("Client not found with name: " + reference);
+        }
+    }
 }
