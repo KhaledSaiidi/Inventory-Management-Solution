@@ -149,4 +149,17 @@ getcampaignbyreference(reference: string){
     })
   );
 }
+
+archiveCampaign(campaignReference: string): Observable<any> {
+  return this.http.delete(this.apiUrl + '/archive/' + campaignReference)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+
+}
+
+
 }

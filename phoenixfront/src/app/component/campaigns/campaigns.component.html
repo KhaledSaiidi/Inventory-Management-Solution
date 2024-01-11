@@ -48,7 +48,7 @@
                          <td style="word-wrap: break-word; white-space: normal;"> {{ onecamp.startDate | date: 'medium' | slice: 0:12 }}</td>
                          <td style="word-wrap: break-word; white-space: normal;">10,000$</td>
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToCampaign(onecamp.reference)">update</a></td>
-                         <td style="word-wrap: break-word; white-space: normal;">end</td>         
+                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" ><a (click)="confirmDeletion(onecamp.reference)">end</a></td>         
                        </tr>
                      
                      </tbody>

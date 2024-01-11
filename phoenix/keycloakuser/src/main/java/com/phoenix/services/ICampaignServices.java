@@ -10,4 +10,5 @@ public interface ICampaignServices {
 
     Campaigndto UpdateCampaign(String reference, Campaigndto campaigndto);
     Campaigndto getCampaignByReference(String reference);
+    void archiveCampaign(String campaignReference);
 }

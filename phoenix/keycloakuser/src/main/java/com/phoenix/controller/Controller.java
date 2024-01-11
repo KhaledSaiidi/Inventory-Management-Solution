@@ -215,5 +215,11 @@ public class Controller {
         }
     }
 
+    @DeleteMapping
+    @RequestMapping("/archive/{campaignReference}")
+    public Response archiveCampaign(@PathVariable("campaignReference") String campaignReference) {
+        icampaignService.archiveCampaign(campaignReference);
+        return Response.ok().build();
+    }
 
 }

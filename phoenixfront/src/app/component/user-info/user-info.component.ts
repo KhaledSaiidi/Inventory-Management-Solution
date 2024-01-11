@@ -177,7 +177,7 @@ getuserinfos(code : string){
       
       }
       confirmDeletion(): void {
-        const message = 'Etes vous sûr que vous voulez supprimer: ' + this.user.firstName + ' ' + this.user.lastName;
+        const message = 'Are you sure you want to delete : ' + this.user.firstName + ' ' + this.user.lastName;
         const confirmation = confirm(message);
         if (confirmation) {
           this.deleteUser();

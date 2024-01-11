@@ -2,10 +2,13 @@ package com.phoenix.services;
 
 import com.phoenix.dto.Campaigndto;
 import com.phoenix.dto.Clientdto;
+import com.phoenix.mapper.ICampaignArchiveMapper;
 import com.phoenix.mapper.ICampaignMapper;
 import com.phoenix.mapper.IClientMapper;
 import com.phoenix.model.Campaign;
+import com.phoenix.model.CampaignArchive;
 import com.phoenix.model.Client;
+import com.phoenix.repository.ICampaignArchiveRepository;
 import com.phoenix.repository.ICampaignRepository;
 import com.phoenix.repository.IClientRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,7 +32,11 @@ public class CampaignServices implements ICampaignServices{
     @Autowired
     private ICampaignRepository iCampaignRepository;
     @Autowired
+    private ICampaignArchiveRepository iCampaignArchiveRepository;
+    @Autowired
     private IClientRepository iClientRepository;
+    @Autowired
+    private ICampaignArchiveMapper iCampaignArchiveMapper;
 
     @Override
     public void addCampaign(Campaigndto campaigndto) {
@@ -88,4 +95,17 @@ public class CampaignServices implements ICampaignServices{
             throw new EntityNotFoundException("Client not found with name: " + reference);
         }
     }
+
+    @Override
+    public void archiveCampaign(String campaignReference) {
+        Optional<Campaign> optionalCampaign = iCampaignRepository.findByReference(campaignReference);
+        if (optionalCampaign.isPresent()) {
+            Campaign campaign = optionalCampaign.get();
+
+            CampaignArchive campaignArchive = iCampaignArchiveMapper.mapCampaignToCampaignArchive(campaign);
+            iCampaignArchiveRepository.save(campaignArchive);
+            iCampaignRepository.delete(campaign);
+        }
+    }
+
 }

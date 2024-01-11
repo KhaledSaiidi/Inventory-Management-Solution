@@ -61,4 +61,23 @@ export class CampaignsComponent implements OnInit {
       this.router.navigate(['/updatecamapign', { reference: reference }]);
     }
   }
+  confirmDeletion(campreference: string | undefined): void {
+    const message = 'Are you sure you want to to archive: ' + campreference;
+    const confirmation = confirm(message);
+    if (confirmation && campreference) {
+      this.archiveCampaign(campreference);
+    }
+  }
+  archiveCampaign(campreference: string): void {
+    this.agentsService.archiveCampaign(campreference).subscribe(
+      () => {
+        console.log('Campaign Archived successfully.');
+        window.location.reload();
+      },
+      (error) => {
+        console.error('Error deleting campaign:', error);
+      }
+    );
+    
+  }
 }
