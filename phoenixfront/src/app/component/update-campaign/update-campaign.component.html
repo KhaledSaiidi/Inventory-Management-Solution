@@ -25,7 +25,7 @@
                         <div class="form-group">
                         
                           <label  class="form-control-label" >Reference</label>
-                          <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4); margin-top: 10px;"> kkk </span>
+                          <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4); margin-top: 10px;"> {{ reference}} </span>
                         </div>
                       </div>
                           
@@ -45,19 +45,34 @@
                           <input type="date"  class="form-control mt-2" id="startDate" formControlName="startDate" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
                         </div>
                       </div>
+
+                      <ng-container *ngIf="isCodeDisabled && campaigndto?.client">
                       <div class="col-md-6">
                         <div class="form-group">
-                            <div formGroupName="client">
-                              <label for="clientReference">Client Reference</label>
-                              <input class="form-control mt-2" type="text" formControlName="client.reference" id="clientReference" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                            <div>
+                              <label>Client</label>
+                              <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4); margin-top: 10px;"> {{campaigndto.client?.companyName}} </span>
                             </div>
                         </div>
                       </div>
+                      </ng-container>
+                      <ng-container *ngIf="!isCodeDisabled">
+                        <div class="col-md-6">
+                          <div formGroupName="client">
+                              <div>
+                            <label for="client-reference">Client</label>
+                            <select class="form-control mt-2" class="form-control mt-2" formControlName="reference" id="reference">
+                              <option *ngFor="let client of clients" [value]="client.reference">  {{client.companyName}}  </option>                      
+                          </select>
+                          </div>
+                          </div>
+                        </div>
+                      </ng-container>
                       
                       <div class="col-md-12">
                         <div class="form-group">
                             <label for="campaignDescription">Campaign Description</label>
-                            <textarea class="form-control mt-2" rows="4" formControlName="campaignDescription" id="campaignDescription" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined"></textarea>
+                            <textarea class="form-control mt-2" rows="5" formControlName="campaignDescription" id="campaignDescription" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined"></textarea>
                         </div>
                     </div>               
                     

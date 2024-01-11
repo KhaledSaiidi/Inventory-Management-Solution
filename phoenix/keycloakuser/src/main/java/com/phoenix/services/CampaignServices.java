@@ -67,9 +67,11 @@ public class CampaignServices implements ICampaignServices{
             campaign.setStartDate(campaigndto.getStartDate());}
         if(campaigndto.getCampaignDescription() != null){
             campaign.setCampaignDescription(campaigndto.getCampaignDescription());}
-        if(campaigndto.getClient() != null){
-            campaign.setClient(iClientMapper.mapClientdtoToClient(campaigndto.getClient()));}
-        Campaign savedclient = iCampaignRepository.save(campaign);
+        if(campaigndto.getClient().getReference() != null){
+            Optional<Client> optionalClient = iClientRepository.findByReference(campaigndto.getClient().getReference());
+            Client client = optionalClient.orElse(null);
+            campaign.setClient(client);}
+        Campaign savedcampaign = iCampaignRepository.save(campaign);
         return campaigndto;
     }
 
@@ -79,6 +81,8 @@ public class CampaignServices implements ICampaignServices{
         if (optionalCampaign.isPresent()) {
             Campaign campaign = optionalCampaign.get();
             Campaigndto campaigndto = iCampaignMapper.mapCampaignToCampaigndto(campaign);
+            Clientdto clientdto = iClientMapper.mapClientToClientdto(campaign.getClient());
+            campaigndto.setClient(clientdto);
             return campaigndto;
         } else {
             throw new EntityNotFoundException("Client not found with name: " + reference);
