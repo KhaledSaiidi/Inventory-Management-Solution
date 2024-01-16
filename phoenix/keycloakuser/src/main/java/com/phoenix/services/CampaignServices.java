@@ -109,6 +109,15 @@ public class CampaignServices implements ICampaignServices{
     }
 
     @Override
+    public void deletearchiveCampaign(String campaignReference) {
+        Optional<CampaignArchive> optionalArchiveCampaign = iCampaignArchiveRepository.findByReference(campaignReference);
+        if (optionalArchiveCampaign.isPresent()) {
+            CampaignArchive campaignarchive = optionalArchiveCampaign.get();
+            iCampaignArchiveRepository.delete(campaignarchive);
+        }
+    }
+
+    @Override
     public List<Campaigndto> getArchivedCampaigns(){
         List<CampaignArchive> campaigns = iCampaignArchiveRepository.findAll();
         List<Campaigndto> campaignsdto = new ArrayList<>();

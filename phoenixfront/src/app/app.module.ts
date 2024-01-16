@@ -29,10 +29,10 @@ import { ArchivedComponent } from './component/archived/archived.component';
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ,"AGENT"] }},
-  {path:'toscan', component: OpenscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
-  {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
+  {path:'toscan', component: OpenscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER", "AGENT"] }},
+  {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ,"AGENT"] }},
   {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
-  {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
+  {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER","AGENT"] }},
   {path:'userdetails', component: UserdetailsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'camapigns', component: CampaignsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addclient', component: AddClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},

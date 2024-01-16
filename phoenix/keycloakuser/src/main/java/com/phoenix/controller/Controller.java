@@ -228,4 +228,11 @@ public class Controller {
         return ResponseEntity.ok(campaigns);
     }
 
+    @DeleteMapping
+    @RequestMapping("/deletearchivecampaign/{campaignReference}")
+    public Response deleteArchiveCampaign(@PathVariable("campaignReference") String campaignReference) {
+        icampaignService.deletearchiveCampaign(campaignReference);
+        return Response.ok().build();
+    }
+
 }

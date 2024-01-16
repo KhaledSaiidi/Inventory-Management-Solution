@@ -171,4 +171,14 @@ getArchivedCampaigns(): Observable<Campaigndto[]> {
   );
 }
 
+deleteArchiveCampaign(campaignref: string): Observable<any> {
+  return this.http.delete(this.apiUrl + '/deletearchivecampaign/' + campaignref)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+
+}
 }

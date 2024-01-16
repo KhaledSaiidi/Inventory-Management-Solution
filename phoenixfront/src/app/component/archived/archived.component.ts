@@ -40,5 +40,19 @@ export class ArchivedComponent implements OnInit {
     this.enable=false;
    }
 
+   deleteArchivedcampaigns(campaignref: string | undefined){
+    if(campaignref) {
+    this.agentsService.deleteArchiveCampaign(campaignref).subscribe(
+      () => {
+        console.log('Archived Campaign deleted successfully.');
+        window.location.reload();
+      },
+      (error) => {
+        console.error('Error deleting Archive Campaign:', error);
+      }
+      );
+    }
+  }
+
 
 }
