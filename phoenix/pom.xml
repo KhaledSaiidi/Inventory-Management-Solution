@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>keycloakuser</module>
+        <module>stock</module>
     </modules>
 
     <properties>
