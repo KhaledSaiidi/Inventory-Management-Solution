@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -20,10 +22,10 @@ public class Product {
     private String productType;
     private String prodName;
     private String prodDescription;
-    private float price;
+    private BigDecimal price;
     @Enumerated(EnumType.STRING)
     private State state;
-    private Date soldDate;
+    private LocalDate soldDate;
     @ManyToOne
     @JoinColumn(name = "stock_reference")
     private Stock stock;

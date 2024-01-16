@@ -1,25 +1,18 @@
-package com.phoenix.model;
+package com.phoenix.dto;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.phoenix.model.ReclamType;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "t_reclamation")
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Reclamation {
-    @jakarta.persistence.Id
+public class ReclamationDto {
     private Long id;
-    @Enumerated(EnumType.STRING)
     private ReclamType reclamationType;
-    @Lob
     private String reclamationText;
     private String senderReference;
     private String receiverReference;
@@ -29,7 +22,6 @@ public class Reclamation {
     private int quantityToAdd;
     private LocalDate reclamDate;
     private Boolean vued;
-    @ManyToOne
-    @JoinColumn(name = "agent_ref")
-    private AgentProd agentProd;
+    private AgentProdDto agentProd;
+
 }

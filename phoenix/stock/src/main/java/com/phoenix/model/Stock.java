@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -23,7 +23,7 @@ public class Stock {
     private String stockReference;
     private List<String> productTypes;
     private String campaignRef;
-    private Date stockDate;
+    private LocalDate stockDate;
     private boolean checked;
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<Product> products;
