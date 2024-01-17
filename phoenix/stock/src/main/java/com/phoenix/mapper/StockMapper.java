@@ -17,6 +17,7 @@ public class StockMapper implements IStockMapper{
         stockDto.setCampaignRef(stock.getCampaignRef());
         stockDto.setStockDate(stock.getStockDate());
         stockDto.setChecked(stock.isChecked());
+        stockDto.setNotes(stock.getNotes());
         return stockDto;
     }
 
@@ -28,6 +29,7 @@ public class StockMapper implements IStockMapper{
         stock.setCampaignRef(stockDto.getCampaignRef());
         stock.setStockDate(stockDto.getStockDate());
         stock.setChecked(stockDto.isChecked());
+        stock.setNotes(stockDto.getNotes());
         return stock;
     }
 

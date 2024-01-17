@@ -90,6 +90,18 @@
                 </div>
               </div>
             </div>
+
+
+  <div class="radio-container" style="margin-top: 20px;">
+    <label class="radio-label">
+      <input type="radio" class="radio-input" name="managerType" [(ngModel)]="areManagers" [value]="true" checked> Managers
+    </label>
+    <label class="radio-label">
+      <input type="radio" class="radio-input" name="managerType" [(ngModel)]="areManagers" [value]="false"> I.Managers
+    </label>
+  </div>
+  
+<ng-container *ngIf="areManagers; else ImanagersTemplate">
 <div class="equipe-container">
               <h5>Managers</h5>
     <table class="table">
@@ -102,17 +114,40 @@
       </thead>
       <tbody style="text-align: center;">
         <tr *ngFor="let manager of managerList">
-
+          <ng-container *ngIf="manager.username">
           <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
-          <td >20</td>
+          <td >{{ countAgentsForManagers(this.agentList, manager.username) }}</td>
           <td>7</td>
+        </ng-container>
           </tr>      
       </tbody>
     </table>
    
 </div>
+</ng-container> 
+<ng-template #ImanagersTemplate>
+  <div class="equipe-container">
+      <h5>Inventory Managers</h5>
+    <table class="table">
+    <thead>
+        <tr>
+          <th >FullName</th>
+          <th >Email</th>
+        </tr>
+        </thead>
+        <tbody style="text-align: center;">
+        <tr *ngFor="let manager of imanagerList">
+          <ng-container *ngIf="manager.username">
+          <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
+          <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.email}}</td>
+          </ng-container>
+          </tr>      
+    </tbody>
+    </table>
+    </div>
+  </ng-template>
 
-          </div>
+    </div>
           
         </div>
         

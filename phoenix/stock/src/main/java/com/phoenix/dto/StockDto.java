@@ -16,5 +16,7 @@ public class StockDto {
     private String campaignRef;
     private LocalDate stockDate;
     private boolean checked;
+    private String notes;
+
     private List<ProductDto> products;
 }

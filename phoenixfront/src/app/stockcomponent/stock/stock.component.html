@@ -1,0 +1,76 @@
+<app-base></app-base>
+<div class="listeequipes-container"> 
+    <a  class="btn-primary btn" routerLink="/addstock" style="color: white;">
+        <span class="">&nbsp; Add Stock</span>
+    </a> &nbsp;
+    
+    
+    <div class="equipe-container">
+        <div class="listetalents-containershown">
+            <div class="col-12">
+             <div class="card mb-4 ">
+                     <div class="card-header pb-0" >
+                       <h6 class="text-center">Stock List</h6>
+                     </div>
+                     <div class="card-body px-0 pt-0 pb-2">
+                 <div class="table-responsive p-0">
+                   <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+                     <thead>
+                       <tr>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Reference</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product Types</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">campaign</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">CLIENT</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Date</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Value</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Checked Status</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToProducts(ref)" >PqR456</a></td>
+                        <td style="word-wrap: break-word; white-space: normal;">
+                          <div style="max-height: 70px; overflow-y: auto;">
+                            <ul>
+                              <li>TABLETS</li>
+                              <li>PHONES</li>
+                            </ul>
+                          </div>
+                        </td>                        
+                        <td style="word-wrap: break-word; white-space: normal;">Orange Campaign</td>
+                        <td style="word-wrap: break-word; white-space: normal;">Phoenixmas</td>
+                        <td style="word-wrap: break-word; white-space: normal;">24/06/2022</td>
+                        <td style="word-wrap: break-word; white-space: normal;">10,000$</td>
+                        <td style="word-wrap: break-word; white-space: normal; color: red;">Non checked</td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>Check</a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>update</a></td>
+                       </tr>
+                       <tr>
+                        <td style="word-wrap: break-word; white-space: normal;">A4C91DF</td>
+                        <td style="word-wrap: break-word; white-space: normal;">
+                          <div style="max-height: 70px; overflow-y: auto;">
+                            <ul>
+                              <li>TABLETS</li>
+                              <li>PHONES</li>
+                            </ul>
+                          </div>
+                        </td>                        
+                        <td style="word-wrap: break-word; white-space: normal;">Orange Campaign</td>
+                        <td style="word-wrap: break-word; white-space: normal;">Phoenixmas</td>
+                        <td style="word-wrap: break-word; white-space: normal;">24/06/2022</td>
+                        <td style="word-wrap: break-word; white-space: normal;">10,000$</td>
+                        <td style="word-wrap: break-word; white-space: normal; color: green;">Checked</td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>Check</a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>update</a></td>
+                       </tr>
+                     </tbody>
+                   </table>
+                 </div>
+                </div>     
+             </div>
+            </div>
+           </div>
+    </div>
+    
+</div>

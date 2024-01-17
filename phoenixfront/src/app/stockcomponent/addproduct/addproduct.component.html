@@ -1,0 +1,57 @@
+<div class="shadowed" (click)="navigateToProducts(stockreference)">
+    <app-products></app-products>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Stock Registration</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="text-uppercase text-sm">Stock Information</p>
+
+                <div class="alert alert-custom" role="alert">
+                  This stock is not checked by default after adding products into the campaign. Please make the check.
+                </div>
+                        
+
+                <form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="campaign">Campaign Affiliation</label>
+                          <select class="form-control mt-2" formControlName="reference" id="reference">
+                            <option> kkk</option>  
+                            <option> kkk</option>                                          
+                        </select>
+                            </div>
+                      </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                          <div class="form-group">
+                            <label for="campaignDescription">Stock Receipt Date</label>
+                            <input type="date" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" >
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                      <label for="campaignDescription">Notes</label>
+                      <textarea class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" placeholder="Please enter a company contact person" rows="3"></textarea>
+                  </div>
+                  </div>
+                  <br>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">New Stock</button>
+                </div>
+               </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>

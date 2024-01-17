@@ -14,7 +14,7 @@ export class AgentsComponent implements OnInit {
   agentList: Userdto[] = [];
   managerList: Userdto[] = [];
   imanagerList: Userdto[] = [];
-
+  areManagers: boolean = true;
   showColMd4 = false;
   toggleColMd4() {
     this.showColMd4 = !this.showColMd4;
@@ -30,12 +30,26 @@ export class AgentsComponent implements OnInit {
         this.agentList = this.allmembers.filter(user => user.realmRoles?.includes('AGENT'));
         this.managerList = this.allmembers.filter(user => user.realmRoles?.includes('MANAGER'));
         this.imanagerList = this.allmembers.filter(user => user.realmRoles?.includes('IMANAGER'));
+        console.log(this.managerList);
+        console.log(this.imanagerList);
       },
       (error: any) => {
         console.error('Error fetching agents:', error);
       }
     );
   }
+
+  countAgentsForManagers(userList: Userdto[], managerUsername: string): number {
+    let count = 0;
+  
+    if (userList && userList.length > 0 && managerUsername !== null) {
+      count = userList
+        .filter(user => user.manager?.username === managerUsername)
+        .length;
+    }
+    return count;
+  }
+    
 
   navigateToUserInfos(username?: string) {
     if (username === undefined) {

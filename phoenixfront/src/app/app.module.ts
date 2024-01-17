@@ -24,6 +24,11 @@ import { AddcampaignComponent } from './component/addcampaign/addcampaign.compon
 import { ClientComponent } from './component/client/client.component';
 import { UpdateCampaignComponent } from './component/update-campaign/update-campaign.component';
 import { ArchivedComponent } from './component/archived/archived.component';
+import { StockComponent } from './stockcomponent/stock/stock.component';
+import { ProdinfoComponent } from './stockcomponent/prodinfo/prodinfo.component';
+import { AddstockComponent } from './stockcomponent/addstock/addstock.component';
+import { ProductsComponent } from './stockcomponent/products/products.component';
+import { AddproductComponent } from './stockcomponent/addproduct/addproduct.component';
 
 
 const appRoute: Routes = [
@@ -39,8 +44,11 @@ const appRoute: Routes = [
   {path:'addcampaign', component: AddcampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'client', component: ClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'updatecamapign', component: UpdateCampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'archive', component: ArchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
-
+  {path:'archive', component: ArchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'stock', component: StockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'addstock', component: AddstockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'products', component: ProductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'addproduct', component: AddproductComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
 
 ]
 
@@ -83,7 +91,12 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     AddcampaignComponent,
     ClientComponent,
     UpdateCampaignComponent,
-    ArchivedComponent
+    ArchivedComponent,
+    StockComponent,
+    ProdinfoComponent,
+    AddstockComponent,
+    ProductsComponent,
+    AddproductComponent
   ],
   imports: [
     BrowserModule,

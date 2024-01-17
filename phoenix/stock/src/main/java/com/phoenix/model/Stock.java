@@ -25,6 +25,8 @@ public class Stock {
     private String campaignRef;
     private LocalDate stockDate;
     private boolean checked;
+    private String notes;
+
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<Product> products;
 }

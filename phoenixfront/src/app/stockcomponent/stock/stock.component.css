@@ -1,0 +1,10 @@
+.listeequipes-container{
+    position: absolute;
+    top: 130px;
+      left: 290px; 
+      width: calc(100% - 300px);
+      height: 100%;
+      
+    }
+  
+    
