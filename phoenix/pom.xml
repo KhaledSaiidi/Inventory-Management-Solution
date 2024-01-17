@@ -17,12 +17,15 @@
     <modules>
         <module>keycloakuser</module>
         <module>stock</module>
+        <module>discovery-server</module>
+        <module>config-server</module>
+        <module>gateway</module>
     </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <spring-cloud.version>2022.0.1</spring-cloud.version>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
