@@ -26,8 +26,7 @@
                         <div class="form-group">
                           <label for="campaign">Campaign Affiliation</label>
                           <select class="form-control mt-2" formControlName="reference" id="reference">
-                            <option> kkk</option>  
-                            <option> kkk</option>                                          
+                            <option *ngFor="let campaign of campaigns"> {{ campaign.campaignName }} - {{ campaign.client?.companyName }} </option>  
                         </select>
                             </div>
                       </div>

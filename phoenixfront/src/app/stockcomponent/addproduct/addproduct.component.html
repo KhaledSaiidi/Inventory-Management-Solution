@@ -9,44 +9,51 @@
             <div class="card">
               <div class="card-header pb-0">
                 <div class="d-flex align-items-center">
-                  <p class="mb-0">Stock Registration</p>
+                  <p class="mb-0">Product Registration in {{ stockreference }} Stock</p>
                 </div>
               </div>
               <div class="card-body">
-                <p class="text-uppercase text-sm">Stock Information</p>
-
-                <div class="alert alert-custom" role="alert">
-                  This stock is not checked by default after adding products into the campaign. Please make the check.
-                </div>
-                        
-
+                <p class="text-uppercase text-sm">Product Information</p>  
                 <form>
                 <div class="row">
-                    <div class="col-md-6">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="campaign">Serial Number</label>
+                      <input type="text" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" >
+                    </div>
+                  </div>  
+                  <div class="col-md-6">
                         <div class="form-group">
-                          <label for="campaign">Campaign Affiliation</label>
+                          <label for="campaign">Product Type</label>
                           <select class="form-control mt-2" formControlName="reference" id="reference">
-                            <option> kkk</option>  
-                            <option> kkk</option>                                          
+                            <option> Tablet</option>  
+                            <option> Phone</option>                                          
                         </select>
                             </div>
                       </div>
                   <div class="col-md-6">
                     <div class="form-group">
                           <div class="form-group">
-                            <label for="campaignDescription">Stock Receipt Date</label>
-                            <input type="date" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" >
+                            <label for="campaignDescription">Product Name</label>
+                            <input type="text" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" >
                         </div>
                     </div>
                   </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="campaign">Price</label>
+                      <input type="text" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" appNumericOnly>
+                    </div>
+                  </div> 
                   <div class="col-md-12">
-                      <label for="campaignDescription">Notes</label>
+                      <label for="campaignDescription">Product Description</label>
                       <textarea class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" placeholder="Please enter a company contact person" rows="3"></textarea>
                   </div>
+                   
                   </div>
                   <br>
                   <div style="display: flex; justify-content: center;">
-                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">New Stock</button>
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Add Product</button>
                 </div>
                </form>
               </div>

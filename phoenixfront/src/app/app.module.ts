@@ -29,7 +29,7 @@ import { ProdinfoComponent } from './stockcomponent/prodinfo/prodinfo.component'
 import { AddstockComponent } from './stockcomponent/addstock/addstock.component';
 import { ProductsComponent } from './stockcomponent/products/products.component';
 import { AddproductComponent } from './stockcomponent/addproduct/addproduct.component';
-
+import { NumericOnlyDirective } from './services/numericOnlyDirective';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -96,7 +96,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     ProdinfoComponent,
     AddstockComponent,
     ProductsComponent,
-    AddproductComponent
+    AddproductComponent,
+    NumericOnlyDirective
   ],
   imports: [
     BrowserModule,

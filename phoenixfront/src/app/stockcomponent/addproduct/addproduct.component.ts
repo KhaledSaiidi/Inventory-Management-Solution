@@ -10,6 +10,7 @@ export class AddproductComponent implements OnInit{
   constructor( 
     private route: ActivatedRoute,
     private router: Router) {}
+    
     stockreference: string = '';
     ngOnInit(): void {
       this.route.queryParamMap.subscribe(params => {
