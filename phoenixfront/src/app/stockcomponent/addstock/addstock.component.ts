@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Campaigndto } from 'src/app/models/agents/Campaigndto';
 import { AgentsService } from 'src/app/services/agents.service';
@@ -8,8 +9,8 @@ import { AgentsService } from 'src/app/services/agents.service';
   templateUrl: './addstock.component.html',
   styleUrls: ['./addstock.component.css']
 })
-export class AddstockComponent {
-  constructor(private router: Router, private agentsService: AgentsService) {}
+export class AddstockComponent implements OnInit{
+  constructor(private router: Router, private agentsService: AgentsService, private fb: FormBuilder) {}
 
   navigateToStock(){
     this.router.navigate(['/stock']);
@@ -26,5 +27,20 @@ export class AddstockComponent {
         console.error('Failed to get campaigns:', error);
       }
     );
+  }
+
+  ngOnInit(): void {
+    this.initializeForm();
+  }
+  stockForm!: FormGroup;
+  initializeForm() {
+    this.stockForm = this.fb.group({
+      reference: [''],
+      stockDate: [null],
+      notes: ['']
+    });
+  }
+  onSubmit(){
+
   }
 }

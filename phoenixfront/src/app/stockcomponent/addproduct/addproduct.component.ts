@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -9,7 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AddproductComponent implements OnInit{
   constructor( 
     private route: ActivatedRoute,
-    private router: Router) {}
+    private router: Router,
+    private fb: FormBuilder) {}
     
     stockreference: string = '';
     ngOnInit(): void {
@@ -20,6 +22,7 @@ export class AddproductComponent implements OnInit{
         console.log(this.stockreference);
         }
       }); 
+      this.initializeForm();
     }
    
     navigateToProducts(ref?: string) {
@@ -30,5 +33,19 @@ export class AddproductComponent implements OnInit{
       this.router.navigate(['/products'], { queryParams: { id: ref } });     
       console.log(ref);
     }
+    prodForm!: FormGroup;
+    initializeForm() {
+      this.prodForm = this.fb.group({
+        serialNumber: [''],
+        productType: [''],
+        productName: [''],
+        price: [''],
+        productDescription: ['']
+      });
+    }
+    onSubmit(){
+  
+    }
+  
   
 }

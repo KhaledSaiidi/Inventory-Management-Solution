@@ -20,27 +20,22 @@
                 </div>
                         
 
-                <form>
+                <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="campaign">Campaign Affiliation</label>
+                          <label for="reference">Campaign Affiliation</label>
                           <select class="form-control mt-2" formControlName="reference" id="reference">
                             <option *ngFor="let campaign of campaigns"> {{ campaign.campaignName }} - {{ campaign.client?.companyName }} </option>  
                         </select>
-                            </div>
+                            
                       </div>
                   <div class="col-md-6">
-                    <div class="form-group">
-                          <div class="form-group">
-                            <label for="campaignDescription">Stock Receipt Date</label>
-                            <input type="date" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" >
-                        </div>
-                    </div>
+                            <label for="stockDate">Stock Receipt Date</label>
+                            <input type="date" class="form-control mt-2" id="stockDate" formControlName="stockDate" >
                   </div>
                   <div class="col-md-12">
-                      <label for="campaignDescription">Notes</label>
-                      <textarea class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" placeholder="Please enter a company contact person" rows="3"></textarea>
+                      <label for="notes">Notes</label>
+                      <textarea class="form-control mt-2" id="notes" formControlName="notes" rows="3"></textarea>
                   </div>
                   </div>
                   <br>

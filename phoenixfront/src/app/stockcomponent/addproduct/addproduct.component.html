@@ -14,40 +14,31 @@
               </div>
               <div class="card-body">
                 <p class="text-uppercase text-sm">Product Information</p>  
-                <form>
+                <form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
                 <div class="row">
                   <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="campaign">Serial Number</label>
-                      <input type="text" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" >
-                    </div>
+                      <label for="serialNumber">Serial Number</label>
+                      <input type="text" class="form-control mt-2" id="serialNumber" formControlName="serialNumber" >
                   </div>  
                   <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="campaign">Product Type</label>
-                          <select class="form-control mt-2" formControlName="reference" id="reference">
+                          <label for="productType">Product Type</label>
+                          <select class="form-control mt-2" formControlName="productType" id="productType">
                             <option> Tablet</option>  
                             <option> Phone</option>                                          
                         </select>
-                            </div>
+                            
                       </div>
                   <div class="col-md-6">
-                    <div class="form-group">
-                          <div class="form-group">
-                            <label for="campaignDescription">Product Name</label>
-                            <input type="text" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" >
-                        </div>
-                    </div>
+                            <label for="productName">Product Name</label>
+                            <input type="text" class="form-control mt-2" id="productName" formControlName="productName" >                    
                   </div>
                   <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="campaign">Price</label>
-                      <input type="text" class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" appNumericOnly>
-                    </div>
+                      <label for="price">Price</label>
+                      <input type="text" class="form-control mt-2" id="price" formControlName="price" appNumericOnly>
                   </div> 
                   <div class="col-md-12">
-                      <label for="campaignDescription">Product Description</label>
-                      <textarea class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" placeholder="Please enter a company contact person" rows="3"></textarea>
+                      <label for="productDescription">Product Description</label>
+                      <textarea class="form-control mt-2" id="productDescription" formControlName="productDescription" rows="3"></textarea>
                   </div>
                    
                   </div>
