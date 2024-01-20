@@ -21,6 +21,7 @@ public class Product {
     private String serialNumber;
     private String productType;
     private String prodName;
+    @Column(columnDefinition = "TEXT")
     private String prodDescription;
     private BigDecimal price;
     @Enumerated(EnumType.STRING)

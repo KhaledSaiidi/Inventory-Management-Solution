@@ -9,7 +9,7 @@
             <div class="card">
               <div class="card-header pb-0">
                 <div class="d-flex align-items-center">
-                  <p class="mb-0">Product Registration in {{ stockreference }} Stock</p>
+                  <p class="mb-0">Product Registration in {{ stockdto.campaigndto?.campaignName }}</p>
                 </div>
               </div>
               <div class="card-body">
@@ -23,8 +23,7 @@
                   <div class="col-md-6">
                           <label for="productType">Product Type</label>
                           <select class="form-control mt-2" formControlName="productType" id="productType">
-                            <option> Tablet</option>  
-                            <option> Phone</option>                                          
+                            <option *ngFor="let prod of products"> {{prod}}</option>  
                         </select>
                             
                       </div>

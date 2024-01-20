@@ -1,5 +1,6 @@
 package com.phoenix.dto;
 
+import com.phoenix.dtokeycloakuser.Campaigndto;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,6 +18,8 @@ public class StockDto {
     private LocalDate stockDate;
     private boolean checked;
     private String notes;
+
+    private Campaigndto campaigndto;
 
     private List<ProductDto> products;
 }

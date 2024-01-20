@@ -154,9 +154,9 @@ public class Controller {
         return ResponseEntity.ok(campaigndto);
     }
     @GetMapping("/getCampaigns")
-    public ResponseEntity<List<Campaigndto>> getCampaigns() {
+    public List<Campaigndto> getCampaigns() {
         List<Campaigndto> campaigns = icampaignService.getCampaigns();
-        return ResponseEntity.ok(campaigns);
+        return campaigns;
     }
 
     @PostMapping("/addClient")

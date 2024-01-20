@@ -28,40 +28,26 @@
                        </tr>
                      </thead>
                      <tbody>
-                       <tr>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToProducts(ref)" >PqR456</a></td>
+                       <tr *ngFor="let stock of stocks">
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToProducts(stock.stockReference)" >{{ stock.stockReference }}</a></td>
                         <td style="word-wrap: break-word; white-space: normal;">
                           <div style="max-height: 70px; overflow-y: auto;">
-                            <ul>
-                              <li>TABLETS</li>
-                              <li>PHONES</li>
+                            <ul *ngFor="let product of stock.campaigndto?.products">
+                              <li>{{product}}</li>
                             </ul>
                           </div>
-                        </td>                        
-                        <td style="word-wrap: break-word; white-space: normal;">Orange Campaign</td>
-                        <td style="word-wrap: break-word; white-space: normal;">Phoenixmas</td>
-                        <td style="word-wrap: break-word; white-space: normal;">24/06/2022</td>
+                        </td>                      
+                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.campaigndto?.campaignName }}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">{{stock.campaigndto?.client?.companyName}}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.stockDate | date: 'medium' | slice: 0:12 }}</td>
                         <td style="word-wrap: break-word; white-space: normal;">10,000$</td>
-                        <td style="word-wrap: break-word; white-space: normal; color: red;">Non checked</td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>Check</a></td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>update</a></td>
-                       </tr>
-                       <tr>
-                        <td style="word-wrap: break-word; white-space: normal;">A4C91DF</td>
+                        <td [style.color]="stock.checked ? 'green' : 'red'">
+                          {{ stock.checked ? 'Stock already checked' : 'Stock not yet checked' }}
+                        </td>
                         <td style="word-wrap: break-word; white-space: normal;">
-                          <div style="max-height: 70px; overflow-y: auto;">
-                            <ul>
-                              <li>TABLETS</li>
-                              <li>PHONES</li>
-                            </ul>
-                          </div>
-                        </td>                        
-                        <td style="word-wrap: break-word; white-space: normal;">Orange Campaign</td>
-                        <td style="word-wrap: break-word; white-space: normal;">Phoenixmas</td>
-                        <td style="word-wrap: break-word; white-space: normal;">24/06/2022</td>
-                        <td style="word-wrap: break-word; white-space: normal;">10,000$</td>
-                        <td style="word-wrap: break-word; white-space: normal; color: green;">Checked</td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>Check</a></td>
+                          <a *ngIf="!stock.checked" style="cursor: pointer;">Check</a>
+                          <span *ngIf="stock.checked">Approved</span>
+                        </td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>update</a></td>
                        </tr>
                      </tbody>

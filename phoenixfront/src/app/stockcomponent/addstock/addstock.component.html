@@ -25,7 +25,7 @@
                     <div class="col-md-6">
                           <label for="reference">Campaign Affiliation</label>
                           <select class="form-control mt-2" formControlName="reference" id="reference">
-                            <option *ngFor="let campaign of campaigns"> {{ campaign.campaignName }} - {{ campaign.client?.companyName }} </option>  
+                            <option *ngFor="let campaign of campaigns" [value]="campaign.reference"> {{ campaign.campaignName }} - {{ campaign.client?.companyName }} </option>  
                         </select>
                             
                       </div>
