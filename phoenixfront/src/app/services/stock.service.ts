@@ -53,5 +53,16 @@ addProduct(productDto: Productdto): Observable<number> {
   );
 }
 
+getProductsByStockReference(stockreference: string): Observable<Productdto[]> {
+  return this.http.get<Productdto[]>(this.apiUrl + '/getProductsByStockReference/' + stockreference)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
 
 }

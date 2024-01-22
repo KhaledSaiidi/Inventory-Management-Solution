@@ -44,4 +44,11 @@ public class Controller {
         }
     }
 
+    @GetMapping("getProductsByStockReference/{stockreference}")
+    public List<ProductDto> getProductsByStockReference(@PathVariable String stockreference) {
+        List<ProductDto> productDtos = iProductService.getProductsBystockReference(stockreference);
+        return productDtos;
+    }
+
+
 }
