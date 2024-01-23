@@ -3,6 +3,7 @@ package com.phoenix.services;
 import com.phoenix.dto.StockDto;
 import com.phoenix.dtokeycloakuser.Campaigndto;
 import com.phoenix.mapper.IStockMapper;
+import com.phoenix.model.Product;
 import com.phoenix.model.Stock;
 import com.phoenix.repository.IStockRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +74,5 @@ public class StockService implements IStockService{
         stockDto.setCampaigndto(campaigndto);
         return stockDto;
     }
-
-
 
 }

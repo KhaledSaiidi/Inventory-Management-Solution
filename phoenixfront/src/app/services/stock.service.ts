@@ -62,7 +62,4 @@ getProductsByStockReference(stockreference: string): Observable<Productdto[]> {
     })
   );
 }
-
-
-
 }

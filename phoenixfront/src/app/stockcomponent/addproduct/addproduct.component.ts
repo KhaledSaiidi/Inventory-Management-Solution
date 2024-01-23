@@ -51,10 +51,14 @@ export class AddproductComponent implements OnInit{
     }
     stockdto!: Stockdto;
     products!: string[];
+    campaignName!: string;
     getStockbyRef(ref : string){
       this.stockservice.getStockByreference(ref).subscribe(
         (data) => {
       this.stockdto = data as Stockdto;
+      if(this.stockdto.campaigndto?.campaignName) {
+       this.campaignName = this.stockdto.campaigndto?.campaignName
+      }
       if(this.stockdto.productTypes) {
       this.products = this.stockdto.productTypes;
       this.prodForm.patchValue({
@@ -64,7 +68,7 @@ export class AddproductComponent implements OnInit{
       console.log(this.stockdto);
         },
         (error) => {
-          console.error('Failed to add team:', error);
+          console.error('Failed to get stock:', error);
         }
       );
     }

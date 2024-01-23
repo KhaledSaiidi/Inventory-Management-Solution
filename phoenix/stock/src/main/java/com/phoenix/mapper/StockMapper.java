@@ -18,6 +18,7 @@ public class StockMapper implements IStockMapper{
         stockDto.setStockDate(stock.getStockDate());
         stockDto.setChecked(stock.isChecked());
         stockDto.setNotes(stock.getNotes());
+        stockDto.setStockValue(stock.getStockValue());
         return stockDto;
     }
 
@@ -30,6 +31,7 @@ public class StockMapper implements IStockMapper{
         stock.setStockDate(stockDto.getStockDate());
         stock.setChecked(stockDto.isChecked());
         stock.setNotes(stockDto.getNotes());
+        stock.setStockValue(stockDto.getStockValue());
         return stock;
     }
 

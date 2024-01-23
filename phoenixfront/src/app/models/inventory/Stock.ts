@@ -10,4 +10,5 @@ export interface Stockdto {
     notes?: string;
     products?: Productdto[];
     campaigndto?: Campaigndto;
+    stockValue?: number;
 }

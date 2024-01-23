@@ -10,7 +10,7 @@
             <div class="col-12">
              <div class="card mb-4 ">
                      <div class="card-header pb-0" >
-                       <h6 class="text-center">{{ stockdto.campaigndto?.campaignName?.toUpperCase() }} Stock Products</h6>
+                       <h6 class="text-center">{{ campaignName }} Stock Products</h6>
                      </div>
                      <div class="card-body px-0 pt-0 pb-2">
                  <div class="table-responsive p-0">
@@ -32,12 +32,12 @@
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>                        
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.prodName}}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.price}}$</td>
-                        <td style="word-wrap: break-word; white-space: normal;">
-                          {{ getStateText(prod.state) }}
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="prod.state">
+                          {{ getStateText(prod.state.toString()) }}
                         </td>
-                        
-
-                        <td style="word-wrap: break-word; white-space: normal;">{{ prod.soldDate| date: 'medium' | slice: 0:12 }}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">
+                          {{ prod.soldDate ? (prod.soldDate | date: 'medium' | slice: 0:12) : 'Not sold yet' }}
+                        </td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a>update</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a>Assign to Seller</a></td>
                        </tr>

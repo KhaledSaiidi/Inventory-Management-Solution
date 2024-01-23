@@ -2,6 +2,7 @@ package com.phoenix.services;
 
 import com.phoenix.dto.StockDto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IStockService {

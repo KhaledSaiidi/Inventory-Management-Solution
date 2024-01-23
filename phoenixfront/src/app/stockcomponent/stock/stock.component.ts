@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, catchError, map, of } from 'rxjs';
+import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -34,6 +36,5 @@ export class StockComponent implements OnInit{
       }
     );
   }
-
 
 }

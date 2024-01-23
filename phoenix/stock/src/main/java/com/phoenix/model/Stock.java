@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class Stock {
     private LocalDate stockDate;
     private boolean checked;
     private String notes;
+    private BigDecimal stockValue;
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<Product> products;

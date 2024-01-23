@@ -3,6 +3,7 @@ package com.phoenix.dto;
 import com.phoenix.dtokeycloakuser.Campaigndto;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class StockDto {
     private String notes;
 
     private Campaigndto campaigndto;
+    private BigDecimal stockValue;
 
     private List<ProductDto> products;
 }

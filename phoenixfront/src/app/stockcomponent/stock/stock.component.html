@@ -40,7 +40,7 @@
                         <td style="word-wrap: break-word; white-space: normal;">{{ stock.campaigndto?.campaignName }}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{stock.campaigndto?.client?.companyName}}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{ stock.stockDate | date: 'medium' | slice: 0:12 }}</td>
-                        <td style="word-wrap: break-word; white-space: normal;">10,000$</td>
+                        <td style="word-wrap: break-word; white-space: normal;"> {{ stock.stockValue ?? 0 }}  $</td>
                         <td [style.color]="stock.checked ? 'green' : 'red'">
                           {{ stock.checked ? 'Stock already checked' : 'Stock not yet checked' }}
                         </td>

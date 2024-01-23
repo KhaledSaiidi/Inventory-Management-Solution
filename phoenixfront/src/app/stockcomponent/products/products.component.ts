@@ -37,10 +37,13 @@ export class ProductsComponent implements OnInit{
     console.log(ref);
   }
   stockdto!: Stockdto;
+  campaignName!: string;
   getStockbyRef(ref : string){
     this.stockservice.getStockByreference(ref).subscribe(
       (data) => {
     this.stockdto = data as Stockdto;
+    if(this.stockdto.campaigndto?.campaignName)
+    this.campaignName = this.stockdto.campaigndto?.campaignName?.toUpperCase();
       },
       (error) => {
         console.error('Failed to get stock:', error);
@@ -60,16 +63,16 @@ export class ProductsComponent implements OnInit{
     );
   }
 
-  getStateText(state: State | undefined): string {
+  getStateText(state: string): string {
     switch (state) {
-      case State.soldProd:
+      case 'soldProd':
         return 'Sold';
-      case State.notSoldProd:
+      case 'notSoldProd':
         return 'Not sold';
-      case State.returnedProd:
+      case 'returnedProd':
         return 'Returned';
       default:
-        return 'Unknown state';
+        return 'Unknown';
     }
   }
 
