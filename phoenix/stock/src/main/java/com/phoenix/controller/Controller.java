@@ -2,6 +2,7 @@ package com.phoenix.controller;
 
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
+import com.phoenix.model.Product;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,4 +52,15 @@ public class Controller {
         return productDtos;
     }
 
+    @PutMapping("/updateProduct/{serialNumber}")
+    public ProductDto updateProduct(@PathVariable String serialNumber, @RequestBody ProductDto productDto) {
+        iProductService.UpdateProduct(serialNumber,productDto);
+        return productDto;
+    }
+
+    @GetMapping("getProductByserialNumber/{serialNumber}")
+    public ProductDto getProductByserialNumber(@PathVariable String serialNumber) {
+        ProductDto productDto = iProductService.getProductByserialNumber(serialNumber);
+        return productDto;
+    }
 }

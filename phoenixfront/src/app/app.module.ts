@@ -25,11 +25,12 @@ import { ClientComponent } from './component/client/client.component';
 import { UpdateCampaignComponent } from './component/update-campaign/update-campaign.component';
 import { ArchivedComponent } from './component/archived/archived.component';
 import { StockComponent } from './stockcomponent/stock/stock.component';
-import { ProdinfoComponent } from './stockcomponent/prodinfo/prodinfo.component';
 import { AddstockComponent } from './stockcomponent/addstock/addstock.component';
 import { ProductsComponent } from './stockcomponent/products/products.component';
 import { AddproductComponent } from './stockcomponent/addproduct/addproduct.component';
 import { NumericOnlyDirective } from './services/numericOnlyDirective';
+import { UpdatestockComponent } from './stockcomponent/updatestock/updatestock.component';
+import { UpdateprodComponent } from './stockcomponent/updateprod/updateprod.component';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -48,7 +49,8 @@ const appRoute: Routes = [
   {path:'stock', component: StockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addstock', component: AddstockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'products', component: ProductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'addproduct', component: AddproductComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
+  {path:'addproduct', component: AddproductComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'updateproduct', component: UpdateprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
 
 ]
 
@@ -93,11 +95,12 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     UpdateCampaignComponent,
     ArchivedComponent,
     StockComponent,
-    ProdinfoComponent,
     AddstockComponent,
     ProductsComponent,
     AddproductComponent,
-    NumericOnlyDirective
+    NumericOnlyDirective,
+    UpdatestockComponent,
+    UpdateprodComponent
   ],
   imports: [
     BrowserModule,

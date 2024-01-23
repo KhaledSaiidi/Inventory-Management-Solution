@@ -62,4 +62,27 @@ getProductsByStockReference(stockreference: string): Observable<Productdto[]> {
     })
   );
 }
+
+
+updateProduct(serialNumber: string, productdto: Productdto): Observable<Productdto> {
+  return this.http.put<Productdto>(this.apiUrl + '/updateProduct/'+ serialNumber , productdto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
+getProductByserialNumber(serialNumber: string): Observable<Productdto> {
+  return this.http.get<Productdto>(this.apiUrl + '/getProductByserialNumber/' + serialNumber)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
 }

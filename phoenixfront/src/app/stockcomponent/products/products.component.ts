@@ -15,7 +15,17 @@ export class ProductsComponent implements OnInit{
     private route: ActivatedRoute,
     private router: Router,
     private stockservice: StockService) {}
-
+    enable: boolean = false;
+    productdto?: Productdto;  
+    selectedRowIndex: number | null = null;
+    showTooltip(productdto: Productdto) {
+      this.enable=true;
+        this.productdto = productdto;
+    }
+    hideTooltip() {
+      this.enable=false;
+     }
+  
   stockreference: string = '';
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
@@ -76,6 +86,14 @@ export class ProductsComponent implements OnInit{
     }
   }
 
-
+  navigateToUpdateProduct(ref1?: string, ref2?: string) {
+    if (ref1 === undefined || ref2 === undefined) {
+      console.log('Invalid refs');
+      return;
+    }
+    this.router.navigate(['/updateproduct'], { queryParams: { id: ref1, prodId: ref2 } });
+    console.log(ref1, ref2);
+  }
+  
 
 }

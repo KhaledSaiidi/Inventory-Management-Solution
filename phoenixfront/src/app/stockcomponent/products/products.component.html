@@ -28,7 +28,8 @@
                      </thead>
                      <tbody>
                        <tr *ngFor="let prod of productsDto">
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" 
+                         (mouseout)="hideTooltip()">{{prod.serialNumber}}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>                        
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.prodName}}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.price}}$</td>
@@ -38,7 +39,7 @@
                         <td style="word-wrap: break-word; white-space: normal;">
                           {{ prod.soldDate ? (prod.soldDate | date: 'medium' | slice: 0:12) : 'Not sold yet' }}
                         </td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a>update</a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a (click)="navigateToUpdateProduct(stockreference, prod.serialNumber)">update</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a>Assign to Seller</a></td>
                        </tr>
                      </tbody>
@@ -46,6 +47,25 @@
                  </div>
                 </div>     
              </div>
+             <ng-container *ngIf="enable === true" style="width: 1000px; height: 1000px;">
+              <div class="tooltip-container" style="position: relative;top: -150px; left: 200px; width: 50%;">
+                <div class="tooltip card" id="tooltip" 
+                [style.bottom]="selectedRowIndex !== null ? (selectedRowIndex * -70) + 'px' : null"
+                [style.left]="selectedRowIndex !== null ? '10%' : null"
+                style="position: absolute; background-color: white;
+                 box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);">
+              
+              <div class="popup" style="margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;">
+                <div class="popup-content" >
+                  <h6 style="text-align: center;"> <b>{{ productdto?.prodName}} </b></h6>
+                  <p style="font-size: 14px; word-wrap: break-word;">
+                    {{productdto?.prodDescription}} <br>
+                  </p>
+                </div>
+              </div>
+                </div>
+              </div>
+            </ng-container>  
             </div>
            </div>
     </div>

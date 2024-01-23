@@ -55,5 +55,43 @@ public class ProductService implements IProductService{
         List<ProductDto> productdtos = iProductMapper.toDtoList(product);
         return productdtos;
     }
+    @Override
+    public ProductDto UpdateProduct(String serialNumber, ProductDto productDto) {
+        Product product = iProductRepository.findById(serialNumber).orElse(null);
+        Stock stock = product.getStock();
+        BigDecimal tochangeValue = BigDecimal.ZERO;
+        if (product == null) {
+            return null;
+        }
+        if (productDto.getProductType() != null) {
+            product.setProductType(productDto.getProductType());}
+        if (productDto.getProdName() != null) {
+            product.setProdName(productDto.getProdName());}
+        if (productDto.getProdDescription() != null) {
+            product.setProdDescription(productDto.getProdDescription());}
+        if (productDto.getState() != null) {
+            product.setState(productDto.getState());}
+        if (productDto.getSoldDate() != null) {
+            product.setSoldDate(productDto.getSoldDate());}
+        if (productDto.getPrice() != null) {
+            tochangeValue = product.getPrice();
+            product.setPrice(productDto.getPrice());}
+        Product savedproduct = iProductRepository.save(product);
+        stock.setStockValue(stock.getStockValue().subtract(tochangeValue).add(product.getPrice()));
+        iStockRepository.save(stock);
+        return productDto;
+    }
+
+
+    @Override
+    public ProductDto getProductByserialNumber(String serialNumber) {
+        Optional<Product> productOptional = iProductRepository.findById(serialNumber);
+        if (productOptional.isEmpty()) {
+            return null;
+        }
+        Product product = productOptional.get();
+        ProductDto productDto = iProductMapper.toDto(product);
+        return productDto;
+    }
 
 }
