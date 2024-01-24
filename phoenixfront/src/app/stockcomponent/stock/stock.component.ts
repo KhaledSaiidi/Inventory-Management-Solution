@@ -36,5 +36,13 @@ export class StockComponent implements OnInit{
       }
     );
   }
+  navigateToStockInfo(ref?: string) {
+    if (ref === undefined) {
+      console.log('Invalid ref');
+      return;
+    }
+    this.router.navigate(['/stockinfo'], { queryParams: { id: ref } });
+    console.log(ref);
+  }
 
 }

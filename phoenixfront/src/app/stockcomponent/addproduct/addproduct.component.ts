@@ -45,6 +45,7 @@ export class AddproductComponent implements OnInit{
         serialNumber: [''],
         productType: [''],
         productName: [''],
+        brand: [''],
         price: [''],
         productDescription: ['']
       });
@@ -79,6 +80,7 @@ export class AddproductComponent implements OnInit{
       prodName: this.prodForm.get('productName')?.value,
       price: this.prodForm.get('price')?.value,
       prodDescription: this.prodForm.get('productDescription')?.value,
+      brand: this.prodForm.get('brand')?.value,
       stock: this.stockdto
     }
     console.log(productdto);

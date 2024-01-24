@@ -55,7 +55,8 @@ export class UpdateprodComponent implements OnInit{
           productType: this.product.productType,
           productName: this.product.prodName,
           price: this.product.price,
-          productDescription: this.product.prodDescription
+          productDescription: this.product.prodDescription,
+          brand: this.product.brand
         });
   
         console.log(this.product);
@@ -88,7 +89,8 @@ export class UpdateprodComponent implements OnInit{
         productType: [''],
         productName: [''],
         price: [''],
-        productDescription: ['']
+        productDescription: [''],
+        brand: ['']
       });
     }
 
@@ -97,7 +99,8 @@ export class UpdateprodComponent implements OnInit{
         productType: this.prodForm.get('productType')?.value,
         prodName: this.prodForm.get('productName')?.value,
         prodDescription: this.prodForm.get('productDescription')?.value,
-        price: this.prodForm.get('price')?.value
+        price: this.prodForm.get('price')?.value,
+        brand: this.prodForm.get('brand')?.value
       }
       console.log(productdto);
       this.stockservice.updateProduct(this.serialNumber, productdto).subscribe(

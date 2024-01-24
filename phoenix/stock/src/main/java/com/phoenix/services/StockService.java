@@ -1,7 +1,9 @@
 package com.phoenix.services;
 
+import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
 import com.phoenix.dtokeycloakuser.Campaigndto;
+import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.Product;
 import com.phoenix.model.Stock;
@@ -21,6 +23,9 @@ import java.util.Optional;
 public class StockService implements IStockService{
     @Autowired
     private IStockMapper iStockMapper;
+    @Autowired
+    private IProductMapper iProductMapper;
+
     @Autowired
     private IStockRepository iStockRepository;
 
@@ -74,5 +79,4 @@ public class StockService implements IStockService{
         stockDto.setCampaigndto(campaigndto);
         return stockDto;
     }
-
 }

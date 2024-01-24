@@ -14,11 +14,15 @@
               </div>
               <div class="card-body">
                 <form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
+                <div class="row">
                   <div class="col-md-6">
-                    <label for="productName">Product Name</label>
+                    <label for="brand">Product Brand</label>
+                    <input type="text" class="form-control mt-2" id="brand" formControlName="brand" >                    
+                </div>
+                  <div class="col-md-6">
+                    <label for="productName">Product Model</label>
                     <input type="text" class="form-control mt-2" id="productName" formControlName="productName" >                    
                 </div>
-                <div class="row">
                   <div class="col-md-6">
                           <label for="productType">Product Type</label>
                           <select class="form-control mt-2" formControlName="productType" id="productType">

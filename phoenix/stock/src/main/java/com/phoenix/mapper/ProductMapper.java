@@ -15,9 +15,11 @@ public class ProductMapper implements IProductMapper{
         productDto.setSerialNumber(product.getSerialNumber());
         productDto.setProductType(product.getProductType());
         productDto.setProdName(product.getProdName());
+        productDto.setBrand(product.getBrand());
         productDto.setProdDescription(product.getProdDescription());
         productDto.setPrice(product.getPrice());
         productDto.setState(product.getState());
+        productDto.setChecked(product.isChecked());
         productDto.setSoldDate(product.getSoldDate());
         return productDto;
     }
@@ -27,9 +29,11 @@ public class ProductMapper implements IProductMapper{
         product.setSerialNumber(productDto.getSerialNumber());
         product.setProductType(productDto.getProductType());
         product.setProdName(productDto.getProdName());
+        product.setBrand(productDto.getBrand());
         product.setProdDescription(productDto.getProdDescription());
         product.setPrice(productDto.getPrice());
         product.setState(productDto.getState());
+        product.setChecked(productDto.isChecked());
         product.setSoldDate(productDto.getSoldDate());
         return product;
     }

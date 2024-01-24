@@ -44,10 +44,7 @@
                         <td [style.color]="stock.checked ? 'green' : 'red'">
                           {{ stock.checked ? 'Stock already checked' : 'Stock not yet checked' }}
                         </td>
-                        <td style="word-wrap: break-word; white-space: normal;">
-                          <a *ngIf="!stock.checked" style="cursor: pointer;">Check</a>
-                          <span *ngIf="stock.checked">Approved</span>
-                        </td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">View</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>update</a></td>
                        </tr>
                      </tbody>

@@ -20,6 +20,7 @@ public class Product {
     @jakarta.persistence.Id
     private String serialNumber;
     private String productType;
+    private String brand;
     private String prodName;
     @Column(columnDefinition = "TEXT")
     private String prodDescription;
@@ -27,6 +28,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private State state;
     private LocalDate soldDate;
+    private boolean checked;
     @ManyToOne
     @JoinColumn(name = "stock_reference")
     private Stock stock;

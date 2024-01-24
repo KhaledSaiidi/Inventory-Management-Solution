@@ -1,0 +1,104 @@
+<div class="shadowed" (click)="navigateToStock()">
+    <app-stock></app-stock>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-body">
+                <div class="container">
+                        <h3 class="mb-0">Stock {{campaignName}} info:</h3>
+
+                    <br>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <p class="mb-0"><b>Campaign</b> </p>
+                          </div>
+                          <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{campaignName}}</p>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <p class="mb-0"><b>Client</b></p>
+                          </div>
+                          <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{companyName}}</p>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <p class="mb-0"><b>Stock Value</b></p>
+                          </div>
+                          <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{stockValue}} $</p>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <p class="mb-0"><b>Stock Date</b></p>
+                          </div>
+                          <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{stockDate}}</p>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <p class="mb-0"><b>Product Types</b></p>
+                          </div>
+                          <div class="col-sm-9">
+                            <div class="product-list">
+                                <p class="text-muted mb-0" *ngFor="let prod of products; let last = last">
+                                  {{ prod }}{{ !last ? ' - ' : '' }}
+                                </p>
+                            </div>
+                        </div>
+                        </div>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table custom-table" style="text-align: center;">
+                                <thead>
+                                <tr>
+                                    <th class="col">Product Model</th>
+                                    <th class="col">Product Brand</th>
+                                    <th class="col">Product Price</th>
+                                    <th class="col">Qty</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let prodmap of uniqueProducts">
+                                    <td>{{ prodmap.prodName }}</td>
+                                    <td>{{ prodmap.brand }}</td>
+                                    <td>{{ prodmap.price }} $</td>
+                                    <td>{{ prodmap.count }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                    <div class="card-body p-4 text-black">
+                          <p class="lead fw-normal mb-1">Stock Notes :</p>
+                          <div class="p-4" style="background-color: #f8f9fa;">
+                            <p class="font-italic mb-1">{{notes}}</p>
+                          </div>
+                    </div>
+
+               
+
+
+
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
