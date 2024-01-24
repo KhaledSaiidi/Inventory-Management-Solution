@@ -7,8 +7,11 @@
         <div class="row" style="width: 100%;">
           <div class="col-md-8" style="width: 100%;">
             <div class="card">
+                <a  class="btn-primary btn" (click)="downloadPdf()" style="color: white;" >
+                    <span class="">Download As PDF</span>
+                </a>
               <div class="card-body">
-                <div class="container">
+                <div id="pdf-content" class="container">
                         <h3 class="mb-0">Stock {{campaignName}} info:</h3>
 
                     <br>
@@ -72,7 +75,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr *ngFor="let prodmap of uniqueProducts">
+                                <tr class="avoid-page-break" *ngFor="let prodmap of uniqueProducts">
                                     <td>{{ prodmap.prodName }}</td>
                                     <td>{{ prodmap.brand }}</td>
                                     <td>{{ prodmap.price }} $</td>
@@ -81,20 +84,12 @@
                                 </tbody>
                             </table>
                             </div>
-                    <div class="card-body p-4 text-black">
+                    <div class="card-body p-4 text-black avoid-page-break">
                           <p class="lead fw-normal mb-1">Stock Notes :</p>
                           <div class="p-4" style="background-color: #f8f9fa;">
                             <p class="font-italic mb-1">{{notes}}</p>
                           </div>
                     </div>
-
-               
-
-
-
-
-
-
                 </div>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
+import * as html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-stockinfo',
@@ -76,8 +77,8 @@ export class StockinfoComponent implements OnInit{
           this.productsDto.forEach(product => {
             this.updateUniqueProductMap(product);
           });
-          this.uniqueProducts = Array.from(this.uniqueProductMap.values());
-          console.log(this.uniqueProducts);
+           this.uniqueProducts = Array.from(this.uniqueProductMap.values());
+           console.log(this.uniqueProducts);
         },
         (error) => {
           console.error('Failed to get prods:', error);
@@ -101,5 +102,25 @@ export class StockinfoComponent implements OnInit{
         this.uniqueProductMap.set(key, { prodName, brand, price, count: 1 });
       }
     }
+
+    downloadPdf() {
+      const originalElement = document.getElementById('pdf-content');
+      if(originalElement) {
+      const clonedElement = originalElement.cloneNode(true) as HTMLElement;
+      const tableElement = clonedElement.querySelector('.table') as HTMLElement;
+      if(tableElement) {
+        tableElement.style.maxHeight = 'unset';
+        tableElement.style.overflowY = 'unset';
+      }
+      
+      const options = {
+        filename: "Stock" + " " + this.campaignName + " " + "info",
+        pagebreak: { avoid: '.avoid-page-break' }
+      };
+      html2pdf().from(clonedElement).set(options).save();
+    }
+      
+    }
+  
 
 }
