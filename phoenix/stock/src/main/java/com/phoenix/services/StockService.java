@@ -7,16 +7,16 @@ import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.Product;
 import com.phoenix.model.Stock;
+import com.phoenix.model.UncheckHistory;
 import com.phoenix.repository.IStockRepository;
+import com.phoenix.repository.IUncheckHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +30,8 @@ public class StockService implements IStockService{
     private IStockRepository iStockRepository;
 
     private final WebClient.Builder webClientBuilder;
+    @Autowired
+    private IUncheckHistoryRepository iUncheckHistoryRepository;
 
 
     @Override
@@ -78,5 +80,17 @@ public class StockService implements IStockService{
         StockDto stockDto = iStockMapper.toDto(stock);
         stockDto.setCampaigndto(campaigndto);
         return stockDto;
+    }
+
+    @Override
+    public List<UncheckHistory> getUncheckedHistorybyStockreference (String reference) {
+        Optional<List<UncheckHistory>> optionaluncheckHistories= iUncheckHistoryRepository.findByStockreference(reference);
+        if(optionaluncheckHistories.isEmpty()) {
+            return null;
+        }
+        List<UncheckHistory> uncheckHistories = optionaluncheckHistories.get();
+        Collections.sort(uncheckHistories, Comparator.comparing(UncheckHistory::getCheckDate));
+        List<UncheckHistory> triByDateUncheckHistories = new ArrayList<>(uncheckHistories);
+        return triByDateUncheckHistories;
     }
 }

@@ -3,6 +3,7 @@ package com.phoenix.controller;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
 import com.phoenix.model.Product;
+import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
 import org.springframework.batch.core.Job;
@@ -81,4 +82,11 @@ public class Controller {
             )throws IOException {
         return iProductService.uploadProducts(file, stockReference);
     }
+
+    @GetMapping("getUncheckedHistorybyStockreference/{stockreference}")
+    public List<UncheckHistory> getUncheckedHistorybyStockreference(@PathVariable String stockreference) {
+        List<UncheckHistory> uncheckHistories = iStockService.getUncheckedHistorybyStockreference(stockreference);
+        return uncheckHistories;
+    }
+
 }
