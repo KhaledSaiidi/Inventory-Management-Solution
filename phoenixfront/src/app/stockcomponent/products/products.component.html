@@ -1,12 +1,12 @@
 <app-base></app-base>
 <div class="listeequipes-container"> 
-    <a  class="btn-primary btn" (click)="navigateToAddProduct(stockreference)" style="color: white;" >
-        <span class="">&nbsp; Add Product</span>
-    </a> &nbsp;
-    <a  class="btn-primary btn" (click)="navigateToAddProduct(stockreference)" style="color: white;" >
-      <span class="">&nbsp; Check Products</span>
-  </a>
-    
+  <a class="btn btn-primary" (click)="navigateToAddProduct(stockreference)">Add Product</a>
+  <div class="d-flex">
+    <input type="file" style="width: 230px; max-height: 40px;" class="form-control" id="image" (change)="onFileSelected($event)">  &nbsp;
+    <a class="btn btn-primary" (click)="uploadFile()">Check Products</a>
+  </div>
+  
+      
     <div class="equipe-container">
         <div class="listetalents-containershown">
             <div class="col-12">

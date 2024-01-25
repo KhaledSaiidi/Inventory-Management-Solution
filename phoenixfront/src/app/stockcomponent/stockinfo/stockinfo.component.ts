@@ -108,14 +108,14 @@ export class StockinfoComponent implements OnInit{
       if(originalElement) {
       const clonedElement = originalElement.cloneNode(true) as HTMLElement;
       const tableElement = clonedElement.querySelector('.table') as HTMLElement;
-      if(tableElement) {
+       if(tableElement) {
         tableElement.style.maxHeight = 'unset';
         tableElement.style.overflowY = 'unset';
       }
       
       const options = {
         filename: "Stock" + " " + this.campaignName + " " + "info",
-        pagebreak: { avoid: '.avoid-page-break' }
+         pagebreak: { avoid: '.avoid-page-break' }
       };
       html2pdf().from(clonedElement).set(options).save();
     }

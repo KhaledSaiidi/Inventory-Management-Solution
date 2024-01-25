@@ -95,5 +95,48 @@ export class ProductsComponent implements OnInit{
     console.log(ref1, ref2);
   }
   
+  selectedFile: File | null = null;
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0] as File;
+    const allowedExtensions = ['csv', 'xlsx'];
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if (fileExtension && allowedExtensions.includes(fileExtension)) {
+      if (fileExtension === 'xlsx') {
+        this.convertExcelToCsv(file);
+      } else {
+        this.selectedFile = file;
+      }
+    } else {
+      console.error('Invalid file type. Please select a CSV or Excel file.');
+    }
+    }
+    convertExcelToCsv(excelFile: File){
+      this.stockservice.excelToCsv(excelFile).subscribe(
+        (csvFile: File) => {
+          this.selectedFile = csvFile;
+          console.log('Excel file converted to CSV.');
+        },
+        error => {
+          console.error('Error converting Excel to CSV:', error);
+        }
+      );
+    }
+        
+
+  uploadFile(): void {
+    if (this.selectedFile) {
+      this.stockservice.uploadFile(this.selectedFile).subscribe(
+        result => {
+          console.log(`File uploaded successfully. Unique serial numbers count: ${result}`);
+        },
+        error => {
+          console.error('Error uploading file:', error);
+        }
+      );
+    } else {
+      console.error('No file selected.');
+    }
+  }
+
 
 }

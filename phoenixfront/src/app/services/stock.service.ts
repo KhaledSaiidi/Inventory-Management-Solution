@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Stockdto } from '../models/inventory/Stock';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, Observer, catchError, throwError } from 'rxjs';
 import { Productdto } from '../models/inventory/ProductDto';
+import * as XLSX from 'xlsx';
 
 @Injectable({
   providedIn: 'root'
@@ -84,5 +85,40 @@ getProductByserialNumber(serialNumber: string): Observable<Productdto> {
     })
   );
 }
+
+uploadFile(file: File): Observable<number> {
+  const formData: FormData = new FormData();
+  formData.append('file', file, file.name);
+
+  return this.http.post<number>(this.apiUrl + "/uploadcsv", formData);
+}
+
+excelToCsv(excelFile: File): Observable<File> {
+  return new Observable((observer: Observer<File>) => {
+    const reader: FileReader = new FileReader();
+
+    reader.onload = (event: any) => {
+      const data: string | ArrayBuffer = event.target.result;
+      const workbook: XLSX.WorkBook = XLSX.read(data, { type: 'binary' });
+
+      // Assume the first sheet is the one you want to convert
+      const firstSheetName = workbook.SheetNames[0];
+      const csvData: string = XLSX.utils.sheet_to_csv(workbook.Sheets[firstSheetName]);
+
+      const blob = new Blob([csvData], { type: 'text/csv' });
+      const csvFile: File = new File([blob], 'converted.csv', { type: 'text/csv' });
+
+      observer.next(csvFile);
+      observer.complete();
+    };
+
+    reader.onerror = (event: ProgressEvent) => {
+      observer.error(event);
+    };
+
+    reader.readAsBinaryString(excelFile);
+  });
+}
+
 
 }

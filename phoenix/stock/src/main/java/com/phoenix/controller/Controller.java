@@ -5,12 +5,22 @@ import com.phoenix.dto.StockDto;
 import com.phoenix.model.Product;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class Controller {
@@ -62,6 +72,13 @@ public class Controller {
     public ProductDto getProductByserialNumber(@PathVariable String serialNumber) {
         ProductDto productDto = iProductService.getProductByserialNumber(serialNumber);
         return productDto;
+    }
+
+    @PostMapping(value = "/uploadcsv", consumes = {"multipart/form-data"})
+    public ResponseEntity<Set<String>> uploadProducts(
+            @RequestPart("file")MultipartFile file
+            )throws IOException {
+        return ResponseEntity.ok(iProductService.uploadProducts(file));
     }
 
 }
