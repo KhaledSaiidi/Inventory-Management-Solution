@@ -31,6 +31,7 @@ import { NumericOnlyDirective } from './services/numericOnlyDirective';
 import { UpdatestockComponent } from './stockcomponent/updatestock/updatestock.component';
 import { UpdateprodComponent } from './stockcomponent/updateprod/updateprod.component';
 import { StockinfoComponent } from './stockcomponent/stockinfo/stockinfo.component';
+import { CheckprodsComponent } from './stockcomponent/checkprods/checkprods.component';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -51,7 +52,8 @@ const appRoute: Routes = [
   {path:'products', component: ProductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addproduct', component: AddproductComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'updateproduct', component: UpdateprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'stockinfo', component: StockinfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
+  {path:'stockinfo', component: StockinfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'checkprods', component: CheckprodsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
 
 ]
 
@@ -102,7 +104,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     NumericOnlyDirective,
     UpdatestockComponent,
     UpdateprodComponent,
-    StockinfoComponent
+    StockinfoComponent,
+    CheckprodsComponent
   ],
   imports: [
     BrowserModule,

@@ -13,10 +13,8 @@ public interface IProductService {
     List<ProductDto> getProductsBystockReference(String stockreference);
     ProductDto UpdateProduct(String serialNumber, ProductDto productDto);
     ProductDto getProductByserialNumber(String serialNumber);
-    boolean checkProductBySerialNumber(String serialNumber);
-    void updateProductCheckedStatus(String serialNumber, boolean checked);
 
-    Set<String> uploadProducts(MultipartFile file) throws IOException;
+    List<String> uploadProducts(MultipartFile file, String stockReference) throws IOException;
 
 
 }

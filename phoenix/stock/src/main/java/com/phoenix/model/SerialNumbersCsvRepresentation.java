@@ -1,4 +1,4 @@
-package com.phoenix.services;
+package com.phoenix.model;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.*;
@@ -9,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class SerialNumbersCsvRepresentation {
-    @CsvBindByName(column = "SerialNumber")
+    @CsvBindByName(column = "serialNumber")
     private String serialNumber;
 }

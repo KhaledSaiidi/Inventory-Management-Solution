@@ -4,14 +4,13 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.phoenix.dto.ProductDto;
-import com.phoenix.dto.StockDto;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
-import com.phoenix.model.Product;
-import com.phoenix.model.State;
-import com.phoenix.model.Stock;
+import com.phoenix.model.*;
 import com.phoenix.repository.IProductRepository;
 import com.phoenix.repository.IStockRepository;
+import com.phoenix.repository.IUncheckHistoryRepository;
+import lombok.Data;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +38,9 @@ public class ProductService implements IProductService{
     @Autowired
     private IStockRepository iStockRepository;
 
+    @Autowired
+    private IUncheckHistoryRepository iUncheckHistoryRepository;
+
 
     @Override
     public void addProduct(ProductDto productDto) {
@@ -52,6 +53,7 @@ public class ProductService implements IProductService{
         product.setStock(stock);
         iProductRepository.save(product);
         stock.setStockValue(stock.getStockValue().add(product.getPrice()));
+        stock.setChecked(false);
         iStockRepository.save(stock);
     }
 
@@ -78,6 +80,8 @@ public class ProductService implements IProductService{
             product.setProductType(productDto.getProductType());}
         if (productDto.getProdName() != null) {
             product.setProdName(productDto.getProdName());}
+        if (productDto.getBrand() != null) {
+            product.setBrand(productDto.getBrand());}
         if (productDto.getProdDescription() != null) {
             product.setProdDescription(productDto.getProdDescription());}
         if (productDto.getState() != null) {
@@ -106,26 +110,42 @@ public class ProductService implements IProductService{
     }
 
 
-    @Override
-    @Transactional(readOnly = true)
-    public boolean checkProductBySerialNumber(String serialNumber) {
-        // Check if a product with the given serial number exists in the database
-        return iProductRepository.existsById(serialNumber);
-    }
-    @Override
-    @Transactional
-    public void updateProductCheckedStatus(String serialNumber, boolean checked) {
-        // Update the 'checked' attribute of the product with the given serial number
-        iProductRepository.findById(serialNumber).ifPresent(product -> {
-            product.setChecked(checked);
-            iProductRepository.save(product);
-        });
-    }
 
     @Override
-    public Set<String> uploadProducts(MultipartFile file) throws IOException {
+    public List<String> uploadProducts(MultipartFile file, String stockReference) throws IOException {
         Set<String> serialNumbers = parseCsv(file);
-    return serialNumbers;
+        List<Product> products = iProductRepository.findAll();
+        List<String> notFoundserialNumbers = new ArrayList<>();
+
+        for (String serial : serialNumbers) {
+            boolean found = false;
+            for (Product product : products) {
+                if (product.getSerialNumber().equalsIgnoreCase(serial)) {
+                    product.setChecked(true);
+                    iProductRepository.save(product);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                notFoundserialNumbers.add(serial);
+            }
+        }
+        if(!notFoundserialNumbers.isEmpty()) {
+                    UncheckHistory uncheckHistory = new UncheckHistory();
+                    uncheckHistory.setNotFoundserialNumbers(notFoundserialNumbers);
+                    uncheckHistory.setStockreference(stockReference);
+                    uncheckHistory.setCheckDate(LocalDate.now());
+                    iUncheckHistoryRepository.save(uncheckHistory);
+        } else {
+            Optional<Stock> stockOptional = iStockRepository.findById(stockReference);
+            if(stockOptional.isPresent()) {
+                Stock stock = stockOptional.get();
+                stock.setChecked(true);
+                iStockRepository.save(stock);
+            }
+        }
+    return notFoundserialNumbers;
     }
 
     private Set<String> parseCsv(MultipartFile file) throws IOException {

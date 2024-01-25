@@ -86,11 +86,11 @@ getProductByserialNumber(serialNumber: string): Observable<Productdto> {
   );
 }
 
-uploadFile(file: File): Observable<number> {
+uploadFile(file: File, stockReference: string): Observable<string[]> {
   const formData: FormData = new FormData();
   formData.append('file', file, file.name);
 
-  return this.http.post<number>(this.apiUrl + "/uploadcsv", formData);
+  return this.http.post<string[]>(this.apiUrl + "/uploadcsv/" + stockReference , formData);
 }
 
 excelToCsv(excelFile: File): Observable<File> {

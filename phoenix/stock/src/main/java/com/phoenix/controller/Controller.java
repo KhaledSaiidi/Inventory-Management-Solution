@@ -74,11 +74,11 @@ public class Controller {
         return productDto;
     }
 
-    @PostMapping(value = "/uploadcsv", consumes = {"multipart/form-data"})
-    public ResponseEntity<Set<String>> uploadProducts(
+    @PostMapping(value = "/uploadcsv/{stockReference}", consumes = {"multipart/form-data"})
+    public List<String> uploadProducts(
+            @PathVariable String stockReference,
             @RequestPart("file")MultipartFile file
             )throws IOException {
-        return ResponseEntity.ok(iProductService.uploadProducts(file));
+        return iProductService.uploadProducts(file, stockReference);
     }
-
 }

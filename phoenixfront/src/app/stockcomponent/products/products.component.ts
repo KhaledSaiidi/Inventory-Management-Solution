@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
+import { DataSharingService } from 'src/app/services/dataSharing.service';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class ProductsComponent implements OnInit{
   constructor( 
     private route: ActivatedRoute,
     private router: Router,
-    private stockservice: StockService) {}
+    private stockservice: StockService,
+    private dataSharingService: DataSharingService) {}
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
@@ -122,12 +124,15 @@ export class ProductsComponent implements OnInit{
       );
     }
         
-
+  uncheckedProds!: string[];
   uploadFile(): void {
     if (this.selectedFile) {
-      this.stockservice.uploadFile(this.selectedFile).subscribe(
+      this.stockservice.uploadFile(this.selectedFile, this.stockreference).subscribe(
         result => {
-          console.log(`File uploaded successfully. Unique serial numbers count: ${result}`);
+          this.uncheckedProds = result as string[];
+          console.log(this.uncheckedProds);
+          this.dataSharingService.updateUncheckedProds(this.uncheckedProds);
+          this.navigateToCheckProds(this.stockreference);
         },
         error => {
           console.error('Error uploading file:', error);
@@ -138,5 +143,12 @@ export class ProductsComponent implements OnInit{
     }
   }
 
-
+  navigateToCheckProds(ref?: string) {
+    if (ref === undefined) {
+      console.log('Invalid ref');
+      return;
+    }
+    this.router.navigate(['/checkprods'], { queryParams: { id: ref } });     
+    console.log(ref);
+  }
 }
