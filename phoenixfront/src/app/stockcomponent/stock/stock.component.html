@@ -45,7 +45,7 @@
                           {{ stock.checked ? 'Stock already checked' : 'Stock not yet checked' }}
                         </td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">View</a></td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a>update</a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">update</a></td>
                        </tr>
                      </tbody>
                    </table>

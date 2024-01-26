@@ -1,1 +1,48 @@
-<p>updatestock works!</p>
+<div class="shadowed" (click)="navigateToStock()">
+    <app-stock></app-stock>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center" style="margin-bottom: 15px;">
+                  <p class="mb-0"><b>Stock <u>{{stockreference}}</u> Information</b></p>
+                </div>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
+                  <div class="d-flex align-items-center" style="margin-bottom: 20px;">
+                    <input type="checkbox" id="checked" class="custom-checkbox">
+                    <label for="checked" formControlName="checked" class="mb-0" style="margin-left: 10px;">Would you like to force the stock check ?</label>
+                  </div>
+                <div class="row">
+                    <div class="col-md-6">
+                          <label for="reference">Campaign Affiliation</label>
+                          <select class="form-control mt-2" formControlName="reference" id="reference">
+                            <option *ngFor="let campaign of campaigns" [value]="campaign.reference"> {{ campaign.campaignName }} - {{ campaign.client?.companyName }} </option>  
+                        </select>
+                            
+                      </div>
+                  <div class="col-md-6">
+                            <label for="stockDate">Stock Receipt Date</label>
+                            <input type="date" class="form-control mt-2" id="stockDate" formControlName="stockDate" >
+                  </div>
+                  <div class="col-md-12">
+                      <label for="notes">Notes</label>
+                      <textarea class="form-control mt-2" id="notes" formControlName="notes" rows="3"></textarea>
+                  </div>
+                  </div>
+                  <br>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Update Stock</button>
+                </div>
+               </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>

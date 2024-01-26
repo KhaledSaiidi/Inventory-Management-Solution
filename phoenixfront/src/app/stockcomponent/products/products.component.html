@@ -27,6 +27,7 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product State</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
                        </tr>
                      </thead>
@@ -44,8 +45,11 @@
                         <td style="word-wrap: break-word; white-space: normal;">
                           {{ prod.soldDate ? (prod.soldDate | date: 'medium' | slice: 0:12) : 'Not sold yet' }}
                         </td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a (click)="navigateToUpdateProduct(stockreference, prod.serialNumber)">update</a></td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a>Assign to Seller</a></td>
+                        <td style="word-wrap: break-word; white-space: normal;" [style.color]="prod.checked ? 'green' : 'red'">
+                          {{ prod.checked ? 'Checked' : 'Not Checked' }}
+                        </td>
+                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a (click)="navigateToUpdateProduct(stockreference, prod.serialNumber)">update</a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a>Assign</a></td>
                        </tr>
                      </tbody>
                    </table>
