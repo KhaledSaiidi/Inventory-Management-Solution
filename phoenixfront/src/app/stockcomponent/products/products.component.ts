@@ -151,4 +151,13 @@ export class ProductsComponent implements OnInit{
     this.router.navigate(['/checkprods'], { queryParams: { id: ref } });     
     console.log(ref);
   }
+
+  navigateTocheckHistory(ref?: string) {
+    if (ref === undefined) {
+      console.log('Invalid ref');
+      return;
+    }
+    this.router.navigate(['/checkhistory'], { queryParams: { id: ref } });     
+    console.log(ref);
+  }
 }

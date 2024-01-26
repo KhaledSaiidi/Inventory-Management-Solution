@@ -17,7 +17,7 @@ export class StockComponent implements OnInit{
     this.getstockswithcampaigns();
     }
 
-  ref: string = 'khaled';
+  ref!: string;
   navigateToProducts(ref?: string) {
     if (ref === undefined) {
       console.log('Invalid ref');

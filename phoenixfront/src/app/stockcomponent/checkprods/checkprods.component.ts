@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { DataSharingService } from 'src/app/services/dataSharing.service';
 import { StockService } from 'src/app/services/stock.service';
-import { Stockdto } from 'src/app/models/inventory/Stock'
+import { Stockdto } from 'src/app/models/inventory/Stock';
+import * as html2pdf from 'html2pdf.js';
+
 @Component({
   selector: 'app-checkprods',
   templateUrl: './checkprods.component.html',
@@ -16,22 +18,10 @@ export class CheckprodsComponent implements OnInit{
     private dataSharingService: DataSharingService,
     private stockservice: StockService) {}
     stockreference: string = '';
-    
-    compuncheckedProds: string[] = [
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1",
-      "prod 1"
-    ];
+    allMatches: boolean = false;
+    excelFileMatches: boolean = false;
+    dbmatches: boolean = false;
+    compuncheckedProds: string[] = [];
     ngOnInit(): void {
       this.route.queryParamMap.subscribe(params => {
         const id = params.get('id');
@@ -40,10 +30,13 @@ export class CheckprodsComponent implements OnInit{
         console.log(this.stockreference);
         }
       }); 
-        /* this.dataSharingService.uncheckedProds$.subscribe(uncheckedProds => {
+        this.dataSharingService.uncheckedProds$.subscribe(uncheckedProds => {
         this.compuncheckedProds = uncheckedProds;
+        if(this.compuncheckedProds.length === 0){
+          this.excelFileMatches = true;
+        }
         console.log(this.compuncheckedProds);
-            }); */
+            });
     this.getProductsByStockReference(this.stockreference);
     this.getStockbyRef(this.stockreference);
     }
@@ -60,6 +53,12 @@ export class CheckprodsComponent implements OnInit{
       this.stockservice.getProductsByStockReference(ref).subscribe(
         (data) => {
           this.productsDto = (data as Productdto[]).filter(product => !product.checked);
+          if (this.productsDto.length === 0 && this.compuncheckedProds.length === 0) {
+            this.allMatches = true;
+          }
+          if (this.productsDto.length === 0) {
+            this.dbmatches = true;
+          }
         },
         (error) => {
           console.error('Failed to get products:', error);
@@ -87,5 +86,16 @@ export class CheckprodsComponent implements OnInit{
         }
       );
     }
-
+    downloadPdf() {
+      const originalElement = document.getElementById('pdf-content');
+      if(originalElement) {
+      const clonedElement = originalElement.cloneNode(true) as HTMLElement;
+      const options = {
+        filename: "Inspection report for" + " " + this.stockreference + " " + "stock",
+         pagebreak: { avoid: '.avoid-page-break' }
+      };
+      html2pdf().from(clonedElement).set(options).save();
+    }
+      
+    }
 }

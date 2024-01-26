@@ -4,6 +4,7 @@ import { Stockdto } from '../models/inventory/Stock';
 import { Observable, Observer, catchError, throwError } from 'rxjs';
 import { Productdto } from '../models/inventory/ProductDto';
 import * as XLSX from 'xlsx';
+import { UncheckHistory } from '../models/inventory/UncheckHistory';
 
 @Injectable({
   providedIn: 'root'
@@ -120,5 +121,15 @@ excelToCsv(excelFile: File): Observable<File> {
   });
 }
 
+
+getUncheckedHistorybyStockreference(ref: string): Observable<UncheckHistory[]> {
+  return this.http.get<UncheckHistory[]>(this.apiUrl + '/getUncheckedHistorybyStockreference/' + ref)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
 
 }

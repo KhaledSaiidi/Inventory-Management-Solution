@@ -32,6 +32,7 @@ import { UpdatestockComponent } from './stockcomponent/updatestock/updatestock.c
 import { UpdateprodComponent } from './stockcomponent/updateprod/updateprod.component';
 import { StockinfoComponent } from './stockcomponent/stockinfo/stockinfo.component';
 import { CheckprodsComponent } from './stockcomponent/checkprods/checkprods.component';
+import { CheckhistoryComponent } from './stockcomponent/checkhistory/checkhistory.component';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -53,8 +54,8 @@ const appRoute: Routes = [
   {path:'addproduct', component: AddproductComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'updateproduct', component: UpdateprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'stockinfo', component: StockinfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'checkprods', component: CheckprodsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
-
+  {path:'checkprods', component: CheckprodsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'checkhistory', component: CheckhistoryComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
 ]
 
 export function kcFactory(kcService: KeycloakService, securityService: SecurityService) {
@@ -105,7 +106,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     UpdatestockComponent,
     UpdateprodComponent,
     StockinfoComponent,
-    CheckprodsComponent
+    CheckprodsComponent,
+    CheckhistoryComponent
   ],
   imports: [
     BrowserModule,

@@ -2,8 +2,9 @@
 <div class="listeequipes-container"> 
   <a class="btn btn-primary" (click)="navigateToAddProduct(stockreference)">Add Product</a>
   <div class="d-flex">
-    <input type="file" style="width: 230px; max-height: 40px;" class="form-control" id="image" (change)="onFileSelected($event)">  &nbsp;
-    <a class="btn btn-primary" (click)="uploadFile()">Check Products</a>
+    <input type="file" style="width: 230px; max-height: 40px;" class="form-control" id="image" (change)="onFileSelected($event)">
+    <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFile()">Check Products</a>
+    <a class="btn btn-primary" style="margin-left: 5px;" (click)="navigateTocheckHistory(stockreference)">Check History</a>
   </div>
   
       
