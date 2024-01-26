@@ -93,4 +93,23 @@ public class StockService implements IStockService{
         List<UncheckHistory> triByDateUncheckHistories = new ArrayList<>(uncheckHistories);
         return triByDateUncheckHistories;
     }
+
+    @Override
+    public StockDto UpdateStock(String reference, StockDto stockDto) {
+        Stock stock = iStockRepository.findById(reference).orElse(null);
+        if (stock == null) {
+            return null;
+        }
+        if (stockDto.getCampaignRef() != null) {
+            stock.setCampaignRef(stockDto.getCampaignRef());}
+        if (stockDto.getStockDate() != null) {
+            stock.setStockDate(stockDto.getStockDate());}
+        if (stockDto.isChecked()) {
+            stock.setChecked(stockDto.isChecked());}
+        if (stockDto.getNotes() != null) {
+            stock.setNotes(stockDto.getNotes());}
+        iStockRepository.save(stock);
+        return stockDto;
+    }
+
 }

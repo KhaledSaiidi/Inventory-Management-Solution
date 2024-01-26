@@ -11,4 +11,5 @@ public interface IStockService {
     List<StockDto> getstocks();
     StockDto getstockByReference(String reference);
     List<UncheckHistory> getUncheckedHistorybyStockreference (String reference);
+    StockDto UpdateStock(String reference, StockDto stockDto);
 }

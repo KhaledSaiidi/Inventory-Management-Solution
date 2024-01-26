@@ -3,6 +3,7 @@ package com.phoenix.controller;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
 import com.phoenix.model.Product;
+import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
@@ -87,6 +88,12 @@ public class Controller {
     public List<UncheckHistory> getUncheckedHistorybyStockreference(@PathVariable String stockreference) {
         List<UncheckHistory> uncheckHistories = iStockService.getUncheckedHistorybyStockreference(stockreference);
         return uncheckHistories;
+    }
+
+    @PutMapping("/UpdateStock/{reference}")
+    public StockDto UpdateStock(@PathVariable String reference, @RequestBody StockDto stockDto) {
+        iStockService.UpdateStock(reference,stockDto);
+        return stockDto;
     }
 
 }
