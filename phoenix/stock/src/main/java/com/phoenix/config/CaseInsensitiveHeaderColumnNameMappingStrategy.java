@@ -1,5 +1,6 @@
 package com.phoenix.config;
 
+import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import java.lang.reflect.Field;
@@ -19,10 +20,17 @@ public class CaseInsensitiveHeaderColumnNameMappingStrategy<T> extends HeaderCol
 
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
-            String normalizedFieldName = field.getName().toLowerCase().replaceAll("\\s", "");
-            columnMapping.put(normalizedFieldName, field.getName());
+            CsvBindByName csvBindByName = field.getAnnotation(CsvBindByName.class);
+            if (csvBindByName != null) {
+                String columnName = csvBindByName.column();
+                String normalizedColumnName = normalizeFieldName(columnName);
+                columnMapping.put(normalizedColumnName, field.getName());
+            }
         }
-
         setColumnMapping(columnMapping);
     }
+    private String normalizeFieldName(String fieldName) {
+        return fieldName.toLowerCase().replaceAll("\\s", "");
+    }
+
 }
