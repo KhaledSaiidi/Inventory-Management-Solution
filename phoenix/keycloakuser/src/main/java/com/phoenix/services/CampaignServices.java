@@ -2,6 +2,7 @@ package com.phoenix.services;
 
 import com.phoenix.dto.Campaigndto;
 import com.phoenix.dto.Clientdto;
+import com.phoenix.dtostock.StockDto;
 import com.phoenix.mapper.ICampaignArchiveMapper;
 import com.phoenix.mapper.ICampaignMapper;
 import com.phoenix.mapper.IClientMapper;
@@ -14,7 +15,9 @@ import com.phoenix.repository.IClientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,9 @@ public class CampaignServices implements ICampaignServices{
     private IClientRepository iClientRepository;
     @Autowired
     private ICampaignArchiveMapper iCampaignArchiveMapper;
+
+    private final WebClient.Builder webClientBuilder;
+
 
     @Override
     public void addCampaign(Campaigndto campaigndto) {
@@ -65,19 +71,42 @@ public class CampaignServices implements ICampaignServices{
     @Override
     public Campaigndto UpdateCampaign(String reference, Campaigndto campaigndto) {
         Campaign campaign = iCampaignRepository.findByReference(reference).orElse(null);
-        if (campaign == null) {return null;}
+        if (campaign == null) {
+            return null;
+        }
         if (campaigndto.getCampaignName() != null) {
-            campaign.setCampaignName(campaigndto.getCampaignName());}
-        if (campaigndto.getProducts() != null) {
-            campaign.setProducts(campaigndto.getProducts());}
+            campaign.setCampaignName(campaigndto.getCampaignName());
+        }
         if (campaigndto.getStartDate() != null) {
-            campaign.setStartDate(campaigndto.getStartDate());}
-        if(campaigndto.getCampaignDescription() != null){
-            campaign.setCampaignDescription(campaigndto.getCampaignDescription());}
-        if(campaigndto.getClient().getReference() != null){
+            campaign.setStartDate(campaigndto.getStartDate());
+        }
+        if (campaigndto.getCampaignDescription() != null) {
+            campaign.setCampaignDescription(campaigndto.getCampaignDescription());
+        }
+        if (campaigndto.getClient().getReference() != null) {
             Optional<Client> optionalClient = iClientRepository.findByReference(campaigndto.getClient().getReference());
             Client client = optionalClient.orElse(null);
-            campaign.setClient(client);}
+            campaign.setClient(client);
+        }
+        if (campaigndto.getProducts() != null){
+            campaign.setProducts(campaigndto.getProducts());
+            List<StockDto> optionalstocksDto = webClientBuilder.build().get()
+                .uri("http://stock-service/stock/returnstockBycampaignRef/{campreference}", reference)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<StockDto>>() {
+                })
+                .block();
+        if (!optionalstocksDto.isEmpty()) {
+            for (StockDto stockDto : optionalstocksDto) {
+                stockDto.setProductTypes(campaigndto.getProducts());
+                webClientBuilder.build().put()
+                        .uri("http://stock-service/stock/UpdateStock/{reference}", stockDto.getStockReference())
+                        .bodyValue(stockDto)
+                        .exchange()
+                        .subscribe();
+            }
+        }
+    }
         Campaign savedcampaign = iCampaignRepository.save(campaign);
         return campaigndto;
     }

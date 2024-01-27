@@ -1,6 +1,5 @@
 package com.phoenix.dtostock;
 
-import com.phoenix.model.State;
 import lombok.*;
 
 import java.math.BigDecimal;

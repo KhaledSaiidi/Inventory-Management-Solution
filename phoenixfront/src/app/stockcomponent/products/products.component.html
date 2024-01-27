@@ -34,7 +34,7 @@
                        <tr *ngFor="let prod of productsDto">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" 
                          (mouseout)="hideTooltip()">    
-                         <span [style.color]="prod.checked ? 'green' : 'red'">
+                         <span style="font-size: 20px;" [style.color]="prod.checked ? 'green' : 'red'">
                           {{prod.checked ? '&#10003;' : '&#10008;'}}
                           </span>
                            {{prod.serialNumber}}</td>

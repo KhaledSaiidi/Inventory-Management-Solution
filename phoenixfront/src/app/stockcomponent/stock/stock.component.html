@@ -29,7 +29,7 @@
                      <tbody>
                        <tr *ngFor="let stock of stocks">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToProducts(stock.stockReference)" >
-                          <span [style.color]="stock.checked ? 'green' : 'red'">
+                          <span style="font-size: 20px;" [style.color]="stock.checked ? 'green' : 'red'">
                             {{stock.checked ? '&#10003;' : '&#10008;'}}
                         </span>
                           {{ stock.stockReference }}</a></td>

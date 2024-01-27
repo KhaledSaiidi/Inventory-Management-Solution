@@ -1,6 +1,5 @@
 package com.phoenix.dtostock;
 
-import com.phoenix.model.ReclamType;
 import lombok.*;
 
 import java.time.LocalDate;

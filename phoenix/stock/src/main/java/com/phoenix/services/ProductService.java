@@ -3,6 +3,7 @@ package com.phoenix.services;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
@@ -161,8 +162,8 @@ public class ProductService implements IProductService{
 
     private Set<String> parseCsv(MultipartFile file) throws IOException {
         try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))){
-            HeaderColumnNameMappingStrategy<SerialNumbersCsvRepresentation> strategy =
-                    new HeaderColumnNameMappingStrategy<>();
+            CaseInsensitiveHeaderColumnNameMappingStrategy<SerialNumbersCsvRepresentation> strategy =
+                    new CaseInsensitiveHeaderColumnNameMappingStrategy<>();
             strategy.setType(SerialNumbersCsvRepresentation.class);
             CsvToBean<SerialNumbersCsvRepresentation> csvToBean =
                     new CsvToBeanBuilder<SerialNumbersCsvRepresentation>(reader)

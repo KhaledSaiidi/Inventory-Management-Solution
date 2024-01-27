@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -96,4 +97,8 @@ public class Controller {
         return stockDto;
     }
 
+    @GetMapping("returnstockBycampaignRef/{campreference}")
+    public List<StockDto> getStocksByCampaignRef(@PathVariable String campreference) {
+        return iStockService.getStocksByCampaignRef(campreference);
+    }
 }

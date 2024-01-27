@@ -102,6 +102,8 @@ public class StockService implements IStockService{
         }
         if (stockDto.getCampaignRef() != null) {
             stock.setCampaignRef(stockDto.getCampaignRef());}
+        if (stockDto.getProducts() != null) {
+            stock.setProductTypes(stockDto.getProductTypes());}
         if (stockDto.getStockDate() != null) {
             stock.setStockDate(stockDto.getStockDate());}
         if (stockDto.isChecked()) {
@@ -112,4 +114,15 @@ public class StockService implements IStockService{
         return stockDto;
     }
 
+    @Override
+    public List<StockDto> getStocksByCampaignRef(String campaignreference) {
+        Optional<List<Stock>> optionalstocks = iStockRepository.findByCampaignRef(campaignreference);
+        if(optionalstocks.isPresent()) {
+            List<Stock> stocks = optionalstocks.get();
+            List<StockDto> stocksdto =  iStockMapper.toDtoList(stocks);
+            return stocksdto;
+        } else {
+            return null;
+        }
+    }
 }
