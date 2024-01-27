@@ -113,39 +113,50 @@ public class ProductService implements IProductService{
 
     @Override
     public List<String> uploadProducts(MultipartFile file, String stockReference) throws IOException {
-        Set<String> serialNumbers = parseCsv(file);
-        List<Product> products = iProductRepository.findAll();
-        List<String> notFoundserialNumbers = new ArrayList<>();
 
-        for (String serial : serialNumbers) {
-            boolean found = false;
-            for (Product product : products) {
-                if (product.getSerialNumber().equalsIgnoreCase(serial)) {
-                    product.setChecked(true);
-                    iProductRepository.save(product);
-                    found = true;
+
+        Set<String> serialNumbers = parseCsv(file);
+        List<String> notFoundserialNumbers = new ArrayList<>();
+        Optional<Stock> stockOptional = iStockRepository.findById(stockReference);
+        if(stockOptional.isPresent()) {
+            Stock stock = stockOptional.get();
+            List<Product> products = iProductRepository.findByStock(stock);
+            for (String serial : serialNumbers) {
+                boolean found = false;
+                for (Product product : products) {
+                    if (product.getSerialNumber().equalsIgnoreCase(serial)) {
+                        product.setChecked(true);
+                        iProductRepository.save(product);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    notFoundserialNumbers.add(serial);
+                }
+            }
+            List<Product> productsafterChange = iProductRepository.findByStock(stock);
+            Boolean productsAreChecked = true;
+            for (Product product : productsafterChange) {
+                if (!product.isChecked()) {
+                    productsAreChecked = false;
                     break;
                 }
             }
-            if (!found) {
-                notFoundserialNumbers.add(serial);
+            if (!notFoundserialNumbers.isEmpty()) {
+                UncheckHistory uncheckHistory = new UncheckHistory();
+                uncheckHistory.setNotFoundserialNumbers(notFoundserialNumbers);
+                uncheckHistory.setStockreference(stockReference);
+                uncheckHistory.setCheckDate(LocalDate.now());
+                iUncheckHistoryRepository.save(uncheckHistory);
             }
-        }
-        if(!notFoundserialNumbers.isEmpty()) {
-                    UncheckHistory uncheckHistory = new UncheckHistory();
-                    uncheckHistory.setNotFoundserialNumbers(notFoundserialNumbers);
-                    uncheckHistory.setStockreference(stockReference);
-                    uncheckHistory.setCheckDate(LocalDate.now());
-                    iUncheckHistoryRepository.save(uncheckHistory);
-        } else {
-            Optional<Stock> stockOptional = iStockRepository.findById(stockReference);
-            if(stockOptional.isPresent()) {
-                Stock stock = stockOptional.get();
+            if (notFoundserialNumbers.isEmpty() && productsAreChecked) {
                 stock.setChecked(true);
                 iStockRepository.save(stock);
             }
+
         }
-    return notFoundserialNumbers;
+        return notFoundserialNumbers;
     }
 
     private Set<String> parseCsv(MultipartFile file) throws IOException {
@@ -163,6 +174,7 @@ public class ProductService implements IProductService{
             return csvToBean.parse()
                     .stream()
                     .map(SerialNumbersCsvRepresentation::getSerialNumber)
+                    .filter(serialNumber -> !serialNumber.isEmpty())
                     .collect(Collectors.toSet());
         }
     }

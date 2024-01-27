@@ -89,7 +89,7 @@ public class StockService implements IStockService{
             return null;
         }
         List<UncheckHistory> uncheckHistories = optionaluncheckHistories.get();
-        Collections.sort(uncheckHistories, Comparator.comparing(UncheckHistory::getCheckDate));
+        Collections.sort(uncheckHistories, Comparator.comparing(UncheckHistory::getCheckDate).reversed());
         List<UncheckHistory> triByDateUncheckHistories = new ArrayList<>(uncheckHistories);
         return triByDateUncheckHistories;
     }

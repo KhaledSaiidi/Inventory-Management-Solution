@@ -14,14 +14,17 @@
               </div>
               <div class="card-body">
                 <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
+                  <ng-container *ngIf="!stockIschecked">
                   <div class="d-flex align-items-center" style="margin-bottom: 20px;">
-                    <input type="checkbox" id="checked" class="custom-checkbox">
-                    <label for="checked" formControlName="checked" class="mb-0" style="margin-left: 10px;">Would you like to force the stock check ?</label>
+                    <input type="checkbox"  formControlName="checked" id="checked" class="custom-checkbox">
+                    <label for="checked" class="mb-0" style="margin-left: 10px;">Would you like to force the stock check ?</label>
                   </div>
+                </ng-container>
                 <div class="row">
                     <div class="col-md-6">
                           <label for="reference">Campaign Affiliation</label>
                           <select class="form-control mt-2" formControlName="reference" id="reference">
+                            <option [value]="selectedCampaignrefernce"> {{ selectedcampaignName }} - {{ selectedcampaignclientcompanyName }} </option>  
                             <option *ngFor="let campaign of campaigns" [value]="campaign.reference"> {{ campaign.campaignName }} - {{ campaign.client?.companyName }} </option>  
                         </select>
                             

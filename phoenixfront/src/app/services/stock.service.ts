@@ -132,4 +132,13 @@ getUncheckedHistorybyStockreference(ref: string): Observable<UncheckHistory[]> {
   );
 }
 
+updateStock(reference: string, stockDto: Stockdto): Observable<Stockdto> {
+  return this.http.put<Stockdto>(this.apiUrl + '/UpdateStock/'+ reference , stockDto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
 }

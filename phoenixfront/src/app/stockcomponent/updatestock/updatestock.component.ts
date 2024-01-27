@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Campaigndto } from 'src/app/models/agents/Campaigndto';
+import { Stockdto } from 'src/app/models/inventory/Stock';
 import { AgentsService } from 'src/app/services/agents.service';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -15,7 +16,8 @@ export class UpdatestockComponent implements OnInit {
      private agentsService: AgentsService,
      private route: ActivatedRoute,
      private stockservice: StockService,
-     private fb: FormBuilder) {}
+     private fb: FormBuilder,
+     private agentservice: AgentsService) {}
 
        campaigns: Campaigndto[] = [];
        navigateToStock(){
@@ -32,7 +34,7 @@ export class UpdatestockComponent implements OnInit {
         }); 
   
         this.initializeForm();
-        this.getcampaigns();
+        this.getStockbyRef(this.stockreference);
       }  
       stockForm!: FormGroup;
       initializeForm() {
@@ -40,28 +42,112 @@ export class UpdatestockComponent implements OnInit {
           reference: [''],
           stockDate: [null],
           notes: [''],
-          checked: null
+          checked: [false]
         });
       }
+
+
     
       getcampaigns(){
         this.agentsService.getCampaigns().subscribe(
           (data) => {
         this.campaigns = data as Campaigndto[];
+        if (this.selectedcampaign) {
+          this.campaigns = this.campaigns.filter(campaign => campaign.reference !== this.selectedcampaign.reference);
+        }  
         console.log(this.campaigns);
-        if (this.campaigns.length > 0) {
-          this.stockForm.patchValue({
-            reference: this.campaigns[0].reference
-          });
-        }
           },
           (error) => {
             console.error('Failed to get campaign:', error);
           }
         );
       }
-      onSubmit(){
+      stockdto!: Stockdto;
+      stockIschecked: boolean = false;
+      campaignref!: string;
+      selectedcampaign!: Campaigndto;
+      getStockbyRef(ref : string){
+        this.stockservice.getStockByreference(ref).subscribe(
+          (data) => {
+        this.stockdto = data as Stockdto;
+        if(this.stockdto.checked){
+        this.stockIschecked = this.stockdto.checked;
+      }
+      if(this.stockdto.campaignRef){
+        this.campaignref = this.stockdto.campaignRef;
+        this.getcampaignbyreference(this.campaignref);
+      }
+        this.stockForm.patchValue({
+          reference: this.stockdto.campaignRef,
+          stockDate: this.stockdto.stockDate,
+          notes:this.stockdto.notes,
+          checked: this.stockdto.checked
+        });
 
+          },
+          (error) => {
+            console.error('Failed to get stock:', error);
+          }
+        );
       }
 
+      selectedCampaignrefernce!: string;
+      selectedcampaignName!: string;
+      selectedcampaignclientcompanyName!: string;
+      getcampaignbyreference(reference : string){
+        this.agentservice.getcampaignbyreference(reference).subscribe(
+          (data) => {
+        this.selectedcampaign = data as Campaigndto;
+        if(this.selectedcampaign.reference) {
+          this.selectedCampaignrefernce = this.selectedcampaign.reference;
+        }
+        if(this.selectedcampaign.campaignName) {
+          this.selectedcampaignName = this.selectedcampaign.campaignName;
+        }
+        if(this.selectedcampaign.client?.companyName) {
+          this.selectedcampaignclientcompanyName = this.selectedcampaign.client?.companyName;
+        }
+
+        this.getcampaigns();
+          },
+          (error) => {
+            console.error('Failed to get camp:', error);
+          }
+        );
+      }
+    
+    newproductTypes!: string[];
+      onSubmit() {
+        const stockDto: Stockdto = {
+          campaignRef: this.stockForm.get('reference')?.value,
+          stockDate: this.stockForm.get('stockDate')?.value,
+          notes: this.stockForm.get('notes')?.value,
+          checked: this.stockForm.get('checked')?.value,
+        }
+        if (this.stockForm.get('reference')?.value) {
+          this.agentservice.getcampaignbyreference(this.stockForm.get('reference')?.value).subscribe(
+            (data) => {
+              stockDto.campaigndto  = data as Campaigndto;
+              if(stockDto.campaigndto.products){
+              this.newproductTypes = stockDto.campaigndto.products;
+              stockDto.productTypes = this.newproductTypes;
+            }
+            },
+            (error) => {
+              console.error('Failed to get camp:', error);
+            }
+          );
+        }
+        console.log(stockDto);
+        this.stockservice.updateStock(this.stockreference, stockDto).subscribe(
+          (response) => {
+            console.log('Stock Updated successfully:', response);
+            this.stockForm.reset();
+            this.navigateToStock();
+          },
+          (error) => {
+            console.error('Failed to update stock:', error);
+          }
+        );
+      }
 }
