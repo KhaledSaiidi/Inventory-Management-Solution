@@ -22,19 +22,27 @@ export class AgentsComponent implements OnInit {
   ngOnInit(): void{
     this.getUserscategorized();
   }
-
+  loading: boolean = true;
+  emptyagents: boolean = true;
   getUserscategorized() {
     this.agentsService.getagents().subscribe(
       (data) => {
         this.allmembers = data as Userdto[];
+        this.loading = false;
+        if(this.allmembers.length > 0){
+          this.emptyagents = false;
+          console.log("emptyStock: " + this.emptyagents);
         this.agentList = this.allmembers.filter(user => user.realmRoles?.includes('AGENT'));
         this.managerList = this.allmembers.filter(user => user.realmRoles?.includes('MANAGER'));
         this.imanagerList = this.allmembers.filter(user => user.realmRoles?.includes('IMANAGER'));
         console.log(this.managerList);
         console.log(this.imanagerList);
+        }
+        
       },
       (error: any) => {
         console.error('Error fetching agents:', error);
+        this.loading = false;
       }
     );
   }

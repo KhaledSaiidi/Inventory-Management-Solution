@@ -29,6 +29,23 @@
                        </tr>
                      </thead>
                      <tbody>
+                      <ng-container  *ngIf="loading;">
+                        <tr>
+                          <td colspan="8" style="text-align: center;">
+                            <div class="loading-container">
+                              <div class="loading-spinner"></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && emptyCampaigns;">
+                        <tr>
+                          <td colspan="8" style="text-align: center;">
+                            <p>No Campaigns found. Please check back later.</p>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && !emptyCampaigns; ">
                        <tr *ngFor="let onecamp of campaigns let i = index"
                         (mouseenter)="selectedRowIndex = i"
                         (mouseleave)="selectedRowIndex = null"
@@ -50,7 +67,7 @@
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToCampaign(onecamp.reference)">update</a></td>
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" ><a (click)="confirmDeletion(onecamp.reference)">end</a></td>         
                        </tr>
-                     
+                     </ng-container>
                      </tbody>
                    </table>
                  </div>

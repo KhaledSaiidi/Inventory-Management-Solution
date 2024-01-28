@@ -33,6 +33,23 @@
             </tr>
           </thead>
           <tbody>
+            <ng-container  *ngIf="loading;">
+              <tr>
+                <td colspan="8" style="text-align: center;">
+                  <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container  *ngIf="!loading && emptyagents;">
+              <tr>
+                <td colspan="8" style="text-align: center;">
+                  <p>No Agents found. Please check back later.</p>
+                </td>
+              </tr>
+            </ng-container>
+           <ng-container  *ngIf="!loading && !emptyagents; ">
             <tr *ngFor="let agent of agentList">
               <td style="word-wrap: break-word; white-space: normal;"> {{agent.firstName}} {{agent.lastName}} </td>
               <td style="word-wrap: break-word; white-space: normal;"> {{agent.email}} </td>
@@ -50,6 +67,7 @@
               <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.username)" >Profil</td>
   
             </tr>
+           </ng-container>
           </tbody>
         </table>
       </div>
@@ -113,13 +131,32 @@
         </tr>
       </thead>
       <tbody style="text-align: center;">
+        <ng-container  *ngIf="loading;">
+          <tr>
+            <td colspan="8" style="text-align: center;">
+              <div class="loading-container">
+                <div class="loading-spinner"></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container  *ngIf="!loading && emptyagents;">
+          <tr>
+            <td colspan="8" style="text-align: center;">
+              <p>No Managers found. Please check back later.</p>
+            </td>
+          </tr>
+        </ng-container>
+       <ng-container  *ngIf="!loading && !emptyagents; ">
         <tr *ngFor="let manager of managerList">
           <ng-container *ngIf="manager.username">
           <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
           <td >{{ countAgentsForManagers(this.agentList, manager.username) }}</td>
           <td>7</td>
         </ng-container>
-          </tr>      
+          </tr>   
+       </ng-container>
+          
       </tbody>
     </table>
    
@@ -136,12 +173,30 @@
         </tr>
         </thead>
         <tbody style="text-align: center;">
-        <tr *ngFor="let manager of imanagerList">
+          <ng-container  *ngIf="loading;">
+            <tr>
+              <td colspan="8" style="text-align: center;">
+                <div class="loading-container">
+                  <div class="loading-spinner"></div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container  *ngIf="!loading && emptyagents;">
+            <tr>
+              <td colspan="8" style="text-align: center;">
+                <p>No I.Managers found. Please check back later.</p>
+              </td>
+            </tr>
+          </ng-container>
+         <ng-container  *ngIf="!loading && !emptyagents; ">
+          <tr *ngFor="let manager of imanagerList">
           <ng-container *ngIf="manager.username">
           <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
           <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.email}}</td>
           </ng-container>
-          </tr>      
+          </tr>     
+         </ng-container> 
     </tbody>
     </table>
     </div>
@@ -175,6 +230,23 @@
                    </tr>
                  </thead>
                  <tbody>
+                  <ng-container  *ngIf="loading;">
+                    <tr>
+                      <td colspan="8" style="text-align: center;">
+                        <div class="loading-container">
+                          <div class="loading-spinner"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loading && emptyagents;">
+                    <tr>
+                      <td colspan="8" style="text-align: center;">
+                        <p>No Agents found. Please check back later.</p>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loading && !emptyagents; ">
                    <tr *ngFor="let agent of agentList">
                      <td style="word-wrap: break-word; white-space: normal;"> {{agent.firstName}} {{agent.lastName}} </td>
                      <td style="word-wrap: break-word; white-space: normal;">{{agent.email}}</td>
@@ -190,7 +262,7 @@
                     </td>        
                      <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.username)">Profil</td>
                    </tr>
-                 
+                 </ng-container>
                  </tbody>
                </table>
              </div>

@@ -64,13 +64,22 @@ export class ProductsComponent implements OnInit{
   }
   state!: State;
   productsDto: Productdto[] = [];
+  loading: boolean = true;
+  emptyProducts: boolean = true;
   getProductsByStockReference(ref : string){
     this.stockservice.getProductsByStockReference(ref).subscribe(
       (data) => {
     this.productsDto = data as Productdto[];
+    this.loading = false;
+    if(this.productsDto.length > 0){
+      this.emptyProducts = false;
+      console.log("emptyStock: " + this.emptyProducts);
+    }
+
       },
       (error) => {
         console.error('Failed to get products:', error);
+        this.loading = false;
       }
     );
   }

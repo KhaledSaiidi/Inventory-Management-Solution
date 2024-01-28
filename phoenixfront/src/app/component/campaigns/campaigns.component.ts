@@ -17,15 +17,21 @@ export class CampaignsComponent implements OnInit {
       this.getcampaigns();
   }
 
-
+  loading: boolean = true;
+  emptyCampaigns: boolean = true;
   getcampaigns(){
     this.agentsService.getCampaigns().subscribe(
       (data) => {
     this.campaigns = data as Campaigndto[];
-    console.log(this.campaigns);
+    this.loading = false;
+    if(this.campaigns.length > 0){
+      this.emptyCampaigns = false;
+      console.log("emptyStock: " + this.emptyCampaigns);
+    }
       },
       (error) => {
         console.error('Failed to add team:', error);
+        this.loading = false;
       }
     );
   }

@@ -31,6 +31,23 @@
                        </tr>
                      </thead>
                      <tbody>
+                      <ng-container  *ngIf="loading;">
+                        <tr>
+                          <td colspan="8" style="text-align: center;">
+                            <div class="loading-container">
+                              <div class="loading-spinner"></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && emptyProducts;">
+                        <tr>
+                          <td colspan="8" style="text-align: center;">
+                            <p>No products found. Please check back later.</p>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && !emptyProducts; ">
                        <tr *ngFor="let prod of productsDto">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" 
                          (mouseout)="hideTooltip()">    
@@ -51,6 +68,8 @@
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a (click)="navigateToUpdateProduct(stockreference, prod.serialNumber)">update</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a>Assign</a></td>
                        </tr>
+                       </ng-container>
+
                      </tbody>
                    </table>
                  </div>
