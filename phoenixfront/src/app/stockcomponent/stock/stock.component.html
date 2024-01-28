@@ -27,7 +27,24 @@
                        </tr>
                      </thead>
                      <tbody>
-                       <tr *ngFor="let stock of stocks">
+                      <ng-container  *ngIf="loading;">
+                        <tr>
+                          <td colspan="8" style="text-align: center;">
+                            <div class="loading-container">
+                              <div class="loading-spinner"></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && emptyStock;">
+                        <tr>
+                          <td colspan="8" style="text-align: center;">
+                            <p>No stocks found. Please check back later.</p>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && !emptyStock; ">
+                      <tr *ngFor="let stock of stocks">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToProducts(stock.stockReference)" >
                           <span style="font-size: 20px;" [style.color]="stock.checked ? 'green' : 'red'">
                             {{stock.checked ? '&#10003;' : '&#10008;'}}
@@ -47,6 +64,7 @@
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">View</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">update</a></td>
                        </tr>
+                      </ng-container>
                      </tbody>
                    </table>
                  </div>

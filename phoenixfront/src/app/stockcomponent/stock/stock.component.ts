@@ -26,13 +26,21 @@ export class StockComponent implements OnInit{
     this.router.navigate(['/products'], { queryParams: { id: ref } });     
     console.log(ref);
   }
+  loading: boolean = true;
+  emptyStock: boolean = true;
   getstockswithcampaigns(){
     this.stockservice.getStockWithCampaigns().subscribe(
       (data) => {
     this.stocks = data as Stockdto[];
+    this.loading = false;
+    if(this.stocks.length > 0){
+      this.emptyStock = false;
+      console.log("emptyStock: " + this.emptyStock);
+    }
       },
       (error) => {
         console.error('Failed to add team:', error);
+        this.loading = false;
       }
     );
   }
