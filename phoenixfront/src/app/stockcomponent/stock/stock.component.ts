@@ -14,7 +14,7 @@ export class StockComponent implements OnInit{
   constructor(private router: Router, private stockservice: StockService) {}
   stocks!: Stockdto[];
   ngOnInit(): void{
-    this.getStocksWithCampaigns(0, 1);
+    this.getStocksWithCampaigns(0, 5);
     }
 
   ref!: string;
