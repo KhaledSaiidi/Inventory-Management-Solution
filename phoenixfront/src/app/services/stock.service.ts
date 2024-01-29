@@ -5,6 +5,7 @@ import { Observable, Observer, catchError, throwError } from 'rxjs';
 import { Productdto } from '../models/inventory/ProductDto';
 import * as XLSX from 'xlsx';
 import { UncheckHistory } from '../models/inventory/UncheckHistory';
+import { StockPage } from '../models/inventory/StockPage';
 
 @Injectable({
   providedIn: 'root'
@@ -25,14 +26,9 @@ export class StockService {
 }
 
 
-getStockWithCampaigns(): Observable<Stockdto[]> {
-  return this.http.get<Stockdto[]>(this.apiUrl + '/getStocksWithTheirCampaigns')
-  .pipe(
-    catchError((error) => {
-      console.error('An error occurred:', error);
-      return throwError(error);
-    })
-  );
+getStockWithCampaigns(page: number, size: number): Observable<StockPage> {
+  const apiUrl = `${this.apiUrl}/getStocksWithTheirCampaigns?page=${page}&size=${size}`;
+  return this.http.get<StockPage>(apiUrl);
 }
 
 getStockByreference(reference: string): Observable<Stockdto> {

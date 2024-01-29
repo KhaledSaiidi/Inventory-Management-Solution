@@ -14,7 +14,7 @@ export class StockComponent implements OnInit{
   constructor(private router: Router, private stockservice: StockService) {}
   stocks!: Stockdto[];
   ngOnInit(): void{
-    this.getstockswithcampaigns();
+    this.getStocksWithCampaigns(0, 1);
     }
 
   ref!: string;
@@ -28,22 +28,36 @@ export class StockComponent implements OnInit{
   }
   loading: boolean = true;
   emptyStock: boolean = true;
-  getstockswithcampaigns(){
-    this.stockservice.getStockWithCampaigns().subscribe(
+  totalPages: number = 0;
+  totalElements: number = 0;
+  currentPage: number = 1;
+
+  getStocksWithCampaigns(page: number, size: number): void {
+    this.stockservice.getStockWithCampaigns(page, size).subscribe(
       (data) => {
-    this.stocks = data as Stockdto[];
-    this.loading = false;
-    if(this.stocks.length > 0){
-      this.emptyStock = false;
-      console.log("emptyStock: " + this.emptyStock);
-    }
+        this.stocks = data.content;
+        this.totalPages = data.totalPages;
+        this.totalElements = data.totalElements;
+        this.currentPage = data.number + 1;
+        this.loading = false;
+  
+        if (this.stocks.length > 0) {
+          this.emptyStock = false;
+          console.log("emptyStock: " + this.emptyStock);
+        }
       },
       (error) => {
-        console.error('Failed to add team:', error);
+        console.error('Failed to fetch stocks:', error);
         this.loading = false;
       }
     );
-  }
+  }  
+  
+  onPageChange(newPage: number): void {
+    this.getStocksWithCampaigns(newPage - 1, 1);
+  }  
+  
+  
   navigateToStockInfo(ref?: string) {
     if (ref === undefined) {
       console.log('Invalid ref');

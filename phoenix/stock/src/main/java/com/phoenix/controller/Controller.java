@@ -7,11 +7,13 @@ import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -39,8 +41,12 @@ public class Controller {
     }
 
     @GetMapping("/getStocksWithTheirCampaigns")
-    public List<StockDto> getStocksAndCampaigns() {
-        return iStockService.getstocks();
+    public ResponseEntity<Page<StockDto>> getStocksAndCampaigns(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<StockDto> stockPage = iStockService.getStocks(pageable);
+        return ResponseEntity.ok(stockPage);
     }
 
     @PostMapping("/addProduct")

@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/f
 import { ActivatedRoute, Router } from '@angular/router';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentsService } from 'src/app/services/agents.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-userdetails',
@@ -37,13 +38,28 @@ selectedImage: File | null = null;
   constructor(private agentsService: AgentsService, 
     private route: ActivatedRoute,
     private formBuilder: FormBuilder, 
-    private router: Router) {}
+    private router: Router,
+    private dataService: UserService) {}
   username!: string;
   get isCodeDisabled(): boolean {
     return !this.isEditable;
     
   }
-  ngOnInit() {
+  async updateValues(): Promise<void> {
+    const newValues = {
+      defaultNickname: this.username,
+      defaultFullname: this.username
+    };
+
+    try {
+      await this.dataService.updateValues(newValues).toPromise();
+      // Now that the update is complete, you can proceed with other actions
+    } catch (error) {
+      console.error('Failed to update values:', error);
+    }
+  }
+
+  async ngOnInit(): Promise<void> {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
       if(id != null){
@@ -67,7 +83,11 @@ selectedImage: File | null = null;
       username: [{value:this.username, disabled: this.isCodeDisabled }]
     });
     this.initForm();
+    await this.updateValues();
+
+    
   }
+
 
   private initForm(): void {
     this.passwordForm = this.formBuilder.group({

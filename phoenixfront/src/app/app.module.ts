@@ -33,6 +33,7 @@ import { UpdateprodComponent } from './stockcomponent/updateprod/updateprod.comp
 import { StockinfoComponent } from './stockcomponent/stockinfo/stockinfo.component';
 import { CheckprodsComponent } from './stockcomponent/checkprods/checkprods.component';
 import { CheckhistoryComponent } from './stockcomponent/checkhistory/checkhistory.component';
+import { CustomPaginationComponent } from './services/custom-pagination/custom-pagination.component';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -109,7 +110,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     UpdateprodComponent,
     StockinfoComponent,
     CheckprodsComponent,
-    CheckhistoryComponent
+    CheckhistoryComponent,
+    CustomPaginationComponent
   ],
   imports: [
     BrowserModule,

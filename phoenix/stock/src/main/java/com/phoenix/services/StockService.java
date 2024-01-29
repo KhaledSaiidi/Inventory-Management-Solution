@@ -5,7 +5,10 @@ import com.phoenix.dto.StockDto;
 import com.phoenix.dtokeycloakuser.Campaigndto;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
-import com.phoenix.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.repository.IStockRepository;
@@ -51,19 +54,22 @@ public class StockService implements IStockService{
     }
 
     @Override
-    public List<StockDto> getstocks() {
-        List<Stock> stocks = iStockRepository.findAll();
-        List<StockDto> stockDtos = iStockMapper.toDtoList(stocks);
-        for (StockDto stockdto: stockDtos) {
-            Campaigndto campaigndto =  webClientBuilder.build().get()
+    public Page<StockDto> getStocks(Pageable pageable) {
+        Page<Stock> stocks = iStockRepository.findAll(pageable);
+        List<StockDto> stockDtos = iStockMapper.toDtoList(stocks.getContent());
+
+        for (StockDto stockdto : stockDtos) {
+            Campaigndto campaignDto = webClientBuilder.build().get()
                     .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockdto.getCampaignRef())
                     .retrieve()
                     .bodyToMono(Campaigndto.class)
                     .block();
-            stockdto.setCampaigndto(campaigndto);
+            stockdto.setCampaigndto(campaignDto);
         }
-        return stockDtos;
+
+        return new PageImpl<>(stockDtos, pageable, stocks.getTotalElements());
     }
+
 
     @Override
     public StockDto getstockByReference(String reference) {

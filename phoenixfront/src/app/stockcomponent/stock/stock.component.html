@@ -63,7 +63,12 @@
                         <td style="word-wrap: break-word; white-space: normal;"> {{ stock.stockValue ?? 0 }}  $</td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">View</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">update</a></td>
-                       </tr>
+                      </tr>
+                      <tr>
+                      <td colspan="8" style="margin-right: 5px;">
+                        <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
+                       </td>
+                      </tr>
                       </ng-container>
                      </tbody>
                    </table>
