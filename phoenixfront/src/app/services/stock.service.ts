@@ -6,6 +6,7 @@ import { Productdto } from '../models/inventory/ProductDto';
 import * as XLSX from 'xlsx';
 import { UncheckHistory } from '../models/inventory/UncheckHistory';
 import { StockPage } from '../models/inventory/StockPage';
+import { ProductPage } from '../models/inventory/ProductPage';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +62,13 @@ getProductsByStockReference(stockreference: string): Observable<Productdto[]> {
   );
 }
 
+getProductsPaginatedByStockReference(stockReference: string, page: number, size: number): Observable<ProductPage> {
+  const url = `${this.apiUrl}/getProductsPaginatedByStockReference/${stockReference}`;
+  const params = { page: page.toString(), size: size.toString() };
+
+  return this.http.get<ProductPage>(url, { params });
+}
+
 
 updateProduct(serialNumber: string, productdto: Productdto): Observable<Productdto> {
   return this.http.put<Productdto>(this.apiUrl + '/updateProduct/'+ serialNumber , productdto)
@@ -90,20 +98,35 @@ uploadFile(file: File, stockReference: string): Observable<string[]> {
   return this.http.post<string[]>(this.apiUrl + "/uploadcsv/" + stockReference , formData);
 }
 
-excelToCsv(excelFile: File): Observable<File> {
+addProdbyuploadFile(file: File, stockReference: string): Observable<number> {
+  const formData: FormData = new FormData();
+  formData.append('file', file, file.name);
+
+  return this.http.post<number>(this.apiUrl + "/addProductsByupload/" + stockReference , formData);
+}
+
+excelToCsv(excelFile: File, selectedSheetIndex: number): Observable<File> {
   return new Observable((observer: Observer<File>) => {
     const reader: FileReader = new FileReader();
 
     reader.onload = (event: any) => {
       const data: string | ArrayBuffer = event.target.result;
       const workbook: XLSX.WorkBook = XLSX.read(data, { type: 'binary' });
+      if (workbook.SheetNames.length === 0) {
+        observer.error('No sheets found in the Excel file.');
+        return;
+      }
+      if (selectedSheetIndex < 0 || selectedSheetIndex >= workbook.SheetNames.length) {
+        observer.error('Invalid sheet index selected.');
+        return;
+      }
 
       // Assume the first sheet is the one you want to convert
-      const firstSheetName = workbook.SheetNames[0];
-      const csvData: string = XLSX.utils.sheet_to_csv(workbook.Sheets[firstSheetName]);
+      const selectedSheetName = workbook.SheetNames[selectedSheetIndex];
+      const csvData: string = XLSX.utils.sheet_to_csv(workbook.Sheets[selectedSheetName]);
 
       const blob = new Blob([csvData], { type: 'text/csv' });
-      const csvFile: File = new File([blob], 'converted.csv', { type: 'text/csv' });
+      const csvFile: File = new File([blob], `converted_${selectedSheetName}.csv`, { type: 'text/csv' });
 
       observer.next(csvFile);
       observer.complete();

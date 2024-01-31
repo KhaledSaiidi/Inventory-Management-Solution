@@ -12,6 +12,9 @@ import com.phoenix.repository.IProductRepository;
 import com.phoenix.repository.IStockRepository;
 import com.phoenix.repository.IUncheckHistoryRepository;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +72,20 @@ public class ProductService implements IProductService{
         List<ProductDto> productdtos = iProductMapper.toDtoList(product);
         return productdtos;
     }
+
+    @Override
+    public Page<ProductDto> getProductsPaginatedBystockReference(Pageable pageable, String stockreference) {
+
+        Optional<Stock> stockOptional = iStockRepository.findById(stockreference);
+        if (stockOptional.isEmpty()) {
+            return new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
+        Stock stock = stockOptional.get();
+        Page<Product> productsPage  = iProductRepository.findByStock(stock, pageable);
+        List<ProductDto> productDtos = iProductMapper.toDtoList(productsPage.getContent());
+        return new PageImpl<>(productDtos, pageable, productsPage.getTotalElements());
+    }
+
     @Override
     public ProductDto UpdateProduct(String serialNumber, ProductDto productDto) {
         Product product = iProductRepository.findById(serialNumber).orElse(null);
@@ -113,9 +130,7 @@ public class ProductService implements IProductService{
 
     @Override
     public List<String> uploadProducts(MultipartFile file, String stockReference) throws IOException {
-
-
-        Set<String> serialNumbers = parseCsv(file);
+        Set<String> serialNumbers = parseCsvCheck(file);
         List<String> notFoundserialNumbers = new ArrayList<>();
         Optional<Stock> stockOptional = iStockRepository.findById(stockReference);
         if(stockOptional.isPresent()) {
@@ -158,7 +173,7 @@ public class ProductService implements IProductService{
         return notFoundserialNumbers;
     }
 
-    private Set<String> parseCsv(MultipartFile file) throws IOException {
+    private Set<String> parseCsvCheck(MultipartFile file) throws IOException {
         try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))){
             CaseInsensitiveHeaderColumnNameMappingStrategy<SerialNumbersCsvRepresentation> strategy =
                     new CaseInsensitiveHeaderColumnNameMappingStrategy<>();
@@ -177,4 +192,42 @@ public class ProductService implements IProductService{
                     .collect(Collectors.toSet());
         }
     }
-}
+
+    @Override
+    public Integer addProductsByupload(MultipartFile file, String stockReference) throws IOException {
+        List<ProductDto> productDtos = new ArrayList<>(parseCsv(file));
+        Optional<Stock> optionalstock = iStockRepository.findById(stockReference);
+        if(optionalstock.isEmpty())
+        {return  null;}
+        else {
+            Stock stock = optionalstock.get();
+            List<Product> products = iProductMapper.toEntityList(productDtos);
+            products.forEach(product -> product.setStock(stock));
+            iProductRepository.saveAll(products);
+            return productDtos.size();
+        }
+    }
+
+    private Set<ProductDto> parseCsv(MultipartFile file) throws IOException {
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream())) ){
+            HeaderColumnNameMappingStrategy<ProductDtosCsvRepresentation> strategy =
+                    new HeaderColumnNameMappingStrategy<>();
+            strategy.setType(ProductDtosCsvRepresentation.class);
+            CsvToBean<ProductDtosCsvRepresentation> csvToBean =
+                    new CsvToBeanBuilder<ProductDtosCsvRepresentation>(reader)
+                            .withMappingStrategy(strategy)
+                            .withIgnoreEmptyLine(true)
+                            .withIgnoreLeadingWhiteSpace(true)
+                            .build();
+            return csvToBean.parse()
+                    .stream()
+                    .filter(csvLine -> !csvLine.getSerialNumber().isEmpty() && !csvLine.getSerialNumber().equals("EOF"))
+                    .map(csvLine -> ProductDto.builder()
+                            .serialNumber(csvLine.getSerialNumber())
+                            .simNumber(csvLine.getSimNumber())
+                            .productType(csvLine.getProductType())
+                            .build())
+                    .collect(Collectors.toSet());
+        }
+    }
+    }

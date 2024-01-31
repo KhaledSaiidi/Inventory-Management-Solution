@@ -38,7 +38,7 @@ export class ProductsComponent implements OnInit{
       }
     }); 
     this.getStockbyRef(this.stockreference);
-    this.getProductsByStockReference(this.stockreference);
+    this.getProductsByStockReference(this.stockreference,0, 10);
   }
   navigateToAddProduct(ref?: string) {
     if (ref === undefined) {
@@ -66,11 +66,20 @@ export class ProductsComponent implements OnInit{
   productsDto: Productdto[] = [];
   loading: boolean = true;
   emptyProducts: boolean = true;
-  getProductsByStockReference(ref : string){
-    this.stockservice.getProductsByStockReference(ref).subscribe(
+  totalPages: number = 0;
+  totalElements: number = 0;
+  currentPage: number = 1;
+
+  getProductsByStockReference(ref : string, page: number, size: number){
+    this.stockservice.getProductsPaginatedByStockReference(ref, page, size).subscribe(
       (data) => {
-    this.productsDto = data as Productdto[];
+    this.productsDto = data.content;
+    this.totalPages = data.totalPages;
+    this.totalElements = data.totalElements;
+    this.currentPage = data.number + 1;
+
     this.loading = false;
+
     if(this.productsDto.length > 0){
       this.emptyProducts = false;
       console.log("emptyStock: " + this.emptyProducts);
@@ -83,6 +92,12 @@ export class ProductsComponent implements OnInit{
       }
     );
   }
+
+  onPageChange(newPage: number): void {
+    const pageSize = 10;
+    this.getProductsByStockReference(this.stockreference, newPage - 1, pageSize);
+  }  
+
 
   getStateText(state: string): string {
     switch (state) {
@@ -107,13 +122,22 @@ export class ProductsComponent implements OnInit{
   }
   
   selectedFile: File | null = null;
+  selectedSheetIndex: number = 0;
+  selectedSheetIndexToenter: number = 0;
+  updateSheetIndex(): void {
+    this.selectedSheetIndexToenter = Math.max(0, this.selectedSheetIndex - 1);
+    console.log(this.selectedSheetIndex);
+    console.log(this.selectedSheetIndexToenter);
+
+  }
+
   onFileSelected(event: any): void {
     const file: File = event.target.files[0] as File;
     const allowedExtensions = ['csv', 'xlsx'];
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
     if (fileExtension && allowedExtensions.includes(fileExtension)) {
       if (fileExtension === 'xlsx') {
-        this.convertExcelToCsv(file);
+        this.convertExcelToCsv(file, this.selectedSheetIndexToenter);
       } else {
         this.selectedFile = file;
       }
@@ -121,8 +145,8 @@ export class ProductsComponent implements OnInit{
       console.error('Invalid file type. Please select a CSV or Excel file.');
     }
     }
-    convertExcelToCsv(excelFile: File){
-      this.stockservice.excelToCsv(excelFile).subscribe(
+    convertExcelToCsv(excelFile: File, selectedSheetIndex: number){
+      this.stockservice.excelToCsv(excelFile, selectedSheetIndex).subscribe(
         (csvFile: File) => {
           this.selectedFile = csvFile;
           console.log('Excel file converted to CSV.');
@@ -132,8 +156,24 @@ export class ProductsComponent implements OnInit{
         }
       );
     }
+
+    uploadFile(): void {
+      if (this.selectedFile) {
+        this.stockservice.addProdbyuploadFile(this.selectedFile, this.stockreference).subscribe(
+          result => {
+            location.reload();
+          },
+          error => {
+            console.error('Error uploading file:', error);
+          }
+        );
+      } else {
+        console.error('No file selected.');
+      }
+  
+    }
         
-  uncheckedProds!: string[];
+ /* uncheckedProds!: string[];
   uploadFile(): void {
     if (this.selectedFile) {
       this.stockservice.uploadFile(this.selectedFile, this.stockreference).subscribe(
@@ -150,7 +190,7 @@ export class ProductsComponent implements OnInit{
     } else {
       console.error('No file selected.');
     }
-  }
+  } */
 
   navigateToCheckProds(ref?: string) {
     if (ref === undefined) {

@@ -26,3 +26,20 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .selectedSheetIndex {
+      max-width: 560px;
+      margin-left: 0px;
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      padding: 5px;
+      color: #333;
+      background-color: #f0f0f0; 
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+        
+    
+    

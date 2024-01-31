@@ -70,6 +70,16 @@ public class Controller {
         List<ProductDto> productDtos = iProductService.getProductsBystockReference(stockreference);
         return productDtos;
     }
+    @GetMapping("getProductsPaginatedByStockReference/{stockreference}")
+    public ResponseEntity<Page<ProductDto>> getProductsPaginatedByStockReference(
+            @PathVariable String stockreference,
+            @RequestParam int page,
+            @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDto> productPage = iProductService.getProductsPaginatedBystockReference(pageable, stockreference);
+        return ResponseEntity.ok(productPage);
+    }
+
 
     @PutMapping("/updateProduct/{serialNumber}")
     public ProductDto updateProduct(@PathVariable String serialNumber, @RequestBody ProductDto productDto) {
@@ -106,5 +116,13 @@ public class Controller {
     @GetMapping("returnstockBycampaignRef/{campreference}")
     public List<StockDto> getStocksByCampaignRef(@PathVariable String campreference) {
         return iStockService.getStocksByCampaignRef(campreference);
+    }
+
+    @PostMapping(value = "/addProductsByupload/{stockReference}", consumes = {"multipart/form-data"})
+    public ResponseEntity<Integer> addProductsByupload(
+            @PathVariable String stockReference,
+            @RequestPart("file") MultipartFile file
+    )throws IOException {
+        return ResponseEntity.ok(iProductService.addProductsByupload(file, stockReference));
     }
 }

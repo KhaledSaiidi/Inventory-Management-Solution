@@ -1,9 +1,13 @@
 <app-base></app-base>
 <div class="listeequipes-container"> 
   <a class="btn btn-primary" (click)="navigateToAddProduct(stockreference)">Add Product</a>
+  <br>
+  <label class="selectedSheetIndex" for="selectedSheetIndex">Select the Excel File and enter the sheet number :</label>
+
   <div class="d-flex">
-    <input type="file" style="width: 230px; max-height: 40px;" class="form-control" id="image" (change)="onFileSelected($event)">
-    <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFile()">Check Products</a>
+    <input type="file" style="width: 230px; max-height: 40px; margin-right: 5px;"  class="form-control" id="image" (change)="onFileSelected($event)">
+    <input type="number" class="form-control"style="width: 55px; max-height: 40px;"  [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" />
+    <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFile()">Add Products</a>
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="navigateTocheckHistory(stockreference)">Check History</a>
   </div>
   
@@ -21,6 +25,8 @@
                      <thead>
                        <tr>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 50px;">Status</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product Type</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Brand</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product Model</th>
@@ -33,7 +39,7 @@
                      <tbody>
                       <ng-container  *ngIf="loading;">
                         <tr>
-                          <td colspan="8" style="text-align: center;">
+                          <td colspan="10" style="text-align: center;">
                             <div class="loading-container">
                               <div class="loading-spinner"></div>
                             </div>
@@ -42,7 +48,7 @@
                       </ng-container>
                       <ng-container  *ngIf="!loading && emptyProducts;">
                         <tr>
-                          <td colspan="8" style="text-align: center;">
+                          <td colspan="10" style="text-align: center;">
                             <p>No products found. Please check back later.</p>
                           </td>
                         </tr>
@@ -50,15 +56,16 @@
                       <ng-container  *ngIf="!loading && !emptyProducts; ">
                        <tr *ngFor="let prod of productsDto">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" 
-                         (mouseout)="hideTooltip()">    
-                         <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
-                          {{prod.checkedExistence ? '&#10003;' : '&#10008;'}}
-                          </span>
-                           {{prod.serialNumber}}</td>
+                         (mouseout)="hideTooltip()">{{prod.serialNumber}}</td> 
+                        <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
+                        <td style="word-wrap: break-word; white-space: normal;">
+                          <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
+                            {{prod.checkedExistence ? '&#10003;' : '&#10008;'}}
+                            </span></td> 
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.brand}}</td>                      
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.prodName}}</td>
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.price}}$</td>
+                        <td style="word-wrap: break-word; white-space: normal;">{{prod.price ? prod.price + '$' : '0$'}}</td>
                         <td style="word-wrap: break-word; white-space: normal;" *ngIf="prod.state">
                           {{ getStateText(prod.state.toString()) }}
                         </td>
@@ -68,6 +75,12 @@
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a (click)="navigateToUpdateProduct(stockreference, prod.serialNumber)">update</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a>Assign</a></td>
                        </tr>
+                       <tr>
+                        <td colspan="10" style="margin-right: 5px;">
+                          <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
+                         </td>
+                        </tr>
+  
                        </ng-container>
 
                      </tbody>

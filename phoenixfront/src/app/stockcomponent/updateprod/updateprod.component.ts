@@ -89,7 +89,7 @@ export class UpdateprodComponent implements OnInit{
         productType: [''],
         productName: [''],
         price: [''],
-        productDescription: [''],
+        comments: [''],
         brand: ['']
       });
     }
