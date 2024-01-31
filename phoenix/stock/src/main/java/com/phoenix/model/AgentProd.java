@@ -20,9 +20,12 @@ import java.util.List;
 public class AgentProd {
     @jakarta.persistence.Id
     private String agentRef;
-    private String agentManagerReference;
-    @OneToMany(mappedBy = "agentProd", cascade = CascadeType.ALL)
-    private List<Product> products;
+    @OneToMany(mappedBy = "managerProd")
+    private List<Product> productsManaged;
+    @OneToMany(mappedBy = "agentWhoSold")
+    private List<Product> productsSoldBy;
+    @OneToMany(mappedBy = "agentProd")
+    private List<Product> productsAssociated;
     @OneToMany(mappedBy = "agentProd", cascade = CascadeType.ALL)
     private List<Reclamation> reclamations;
 }

@@ -4,15 +4,21 @@ import { Stockdto } from "./Stock";
 
 export interface Productdto {
     serialNumber?: string;
+    simNumber?: string;
+    checkout?: Date;
+    checkin?: Date;
+    boxNumber?: string;
+    checkedSell?: boolean;
+    brand?: string;
     productType?: string;
     prodName?: string;
-    brand?: string;
-    prodDescription?: string;
+    comments?: string;
     price?: number;
     state?: State;
     soldDate?: Date;
-    checked?: boolean;
+    checkedExistence?: boolean;
     stock?: Stockdto;
     agentProd?: AgentProdDto;
-
+    managerProd?: AgentProdDto;
+    agentWhoSold?: AgentProdDto;
 }

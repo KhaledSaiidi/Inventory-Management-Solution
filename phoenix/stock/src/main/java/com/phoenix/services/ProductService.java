@@ -74,21 +74,20 @@ public class ProductService implements IProductService{
         Product product = iProductRepository.findById(serialNumber).orElse(null);
         Stock stock = product.getStock();
         BigDecimal tochangeValue = BigDecimal.ZERO;
-        if (product == null) {
-            return null;
-        }
-        if (productDto.getProductType() != null) {
-            product.setProductType(productDto.getProductType());}
-        if (productDto.getProdName() != null) {
-            product.setProdName(productDto.getProdName());}
-        if (productDto.getBrand() != null) {
-            product.setBrand(productDto.getBrand());}
-        if (productDto.getProdDescription() != null) {
-            product.setProdDescription(productDto.getProdDescription());}
-        if (productDto.getState() != null) {
-            product.setState(productDto.getState());}
-        if (productDto.getSoldDate() != null) {
-            product.setSoldDate(productDto.getSoldDate());}
+        if (product == null) {return null;}
+        if (productDto.getSimNumber() != null) {product.setSimNumber(productDto.getSimNumber());}
+        if (productDto.getCheckout() != null) {product.setCheckout(productDto.getCheckout());}
+        if (productDto.getCheckin() != null) {product.setCheckin(productDto.getCheckin());}
+        if (productDto.getBoxNumber() != null) {product.setBoxNumber(productDto.getBoxNumber());}
+        if (productDto.isCheckedSell()) {product.setCheckedSell(productDto.isCheckedSell());}
+        if (productDto.getBrand() != null) {product.setBrand(productDto.getBrand());}
+        if (productDto.getProductType() != null) {product.setProductType(productDto.getProductType());}
+        if (productDto.getProdName() != null) {product.setProdName(productDto.getProdName());}
+        if (productDto.getComments() != null) {product.setComments(productDto.getComments());}
+        if (productDto.getPrice() != null) {product.setPrice(productDto.getPrice());}
+        if (productDto.getState() != null) {product.setState(productDto.getState());}
+        if (productDto.getSoldDate() != null) {product.setSoldDate(productDto.getSoldDate());}
+        if (productDto.isCheckedExistence()) {product.setCheckedExistence(productDto.isCheckedExistence());}
         if (productDto.getPrice() != null) {
             tochangeValue = product.getPrice();
             product.setPrice(productDto.getPrice());}
@@ -126,7 +125,7 @@ public class ProductService implements IProductService{
                 boolean found = false;
                 for (Product product : products) {
                     if (product.getSerialNumber().equalsIgnoreCase(serial)) {
-                        product.setChecked(true);
+                        product.setCheckedExistence(true);
                         iProductRepository.save(product);
                         found = true;
                         break;
@@ -139,7 +138,7 @@ public class ProductService implements IProductService{
             List<Product> productsafterChange = iProductRepository.findByStock(stock);
             Boolean productsAreChecked = true;
             for (Product product : productsafterChange) {
-                if (!product.isChecked()) {
+                if (!product.isCheckedExistence()) {
                     productsAreChecked = false;
                     break;
                 }
@@ -155,7 +154,6 @@ public class ProductService implements IProductService{
                 stock.setChecked(true);
                 iStockRepository.save(stock);
             }
-
         }
         return notFoundserialNumbers;
     }

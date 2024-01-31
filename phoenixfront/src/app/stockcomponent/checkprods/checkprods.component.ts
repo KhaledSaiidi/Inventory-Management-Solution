@@ -52,7 +52,7 @@ export class CheckprodsComponent implements OnInit{
     getProductsByStockReference(ref : string){
       this.stockservice.getProductsByStockReference(ref).subscribe(
         (data) => {
-          this.productsDto = (data as Productdto[]).filter(product => !product.checked);
+          this.productsDto = (data as Productdto[]).filter(product => !product.checkedExistence);
           if (this.productsDto.length === 0 && this.compuncheckedProds.length === 0) {
             this.allMatches = true;
           }

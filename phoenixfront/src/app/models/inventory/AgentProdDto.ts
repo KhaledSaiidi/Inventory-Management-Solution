@@ -3,8 +3,8 @@ import { ReclamationDto } from "./ReclamationDto";
 
 export interface AgentProdDto {
      agentRef?: string;
-     agentManagerReference?: string; 
-     products?: Productdto[];
-    reclamations?: ReclamationDto[];
-
+     productsManaged?: Productdto[];
+     productsSoldBy?: Productdto[];
+     productsAssociated?: Productdto[];
+     reclamations?: ReclamationDto[];
 }

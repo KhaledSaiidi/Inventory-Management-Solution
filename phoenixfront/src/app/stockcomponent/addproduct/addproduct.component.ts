@@ -79,7 +79,6 @@ export class AddproductComponent implements OnInit{
       productType: this.prodForm.get('productType')?.value,
       prodName: this.prodForm.get('productName')?.value,
       price: this.prodForm.get('price')?.value,
-      prodDescription: this.prodForm.get('productDescription')?.value,
       brand: this.prodForm.get('brand')?.value,
       stock: this.stockdto
     }

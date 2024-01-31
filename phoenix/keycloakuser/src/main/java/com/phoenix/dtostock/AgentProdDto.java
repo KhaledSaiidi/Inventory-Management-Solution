@@ -11,8 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 public class AgentProdDto {
     private String agentRef;
-    private String agentManagerReference;
-    private List<ProductDto> products;
+    private List<ProductDto> productsManaged;
+    private List<ProductDto> productsSoldBy;
+    private List<ProductDto> productsAssociated;
     private List<ReclamationDto> reclamations;
 
 }

@@ -13,7 +13,6 @@ public class AgentProdMapper implements IAgentProdMapper{
     public AgentProdDto toDto(AgentProd agentProd) {
         AgentProdDto agentProdDto = new AgentProdDto();
         agentProdDto.setAgentRef(agentProd.getAgentRef());
-        agentProdDto.setAgentManagerReference(agentProd.getAgentManagerReference());
         return agentProdDto;
     }
 
@@ -21,7 +20,6 @@ public class AgentProdMapper implements IAgentProdMapper{
     public AgentProd toEntity(AgentProdDto agentProdDto) {
         AgentProd agentProd = new AgentProd();
         agentProd.setAgentRef(agentProdDto.getAgentRef());
-        agentProd.setAgentManagerReference(agentProdDto.getAgentManagerReference());
         return agentProd;
     }
 

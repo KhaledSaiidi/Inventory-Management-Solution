@@ -55,7 +55,7 @@ export class UpdateprodComponent implements OnInit{
           productType: this.product.productType,
           productName: this.product.prodName,
           price: this.product.price,
-          productDescription: this.product.prodDescription,
+          comments: this.product.comments,
           brand: this.product.brand
         });
   
@@ -98,7 +98,7 @@ export class UpdateprodComponent implements OnInit{
       const productdto: Productdto = {
         productType: this.prodForm.get('productType')?.value,
         prodName: this.prodForm.get('productName')?.value,
-        prodDescription: this.prodForm.get('productDescription')?.value,
+        comments: this.prodForm.get('comments')?.value,
         price: this.prodForm.get('price')?.value,
         brand: this.prodForm.get('brand')?.value
       }

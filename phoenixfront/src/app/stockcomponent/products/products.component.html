@@ -51,8 +51,8 @@
                        <tr *ngFor="let prod of productsDto">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" 
                          (mouseout)="hideTooltip()">    
-                         <span style="font-size: 20px;" [style.color]="prod.checked ? 'green' : 'red'">
-                          {{prod.checked ? '&#10003;' : '&#10008;'}}
+                         <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
+                          {{prod.checkedExistence ? '&#10003;' : '&#10008;'}}
                           </span>
                            {{prod.serialNumber}}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
@@ -87,7 +87,7 @@
                 <div class="popup-content" >
                   <h6 style="text-align: center;"> <b>{{ productdto?.prodName}} </b></h6>
                   <p style="font-size: 14px; word-wrap: break-word;">
-                    {{productdto?.prodDescription}} <br>
+                    {{productdto?.comments}} <br>
                   </p>
                 </div>
               </div>
