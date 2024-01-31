@@ -54,7 +54,8 @@ export class StockComponent implements OnInit{
   }  
   
   onPageChange(newPage: number): void {
-    this.getStocksWithCampaigns(newPage - 1, 1);
+    const pageSize = 5;
+    this.getStocksWithCampaigns(newPage - 1, pageSize);
   }  
   
   

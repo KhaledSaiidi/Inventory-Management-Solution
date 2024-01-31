@@ -42,8 +42,8 @@ public class Controller {
 
     @GetMapping("/getStocksWithTheirCampaigns")
     public ResponseEntity<Page<StockDto>> getStocksAndCampaigns(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "1") int size) {
+            @RequestParam int page,
+            @RequestParam int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<StockDto> stockPage = iStockService.getStocks(pageable);
         return ResponseEntity.ok(stockPage);
