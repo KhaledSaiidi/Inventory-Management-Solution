@@ -15,45 +15,25 @@
                         <h3 class="mb-0">Stock {{campaignName}} info:</h3>
 
                     <br>
-                        <div class="row">
+                    <div class="container">
+                      <div class="row">
+                          <div class="col mb-0"><b>Campaign: </b> {{campaignName}}</div>
+                          <div class="col mb-0"><b>Client: </b> {{companyName}}</div>
+                      </div>
+                      <div class="row">
+                          <div class="col mb-0">
+                            <b>Stock Value</b> {{ stockValue !== null && stockValue !== undefined ? stockValue + ' $' : '0 $' }}
+                          </div>
+                          <div class="col mb-0"><b>Shipping Date: </b> {{shippingDate| date: 'medium' | slice: 0:12 }}</div>
+                      </div>
+                      <div class="row">
+                          <div class="col mb-0"><b>Received Date: </b> {{receivedDate| date: 'medium' | slice: 0:12 }}</div>
+                          <div class="col mb-0"><b>Due Date: </b> {{dueDate| date: 'medium' | slice: 0:12 }}</div>
+                      </div>
+                  </div>                  
+                        <div class="row" style="margin-top: 20px;">
                           <div class="col-sm-3">
-                            <p class="mb-0"><b>Campaign</b> </p>
-                          </div>
-                          <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{campaignName}}</p>
-                          </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <p class="mb-0"><b>Client</b></p>
-                          </div>
-                          <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{companyName}}</p>
-                          </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <p class="mb-0"><b>Stock Value</b></p>
-                          </div>
-                          <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{stockValue}} $</p>
-                          </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <p class="mb-0"><b>Stock Date</b></p>
-                          </div>
-                          <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{stockDate}}</p>
-                          </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <p class="mb-0"><b>Product Types</b></p>
+                            <p class="mb-0"><b>Product Types: </b></p>
                           </div>
                           <div class="col-sm-9">
                             <div class="product-list">

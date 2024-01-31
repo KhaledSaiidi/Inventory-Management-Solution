@@ -48,6 +48,7 @@ public class StockService implements IStockService{
         if (campaigndto != null) {
         stockDto.setCampaignRef(campaigndto.getReference());
         stockDto.setProductTypes(campaigndto.getProducts());
+        stockDto.setDueDate(stockDto.getReceivedDate().plusDays(45));
         }
         Stock stock = iStockMapper.toEntity(stockDto);
         iStockRepository.save(stock);
@@ -111,8 +112,14 @@ public class StockService implements IStockService{
             stock.setCampaignRef(stockDto.getCampaignRef());}
         if (stockDto.getProducts() != null) {
             stock.setProductTypes(stockDto.getProductTypes());}
-        if (stockDto.getStockDate() != null) {
-            stock.setStockDate(stockDto.getStockDate());}
+
+        if (stockDto.getShippingDate() != null) {
+            stock.setShippingDate(stockDto.getShippingDate());}
+
+        if (stockDto.getReceivedDate() != null) {
+            stock.setReceivedDate(stockDto.getReceivedDate());
+            stock.setDueDate(stockDto.getReceivedDate().plusDays(45));
+        }
         if (stockDto.isChecked()) {
             stock.setChecked(stockDto.isChecked());}
         if (stockDto.getNotes() != null) {

@@ -28,8 +28,9 @@ export class AddstockComponent implements OnInit{
   initializeForm() {
     this.stockForm = this.fb.group({
       reference: [''],
-      stockDate: [null],
-      notes: ['']
+      shippingDate: [null],
+      notes: [''],
+      receivedDate: [null]
     });
   }
 
@@ -53,7 +54,8 @@ export class AddstockComponent implements OnInit{
   onSubmit(){
     const campaignReference: string = this.stockForm.get('reference')?.value;
     const stockdto: Stockdto = {
-      stockDate: this.stockForm.get('stockDate')?.value,
+      shippingDate: this.stockForm.get('shippingDate')?.value,
+      receivedDate: this.stockForm.get('receivedDate')?.value,
       notes: this.stockForm.get('notes')?.value
     }
 

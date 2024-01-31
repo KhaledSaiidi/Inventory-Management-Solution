@@ -40,7 +40,8 @@ export class UpdatestockComponent implements OnInit {
       initializeForm() {
         this.stockForm = this.fb.group({
           reference: [''],
-          stockDate: [null],
+          shippingDate: [null],
+          receivedDate: [null],
           notes: [''],
           checked: [false]
         });
@@ -79,7 +80,8 @@ export class UpdatestockComponent implements OnInit {
       }
         this.stockForm.patchValue({
           reference: this.stockdto.campaignRef,
-          stockDate: this.stockdto.stockDate,
+          shippingDate: this.stockdto.shippingDate,
+          receivedDate: this.stockdto.receivedDate,
           notes:this.stockdto.notes,
           checked: this.stockdto.checked
         });
@@ -120,7 +122,8 @@ export class UpdatestockComponent implements OnInit {
       onSubmit() {
         const stockDto: Stockdto = {
           campaignRef: this.stockForm.get('reference')?.value,
-          stockDate: this.stockForm.get('stockDate')?.value,
+          shippingDate: this.stockForm.get('shippingDate')?.value,
+          receivedDate: this.stockForm.get('receivedDate')?.value,
           notes: this.stockForm.get('notes')?.value,
           checked: this.stockForm.get('checked')?.value,
         }

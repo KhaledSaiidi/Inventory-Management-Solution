@@ -36,6 +36,5 @@ export class CustomPaginationComponent {
     if (typeof page === 'number') {
       this.pageChange.emit(page);
     }
-    // You can add additional logic here for handling '...' clicks if needed
   }
 }

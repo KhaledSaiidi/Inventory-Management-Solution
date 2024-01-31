@@ -5,7 +5,9 @@ export interface Stockdto {
     stockReference?: string;
     productTypes?: string[];
     campaignRef?: string; 
-    stockDate?: Date;
+    shippingDate?: Date;
+    receivedDate?: Date;
+    dueDate?: Date;
     checked?: boolean;
     notes?: string;
     products?: Productdto[];

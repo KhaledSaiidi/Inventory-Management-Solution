@@ -21,7 +21,9 @@ public class Stock {
     private String stockReference;
     private List<String> productTypes;
     private String campaignRef;
-    private LocalDate stockDate;
+    private LocalDate shippingDate;
+    private LocalDate receivedDate;
+    private LocalDate dueDate;
     private boolean checked;
     private String notes;
     private BigDecimal stockValue;

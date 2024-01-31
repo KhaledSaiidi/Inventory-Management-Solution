@@ -37,7 +37,10 @@ export class StockinfoComponent implements OnInit{
     campaignName!: string;
     companyName!: string;
     stockValue!: number;
-    stockDate!: Date;
+    shippingDate!: Date;
+    receivedDate!: Date;
+    dueDate!: Date;
+
     notes!: string;
     getStockbyRef(ref : string){
       this.stockservice.getStockByreference(ref).subscribe(
@@ -50,9 +53,15 @@ export class StockinfoComponent implements OnInit{
       if(this.stockdto.productTypes) {
       this.products = this.stockdto.productTypes;
         }
-      if(this.stockdto.stockDate) {
-        this.stockDate = this.stockdto.stockDate;
+      if(this.stockdto.shippingDate) {
+        this.shippingDate = this.stockdto.shippingDate;
         }
+        if(this.stockdto.receivedDate) {
+          this.receivedDate = this.stockdto.receivedDate;
+          }
+          if(this.stockdto.dueDate) {
+            this.dueDate = this.stockdto.dueDate;
+            }
       if(this.stockdto.stockValue) {
         this.stockValue = this.stockdto.stockValue;
         }

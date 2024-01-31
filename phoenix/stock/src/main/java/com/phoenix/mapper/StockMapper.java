@@ -15,7 +15,9 @@ public class StockMapper implements IStockMapper{
         stockDto.setStockReference(stock.getStockReference());
         stockDto.setProductTypes(stock.getProductTypes());
         stockDto.setCampaignRef(stock.getCampaignRef());
-        stockDto.setStockDate(stock.getStockDate());
+        stockDto.setShippingDate(stock.getShippingDate());
+        stockDto.setReceivedDate(stock.getReceivedDate());
+        stockDto.setDueDate(stock.getDueDate());
         stockDto.setChecked(stock.isChecked());
         stockDto.setNotes(stock.getNotes());
         stockDto.setStockValue(stock.getStockValue());
@@ -28,7 +30,9 @@ public class StockMapper implements IStockMapper{
         stock.setStockReference(stockDto.getStockReference());
         stock.setProductTypes(stockDto.getProductTypes());
         stock.setCampaignRef(stockDto.getCampaignRef());
-        stock.setStockDate(stockDto.getStockDate());
+        stock.setShippingDate(stockDto.getShippingDate());
+        stock.setReceivedDate(stockDto.getReceivedDate());
+        stock.setDueDate(stockDto.getDueDate());
         stock.setChecked(stockDto.isChecked());
         stock.setNotes(stockDto.getNotes());
         stock.setStockValue(stockDto.getStockValue());

@@ -18,10 +18,13 @@
                      <thead>
                        <tr>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Reference</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product Types</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">campaign</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">CLIENT</th>
-                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Date</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock shipping Date</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Received Date</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Due Date</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Value</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
                        </tr>
@@ -46,10 +49,12 @@
                       <ng-container  *ngIf="!loading && !emptyStock; ">
                       <tr *ngFor="let stock of stocks">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToProducts(stock.stockReference)" >
-                          <span style="font-size: 20px;" [style.color]="stock.checked ? 'green' : 'red'">
-                            {{stock.checked ? '&#10003;' : '&#10008;'}}
-                        </span>
                           {{ stock.stockReference }}</a></td>
+                          <td style="word-wrap: break-word; white-space: normal;">
+                            <span style="font-size: 20px;" [style.color]="stock.checked ? 'green' : 'red'">
+                              {{stock.checked ? '&#10003;' : '&#10008;'}}
+                            </span>
+                          </td>
                         <td style="word-wrap: break-word; white-space: normal;">
                           <div style="max-height: 70px; overflow-y: auto;">
                             <ul *ngFor="let product of stock.campaigndto?.products">
@@ -59,13 +64,15 @@
                         </td>                      
                         <td style="word-wrap: break-word; white-space: normal;">{{ stock.campaigndto?.campaignName }}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{stock.campaigndto?.client?.companyName}}</td>
-                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.stockDate | date: 'medium' | slice: 0:12 }}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.shippingDate | date: 'medium' | slice: 0:12 }}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.receivedDate | date: 'medium' | slice: 0:12 }}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.dueDate | date: 'medium' | slice: 0:12 }}</td>
                         <td style="word-wrap: break-word; white-space: normal;"> {{ stock.stockValue ?? 0 }}  $</td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">View</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">update</a></td>
                       </tr>
                       <tr>
-                      <td colspan="8" style="margin-right: 5px;">
+                      <td colspan="11" style="margin-right: 5px;">
                         <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
                        </td>
                       </tr>
