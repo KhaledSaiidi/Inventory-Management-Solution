@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
@@ -39,15 +40,16 @@ export class ProductsComponent implements OnInit{
       }
     }); 
     this.getStockbyRef(this.stockreference);
-    this.getProductsByStockReference(this.stockreference,0, 10);
+    this.getProductsByStockReference(this.stockreference,0, 20);
   }
   navigateToAddProduct(ref?: string) {
     if (ref === undefined) {
       console.log('Invalid ref');
       return;
     }
-    this.router.navigate(['/addproduct'], { queryParams: { id: ref } });     
-    console.log(ref);
+    console.log(this.selectedSerialNumbers);
+   //this.router.navigate(['/addproduct'], { queryParams: { id: ref } });     
+   //console.log(ref);
   }
   stockdto!: Stockdto;
   campaignName!: string;
@@ -96,7 +98,7 @@ export class ProductsComponent implements OnInit{
   }
 
   onPageChange(newPage: number): void {
-    const pageSize = 10;
+    const pageSize = 20;
     this.getProductsByStockReference(this.stockreference, newPage - 1, pageSize);
   }  
 
@@ -205,7 +207,6 @@ export class ProductsComponent implements OnInit{
   searchTerm: string = '';
 
   selectAllChecked: boolean = false;
-
   selectedSerialNumbers: Set<string> = new Set<string>();
   isSelected(prod: Productdto): boolean {
     return prod.serialNumber !== undefined && this.selectedSerialNumbers.has(prod.serialNumber as string);
@@ -217,28 +218,38 @@ export class ProductsComponent implements OnInit{
       } else {
         this.selectedSerialNumbers.add(prod.serialNumber as string);
       }
-      this.consoleLogSelectedSerialNumbers();
     }
   }
 
   selectAllCheckbox(event: any) {
     this.selectAllChecked = event.target.checked;
-  
     if (this.selectAllChecked) {
-      this.productsDto.forEach(prod => {
-        if (prod.serialNumber !== undefined) {
-          this.selectedSerialNumbers.add(prod.serialNumber as string);
+      const observables = [];
+  
+      for (let page = 0; page < this.totalPages; page++) {
+        observables.push(
+          this.stockservice.getProductsPaginatedByStockReference(this.stockreference, page, 20)
+        );
+      }
+  
+      forkJoin(observables).subscribe(
+        (responses) => {
+          responses.forEach((data) => {
+            const slectedProds: Productdto[] = data.content;
+            slectedProds.forEach((prod) => {
+              this.selectedSerialNumbers.add(prod.serialNumber as string);
+            });
+          });
+        },
+        (error) => {
+          console.error('Failed to get products:', error);
         }
-      });
-    } else {
+      );
+    }
+  
+    if (!this.selectAllChecked) {
       this.selectedSerialNumbers.clear();
     }
-    this.consoleLogSelectedSerialNumbers();
-  }  
-  
-  consoleLogSelectedSerialNumbers() {
-    console.log(Array.from(this.selectedSerialNumbers));
-    this.cdr.detectChanges();
   }
 
 
