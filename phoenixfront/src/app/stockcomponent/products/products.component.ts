@@ -205,6 +205,7 @@ export class ProductsComponent implements OnInit{
     console.log(ref);
   }
   searchTerm: string = '';
+  filteredProducts: Productdto[] = [];
 
   selectAllChecked: boolean = false;
   selectedSerialNumbers: Set<string> = new Set<string>();
