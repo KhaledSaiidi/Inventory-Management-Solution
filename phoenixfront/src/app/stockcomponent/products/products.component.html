@@ -1,14 +1,15 @@
 <app-base></app-base>
 <div class="listeequipes-container"> 
-  <a class="btn btn-primary" (click)="navigateToAddProduct(stockreference)">Add Product</a>
-  <br>
-  <label class="selectedSheetIndex" for="selectedSheetIndex">Select the Excel File and enter the sheet number :</label>
-
+  <div class="search-container">
+    <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
+    <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" style="margin-left: 10px;" placeholder="Search by Serial Number or Sim Number">
+  </div>
+    
   <div class="d-flex">
     <input type="file" style="width: 230px; max-height: 40px; margin-right: 5px;"  class="form-control" id="image" (change)="onFileSelected($event)">
     <input type="number" class="form-control"style="width: 55px; max-height: 40px;"  [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" />
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFile()">Add Products</a>
-    <a class="btn btn-primary" style="margin-left: 5px;" (click)="navigateTocheckHistory(stockreference)">Check History</a>
+    <a class="btn btn-primary" style="margin-left: 5px;" (click)="navigateToAddProduct(stockreference)">Add Product</a>
   </div>
   
       
@@ -54,10 +55,12 @@
                         </tr>
                       </ng-container>
                       <ng-container  *ngIf="!loading && !emptyProducts; ">
-                       <tr *ngFor="let prod of productsDto">
+                       <tr *ngFor="let prod of productsDto | filterProducts: searchTerm">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" 
-                         (mouseout)="hideTooltip()">{{prod.serialNumber}}</td> 
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
+                         (mouseout)="hideTooltip()" [innerHTML]="prod.serialNumber">
+                        </td> 
+                        <td style="word-wrap: break-word; white-space: normal;" [innerHTML]="prod.simNumber">
+                        </td>  
                         <td style="word-wrap: break-word; white-space: normal;">
                           <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
                             {{prod.checkedExistence ? '&#10003;' : '&#10008;'}}

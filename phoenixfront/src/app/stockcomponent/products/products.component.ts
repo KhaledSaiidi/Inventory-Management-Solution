@@ -70,6 +70,7 @@ export class ProductsComponent implements OnInit{
   totalElements: number = 0;
   currentPage: number = 1;
 
+
   getProductsByStockReference(ref : string, page: number, size: number){
     this.stockservice.getProductsPaginatedByStockReference(ref, page, size).subscribe(
       (data) => {
@@ -200,13 +201,7 @@ export class ProductsComponent implements OnInit{
     this.router.navigate(['/checkprods'], { queryParams: { id: ref } });     
     console.log(ref);
   }
+  searchTerm: string = '';
 
-  navigateTocheckHistory(ref?: string) {
-    if (ref === undefined) {
-      console.log('Invalid ref');
-      return;
-    }
-    this.router.navigate(['/checkhistory'], { queryParams: { id: ref } });     
-    console.log(ref);
-  }
+
 }
