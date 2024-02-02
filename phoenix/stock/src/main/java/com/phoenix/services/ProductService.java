@@ -226,6 +226,7 @@ public class ProductService implements IProductService{
                             .serialNumber(csvLine.getSerialNumber())
                             .simNumber(csvLine.getSimNumber())
                             .productType(csvLine.getProductType())
+                            .state(State.notSoldProd)
                             .build())
                     .collect(Collectors.toSet());
         }

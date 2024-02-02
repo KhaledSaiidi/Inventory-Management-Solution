@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { State } from 'src/app/models/inventory/State';
@@ -16,7 +16,8 @@ export class ProductsComponent implements OnInit{
     private route: ActivatedRoute,
     private router: Router,
     private stockservice: StockService,
-    private dataSharingService: DataSharingService) {}
+    private dataSharingService: DataSharingService,
+    private cdr: ChangeDetectorRef) {}
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
@@ -202,6 +203,44 @@ export class ProductsComponent implements OnInit{
     console.log(ref);
   }
   searchTerm: string = '';
+
+  selectAllChecked: boolean = false;
+
+  selectedSerialNumbers: Set<string> = new Set<string>();
+  isSelected(prod: Productdto): boolean {
+    return prod.serialNumber !== undefined && this.selectedSerialNumbers.has(prod.serialNumber as string);
+  }
+  toggleCheckbox(prod: Productdto) {
+    if (prod.serialNumber !== undefined) {
+      if (this.selectedSerialNumbers.has(prod.serialNumber as string)) {
+        this.selectedSerialNumbers.delete(prod.serialNumber as string);
+      } else {
+        this.selectedSerialNumbers.add(prod.serialNumber as string);
+      }
+      this.consoleLogSelectedSerialNumbers();
+    }
+  }
+
+  selectAllCheckbox(event: any) {
+    this.selectAllChecked = event.target.checked;
+  
+    if (this.selectAllChecked) {
+      this.productsDto.forEach(prod => {
+        if (prod.serialNumber !== undefined) {
+          this.selectedSerialNumbers.add(prod.serialNumber as string);
+        }
+      });
+    } else {
+      this.selectedSerialNumbers.clear();
+    }
+    this.consoleLogSelectedSerialNumbers();
+  }  
+  
+  consoleLogSelectedSerialNumbers() {
+    console.log(Array.from(this.selectedSerialNumbers));
+    this.cdr.detectChanges();
+  }
+
 
 
 }

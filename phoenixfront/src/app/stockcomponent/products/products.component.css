@@ -55,4 +55,11 @@
       cursor: pointer;
     }
     
+    .custom-checkbox {
+      border-radius: 4px;
+      border: 2px solid #ccc;
+      position: relative;
+      transition: background-color 0.2s ease;
+    }
+  
     
