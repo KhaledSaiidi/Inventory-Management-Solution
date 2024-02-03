@@ -96,6 +96,7 @@ export class ProductsComponent implements OnInit{
       }
     );
   }
+  searchTerm: string = '';
 
   onPageChange(newPage: number): void {
     const pageSize = 20;
@@ -204,8 +205,6 @@ export class ProductsComponent implements OnInit{
     this.router.navigate(['/checkprods'], { queryParams: { id: ref } });     
     console.log(ref);
   }
-  searchTerm: string = '';
-  filteredProducts: Productdto[] = [];
 
   selectAllChecked: boolean = false;
   selectedSerialNumbers: Set<string> = new Set<string>();

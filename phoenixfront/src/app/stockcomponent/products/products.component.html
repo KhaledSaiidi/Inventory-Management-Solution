@@ -58,7 +58,8 @@
                         </tr>
                        <tr *ngFor="let prod of productsDto | filterProducts: searchTerm">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" (mouseout)="hideTooltip()">
-                          <input type="checkbox" class="custom-checkbox" style="margin-right: 6px;"   [checked]="isSelected(prod)"  (change)="toggleCheckbox(prod)"> <span [innerHTML]="prod.serialNumber"></span>
+                          <input type="checkbox" class="custom-checkbox" style="margin-right: 6px;"   [checked]="isSelected(prod)"  (change)="toggleCheckbox(prod)"> 
+                          <span [innerHTML]="prod.serialNumber"></span>
                         </td>
                         <td style="word-wrap: break-word; white-space: normal;" [innerHTML]="prod.simNumber">
                         </td>  

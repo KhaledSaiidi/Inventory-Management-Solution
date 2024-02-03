@@ -53,7 +53,7 @@ export class FilterProductsPipe implements PipeTransform {
       const remainingText = text.substring(index + searchTerm.length);
   
       const highlightedHtml = `
-        <span style="background-color: yellow; font-weight: bold;">${highlightedText}</span>${remainingText}
+      ${text.substring(0, index)}<span style="background-color: yellow; font-weight: bold;">${highlightedText}</span>${remainingText}
       `;
   
       return this.sanitizer.bypassSecurityTrustHtml(highlightedHtml);
