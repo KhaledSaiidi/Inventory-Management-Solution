@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
@@ -18,7 +19,7 @@ export class ProductsComponent implements OnInit{
     private router: Router,
     private stockservice: StockService,
     private dataSharingService: DataSharingService,
-    private cdr: ChangeDetectorRef) {}
+    private sanitizer: DomSanitizer) {}
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
@@ -73,36 +74,69 @@ export class ProductsComponent implements OnInit{
   totalElements: number = 0;
   currentPage: number = 1;
 
+  pageSize: number = 20;
 
-  getProductsByStockReference(ref : string, page: number, size: number){
+  filteredProducts: Productdto[] = [];
+
+  getProductsByStockReference(ref: string, page: number, size: number) {
     this.stockservice.getProductsPaginatedByStockReference(ref, page, size).subscribe(
       (data) => {
-    this.productsDto = data.content;
-    this.totalPages = data.totalPages;
-    this.totalElements = data.totalElements;
-    this.currentPage = data.number + 1;
-
-    this.loading = false;
-
-    if(this.productsDto.length > 0){
-      this.emptyProducts = false;
-      console.log("emptyStock: " + this.emptyProducts);
-    }
-
+        this.productsDto = data.content;
+        this.totalElements = data.totalElements;
+        this.currentPage = data.number + 1;
+        this.totalPages = data.totalPages;
+        this.loading = false;
+  
+        if (this.searchTerm) {
+          this.filteredProducts = this.productsDto.filter(prod =>
+            (prod.serialNumber && prod.serialNumber.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+            (prod.simNumber && prod.simNumber.toLowerCase().includes(this.searchTerm.toLowerCase()))
+          );
+          if (this.filteredProducts.length > 0) {
+            this.currentPage = 1;
+            this.totalPages = Math.ceil(this.filteredProducts.length / size);
+            console.log("length filteredProducts" + this.filteredProducts.length);
+            console.log("totalPages" + this.totalPages);
+          } else {
+            this.emptyProducts = true;
+          }
+        } else {
+          this.filteredProducts = this.productsDto;
+        }
+  
+        if (this.productsDto.length > 0) {
+          this.emptyProducts = false;
+        } else {
+          this.emptyProducts = true;
+        }
       },
       (error) => {
         console.error('Failed to get products:', error);
         this.loading = false;
       }
     );
-  }
+  }  
   searchTerm: string = '';
-
+  
+  onSearchInputChange(): void {
+    const pageSize = 20;
+    this.getProductsByStockReference(this.stockreference, 0, pageSize);
+  }
+  
   onPageChange(newPage: number): void {
     const pageSize = 20;
     this.getProductsByStockReference(this.stockreference, newPage - 1, pageSize);
-  }  
-
+  }
+  
+  highlightMatch(value: string): SafeHtml {
+    if (this.searchTerm && value) {
+      const regex = new RegExp(`(${this.searchTerm})`, 'gi');
+      const highlightedValue = value.replace(regex, '<span style="background-color: yellow;">$1</span>');
+      return this.sanitizer.bypassSecurityTrustHtml(highlightedValue);
+    }
+    return this.sanitizer.bypassSecurityTrustHtml(value);
+  }
+      
 
   getStateText(state: string): string {
     switch (state) {
