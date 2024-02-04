@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
@@ -76,9 +76,9 @@ export class ProductsComponent implements OnInit{
 
   pageSize: number = 20;
 
-  filteredProducts: Productdto[] = [];
-
+  filterfinishforProds: Set<Productdto> = new Set();
   getProductsByStockReference(ref: string, page: number, size: number) {
+    this.loading = true;
     this.stockservice.getProductsPaginatedByStockReference(ref, page, size).subscribe(
       (data) => {
         this.productsDto = data.content;
@@ -86,37 +86,56 @@ export class ProductsComponent implements OnInit{
         this.currentPage = data.number + 1;
         this.totalPages = data.totalPages;
         this.loading = false;
-  
+        this.filterfinishforProds = new Set();
         if (this.searchTerm) {
-          this.filteredProducts = this.productsDto.filter(prod =>
-            (prod.serialNumber && prod.serialNumber.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-            (prod.simNumber && prod.simNumber.toLowerCase().includes(this.searchTerm.toLowerCase()))
-          );
-          if (this.filteredProducts.length > 0) {
-            this.currentPage = 1;
-            this.totalPages = Math.ceil(this.filteredProducts.length / size);
-            console.log("length filteredProducts" + this.filteredProducts.length);
-            console.log("totalPages" + this.totalPages);
-          } else {
-            this.emptyProducts = true;
+          const observables: Observable<Productdto[]>[] = [];
+          for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
+            observables.push(
+              this.stockservice.getProductsPaginatedByStockReference(ref, currentPage, size).pipe(
+                map(pageData => pageData.content)
+              )
+            );
           }
+          forkJoin(observables).subscribe(
+            (pagesData: Productdto[][]) => {
+              this.filterfinishforProds = new Set();
+              pagesData.forEach(currentProducts => {
+                const matchedProducts: Productdto[] = currentProducts
+                  .filter(prod =>
+                    (prod.serialNumber && prod.serialNumber.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+                    (prod.simNumber && prod.simNumber.toLowerCase().includes(this.searchTerm.toLowerCase()))
+                  );
+                matchedProducts.forEach(product => this.filterfinishforProds.add(product));
+              });
+              this.totalPages = Math.ceil(this.filterfinishforProds.size / size);
+              this.checkAndSetEmptyProducts();
+            },
+            (error) => {
+              console.error('Failed to get products for page:', error);
+              this.loading = false;
+            }
+          );
         } else {
-          this.filteredProducts = this.productsDto;
+          this.productsDto.forEach(product => this.filterfinishforProds.add(product));
+          this.checkAndSetEmptyProducts();
         }
-  
-        if (this.productsDto.length > 0) {
-          this.emptyProducts = false;
-        } else {
-          this.emptyProducts = true;
-        }
+        
       },
       (error) => {
         console.error('Failed to get products:', error);
         this.loading = false;
       }
     );
-  }  
-  searchTerm: string = '';
+  }      
+private checkAndSetEmptyProducts() {
+  if (this.filterfinishforProds.size > 0) {
+    this.emptyProducts = false;
+  } else {
+    this.emptyProducts = true;
+  }
+}
+
+    searchTerm: string = '';
   
   onSearchInputChange(): void {
     const pageSize = 20;
@@ -274,16 +293,19 @@ export class ProductsComponent implements OnInit{
               this.selectedSerialNumbers.add(prod.serialNumber as string);
             });
           });
+          console.log(this.selectedSerialNumbers);
         },
         (error) => {
           console.error('Failed to get products:', error);
         }
       );
+
     }
-  
     if (!this.selectAllChecked) {
       this.selectedSerialNumbers.clear();
     }
+
+    
   }
 
 

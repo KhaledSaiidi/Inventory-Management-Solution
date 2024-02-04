@@ -56,7 +56,7 @@
                       <ng-container  *ngIf="!loading && !emptyProducts; ">
                         <tr>
                         </tr>
-                       <tr *ngFor="let prod of filteredProducts">
+                       <tr *ngFor="let prod of filterfinishforProds">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" (mouseout)="hideTooltip()" *ngIf="prod.serialNumber">
                           <input type="checkbox" class="custom-checkbox" style="margin-right: 6px;"   [checked]="isSelected(prod)"  (change)="toggleCheckbox(prod)"> 
                           <span [innerHTML]="highlightMatch(prod.serialNumber)"></span>
