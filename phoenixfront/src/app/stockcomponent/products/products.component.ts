@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject, forkJoin, map } from 'rxjs';
@@ -20,7 +20,8 @@ export class ProductsComponent implements OnInit{
     private router: Router,
     private stockservice: StockService,
     private dataSharingService: DataSharingService,
-    private sanitizer: DomSanitizer) {}
+    private sanitizer: DomSanitizer,
+    private elementRef: ElementRef) {}
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
@@ -58,9 +59,9 @@ export class ProductsComponent implements OnInit{
       console.log('Invalid ref');
       return;
     }
-    console.log(this.selectedSerialNumbers);
-   //this.router.navigate(['/addproduct'], { queryParams: { id: ref } });     
-   //console.log(ref);
+  //  console.log(this.selectedSerialNumbers);
+   this.router.navigate(['/addproduct'], { queryParams: { id: ref } });     
+   console.log(ref);
   }
   stockdto!: Stockdto;
   campaignName!: string;
@@ -128,7 +129,6 @@ export class ProductsComponent implements OnInit{
         )
       );
     }
-  
     forkJoin(observables).subscribe(
       (pagesData: Productdto[][]) => {
         this.filterfinishforProds = [];
@@ -365,7 +365,47 @@ private checkAndSetEmptyProducts() {
 
     
   }
+  isEditMode = false;
+  selectedProd: Productdto | null = null;
+  editedBoxNumber: string | undefined;
+  enableEditMode(prod: Productdto) {
+    this.isEditMode = true;
+    this.selectedProd = prod;
+    this.editedBoxNumber = prod.boxNumber || undefined;
+    console.log(this.selectedProd);
+    console.log(this.editedBoxNumber);
 
+  }
+  disableEditMode() {
+    this.isEditMode = false;
 
+    if (this.selectedProd) {
+      this.selectedProd.boxNumber = this.editedBoxNumber;
+    }
+
+    this.selectedProd = null;
+    this.editedBoxNumber = undefined;
+  }
+
+  @ViewChild('boxNumberInput') boxNumberInput!: ElementRef<HTMLInputElement>;
+  onTab(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    event.preventDefault();
+  
+    if (this.selectedProd) {
+      const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
+      const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length;
+  
+      this.enableEditMode(this.filterfinishforProds[nextIndex]);
+        if (this.boxNumberInput) {
+        this.boxNumberInput.nativeElement.focus();
+      } else {
+        console.warn("boxNumberInput element not yet available.");
+      }
+    } else {
+      console.error("selectedProd is null, cannot determine index");
+    }
+  }
+      
 
 }

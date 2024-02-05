@@ -1,10 +1,16 @@
 <app-base></app-base>
 <div class="listeequipes-container"> 
-    <a  class="btn-primary btn" routerLink="/addstock" style="color: white;">
-        <span class="">&nbsp; Add Stock</span>
-    </a> &nbsp;
-    
-    
+  <div class="d-flex align-items-center">
+    <a class="btn-primary btn" routerLink="/addstock" style="color: white;">
+      <span class="">&nbsp; Add Stock</span>
+    </a>
+    &nbsp;
+    <div class="search-container">
+      <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
+      <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" (input)="onSearchInputChange()" style="margin-left: 10px; " placeholder="Search by reference, campaign, client, or dates: shipping, received, or due...">
+    </div>
+  </div>
+      
     <div class="equipe-container">
         <div class="listetalents-containershown">
             <div class="col-12">
@@ -47,9 +53,11 @@
                         </tr>
                       </ng-container>
                       <ng-container  *ngIf="!loading && !emptyStock; ">
-                      <tr *ngFor="let stock of stocks">
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToProducts(stock.stockReference)" >
-                          {{ stock.stockReference }}</a></td>
+                      <tr *ngFor="let stock of filterfinishforStocks">
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" *ngIf="stock.stockReference">
+                          <a (click)="navigateToProducts(stock.stockReference)" >
+                            <span [innerHTML]="highlightMatch(stock.stockReference)"></span>
+                        </a></td>
                           <td style="word-wrap: break-word; white-space: normal;">
                             <span style="font-size: 20px;" [style.color]="stock.checked ? 'green' : 'red'">
                               {{stock.checked ? '&#10003;' : '&#10008;'}}
@@ -62,8 +70,12 @@
                             </ul>
                           </div>
                         </td>                      
-                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.campaigndto?.campaignName }}</td>
-                        <td style="word-wrap: break-word; white-space: normal;">{{stock.campaigndto?.client?.companyName}}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">
+                          <span [innerHTML]="highlightMatch(stock.campaigndto?.campaignName || '')"></span>
+                        </td>
+                        <td style="word-wrap: break-word; white-space: normal;">
+                          <span [innerHTML]="highlightMatch(stock.campaigndto?.client?.companyName || '')"></span>
+                        </td>
                         <td style="word-wrap: break-word; white-space: normal;">{{ stock.shippingDate | date: 'medium' | slice: 0:12 }}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{ stock.receivedDate | date: 'medium' | slice: 0:12 }}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{ stock.dueDate | date: 'medium' | slice: 0:12 }}</td>

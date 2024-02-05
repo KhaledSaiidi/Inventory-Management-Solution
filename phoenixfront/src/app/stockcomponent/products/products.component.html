@@ -30,6 +30,7 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 50px;">Status</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product Type</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 50px;">Box</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product State</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
@@ -39,7 +40,7 @@
                      <tbody>
                       <ng-container  *ngIf="loading;">
                         <tr>
-                          <td colspan="9" style="text-align: center;">
+                          <td colspan="10" style="text-align: center;">
                             <div class="loading-container">
                               <div class="loading-spinner"></div>
                             </div>
@@ -48,7 +49,7 @@
                       </ng-container>
                       <ng-container  *ngIf="!loading && emptyProducts;">
                         <tr>
-                          <td colspan="9" style="text-align: center;">
+                          <td colspan="10" style="text-align: center;">
                             <p>No products found. Please check back later.</p>
                           </td>
                         </tr>
@@ -64,11 +65,26 @@
                         <td style="word-wrap: break-word; white-space: normal;" *ngIf="prod.simNumber">
                           <span [innerHTML]="highlightMatch(prod.simNumber)"></span>
                         </td>  
-                        <td style="word-wrap: break-word; white-space: normal;">
+                        <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
                           <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
                             {{prod.checkedExistence ? '&#10003;' : '&#10008;'}}
                             </span></td> 
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
+                        <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
+                          <ng-container *ngIf="!isEditMode || prod !== selectedProd">
+                            <span style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;" (dblclick)="enableEditMode(prod)">
+                              {{ prod.boxNumber ? prod.boxNumber : 'Double Click' }}
+                            </span>
+                          </ng-container>
+                      
+                          <ng-container *ngIf="isEditMode && prod === selectedProd" style="align-items: center;">
+                            <input #boxNumberInput style="max-width: 40px;"
+                              type="text"
+                              [(ngModel)]="editedBoxNumber"
+                              (blur)="disableEditMode()"
+                              (keydown.enter)="disableEditMode()"
+                              (keydown.tab)="onTab($event)" />
+                            </ng-container>                        </td>  
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.price ? prod.price + '$' : '0$'}}</td>
                         <td style="word-wrap: break-word; white-space: normal;" *ngIf="prod.state">
                           {{ getStateText(prod.state.toString()) }}
@@ -80,7 +96,7 @@
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
                        </tr>
                        <tr>
-                        <td colspan="9" style="margin-right: 5px;">
+                        <td colspan="10" style="margin-right: 5px;">
                           <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
                          </td>
                         </tr>
