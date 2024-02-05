@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, Subject, forkJoin, map } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { DataSharingService } from 'src/app/services/dataSharing.service';
 import { StockService } from 'src/app/services/stock.service';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-products',
@@ -32,6 +33,8 @@ export class ProductsComponent implements OnInit{
      }
   
   stockreference: string = '';
+  onSearchInputChange$ = new Subject<string>();
+
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
@@ -42,6 +45,13 @@ export class ProductsComponent implements OnInit{
     }); 
     this.getStockbyRef(this.stockreference);
     this.getProductsByStockReference(this.stockreference,0, 20);
+    this.onSearchInputChange$
+    .pipe(debounceTime(600))
+    .subscribe(() => {
+      const pageSize = 20;
+      this.getProductsByStockReference(this.stockreference, 0, pageSize);
+    });
+
   }
   navigateToAddProduct(ref?: string) {
     if (ref === undefined) {
@@ -169,9 +179,12 @@ export class ProductsComponent implements OnInit{
 
 
 private checkAndSetEmptyProducts() {
+  if(this.filterfinishforProds) {
   if (this.filterfinishforProds.length > 0) {
     this.emptyProducts = false;
   } else {
+    this.emptyProducts = true;
+  }} else {
     this.emptyProducts = true;
   }
 }
@@ -179,8 +192,7 @@ private checkAndSetEmptyProducts() {
     searchTerm: string = '';
   
   onSearchInputChange(): void {
-    const pageSize = 20;
-    this.getProductsByStockReference(this.stockreference, 0, pageSize);
+    this.onSearchInputChange$.next(this.searchTerm);
   }
   
   onPageChange(newPage: number): void {
@@ -340,7 +352,6 @@ private checkAndSetEmptyProducts() {
               this.selectedSerialNumbers.add(prod.serialNumber as string);
             });
           });
-          console.log(this.selectedSerialNumbers);
         },
         (error) => {
           console.error('Failed to get products:', error);
