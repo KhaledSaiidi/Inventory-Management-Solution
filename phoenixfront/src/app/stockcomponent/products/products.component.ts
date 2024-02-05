@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {  Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject, forkJoin, map } from 'rxjs';
@@ -14,7 +14,7 @@ import { debounceTime } from 'rxjs/operators';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent implements OnInit, AfterViewInit{
+export class ProductsComponent implements OnInit{
   constructor( 
     private route: ActivatedRoute,
     private router: Router,
@@ -366,9 +366,6 @@ private checkAndSetEmptyProducts() {
     
   }
 
-  ngAfterViewInit() {
-    this.editedBoxNumberInput.nativeElement.addEventListener('keydown.tab', this.onTab);
-  }
   
   isEditMode = false;
   selectedProd: Productdto | null = null;
@@ -401,17 +398,14 @@ private checkAndSetEmptyProducts() {
       const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length;
   
       this.disableEditMode();
-  
-      // Find the next editedBoxNumber input element and focus on it
-      const nextEditedBoxNumberInput = this.editedBoxNumberInput.nativeElement.parentElement.nextElementSibling
-        ?.querySelector('input[name="editedBoxNumber"]');
-      console.log(nextEditedBoxNumberInput);
-      // Enable edit mode for the next product and focus on its editedBoxNumber input
+      const nextEditedBoxNumberInput = this.editedBoxNumberInput.nativeElement.closest('tr')!
+      .nextElementSibling?.querySelector('input[name="editedBoxNumber"]');
+        console.log(nextEditedBoxNumberInput);
       if (nextEditedBoxNumberInput) {
         this.selectedProd = this.filterfinishforProds[nextIndex];
         this.editedBoxNumber = this.selectedProd.boxNumber || undefined;
         nextEditedBoxNumberInput.focus();
-        this.isEditMode = true; // Enable edit mode for the next product
+        this.isEditMode = true;
       }
     }
   }
