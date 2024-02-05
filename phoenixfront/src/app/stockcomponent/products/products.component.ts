@@ -76,7 +76,7 @@ export class ProductsComponent implements OnInit{
 
   pageSize: number = 20;
 
-  filterfinishforProds: Set<Productdto> = new Set();
+  filterfinishforProds: Productdto[] = [];
   getProductsByStockReference(ref: string, page: number, size: number) {
     this.loading = true;
     this.stockservice.getProductsPaginatedByStockReference(ref, page, size).subscribe(
@@ -86,7 +86,7 @@ export class ProductsComponent implements OnInit{
         this.currentPage = data.number + 1;
         this.totalPages = data.totalPages;
         this.loading = false;
-        this.filterfinishforProds = new Set();
+        this.filterfinishforProds = [];
         if (this.searchTerm) {
           const observables: Observable<Productdto[]>[] = [];
           for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
@@ -98,25 +98,40 @@ export class ProductsComponent implements OnInit{
           }
           forkJoin(observables).subscribe(
             (pagesData: Productdto[][]) => {
-              this.filterfinishforProds = new Set();
+              const allMatchedProducts: Productdto[] = [];
+          
               pagesData.forEach(currentProducts => {
                 const matchedProducts: Productdto[] = currentProducts
                   .filter(prod =>
                     (prod.serialNumber && prod.serialNumber.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
                     (prod.simNumber && prod.simNumber.toLowerCase().includes(this.searchTerm.toLowerCase()))
                   );
-                matchedProducts.forEach(product => this.filterfinishforProds.add(product));
+                allMatchedProducts.push(...matchedProducts);
               });
-              this.totalPages = Math.ceil(this.filterfinishforProds.size / size);
+          
+              this.totalPages = Math.ceil(allMatchedProducts.length / size);
+          
+              for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
+                const startIndex = currentPage * size;
+                const endIndex = startIndex + size;
+                const currentPageProducts = allMatchedProducts.slice(startIndex, endIndex);
+                currentPageProducts.forEach(product => {
+                  if (!this.filterfinishforProds.some(existingProduct => existingProduct.serialNumber === product.serialNumber)) {
+                    this.filterfinishforProds.push(product);
+                    }
+                });
+              }
+          
               this.checkAndSetEmptyProducts();
             },
+                    
             (error) => {
               console.error('Failed to get products for page:', error);
               this.loading = false;
             }
           );
         } else {
-          this.productsDto.forEach(product => this.filterfinishforProds.add(product));
+          this.productsDto.forEach(product => this.filterfinishforProds.push(product));
           this.checkAndSetEmptyProducts();
         }
         
@@ -128,7 +143,7 @@ export class ProductsComponent implements OnInit{
     );
   }      
 private checkAndSetEmptyProducts() {
-  if (this.filterfinishforProds.size > 0) {
+  if (this.filterfinishforProds.length > 0) {
     this.emptyProducts = false;
   } else {
     this.emptyProducts = true;
