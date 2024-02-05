@@ -1,24 +1,23 @@
 .pagination {
   display: flex;
-  justify-content: flex-end; /* Align pagination to the right */
+  justify-content: flex-end;
   align-items: center;
 }
 
 .pagination button, .pagination span {
   margin: 0 5px;
   cursor: pointer;
-  padding: 5px 8px; /* Adjust padding for a smaller size */
-  border: none; /* Remove border for both button and span */
+  padding: 5px 8px;
+  border: none; 
   background-color: #fff;
-  transition: background-color 0.3s ease; /* Smooth transition for background color */
+  transition: background-color 0.3s ease; 
 }
 
 .pagination span.selected {
   background-color: #007bff;
   color: #fff;
-  border-radius: 5px; /* Add border-radius for a smoother look */
-}
+  border-radius: 5px; }
 
 .pagination span:hover {
-  background-color: #e6e6e6; /* Change background color on hover for non-selected numbers */
+  background-color: #e6e6e6;
 }

@@ -73,75 +73,101 @@ export class ProductsComponent implements OnInit{
   totalPages: number = 0;
   totalElements: number = 0;
   currentPage: number = 1;
-
   pageSize: number = 20;
-
   filterfinishforProds: Productdto[] = [];
+  pagedProducts: Productdto[][] = [];
+
   getProductsByStockReference(ref: string, page: number, size: number) {
     this.loading = true;
     this.stockservice.getProductsPaginatedByStockReference(ref, page, size).subscribe(
       (data) => {
-        this.productsDto = data.content;
-        this.totalElements = data.totalElements;
-        this.currentPage = data.number + 1;
-        this.totalPages = data.totalPages;
-        this.loading = false;
-        this.filterfinishforProds = [];
-        if (this.searchTerm) {
-          const observables: Observable<Productdto[]>[] = [];
-          for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
-            observables.push(
-              this.stockservice.getProductsPaginatedByStockReference(ref, currentPage, size).pipe(
-                map(pageData => pageData.content)
-              )
-            );
-          }
-          forkJoin(observables).subscribe(
-            (pagesData: Productdto[][]) => {
-              const allMatchedProducts: Productdto[] = [];
-          
-              pagesData.forEach(currentProducts => {
-                const matchedProducts: Productdto[] = currentProducts
-                  .filter(prod =>
-                    (prod.serialNumber && prod.serialNumber.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-                    (prod.simNumber && prod.simNumber.toLowerCase().includes(this.searchTerm.toLowerCase()))
-                  );
-                allMatchedProducts.push(...matchedProducts);
-              });
-          
-              this.totalPages = Math.ceil(allMatchedProducts.length / size);
-          
-              for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
-                const startIndex = currentPage * size;
-                const endIndex = startIndex + size;
-                const currentPageProducts = allMatchedProducts.slice(startIndex, endIndex);
-                currentPageProducts.forEach(product => {
-                  if (!this.filterfinishforProds.some(existingProduct => existingProduct.serialNumber === product.serialNumber)) {
-                    this.filterfinishforProds.push(product);
-                    }
-                });
-              }
-          
-              this.checkAndSetEmptyProducts();
-            },
-                    
-            (error) => {
-              console.error('Failed to get products for page:', error);
-              this.loading = false;
-            }
-          );
-        } else {
-          this.productsDto.forEach(product => this.filterfinishforProds.push(product));
-          this.checkAndSetEmptyProducts();
-        }
-        
+        this.handleProductsResponse(data);
       },
       (error) => {
-        console.error('Failed to get products:', error);
+        this.handleProductsError(error);
+      }
+    );
+  }
+  
+  private handleProductsResponse(data: any) {
+    this.productsDto = data.content;
+    this.totalElements = data.totalElements;
+    this.currentPage = data.number + 1;
+    this.totalPages = data.totalPages;
+    this.loading = false;
+    this.filterfinishforProds = [];
+  
+    if (this.searchTerm) {
+      this.handleSearchTerm();
+    } else {
+      this.addProductsToFilterFinish();
+    }
+  }
+  
+  private handleProductsError(error: any) {
+    console.error('Failed to get products:', error);
+    this.loading = false;
+  }
+  
+  private handleSearchTerm() {
+    const observables: Observable<Productdto[]>[] = [];
+    for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
+      observables.push(
+        this.stockservice.getProductsPaginatedByStockReference(this.stockreference, currentPage, this.pageSize).pipe(
+          map(pageData => pageData.content)
+        )
+      );
+    }
+  
+    forkJoin(observables).subscribe(
+      (pagesData: Productdto[][]) => {
+        this.filterfinishforProds = [];
+        const allMatchedProducts = this.getAllMatchedProducts(pagesData);
+        this.totalPages = Math.ceil(allMatchedProducts.length / this.pageSize);
+        this.pagedProducts = this.paginateProducts(allMatchedProducts, this.pageSize);
+  
+        this.filterfinishforProds = this.pagedProducts[0];
+        this.checkAndSetEmptyProducts();
+      },
+      (error) => {
+        console.error('Failed to get products for page:', error);
         this.loading = false;
       }
     );
-  }      
+  }
+  
+  private getAllMatchedProducts(pagesData: Productdto[][]): Productdto[] {
+    const allMatchedProducts: Productdto[] = [];
+    pagesData.forEach(currentProducts => {
+      const matchedProducts: Productdto[] = currentProducts.filter(prod =>
+        (prod.serialNumber && prod.serialNumber.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (prod.simNumber && prod.simNumber.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      );
+      allMatchedProducts.push(...matchedProducts);
+    });
+    return allMatchedProducts;
+  }
+  
+  private paginateProducts(allMatchedProducts: Productdto[], pageSize: number): Productdto[][] {
+    const pagedProducts: Productdto[][] = [];
+    for (let i = 0; i < allMatchedProducts.length; i++) {
+      const currentPage = Math.floor(i / pageSize);
+      if (!pagedProducts[currentPage]) {
+        pagedProducts[currentPage] = [];
+      }
+      pagedProducts[currentPage].push(allMatchedProducts[i]);
+    }
+    return pagedProducts;
+  }
+  
+  private addProductsToFilterFinish() {
+    this.productsDto.forEach(product => this.filterfinishforProds.push(product));
+    this.checkAndSetEmptyProducts();
+  }
+    
+  
+
+
 private checkAndSetEmptyProducts() {
   if (this.filterfinishforProds.length > 0) {
     this.emptyProducts = false;
@@ -158,8 +184,14 @@ private checkAndSetEmptyProducts() {
   }
   
   onPageChange(newPage: number): void {
+    if(this.searchTerm){
+      const pageSize = 20;
+      this.filterfinishforProds = this.pagedProducts[newPage - 1];
+      this.currentPage = newPage;
+    } else {
     const pageSize = 20;
     this.getProductsByStockReference(this.stockreference, newPage - 1, pageSize);
+  }
   }
   
   highlightMatch(value: string): SafeHtml {
