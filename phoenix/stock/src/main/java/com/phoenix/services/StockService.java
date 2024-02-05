@@ -65,7 +65,7 @@ public class StockService implements IStockService{
                     .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockdto.getCampaignRef())
                     .retrieve()
                     .bodyToMono(Campaigndto.class)
-                    .block(Duration.ofSeconds(5));
+                    .block();
             stockdto.setCampaigndto(campaignDto);
         }
 

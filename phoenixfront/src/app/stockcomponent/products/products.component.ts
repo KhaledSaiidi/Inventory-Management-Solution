@@ -1,4 +1,4 @@
-import {  Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {  AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject, forkJoin, map } from 'rxjs';
@@ -14,14 +14,15 @@ import { debounceTime } from 'rxjs/operators';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent implements OnInit{
+export class ProductsComponent implements OnInit, AfterViewInit{
   constructor( 
     private route: ActivatedRoute,
     private router: Router,
     private stockservice: StockService,
     private dataSharingService: DataSharingService,
     private sanitizer: DomSanitizer,
-    private elementRef: ElementRef) {}
+    private elementRef: ElementRef,
+    private cdRef: ChangeDetectorRef ) {}
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
@@ -366,6 +367,11 @@ private checkAndSetEmptyProducts() {
     
   }
 
+  ngAfterViewInit() {
+    if (this.selectedProd) {
+      this.enableEditMode(this.selectedProd);
+    }
+  }
   
   isEditMode = false;
   selectedProd: Productdto | null = null;
@@ -381,6 +387,10 @@ private checkAndSetEmptyProducts() {
         this.editedBoxNumberInput.nativeElement.focus();
       }
     });
+    if (this.cdRef) {
+      this.cdRef.detectChanges();
+    }
+  
   }
   disableEditMode() {
     this.isEditMode = false;
@@ -393,21 +403,17 @@ private checkAndSetEmptyProducts() {
   onTab(event: Event) {
     const keyboardEvent = event as KeyboardEvent;
     event.preventDefault();
-    if (this.selectedProd) {
-      const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
-      const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length;
-  
-      this.disableEditMode();
-      const nextEditedBoxNumberInput = this.editedBoxNumberInput.nativeElement.closest('tr')!
-      .nextElementSibling?.querySelector('input[name="editedBoxNumber"]');
-        console.log(nextEditedBoxNumberInput);
-      if (nextEditedBoxNumberInput) {
-        this.selectedProd = this.filterfinishforProds[nextIndex];
-        this.editedBoxNumber = this.selectedProd.boxNumber || undefined;
-        nextEditedBoxNumberInput.focus();
-        this.isEditMode = true;
-      }
-    }
+    console.log(this.selectedProd);
+    if(this.selectedProd) {
+    const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
+    console.log("currentIndex" + currentIndex);
+    const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length;
+    console.log("nextIndex" + nextIndex);
+    const nextProd = this.filterfinishforProds[nextIndex];
+    console.log("nextProd" + nextProd);
+    this.enableEditMode(nextProd);
+
+  }
   }
     
       

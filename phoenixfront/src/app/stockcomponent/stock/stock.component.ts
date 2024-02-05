@@ -23,7 +23,7 @@ export class StockComponent implements OnInit{
     this.onSearchInputChange$
     .pipe(debounceTime(600))
     .subscribe(() => {
-      const pageSize = 20;
+      const pageSize = 5;
       this.getStocksWithCampaigns(0, pageSize);
     });
 
