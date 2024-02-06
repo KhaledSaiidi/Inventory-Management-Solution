@@ -47,12 +47,6 @@ export class ProductsComponent implements OnInit, AfterViewInit{
     }); 
     this.getStockbyRef(this.stockreference);
     this.getProductsByStockReference(this.stockreference,0, 20);
-    this.onSearchInputChange$
-    .pipe(debounceTime(600))
-    .subscribe(() => {
-      const pageSize = 20;
-      this.getProductsByStockReference(this.stockreference, 0, pageSize);
-    });
 
   }
   navigateToAddProduct(ref?: string) {
@@ -93,34 +87,26 @@ export class ProductsComponent implements OnInit, AfterViewInit{
     this.loading = true;
     this.stockservice.getProductsPaginatedByStockReference(ref, page, size).subscribe(
       (data) => {
-        this.handleProductsResponse(data);
-      },
+        this.totalElements = data.totalElements;
+        this.currentPage = data.number + 1;
+        this.totalPages = data.totalPages;
+        this.loading = false;
+        this.filterfinishforProds = [];
+      
+        if (!this.searchTerm) {
+          this.filterfinishforProds = data.content;
+          this.checkAndSetEmptyProducts();
+              } else {
+          this.handleSearchTerm();
+        }      },
       (error) => {
-        this.handleProductsError(error);
-      }
+        console.error('Failed to get products:', error);
+        this.loading = false;
+          }
     );
   }
   
-  private handleProductsResponse(data: any) {
-    this.productsDto = data.content;
-    this.totalElements = data.totalElements;
-    this.currentPage = data.number + 1;
-    this.totalPages = data.totalPages;
-    this.loading = false;
-    this.filterfinishforProds = [];
-  
-    if (this.searchTerm) {
-      this.handleSearchTerm();
-    } else {
-      this.addProductsToFilterFinish();
-    }
-  }
-  
-  private handleProductsError(error: any) {
-    console.error('Failed to get products:', error);
-    this.loading = false;
-  }
-  
+
   private handleSearchTerm() {
     const observables: Observable<Productdto[]>[] = [];
     for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
@@ -170,13 +156,7 @@ export class ProductsComponent implements OnInit, AfterViewInit{
     }
     return pagedProducts;
   }
-  
-  private addProductsToFilterFinish() {
-    this.productsDto.forEach(product => this.filterfinishforProds.push(product));
-    this.checkAndSetEmptyProducts();
-  }
     
-  
 
 
 private checkAndSetEmptyProducts() {
@@ -368,6 +348,12 @@ private checkAndSetEmptyProducts() {
   }
 
   ngAfterViewInit() {
+    this.onSearchInputChange$
+    .pipe(debounceTime(600))
+    .subscribe(() => {
+      const pageSize = 20;
+      this.getProductsByStockReference(this.stockreference, 0, pageSize);
+    });
     if (this.selectedProd) {
       this.enableEditMode(this.selectedProd);
     }
