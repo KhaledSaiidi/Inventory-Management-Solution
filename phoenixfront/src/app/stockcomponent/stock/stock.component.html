@@ -7,7 +7,7 @@
     &nbsp;
     <div class="search-container">
       <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
-      <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" (input)="onSearchInputChange()" style="margin-left: 10px; " placeholder="Search by reference, campaign, client, or dates: shipping, received, or due...">
+      <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm"  (keyup)="searchStocks()" style="margin-left: 10px; " placeholder="Search by reference, campaign, client, or dates: shipping, received, or due...">
     </div>
   </div>
       
@@ -57,7 +57,7 @@
                       <tr *ngFor="let stock of filterfinishforStocks">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" *ngIf="stock.stockReference">
                           <a (click)="navigateToProducts(stock.stockReference)" >
-                            <span [innerHTML]="highlightMatch(stock.stockReference)"></span>
+                            <span> {{stock.stockReference}} </span>
                         </a></td>
                           <td style="word-wrap: break-word; white-space: normal;">
                             <span style="font-size: 20px;" [style.color]="stock.checked ? 'green' : 'red'">
@@ -72,10 +72,10 @@
                           </div>
                         </td>                      
                         <td style="word-wrap: break-word; white-space: normal;">
-                          <span [innerHTML]="highlightMatch(stock.campaigndto?.campaignName || '')"></span>
+                          <span> {{stock.campaigndto?.campaignName}} </span>
                         </td>
                         <td style="word-wrap: break-word; white-space: normal;">
-                          <span [innerHTML]="highlightMatch(stock.campaigndto?.client?.companyName || '')"></span>
+                          <span> {{stock.campaigndto?.client?.companyName}} </span>
                         </td>
                         <td style="word-wrap: break-word; white-space: normal;">{{ stock.shippingDate | date: 'medium' | slice: 0:12 }}</td>
                         <td style="word-wrap: break-word; white-space: normal;">{{ stock.receivedDate | date: 'medium' | slice: 0:12 }}</td>

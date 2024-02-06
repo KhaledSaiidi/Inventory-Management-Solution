@@ -2,6 +2,7 @@ package com.phoenix.services;
 
 import com.phoenix.dto.StockDto;
 import com.phoenix.model.UncheckHistory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,7 +12,9 @@ import java.util.Optional;
 
 public interface IStockService {
     void addStock(StockDto stockDto, String campaignReference);
-    Page<StockDto> getStocks(Pageable pageable);
+
+    @Cacheable(value = "stockCache", key = "#searchTerm")
+    Page<StockDto> getStocks(String searchTerm, Pageable pageable);
     StockDto getstockByReference(String reference);
     List<UncheckHistory> getUncheckedHistorybyStockreference (String reference);
     StockDto UpdateStock(String reference, StockDto stockDto);

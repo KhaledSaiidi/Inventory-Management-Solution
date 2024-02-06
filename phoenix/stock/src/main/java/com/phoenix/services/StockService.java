@@ -8,6 +8,7 @@ import com.phoenix.mapper.IStockMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
@@ -20,7 +21,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,20 +61,46 @@ public class StockService implements IStockService{
     }
 
     @Override
-    public Page<StockDto> getStocks(Pageable pageable) {
-        Page<Stock> stocks = iStockRepository.findAll(pageable);
-        List<StockDto> stockDtos = iStockMapper.toDtoList(stocks.getContent());
+    public Page<StockDto> getStocks(String searchTerm,Pageable pageable) {
+            Page<Stock> stocks = iStockRepository.findAll(pageable);
+            List<StockDto> stockDtos = iStockMapper.toDtoList(stocks.getContent());
 
-        for (StockDto stockdto : stockDtos) {
-            Campaigndto campaignDto = webClientBuilder.build().get()
-                    .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockdto.getCampaignRef())
-                    .retrieve()
-                    .bodyToMono(Campaigndto.class)
-                    .block();
-            stockdto.setCampaigndto(campaignDto);
+            for (StockDto stockdto : stockDtos) {
+                Campaigndto campaignDto = webClientBuilder.build().get()
+                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockdto.getCampaignRef())
+                        .retrieve()
+                        .bodyToMono(Campaigndto.class)
+                        .block();
+                stockdto.setCampaigndto(campaignDto);
+            }
+        if(searchTerm.isEmpty()) {
+            return new PageImpl<>(stockDtos, pageable, stocks.getTotalElements());
+        } else {
+            return filterStocks(stockDtos, searchTerm, pageable);
         }
+    }
+    private Page<StockDto> filterStocks(List<StockDto> stockDtos, String searchTerm, Pageable pageable) {
+        List<StockDto> filteredStocks = stockDtos.stream()
+                .filter(stockDto -> filterBySearchTerm(stockDto, searchTerm))
+                .collect(Collectors.toList());
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredStocks.size());
+        Page<StockDto> page = new PageImpl<>(filteredStocks.subList(start, end), pageable, filteredStocks.size());
+        return page;
+    }
+    private boolean filterBySearchTerm(StockDto stockDto, String searchTerm) {
+        String searchString = searchTerm.toLowerCase();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String shippingDate = stockDto.getShippingDate() != null ? stockDto.getShippingDate().format(dateFormatter) : "";
+        String receivedDate = stockDto.getReceivedDate() != null ? stockDto.getReceivedDate().format(dateFormatter) : "";
+        String dueDate = stockDto.getDueDate() != null ? stockDto.getDueDate().format(dateFormatter) : "";
 
-        return new PageImpl<>(stockDtos, pageable, stocks.getTotalElements());
+        return stockDto.getStockReference().toLowerCase().contains(searchString)
+                || stockDto.getCampaigndto().getCampaignName().toLowerCase().contains(searchString)
+                || stockDto.getCampaigndto().getClient().getCompanyName().toLowerCase().contains(searchString)
+                || shippingDate.contains(searchString)
+                || receivedDate.contains(searchString)
+                || dueDate.contains(searchString);
     }
 
 

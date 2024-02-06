@@ -2,7 +2,7 @@
 <div class="listeequipes-container"> 
   <div class="search-container">
     <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
-    <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" (input)="onSearchInputChange()" style="margin-left: 10px;" placeholder="Search by Serial Number or Sim Number">
+    <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" style="margin-left: 10px;" placeholder="Search by Serial Number or Sim Number">
   </div>
     
   <div class="d-flex">
@@ -57,13 +57,13 @@
                       <ng-container  *ngIf="!loading && !emptyProducts; ">
                         <tr>
                         </tr>
-                       <tr *ngFor="let prod of filterfinishforProds;">
+                       <tr *ngFor="let prod of filterfinishforProds;  let i = index">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(prod)" (mouseout)="hideTooltip()" *ngIf="prod.serialNumber">
                           <input type="checkbox" class="custom-checkbox" style="margin-right: 6px;"   [checked]="isSelected(prod)"  (change)="toggleCheckbox(prod)"> 
-                          <span [innerHTML]="highlightMatch(prod.serialNumber)"></span>
+                          <span>{{prod.serialNumber}}</span>
                         </td>
                         <td style="word-wrap: break-word; white-space: normal;" *ngIf="prod.simNumber">
-                          <span [innerHTML]="highlightMatch(prod.simNumber)"></span>
+                          <span>{{prod.simNumber}}</span>
                         </td>  
                         <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
                           <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
@@ -78,12 +78,12 @@
                           </ng-container>
                       
                           <ng-container *ngIf="isEditMode && prod === selectedProd" style="align-items: center;">
-                            <input #editedBoxNumberInput name="editedBoxNumber" style="max-width: 50px;"
+                            <input #editedBoxNumberInput[i] name="editedBoxNumber" style="max-width: 50px;"
                               type="text"
                               [(ngModel)]="editedBoxNumber"
                               (blur)="disableEditMode()"
                               (keydown.enter)="disableEditMode()"
-                              (keydown.tab)="onTab($event)" />
+                              (keydown.tab)="handleTabKey($event)" />
                             </ng-container>                        
                           </td>  
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.price ? prod.price + '$' : '0$'}}</td>

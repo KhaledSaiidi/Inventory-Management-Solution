@@ -1,8 +1,5 @@
-import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {  Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subject, debounceTime, forkJoin, map } from 'rxjs';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -11,170 +8,126 @@ import { StockService } from 'src/app/services/stock.service';
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css']
 })
-export class StockComponent implements OnInit, AfterViewInit{
+export class StockComponent implements OnInit{
+  
+  constructor(private router: Router, private stockService: StockService) {}
 
-  constructor(private router: Router, private stockservice: StockService, private sanitizer: DomSanitizer) {}
-
-  ngOnInit(): void{
-   this.getStocksWithCampaigns(0, 5); 
+  filterfinishforStocks: Stockdto[] = [];
+  currentPage: number = 0;
+  pageSize: number = 5;
+  totalPages: number = 0;
+  totalElements: number = 0;
+  loading: boolean = true;
+  emptyStock: boolean = true;
+  
+  searchTerm: string = '';
+  ngOnInit() {
+    this.getStocks(0, this.searchTerm);
   }
-  ngAfterViewInit() {
-    this.onSearchInputChange$
-    .pipe(debounceTime(600))
-    .subscribe(() => {
-      const pageSize = 5;
-      this.getStocksWithCampaigns(0, pageSize);
-    });  
+  getStocks(page: number, search: string) {
+    this.stockService.getStockWithCampaigns(page, this.pageSize, search)
+      .subscribe(stocksPage => {
+        this.loading = false;
+        this.currentPage = stocksPage.number + 1;
+        this.filterfinishforStocks = stocksPage.content;
+        this.totalPages = stocksPage.totalPages;
+        this.checkAndSetEmptyStocks();
+      }, (error) => {
+        this.loading = false;
+        console.error('Failed to fetch stocks:', error);
+          });
+  }
+
+  private checkAndSetEmptyStocks() {
+    if(this.filterfinishforStocks && this.filterfinishforStocks.length > 0)  {
+      this.emptyStock = false;
+    } else {
+      this.emptyStock = true;
+    }
+  }
+  searchDebounce: any;
+  searchStocks() {
+    clearTimeout(this.searchDebounce);
+    this.searchDebounce = setTimeout(() => {
+      let formattedSearchTerm: string = this.parseSearchTerm(this.searchTerm);
+      this.getStocks(0, formattedSearchTerm);
+    }, 1000);
   }
   
-navigateToProducts(ref?: string) {
-  if (ref === undefined) {
-    console.log('Invalid ref');
-    return;
-  }
-  this.router.navigate(['/products'], { queryParams: { id: ref } });     
-  console.log(ref);
-}
-stocks!: Stockdto[];
-loading: boolean = false;
-emptyStock: boolean = true;
-totalPages: number = 0;
-totalElements: number = 0;
-currentPage: number = 1;
-pageSize: number = 5;
-filterfinishforStocks: Stockdto[] = [];
-pagedStocks: Stockdto[][] = [];
-searchTerm!: string;
-onSearchInputChange$ = new Subject<string>();
-onSearchInputChange(): void {
-  this.onSearchInputChange$.next(this.searchTerm);
-}
+  parseSearchTerm(searchTerm: string): string {
+    searchTerm = this.searchTerm.toLowerCase();
+    const monthsMap: { [key: string]: string } = {
+      jan: "01",
+      feb: "02",
+      mar: "03",
+      apr: "04",
+      may: "05",
+      jun: "06",
+      jul: "07",
+      aug: "08",
+      sep: "09",
+      oct: "10",
+      nov: "11",
+      dec: "12"
+    };
+  
+    const firstThreeChars = searchTerm.toLowerCase().substr(0, 3);
+    if (firstThreeChars in monthsMap) {
+      // Replace month names with corresponding numbers
+      searchTerm = searchTerm.replace(new RegExp(firstThreeChars, "ig"), monthsMap[firstThreeChars]);
 
-getStocksWithCampaigns(page: number, size: number): void {
-  this.loading = true;
-  this.stockservice.getStockWithCampaigns(page, size).subscribe(
-    (data) => {
-      this.loading = false;
-      this.totalPages = data.totalPages;
-      this.totalElements = data.totalElements;
-      this.currentPage = data.number + 1;
-      this.filterfinishforStocks = [];
-      if (!this.searchTerm) {
-        this.filterfinishforStocks = data.content;
-        console.log(this.filterfinishforStocks);
-        this.checkAndSetEmptyStocks();
-      } else {
-        this.handleSearchTerm();
+      // Check if the searchTerm contains "MONTH DAY" pattern
+      const monthDayRegex = /(\b[a-z]{3}\b)\s*(\d{2})/i;
+      const monthDayMatch = searchTerm.match(monthDayRegex);
+      if (monthDayMatch) {
+        const month = monthsMap[monthDayMatch[1]];
+        const day = monthDayMatch[2];
+        searchTerm = `${month}-${day}`;
       }
-    },
-    (error) => {
-      this.loading = false;
-      console.error('Failed to fetch stocks:', error);
-        }
-  );
-}
-private checkAndSetEmptyStocks() {
-  if(this.filterfinishforStocks) {
-  if (this.filterfinishforStocks.length > 0) {
-    this.emptyStock = false;
-  } else {
-    this.emptyStock = true;
-  }} else {
-    this.emptyStock = true;
-  }
-}
-onPageChange(newPage: number): void {
-  if(!this.searchTerm){
-    const pageSize = 5;
-    this.getStocksWithCampaigns(newPage - 1, pageSize);
-  } else {
-    const pageSize = 5;
-    this.filterfinishforStocks = this.pagedStocks[newPage - 1];
-    this.currentPage = newPage;
-}
-}  
-highlightMatch(value: string): SafeHtml {
-  if (this.searchTerm && value) {
-    const regex = new RegExp(`(${this.searchTerm})`, 'gi');
-    const highlightedValue = value.replace(regex, '<span style="background-color: yellow;">$1</span>');
-    return this.sanitizer.bypassSecurityTrustHtml(highlightedValue);
-  }
-  return this.sanitizer.bypassSecurityTrustHtml(value);
-}
-
-
-navigateToStockInfo(ref?: string) {
-  if (ref === undefined) {
-    console.log('Invalid ref');
-    return;
-  }
-  this.router.navigate(['/stockinfo'], { queryParams: { id: ref } });
-  console.log(ref);
-}
-
-navigateToUpdateStock(ref?: string) {
-  if (ref === undefined) {
-    console.log('Invalid ref');
-    return;
-  }
-  this.router.navigate(['/updatestock'], { queryParams: { id: ref } });
-  console.log(ref);
-}
-
-private handleSearchTerm() {
-  const observables: Observable<Stockdto[]>[] = [];
-  for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
-    observables.push(
-      this.stockservice.getStockWithCampaigns(currentPage, this.pageSize).pipe(
-        map(pageData => pageData.content)
-      )
-    );
-  }
-  forkJoin(observables).subscribe(
-    (pagesData: Stockdto[][]) => {
-      this.filterfinishforStocks = [];
-      const allMatchedStocks = this.getAllMatchedStocks(pagesData);
-      this.totalPages = Math.ceil(allMatchedStocks.length / this.pageSize);
-      this.pagedStocks = this.paginateStocks(allMatchedStocks, this.pageSize);
-
-      this.filterfinishforStocks = this.pagedStocks[0];
-      this.checkAndSetEmptyStocks();
-    },
-    (error) => {
-      console.error('Failed to get products for page:', error);
-      this.loading = false;
+      
+      // Check if the searchTerm contains "MONTH DAY, YEAR" pattern
+      const monthDayYearRegex = /(\b[a-z]{3}\b)\s*(\d{2}),\s*(\d{4})/i;
+      const monthDayYearMatch = searchTerm.match(monthDayYearRegex);
+      if (monthDayYearMatch) {
+        const month = monthsMap[monthDayYearMatch[1]];
+        const day = monthDayYearMatch[2];
+        const year = monthDayYearMatch[3];
+        searchTerm = `${year}-${month}-${day}`;
+      }
+    
     }
-  );
-}
-
-private getAllMatchedStocks(pagesData: Stockdto[][]): Stockdto[] {
-  const datePipe = new DatePipe('en-US');
-
-
-  const allMatchedStocks: Stockdto[] = [];
-  pagesData.forEach(currentStocks => {
-    const matchedStocks: Stockdto[] = currentStocks.filter(stock =>
-      (stock.stockReference && stock.stockReference.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-      (stock.campaigndto?.campaignName && stock.campaigndto?.campaignName.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-      (stock.campaigndto?.client?.companyName && stock.campaigndto?.client?.companyName.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-      (stock.shippingDate && datePipe.transform(stock.shippingDate, 'MMM dd, yyyy')?.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-      (stock.dueDate && datePipe.transform(stock.dueDate, 'MMM dd, yyyy')?.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-      (stock.receivedDate && datePipe.transform(stock.receivedDate, 'MMM dd, yyyy')?.toLowerCase().includes(this.searchTerm.toLowerCase()))
-
-      );
-    allMatchedStocks.push(...matchedStocks);
-  });
-  return allMatchedStocks;
-}
-private paginateStocks(allMatchedStocks: Stockdto[], pageSize: number): Stockdto[][] {
-  const pagedStocks: Stockdto[][] = [];
-  for (let i = 0; i < allMatchedStocks.length; i++) {
-    const currentPage = Math.floor(i / pageSize);
-    if (!pagedStocks[currentPage]) {
-      pagedStocks[currentPage] = [];
-    }
-    pagedStocks[currentPage].push(allMatchedStocks[i]);
+    return searchTerm;
   }
-  return pagedStocks;
+    
+
+  onPageChange(newPage: number): void {
+      this.getStocks(newPage - 1, this.searchTerm);
+  }  
+
+  navigateToProducts(ref?: string) {
+    if (ref === undefined) {
+      console.log('Invalid ref');
+      return;
+    }
+    this.router.navigate(['/products'], { queryParams: { id: ref } });     
+    console.log(ref);
+  }
+  navigateToStockInfo(ref?: string) {
+    if (ref === undefined) {
+      console.log('Invalid ref');
+      return;
+    }
+    this.router.navigate(['/stockinfo'], { queryParams: { id: ref } });
+    console.log(ref);
+  }
+  navigateToUpdateStock(ref?: string) {
+    if (ref === undefined) {
+      console.log('Invalid ref');
+      return;
+    }
+    this.router.navigate(['/updatestock'], { queryParams: { id: ref } });
+    console.log(ref);
+  }  
 }
-}
+
+

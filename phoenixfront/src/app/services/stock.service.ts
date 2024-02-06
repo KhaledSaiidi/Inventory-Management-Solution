@@ -27,8 +27,8 @@ export class StockService {
 }
 
 
-getStockWithCampaigns(page: number, size: number): Observable<StockPage> {
-  const apiUrl = `${this.apiUrl}/getStocksWithTheirCampaigns?page=${page}&size=${size}`;
+getStockWithCampaigns(page: number, size: number, searchTerm: String): Observable<StockPage> {
+  const apiUrl = `${this.apiUrl}/getStocksWithTheirCampaigns?page=${page}&size=${size}&searchTerm=${searchTerm}`;
   return this.http.get<StockPage>(apiUrl);
 }
 

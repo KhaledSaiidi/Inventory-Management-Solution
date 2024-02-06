@@ -1,27 +1,21 @@
-import {  AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {  ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subject, forkJoin, map } from 'rxjs';
+import {  forkJoin } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
-import { DataSharingService } from 'src/app/services/dataSharing.service';
 import { StockService } from 'src/app/services/stock.service';
-import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent implements OnInit, AfterViewInit{
+export class ProductsComponent implements OnInit{
   constructor( 
     private route: ActivatedRoute,
     private router: Router,
     private stockservice: StockService,
-    private dataSharingService: DataSharingService,
-    private sanitizer: DomSanitizer,
-    private elementRef: ElementRef,
     private cdRef: ChangeDetectorRef ) {}
     enable: boolean = false;
     productdto?: Productdto;  
@@ -35,7 +29,6 @@ export class ProductsComponent implements OnInit, AfterViewInit{
      }
   
   stockreference: string = '';
-  onSearchInputChange$ = new Subject<string>();
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
@@ -46,7 +39,7 @@ export class ProductsComponent implements OnInit, AfterViewInit{
       }
     }); 
     this.getStockbyRef(this.stockreference);
-    this.getProductsByStockReference(this.stockreference,0, 20);
+    this.getProductsByStockReference(this.stockreference,0);
 
   }
   navigateToAddProduct(ref?: string) {
@@ -54,7 +47,6 @@ export class ProductsComponent implements OnInit, AfterViewInit{
       console.log('Invalid ref');
       return;
     }
-  //  console.log(this.selectedSerialNumbers);
    this.router.navigate(['/addproduct'], { queryParams: { id: ref } });     
    console.log(ref);
   }
@@ -73,129 +65,48 @@ export class ProductsComponent implements OnInit, AfterViewInit{
     );
   }
   state!: State;
-  productsDto: Productdto[] = [];
   loading: boolean = true;
   emptyProducts: boolean = true;
   totalPages: number = 0;
   totalElements: number = 0;
-  currentPage: number = 1;
+  currentPage: number = 0;
   pageSize: number = 20;
   filterfinishforProds: Productdto[] = [];
   pagedProducts: Productdto[][] = [];
+  searchTerm: string = '';
 
-  getProductsByStockReference(ref: string, page: number, size: number) {
+  getProductsByStockReference(ref: string, page: number) {
     this.loading = true;
-    this.stockservice.getProductsPaginatedByStockReference(ref, page, size).subscribe(
+    this.stockservice.getProductsPaginatedByStockReference(ref, page, this.pageSize).subscribe(
       (data) => {
         this.totalElements = data.totalElements;
-        this.currentPage = data.number + 1;
         this.totalPages = data.totalPages;
+        this.currentPage = data.number + 1;
         this.loading = false;
-        this.filterfinishforProds = [];
-      
-        if (!this.searchTerm) {
-          this.filterfinishforProds = data.content;
-          this.checkAndSetEmptyProducts();
-              } else {
-          this.handleSearchTerm();
-        }      },
+        this.filterfinishforProds = data.content;
+        this.checkAndSetEmptyProducts();
+     },
       (error) => {
         console.error('Failed to get products:', error);
         this.loading = false;
           }
     );
-  }
-  
-
-  private handleSearchTerm() {
-    const observables: Observable<Productdto[]>[] = [];
-    for (let currentPage = 0; currentPage < this.totalPages; currentPage++) {
-      observables.push(
-        this.stockservice.getProductsPaginatedByStockReference(this.stockreference, currentPage, this.pageSize).pipe(
-          map(pageData => pageData.content)
-        )
-      );
-    }
-    forkJoin(observables).subscribe(
-      (pagesData: Productdto[][]) => {
-        this.filterfinishforProds = [];
-        const allMatchedProducts = this.getAllMatchedProducts(pagesData);
-        this.totalPages = Math.ceil(allMatchedProducts.length / this.pageSize);
-        this.pagedProducts = this.paginateProducts(allMatchedProducts, this.pageSize);
-  
-        this.filterfinishforProds = this.pagedProducts[0];
-        this.checkAndSetEmptyProducts();
-      },
-      (error) => {
-        console.error('Failed to get products for page:', error);
-        this.loading = false;
-      }
-    );
-  }
-  
-  private getAllMatchedProducts(pagesData: Productdto[][]): Productdto[] {
-    const allMatchedProducts: Productdto[] = [];
-    pagesData.forEach(currentProducts => {
-      const matchedProducts: Productdto[] = currentProducts.filter(prod =>
-        (prod.serialNumber && prod.serialNumber.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-        (prod.simNumber && prod.simNumber.toLowerCase().includes(this.searchTerm.toLowerCase()))
-      );
-      allMatchedProducts.push(...matchedProducts);
-    });
-    return allMatchedProducts;
-  }
-  
-  private paginateProducts(allMatchedProducts: Productdto[], pageSize: number): Productdto[][] {
-    const pagedProducts: Productdto[][] = [];
-    for (let i = 0; i < allMatchedProducts.length; i++) {
-      const currentPage = Math.floor(i / pageSize);
-      if (!pagedProducts[currentPage]) {
-        pagedProducts[currentPage] = [];
-      }
-      pagedProducts[currentPage].push(allMatchedProducts[i]);
-    }
-    return pagedProducts;
-  }
-    
-
+  }    
 
 private checkAndSetEmptyProducts() {
-  if(this.filterfinishforProds) {
-  if (this.filterfinishforProds.length > 0) {
+  if(this.filterfinishforProds && this.filterfinishforProds.length > 0) {
     this.emptyProducts = false;
   } else {
-    this.emptyProducts = true;
-  }} else {
     this.emptyProducts = true;
   }
 }
 
-    searchTerm: string = '';
   
-  onSearchInputChange(): void {
-    this.onSearchInputChange$.next(this.searchTerm);
-  }
   
   onPageChange(newPage: number): void {
-    if(this.searchTerm){
-      const pageSize = 20;
-      this.filterfinishforProds = this.pagedProducts[newPage - 1];
-      this.currentPage = newPage;
-    } else {
-    const pageSize = 20;
-    this.getProductsByStockReference(this.stockreference, newPage - 1, pageSize);
+    this.getProductsByStockReference(this.stockreference, newPage - 1);
   }
-  }
-  
-  highlightMatch(value: string): SafeHtml {
-    if (this.searchTerm && value) {
-      const regex = new RegExp(`(${this.searchTerm})`, 'gi');
-      const highlightedValue = value.replace(regex, '<span style="background-color: yellow;">$1</span>');
-      return this.sanitizer.bypassSecurityTrustHtml(highlightedValue);
-    }
-    return this.sanitizer.bypassSecurityTrustHtml(value);
-  }
-      
+        
 
   getStateText(state: string): string {
     switch (state) {
@@ -346,37 +257,28 @@ private checkAndSetEmptyProducts() {
 
     
   }
-
-  ngAfterViewInit() {
-    this.onSearchInputChange$
-    .pipe(debounceTime(600))
-    .subscribe(() => {
-      const pageSize = 20;
-      this.getProductsByStockReference(this.stockreference, 0, pageSize);
-    });
-    if (this.selectedProd) {
-      this.enableEditMode(this.selectedProd);
-    }
-  }
   
   isEditMode = false;
   selectedProd: Productdto | null = null;
   editedBoxNumber: string | undefined;
-  @ViewChild('editedBoxNumberInput') editedBoxNumberInput!: ElementRef;
+  @ViewChild('editedBoxNumberInput', { static: false }) editedBoxNumberInputs!: ElementRef[];
+
+
   enableEditMode(prod: Productdto) {
     this.isEditMode = true;
     this.selectedProd = prod;
     this.editedBoxNumber = prod.boxNumber || undefined;
-    console.log(this.selectedProd);
+    const index = this.filterfinishforProds.indexOf(prod);
+    const inputRef = this.editedBoxNumberInputs[index];
+
     setTimeout(() => {
-      if (this.editedBoxNumberInput) {
-        this.editedBoxNumberInput.nativeElement.focus();
+      if (inputRef) {
+        inputRef.nativeElement.focus();
       }
     });
     if (this.cdRef) {
       this.cdRef.detectChanges();
     }
-  
   }
   disableEditMode() {
     this.isEditMode = false;
@@ -386,22 +288,28 @@ private checkAndSetEmptyProducts() {
     this.selectedProd = null;
     this.editedBoxNumber = undefined;
   }
-  onTab(event: Event) {
-    const keyboardEvent = event as KeyboardEvent;
-    event.preventDefault();
-    console.log(this.selectedProd);
-    if(this.selectedProd) {
-    const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
-    console.log("currentIndex" + currentIndex);
-    const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length;
-    console.log("nextIndex" + nextIndex);
-    const nextProd = this.filterfinishforProds[nextIndex];
-    console.log("nextProd" + nextProd);
-    this.enableEditMode(nextProd);
-
-  }
-  }
     
       
-
+  handleTabKey(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    event.preventDefault();
+    if(this.selectedProd) {
+    const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
+    const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length; 
+    this.selectedProd = this.filterfinishforProds[nextIndex];
+    this.isEditMode = true;
+    this.editedBoxNumber = this.selectedProd.boxNumber || undefined;
+    const inputRef = this.editedBoxNumberInputs[nextIndex];
+    setTimeout(() => {
+      if (inputRef) {
+        inputRef.nativeElement.focus();
+      }
+    });
+    if (this.cdRef) {
+      this.cdRef.detectChanges();
+    }
+    }
+  }
+  
 }
+    
