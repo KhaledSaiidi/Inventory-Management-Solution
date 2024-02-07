@@ -21,7 +21,7 @@ export class UpdatestockComponent implements OnInit {
 
        campaigns: Campaigndto[] = [];
        navigateToStock(){
-         this.router.navigate(['/stock']);
+         this.router.navigate(['/stocks']);
        }
        stockreference: string = '';
        ngOnInit(): void {

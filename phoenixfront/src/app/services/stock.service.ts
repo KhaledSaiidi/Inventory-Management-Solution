@@ -28,9 +28,16 @@ export class StockService {
 
 
 getStockWithCampaigns(page: number, size: number, searchTerm: String): Observable<StockPage> {
-  const apiUrl = `${this.apiUrl}/getStocksWithTheirCampaigns?page=${page}&size=${size}&searchTerm=${searchTerm}`;
-  return this.http.get<StockPage>(apiUrl);
+  const apiUrl = this.apiUrl + '/getStocksWithTheirCampaigns?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<StockPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
 }
+
 
 getStockByreference(reference: string): Observable<Stockdto> {
   return this.http.get<Stockdto>(this.apiUrl + '/getStockByReference/' + reference)

@@ -23,7 +23,6 @@ import { AddcampaignComponent } from './component/addcampaign/addcampaign.compon
 import { ClientComponent } from './component/client/client.component';
 import { UpdateCampaignComponent } from './component/update-campaign/update-campaign.component';
 import { ArchivedComponent } from './component/archived/archived.component';
-import { StockComponent } from './stockcomponent/stock/stock.component';
 import { AddstockComponent } from './stockcomponent/addstock/addstock.component';
 import { ProductsComponent } from './stockcomponent/products/products.component';
 import { AddproductComponent } from './stockcomponent/addproduct/addproduct.component';
@@ -34,6 +33,7 @@ import { StockinfoComponent } from './stockcomponent/stockinfo/stockinfo.compone
 import { CheckprodsComponent } from './stockcomponent/checkprods/checkprods.component';
 import { CheckhistoryComponent } from './stockcomponent/checkhistory/checkhistory.component';
 import { CustomPaginationComponent } from './services/custom-pagination/custom-pagination.component';
+import { StocksComponent } from './stockcomponent/stocks/stocks.component';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -49,7 +49,7 @@ const appRoute: Routes = [
   {path:'client', component: ClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'updatecamapign', component: UpdateCampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'archive', component: ArchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'stock', component: StockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'stocks', component: StocksComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addstock', component: AddstockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'products', component: ProductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addproduct', component: AddproductComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
@@ -101,7 +101,6 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     ClientComponent,
     UpdateCampaignComponent,
     ArchivedComponent,
-    StockComponent,
     AddstockComponent,
     ProductsComponent,
     AddproductComponent,
@@ -111,7 +110,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     StockinfoComponent,
     CheckprodsComponent,
     CheckhistoryComponent,
-    CustomPaginationComponent
+    CustomPaginationComponent,
+    StocksComponent
   ],
   imports: [
     BrowserModule,

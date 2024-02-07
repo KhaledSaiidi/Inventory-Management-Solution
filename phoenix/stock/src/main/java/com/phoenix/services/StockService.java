@@ -64,7 +64,7 @@ public class StockService implements IStockService{
 
     @Override
     public Page<StockDto> getStocks(String searchTerm,Pageable pageable) {
-        List<Stock> stocks = iStockRepository.findAll();
+        List<Stock> stocks = iStockRepository.findAllWithoutProducts();
         List<StockDto> stockDtos = iStockMapper.toDtoList(stocks);
         List<Mono<Campaigndto>> campaignMonos = stockDtos.stream()
                 .map(stockDto -> webClientBuilder.build().get()

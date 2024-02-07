@@ -32,4 +32,7 @@ public ngOnInit() {
     }
     this.router.navigate(['/userdetails'], { queryParams: { id: userName } });      
   }
+  navigateToStocks(){
+    window.location.href = '/stocks';
+  }
 }

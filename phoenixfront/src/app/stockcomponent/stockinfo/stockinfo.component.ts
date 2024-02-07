@@ -16,7 +16,7 @@ export class StockinfoComponent implements OnInit{
     private router: Router,
     private stockservice: StockService) {}
     navigateToStock(){
-      this.router.navigate(['/stock']);
+      this.router.navigate(['/stocks']);
     }  
     stockreference: string = '';
     ngOnInit(): void {

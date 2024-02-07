@@ -1,19 +1,20 @@
-import {  Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Stockdto } from 'src/app/models/inventory/Stock';
+import { StockPage } from 'src/app/models/inventory/StockPage';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
-  selector: 'app-stock',
-  templateUrl: './stock.component.html',
-  styleUrls: ['./stock.component.css']
+  selector: 'app-stocks',
+  templateUrl: './stocks.component.html',
+  styleUrls: ['./stocks.component.css']
 })
-export class StockComponent implements OnInit{
+export class StocksComponent implements OnInit { 
   
   constructor(private router: Router, private stockService: StockService, private sanitizer: DomSanitizer) {}
 
-  filterfinishforStocks: Stockdto[] = [];
+  filterfinishforStocks!: Stockdto[];
   currentPage: number = 0;
   pageSize: number = 5;
   totalPages: number = 0;
@@ -22,12 +23,13 @@ export class StockComponent implements OnInit{
   emptyStock: boolean = true;
   
   searchTerm: string = '';
-  ngOnInit() {
+  async ngOnInit() {
     this.getStocks(0, this.searchTerm);
   }
   getStocks(page: number, search: string) {
+    this.loading = true;
     this.stockService.getStockWithCampaigns(page, this.pageSize, search)
-      .subscribe(stocksPage => {
+      .subscribe((stocksPage: StockPage) => {
         this.loading = false;
         this.currentPage = stocksPage.number + 1;
         this.filterfinishforStocks = stocksPage.content;
@@ -36,8 +38,9 @@ export class StockComponent implements OnInit{
       }, (error) => {
         this.loading = false;
         console.error('Failed to fetch stocks:', error);
-          });
+      });
   }
+
 
   private checkAndSetEmptyStocks() {
     if(this.filterfinishforStocks && this.filterfinishforStocks.length > 0)  {
@@ -147,5 +150,3 @@ export class StockComponent implements OnInit{
     console.log(ref);
   }  
 }
-
-

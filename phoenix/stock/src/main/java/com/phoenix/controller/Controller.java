@@ -5,6 +5,7 @@ import com.phoenix.dto.StockDto;
 import com.phoenix.model.Product;
 import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
+import com.phoenix.repository.IStockRepository;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
 import org.springframework.data.domain.Page;
@@ -126,4 +127,5 @@ public class Controller {
     )throws IOException {
         return ResponseEntity.ok(iProductService.addProductsByupload(file, stockReference));
     }
+
 }
