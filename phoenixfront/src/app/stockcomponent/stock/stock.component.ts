@@ -1,4 +1,5 @@
 import {  Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
@@ -10,7 +11,7 @@ import { StockService } from 'src/app/services/stock.service';
 })
 export class StockComponent implements OnInit{
   
-  constructor(private router: Router, private stockService: StockService) {}
+  constructor(private router: Router, private stockService: StockService, private sanitizer: DomSanitizer) {}
 
   filterfinishforStocks: Stockdto[] = [];
   currentPage: number = 0;
@@ -51,10 +52,25 @@ export class StockComponent implements OnInit{
     this.searchDebounce = setTimeout(() => {
       let formattedSearchTerm: string = this.parseSearchTerm(this.searchTerm);
       this.getStocks(0, formattedSearchTerm);
-    }, 1000);
+    }, 600);
   }
   
-  parseSearchTerm(searchTerm: string): string {
+  formatDate(date: Date): string {
+    const dateString = date.toString();
+    const dateParts = dateString.split('-');
+    const year = dateParts[0];
+    const month = this.getMonthName(parseInt(dateParts[1]));
+    let day = dateParts[2];
+    return `${month} ${day}, ${year}`;
+  }
+  getMonthName(monthNumber: number): string {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return monthNames[monthNumber - 1];
+  }
+  
+  
+
+      parseSearchTerm(searchTerm: string): string {
     searchTerm = this.searchTerm.toLowerCase();
     const monthsMap: { [key: string]: string } = {
       jan: "01",
@@ -92,6 +108,15 @@ export class StockComponent implements OnInit{
     return searchTerm;
   }
     
+  highlightMatch(value: string) : SafeHtml {
+    if (this.searchTerm && value) {
+      const regex = new RegExp(`(${this.searchTerm})`, 'gi');
+      const highlightedValue = value.replace(regex, '<span style="background-color: yellow;">$1</span>');
+      return this.sanitizer.bypassSecurityTrustHtml(highlightedValue);
+    }
+    return this.sanitizer.bypassSecurityTrustHtml(value);
+  }
+  
 
   onPageChange(newPage: number): void {
       this.getStocks(newPage - 1, this.searchTerm);

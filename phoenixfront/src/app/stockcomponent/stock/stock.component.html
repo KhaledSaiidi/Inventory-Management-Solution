@@ -57,7 +57,7 @@
                       <tr *ngFor="let stock of filterfinishforStocks">
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" *ngIf="stock.stockReference">
                           <a (click)="navigateToProducts(stock.stockReference)" >
-                            <span> {{stock.stockReference}} </span>
+                            <span [innerHTML]="highlightMatch(stock.stockReference)"></span>
                         </a></td>
                           <td style="word-wrap: break-word; white-space: normal;">
                             <span style="font-size: 20px;" [style.color]="stock.checked ? 'green' : 'red'">
@@ -71,15 +71,18 @@
                             </ul>
                           </div>
                         </td>                      
-                        <td style="word-wrap: break-word; white-space: normal;">
-                          <span> {{stock.campaigndto?.campaignName}} </span>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.campaigndto && stock.campaigndto.campaignName">
+                          <span [innerHTML]="highlightMatch(stock.campaigndto.campaignName)"> </span>
                         </td>
-                        <td style="word-wrap: break-word; white-space: normal;">
-                          <span> {{stock.campaigndto?.client?.companyName}} </span>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.campaigndto && stock.campaigndto.client && stock.campaigndto.client.companyName">
+                          <span [innerHTML]="highlightMatch(stock.campaigndto.client.companyName)"></span>
                         </td>
-                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.shippingDate | date: 'medium' | slice: 0:12 }}</td>
-                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.receivedDate | date: 'medium' | slice: 0:12 }}</td>
-                        <td style="word-wrap: break-word; white-space: normal;">{{ stock.dueDate | date: 'medium' | slice: 0:12 }}</td>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.shippingDate">
+                          <span [innerHTML]="highlightMatch(formatDate(stock.shippingDate))"></span></td>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.receivedDate">
+                          <span [innerHTML]="highlightMatch(formatDate(stock.receivedDate))"></span></td>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.dueDate">
+                          <span [innerHTML]="highlightMatch(formatDate(stock.dueDate))"></span></td>
                         <td style="word-wrap: break-word; white-space: normal;"> {{ stock.stockValue ?? 0 }}  $</td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">View</a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">update</a></td>
