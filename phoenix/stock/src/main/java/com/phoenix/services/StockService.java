@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -26,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -62,31 +64,38 @@ public class StockService implements IStockService{
 
     @Override
     public Page<StockDto> getStocks(String searchTerm,Pageable pageable) {
-            Page<Stock> stocks = iStockRepository.findAll(pageable);
-            List<StockDto> stockDtos = iStockMapper.toDtoList(stocks.getContent());
-
-            for (StockDto stockdto : stockDtos) {
-                Campaigndto campaignDto = webClientBuilder.build().get()
-                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockdto.getCampaignRef())
+        List<Stock> stocks = iStockRepository.findAll();
+        List<StockDto> stockDtos = iStockMapper.toDtoList(stocks);
+        List<Mono<Campaigndto>> campaignMonos = stockDtos.stream()
+                .map(stockDto -> webClientBuilder.build().get()
+                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockDto.getCampaignRef())
                         .retrieve()
-                        .bodyToMono(Campaigndto.class)
-                        .block();
-                stockdto.setCampaigndto(campaignDto);
-            }
-        if(searchTerm.isEmpty()) {
-            return new PageImpl<>(stockDtos, pageable, stocks.getTotalElements());
-        } else {
-            return filterStocks(stockDtos, searchTerm, pageable);
-        }
-    }
-    private Page<StockDto> filterStocks(List<StockDto> stockDtos, String searchTerm, Pageable pageable) {
-        List<StockDto> filteredStocks = stockDtos.stream()
-                .filter(stockDto -> filterBySearchTerm(stockDto, searchTerm))
+                        .bodyToMono(Campaigndto.class))
                 .collect(Collectors.toList());
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), filteredStocks.size());
-        Page<StockDto> page = new PageImpl<>(filteredStocks.subList(start, end), pageable, filteredStocks.size());
-        return page;
+        Mono<List<Campaigndto>> campaignMono = Mono.zip(campaignMonos, objects ->
+                Arrays.stream(objects)
+                        .map(obj -> (Campaigndto) obj)
+                        .collect(Collectors.toList()));
+        List<Campaigndto> campaignDtos = campaignMono.block();
+        for (int i = 0; i < stockDtos.size(); i++) {
+            stockDtos.get(i).setCampaigndto(campaignDtos.get(i));
+        }
+        if (!searchTerm.isEmpty()) {
+            stockDtos = stockDtos.parallelStream()
+                    .filter(stockDto -> filterBySearchTerm(stockDto, searchTerm))
+                    .collect(Collectors.toList());
+        }
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<StockDto> pageContent;
+        if (stockDtos.size() < startItem) {
+            pageContent = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, stockDtos.size());
+            pageContent = stockDtos.subList(startItem, toIndex);
+        }
+            return new PageImpl<>(pageContent, pageable, stockDtos.size());
     }
     private boolean filterBySearchTerm(StockDto stockDto, String searchTerm) {
         String searchString = searchTerm.toLowerCase();
