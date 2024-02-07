@@ -1,10 +1,11 @@
-import {  ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {  ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {  forkJoin } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
+import { QueryList } from '@angular/core';
 
 @Component({
   selector: 'app-products',
@@ -261,26 +262,22 @@ private checkAndSetEmptyProducts() {
   isEditMode = false;
   selectedProd: Productdto | null = null;
   editedBoxNumber: string | undefined;
-  @ViewChild('editedBoxNumberInput', { static: false }) editedBoxNumberInputs!: ElementRef[];
 
 
-  enableEditMode(prod: Productdto) {
+  enableEditMode(prod: Productdto, index: number) {
     this.isEditMode = true;
     this.selectedProd = prod;
-    this.editedBoxNumber = prod.boxNumber || undefined;
-    const index = this.filterfinishforProds.indexOf(prod);
-    const inputRef = this.editedBoxNumberInputs[index];
-
+    this.editedBoxNumber = prod.boxNumber;
     setTimeout(() => {
-      if (inputRef) {
-        inputRef.nativeElement.focus();
+      const inputField = document.getElementById('inputField' + index) as HTMLInputElement;
+      console.log(inputField);
+      if (inputField) {
+        inputField.focus();
       }
     });
-    if (this.cdRef) {
-      this.cdRef.detectChanges();
-    }
   }
-  disableEditMode() {
+  
+    disableEditMode() {
     this.isEditMode = false;
     if (this.selectedProd) {
       this.selectedProd.boxNumber = this.editedBoxNumber;
@@ -291,25 +288,37 @@ private checkAndSetEmptyProducts() {
     
       
   handleTabKey(event: Event) {
-    const keyboardEvent = event as KeyboardEvent;
+   const keyboardEvent = event as KeyboardEvent;
     event.preventDefault();
-    if(this.selectedProd) {
-    const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
-    const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length; 
-    this.selectedProd = this.filterfinishforProds[nextIndex];
-    this.isEditMode = true;
-    this.editedBoxNumber = this.selectedProd.boxNumber || undefined;
-    const inputRef = this.editedBoxNumberInputs[nextIndex];
-    setTimeout(() => {
-      if (inputRef) {
-        inputRef.nativeElement.focus();
-      }
-    });
-    if (this.cdRef) {
-      this.cdRef.detectChanges();
-    }
+    if (this.selectedProd) {
+      const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
+      const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length; 
+      this.selectedProd = this.filterfinishforProds[nextIndex];
+      setTimeout(() => {
+        this.selectedProd = this.filterfinishforProds[nextIndex];
+        if (this.selectedProd) {
+          this.enableEditMode(this.selectedProd, nextIndex);
+        }
+      });
     }
   }
-  
+
+  handleShiftTabKey(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+     event.preventDefault();
+     if (this.selectedProd) {
+       const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
+       const previousIndex = currentIndex === 0 ? this.filterfinishforProds.length - 1 : currentIndex - 1;
+       this.selectedProd = this.filterfinishforProds[previousIndex];
+       setTimeout(() => {
+         this.selectedProd = this.filterfinishforProds[previousIndex];
+         if (this.selectedProd) {
+           this.enableEditMode(this.selectedProd, previousIndex);
+         }
+       });
+     }
+   }
+ 
+    
 }
     

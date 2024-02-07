@@ -72,18 +72,19 @@
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
                         <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
                           <ng-container *ngIf="!isEditMode || prod !== selectedProd">
-                            <span style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;" (dblclick)="enableEditMode(prod)">
+                            <span style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;" (dblclick)="enableEditMode(prod, i)">
                               {{ prod.boxNumber ? prod.boxNumber : 'DbClick' }}
                             </span>
                           </ng-container>
                       
                           <ng-container *ngIf="isEditMode && prod === selectedProd" style="align-items: center;">
-                            <input #editedBoxNumberInput[i] name="editedBoxNumber" style="max-width: 50px;"
+                            <input [attr.id]="'inputField' + i"  name="editedBoxNumber" style="max-width: 50px;"
                               type="text"
                               [(ngModel)]="editedBoxNumber"
                               (blur)="disableEditMode()"
                               (keydown.enter)="disableEditMode()"
-                              (keydown.tab)="handleTabKey($event)" />
+                              (keydown.tab)="handleTabKey($event)" 
+                              (keydown.shift.TAB)="handleShiftTabKey($event)"/>
                             </ng-container>                        
                           </td>  
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.price ? prod.price + '$' : '0$'}}</td>
