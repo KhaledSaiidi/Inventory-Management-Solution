@@ -74,28 +74,21 @@ export class StockComponent implements OnInit{
     const firstThreeChars = searchTerm.toLowerCase().substr(0, 3);
     if (firstThreeChars in monthsMap) {
       // Replace month names with corresponding numbers
-      searchTerm = searchTerm.replace(new RegExp(firstThreeChars, "ig"), monthsMap[firstThreeChars]);
-
-      // Check if the searchTerm contains "MONTH DAY" pattern
-      const monthDayRegex = /(\b[a-z]{3}\b)\s*(\d{2})/i;
-      const monthDayMatch = searchTerm.match(monthDayRegex);
-      if (monthDayMatch) {
-        const month = monthsMap[monthDayMatch[1]];
-        const day = monthDayMatch[2];
-        searchTerm = `${month}-${day}`;
-      }
-      
-      // Check if the searchTerm contains "MONTH DAY, YEAR" pattern
-      const monthDayYearRegex = /(\b[a-z]{3}\b)\s*(\d{2}),\s*(\d{4})/i;
-      const monthDayYearMatch = searchTerm.match(monthDayYearRegex);
-      if (monthDayYearMatch) {
-        const month = monthsMap[monthDayYearMatch[1]];
-        const day = monthDayYearMatch[2];
-        const year = monthDayYearMatch[3];
-        searchTerm = `${year}-${month}-${day}`;
-      }
-    
+      searchTerm = searchTerm.replace(new RegExp(firstThreeChars, "ig"), monthsMap[firstThreeChars]);    
     }
+    if (firstThreeChars in monthsMap  && !isNaN(parseInt(searchTerm.substr(3)))){
+      console.log(parseInt(searchTerm.substr(3,4)));
+      searchTerm = monthsMap[firstThreeChars] + '-' + searchTerm.substr(3);
+      console.log(searchTerm);
+    }
+  
+    if (firstThreeChars in monthsMap  && !isNaN(parseInt(searchTerm.substr(3,4))) && searchTerm.charAt(5) === "," ){
+      let daySubstring = searchTerm.substr(3, 4);
+      daySubstring = daySubstring.replace(/,/g, '');
+      searchTerm = searchTerm.substr(7) + '-' + monthsMap[firstThreeChars] + '-' + daySubstring;
+      console.log(searchTerm);
+    }
+
     return searchTerm;
   }
     
