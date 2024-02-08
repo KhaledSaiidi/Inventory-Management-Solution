@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Stockdto } from 'src/app/models/inventory/Stock';
@@ -12,7 +12,8 @@ import { StockService } from 'src/app/services/stock.service';
 })
 export class StocksComponent implements OnInit { 
   
-  constructor(private router: Router, private stockService: StockService, private sanitizer: DomSanitizer) {}
+  constructor(private router: Router, private stockService: StockService, 
+              private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef) {}
 
   filterfinishforStocks!: Stockdto[];
   currentPage: number = 0;
@@ -24,22 +25,37 @@ export class StocksComponent implements OnInit {
   
   searchTerm: string = '';
   async ngOnInit() {
-    this.getStocks(0, this.searchTerm);
+    try {
+      await this.getStocks(0, this.searchTerm);
+      this.cdRef.detectChanges();
+    } catch (error) {
+      this.filterfinishforStocks = [];
+        }
   }
-  getStocks(page: number, search: string) {
+  
+    getStocks(page: number, search: string) {
     this.loading = true;
-    this.stockService.getStockWithCampaigns(page, this.pageSize, search)
-      .subscribe((stocksPage: StockPage) => {
-        this.loading = false;
-        this.currentPage = stocksPage.number + 1;
-        this.filterfinishforStocks = stocksPage.content;
-        this.totalPages = stocksPage.totalPages;
-        this.checkAndSetEmptyStocks();
-      }, (error) => {
-        this.loading = false;
-        console.error('Failed to fetch stocks:', error);
-      });
-  }
+    try {
+      this.stockService.getStockWithCampaigns(page, this.pageSize, search)
+        .subscribe(
+          (stocksPage: StockPage) => {
+            this.loading = false;
+            this.currentPage = stocksPage.number + 1;
+            this.filterfinishforStocks = stocksPage.content;
+            this.totalPages = stocksPage.totalPages;
+            this.checkAndSetEmptyStocks();
+              this.cdRef.detectChanges();
+          },
+          (error) => {
+            console.error('Error fetching stocks:', error);
+            this.loading = false;
+          }
+        );
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      this.loading = false;
+    }
+    }
 
 
   private checkAndSetEmptyStocks() {
