@@ -1,0 +1,48 @@
+
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-data {
+    padding: 20px;
+}
+
+.forms-inputs {
+    margin-bottom: 20px;
+}
+
+.forms-inputs span {
+    display: block;
+    margin-bottom: 8px;
+    color: #495057;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bff; /* Highlight border color on focus */
+}
+
+.btn-dark {
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-dark:hover {
+    background-color: #23272b;
+}

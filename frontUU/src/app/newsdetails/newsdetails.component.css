@@ -1,0 +1,75 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Adjust the z-index value as needed */
+  background-color: white;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  transition: box-shadow 0.3s ease; /* Add a smooth transition effect for the box shadow */
+}
+
+.header:hover {
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Adjust the box shadow on hover */
+}
+
+.header ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header ul li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.header ul li a {
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+  transition: color 0.3s ease;
+}
+
+.header ul li a:hover {
+  color: #FFA500;
+}
+
+.post-img {
+  position: relative;
+}  
+.carousel-arrows {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.arrow {
+  cursor: pointer;
+  background-color: transparent;
+  padding: 10px;
+  border-radius: 0;
+  margin: 0 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease, border-radius 0.3s ease;
+}  
+.arrow-icon {
+  font-size: 30px;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.arrow:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%; 
+  transform: scale(1.2); 
+}
+
+.arrow:hover .arrow-icon {
+  color: #ffcc00; 
+}
+
+

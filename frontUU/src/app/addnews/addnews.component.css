@@ -1,0 +1,89 @@
+.card {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .card-title {
+    color: #343a40;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #495057;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .btn-dark {
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-dark:hover {
+    background-color: #23272b;
+  }
+  
+  /* Style the container for the file input */
+.file-input-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* Style the input to be transparent and cover the container */
+.file-input-container input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Style the container as a button */
+.file-input-container label {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #343a40;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Style the label text */
+.file-input-container label span {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* Style the label icon (optional) */
+.file-input-container label i {
+  font-size: 18px;
+}
+
+/* Style on hover and focus for better user interaction */
+.file-input-container label:hover,
+.file-input-container label:focus {
+  background-color: #23272b;
+}

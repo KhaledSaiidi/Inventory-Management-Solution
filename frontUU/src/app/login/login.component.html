@@ -1,0 +1,15 @@
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+            <div class="card px-5 py-5" id="form1">
+                <div class="form-data" v-if="!submitted">
+                    <div class="forms-inputs mb-4"> <span>Email or username</span> <input type="text" v-model="email">
+                    </div>
+                    <div class="forms-inputs mb-4"> <span>Password</span> <input  type="password" v-model="password">
+                    </div>
+                    <div class="mb-3"> <button (click)="navigateToaddnews()" class="btn btn-dark w-100">Login</button> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Adjust the z-index value as needed */
+    background-color: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    transition: box-shadow 0.3s ease; /* Add a smooth transition effect for the box shadow */
+  }
+  
+  .header:hover {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Adjust the box shadow on hover */
+  }
+
+  .header ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .header ul li {
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  .header ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 15px; /* Set the font size to 20px */
+    transition: color 0.3s ease; /* Add a smooth transition effect for color changes */
+  }
+  
+  .header ul li a:hover {
+    color: #FFA500; /* Change the color on hover to #FFA500 */
+  }
+  
+
+  /* Apply the same zoom-in effect on hover for each col-xl-4 */
+.col-xl-4:hover {
+  transform: scale(1.1); /* Increase the scale on hover */
+  z-index: 2; /* Adjust z-index on hover to bring it to the front */
+}
+
+/* Add a smooth transition effect for the col-xl-4 */
+.col-xl-4 {
+  transition: transform 0.3s ease-in-out;
+  overflow: hidden; /* Additional styling for better visibility */
+}
+
+/* Apply the same zoom-in effect on hover for each post-img inside col-xl-4 */
+.col-xl-4:hover .post-img {
+  transform: scale(1.1); /* Increase the scale on hover */
+}
+
+/* Add a smooth transition effect for the post-img */
+.post-img {
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Apply the same zoom-in effect on hover for each image inside post-img */
+.col-xl-4:hover .post-img img {
+  transform: scale(1.2); /* Increase the scale of the image on hover */
+}
