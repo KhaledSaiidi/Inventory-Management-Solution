@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Userdto } from '../models/agents/Userdto';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, of, throwError } from 'rxjs';
 import { Clientdto } from '../models/agents/Clientdto';
 import { Campaigndto } from '../models/agents/Campaigndto';
 
@@ -27,8 +27,11 @@ getagents() {
   return this.http.get(this.apiUrl + '/allusers')
   .pipe(
     catchError((error) => {
+      if (error.status === 200 && error.error instanceof ErrorEvent) {
+        return of([]);
+      } else {
       console.error('An error occurred:', error);
-      return throwError(error);
+      return throwError(error); }
     })
   );
 }
@@ -36,8 +39,11 @@ getuserbycode(code: string){
   return this.http.get(this.apiUrl + '/userdetails/' + code)
   .pipe(
     catchError((error) => {
+      if (error.status === 200 && error.error instanceof ErrorEvent) {
+        return of([]);
+      } else {
       console.error('An error occurred:', error);
-      return throwError(error);
+      return throwError(error);}
     })
   );
 
@@ -94,8 +100,11 @@ getCampaigns(): Observable<Campaigndto[]> {
   return this.http.get<Campaigndto[]>(this.apiUrl + '/getCampaigns')
   .pipe(
     catchError((error) => {
+      if (error.status === 200 && error.error instanceof ErrorEvent) {
+        return of([]);
+      } else {
       console.error('An error occurred:', error);
-      return throwError(error);
+      return throwError(error);}
     })
   );
 }
@@ -104,8 +113,11 @@ getClients(): Observable<Clientdto[]> {
   return this.http.get<Clientdto[]>(this.apiUrl + '/getClients')
   .pipe(
     catchError((error) => {
+      if (error.status === 200 && error.error instanceof ErrorEvent) {
+        return of([]);
+      } else {
       console.error('An error occurred:', error);
-      return throwError(error);
+      return throwError(error);}
     })
   );
 }
@@ -114,8 +126,11 @@ getclientbycompanyName(companyName: string){
   return this.http.get(this.apiUrl + '/getClientByName/' + companyName)
   .pipe(
     catchError((error) => {
+      if (error.status === 200 && error.error instanceof ErrorEvent) {
+        return of([]);
+      } else {
       console.error('An error occurred:', error);
-      return throwError(error);
+      return throwError(error);}
     })
   );
 }
@@ -144,8 +159,12 @@ getcampaignbyreference(reference: string){
   return this.http.get(this.apiUrl + '/getCampaignByReference/' + reference)
   .pipe(
     catchError((error) => {
+      if (error.status === 200 && error.error instanceof ErrorEvent) {
+        return of([]);
+      } else {
       console.error('An error occurred:', error);
       return throwError(error);
+      }
     })
   );
 }
@@ -165,8 +184,11 @@ getArchivedCampaigns(): Observable<Campaigndto[]> {
   return this.http.get<Campaigndto[]>(this.apiUrl + '/getCampaignsarchived')
   .pipe(
     catchError((error) => {
+      if (error.status === 200 && error.error instanceof ErrorEvent) {
+        return of([]);
+      } else {
       console.error('An error occurred:', error);
-      return throwError(error);
+      return throwError(error);}
     })
   );
 }

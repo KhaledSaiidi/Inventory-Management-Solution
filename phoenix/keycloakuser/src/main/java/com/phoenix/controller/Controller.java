@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,11 +85,11 @@ public class Controller {
     @RequestMapping("/allusers")
     public ResponseEntity<List<Userdto>> getallUsers() {
         List<Userdto> userdtos = iUserServices.getallUsers();
-        if (userdtos != null) {
-            return new ResponseEntity<>(userdtos, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (userdtos == null) {
+            userdtos = Collections.emptyList();
         }
+        return new ResponseEntity<>(userdtos, HttpStatus.OK);
+
     }
 
     @PutMapping
@@ -100,7 +101,7 @@ public class Controller {
             if (users.isEmpty()) {
                 return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
             }
-            UserRepresentation updatedUser = iMapper.mapUserRep(user);
+            UserRepresentation updatedUser = iMapper.mapUserRepForUpdate(user);
             keycloak.realm(realm).users().get(users.get(0).getId()).update(updatedUser);
 
             iUserServices.UpdateUser(username, user);
@@ -144,6 +145,7 @@ public class Controller {
         cred.setValue(newPassword);
         creds.add(cred);
         updatedUser.setCredentials(creds);
+        updatedUser.setRequiredActions(Collections.emptyList());
         keycloak.realm(realm).users().get(users.get(0).getId()).update(updatedUser);
         return Response.ok(updatedUser).build();
     }

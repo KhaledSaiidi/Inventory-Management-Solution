@@ -63,6 +63,17 @@ public class UserMapper implements IMapper {
         return userRep;
     }
     @Override
+    public UserRepresentation mapUserRepForUpdate(Userdto userdto){
+        UserRepresentation userRep = new UserRepresentation();
+        userRep.setUsername(userdto.getUsername());
+        userRep.setFirstName(userdto.getFirstName());
+        userRep.setLastName(userdto.getLastName());
+        userRep.setEmail(userdto.getEmail());
+        userRep.setEnabled(true);
+        userRep.setRealmRoles(userdto.getRealmRoles());
+        return userRep;
+    }
+    @Override
     public Userdto mapUserMysqlToDto(UserMysql userMysql) {
         if (userMysql == null) {
             return null;
