@@ -24,19 +24,31 @@ export class AgentsComponent implements OnInit {
   }
   loading: boolean = true;
   emptyagents: boolean = true;
+  empptyimanagers: boolean = true;
+  empptymanagers: boolean = true;
   getUserscategorized() {
     this.agentsService.getagents().subscribe(
       (data) => {
         this.allmembers = data as Userdto[];
         this.loading = false;
         if(this.allmembers.length > 0){
-          this.emptyagents = false;
-          console.log("emptyStock: " + this.emptyagents);
         this.agentList = this.allmembers.filter(user => user.realmRoles?.includes('AGENT'));
         this.managerList = this.allmembers.filter(user => user.realmRoles?.includes('MANAGER'));
         this.imanagerList = this.allmembers.filter(user => user.realmRoles?.includes('IMANAGER'));
         console.log(this.managerList);
         console.log(this.imanagerList);
+        if(this.imanagerList.length > 0){
+          this.empptyimanagers = false;
+          console.log("emptyStock: " + this.emptyagents);
+        }
+        if(this.managerList.length > 0){
+          this.empptymanagers = false;
+          console.log("emptyStock: " + this.emptyagents);
+        }
+        if(this.agentList.length > 0){
+          this.emptyagents = false;
+          console.log("emptyStock: " + this.emptyagents);
+        }
         }
         
       },

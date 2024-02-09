@@ -140,14 +140,14 @@
             </td>
           </tr>
         </ng-container>
-        <ng-container  *ngIf="!loading && emptyagents;">
+        <ng-container  *ngIf="!loading && empptymanagers;">
           <tr>
             <td colspan="8" style="text-align: center;">
               <p>No Managers found. Please check back later.</p>
             </td>
           </tr>
         </ng-container>
-       <ng-container  *ngIf="!loading && !emptyagents; ">
+       <ng-container  *ngIf="!loading && !empptymanagers; ">
         <tr *ngFor="let manager of managerList">
           <ng-container *ngIf="manager.username">
           <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
@@ -182,14 +182,14 @@
               </td>
             </tr>
           </ng-container>
-          <ng-container  *ngIf="!loading && emptyagents;">
+          <ng-container  *ngIf="!loading && empptyimanagers;">
             <tr>
               <td colspan="8" style="text-align: center;">
                 <p>No I.Managers found. Please check back later.</p>
               </td>
             </tr>
           </ng-container>
-         <ng-container  *ngIf="!loading && !emptyagents; ">
+         <ng-container  *ngIf="!loading && !empptyimanagers; ">
           <tr *ngFor="let manager of imanagerList">
           <ng-container *ngIf="manager.username">
           <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
