@@ -20,6 +20,8 @@ import java.util.List;
 public class AgentProd {
     @jakarta.persistence.Id
     private String agentRef;
+    private String firstname;
+    private String lastname;
     @OneToMany(mappedBy = "managerProd")
     private List<Product> productsManaged;
     @OneToMany(mappedBy = "agentWhoSold")

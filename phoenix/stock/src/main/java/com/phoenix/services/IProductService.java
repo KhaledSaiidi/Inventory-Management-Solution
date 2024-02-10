@@ -13,7 +13,7 @@ import java.util.Set;
 public interface IProductService {
     void addProduct(ProductDto productDto);
     List<ProductDto> getProductsBystockReference(String stockreference);
-    Page<ProductDto> getProductsPaginatedBystockReference(Pageable pageable, String stockreference);
+    Page<ProductDto> getProductsPaginatedBystockReference(Pageable pageable, String stockreference,String searchTermn);
 
     ProductDto UpdateProduct(String serialNumber, ProductDto productDto);
     ProductDto getProductByserialNumber(String serialNumber);

@@ -61,13 +61,15 @@ public class Controller {
         List<String> realmRoles = userdto.getRealmRoles();
         UserRepresentation userRep = iMapper.mapUserRep(userdto);
         Keycloak keycloak = keycloakUtil.getKeycloakInstance();
-        keycloak.realm(realm).users().create(userRep);
-        iUserServices.addUser(userdto);
-        // Assign realm roles to the created userdto
-        String userId = keycloak.realm(realm).users().search(userdto.getUsername()).get(0).getId();
-        iUserServices.assignRoles(userId, userdto.getRealmRoles());
-
-        return Response.ok(userdto).build();
+        Response response = keycloak.realm(realm).users().create(userRep);
+        if (response.getStatus() == 201) { // User created successfully
+            iUserServices.addUser(userdto);
+            String userId = keycloak.realm(realm).users().search(userdto.getUsername()).get(0).getId();
+            iUserServices.assignRoles(userId, userdto.getRealmRoles());
+            return Response.ok(userdto).build();
+        } else {
+            return Response.status(response.getStatus()).entity(response.getEntity()).build(); // Return Keycloak's error response
+        }
     }
 
     @GetMapping("userdetails/{username}")

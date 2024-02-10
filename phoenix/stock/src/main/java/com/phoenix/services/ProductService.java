@@ -5,6 +5,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
 import com.phoenix.dto.ProductDto;
+import com.phoenix.dto.StockDto;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.*;
@@ -27,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,16 +76,43 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Page<ProductDto> getProductsPaginatedBystockReference(Pageable pageable, String stockreference) {
+    public Page<ProductDto> getProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm) {
 
         Optional<Stock> stockOptional = iStockRepository.findById(stockreference);
         if (stockOptional.isEmpty()) {
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
         Stock stock = stockOptional.get();
-        Page<Product> productsPage  = iProductRepository.findByStock(stock, pageable);
-        List<ProductDto> productDtos = iProductMapper.toDtoList(productsPage.getContent());
-        return new PageImpl<>(productDtos, pageable, productsPage.getTotalElements());
+        List<Product> products  = iProductRepository.findByStock(stock);
+        List<ProductDto> productDtos = iProductMapper.toDtoList(products);
+        if (!searchTerm.isEmpty()) {
+            productDtos = productDtos.parallelStream()
+                    .filter(productDto -> filterBySearchTerm(productDto, searchTerm))
+                    .collect(Collectors.toList());
+        }
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<ProductDto> pageContent;
+        if (productDtos.size() < startItem) {
+            pageContent = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, productDtos.size());
+            pageContent = productDtos.subList(startItem, toIndex);
+        }
+        return new PageImpl<>(pageContent, pageable, productDtos.size());
+    }
+    private boolean filterBySearchTerm(ProductDto productDto, String searchTerm) {
+        String searchString = searchTerm.toLowerCase();
+        if (productDto.getAgentProd() != null) {
+            return productDto.getSerialNumber().toLowerCase().contains(searchString)
+                    || productDto.getSimNumber().toLowerCase().contains(searchString)
+                    || productDto.getAgentProd().getFirstname().toLowerCase().contains(searchString)
+                    || productDto.getAgentProd().getLastname().toLowerCase().contains(searchString);
+        } else {
+            return productDto.getSerialNumber().toLowerCase().contains(searchString)
+                    || productDto.getSimNumber().toLowerCase().contains(searchString);
+        }
     }
 
     @Override
