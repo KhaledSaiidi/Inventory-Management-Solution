@@ -136,10 +136,13 @@ public class ProductService implements IProductService{
         if (productDto.isCheckedExistence()) {product.setCheckedExistence(productDto.isCheckedExistence());}
         if (productDto.getPrice() != null) {
             tochangeValue = product.getPrice();
-            product.setPrice(productDto.getPrice());}
-        Product savedproduct = iProductRepository.save(product);
-        stock.setStockValue(stock.getStockValue().subtract(tochangeValue).add(product.getPrice()));
-        iStockRepository.save(stock);
+            product.setPrice(productDto.getPrice());
+            Product savedproduct = iProductRepository.save(product);
+            stock.setStockValue(stock.getStockValue().subtract(tochangeValue).add(product.getPrice()));
+            iStockRepository.save(stock);
+        } else {
+            Product savedproduct = iProductRepository.save(product);
+        }
         return productDto;
     }
 

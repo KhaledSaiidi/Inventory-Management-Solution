@@ -301,7 +301,6 @@ onPageChange(newPage: number): void {
     this.editedBoxNumber = prod.boxNumber;
     setTimeout(() => {
       const inputField = document.getElementById('inputField' + index) as HTMLInputElement;
-      console.log(inputField);
       if (inputField) {
         inputField.focus();
       }
@@ -312,6 +311,7 @@ onPageChange(newPage: number): void {
     this.isEditMode = false;
     if (this.selectedProd) {
       this.selectedProd.boxNumber = this.editedBoxNumber;
+      this.updateBoxNumber(this.selectedProd, this.editedBoxNumber);
     }
     this.selectedProd = null;
     this.editedBoxNumber = undefined;
@@ -324,7 +324,11 @@ onPageChange(newPage: number): void {
     if (this.selectedProd) {
       const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
       const nextIndex = (currentIndex + 1) % this.filterfinishforProds.length; 
+      this.selectedProd.boxNumber = this.editedBoxNumber;
+      this.updateBoxNumber(this.selectedProd, this.editedBoxNumber);
       this.selectedProd = this.filterfinishforProds[nextIndex];
+      this.editedBoxNumber = this.selectedProd.boxNumber || undefined; 
+      this.cdRef.detectChanges();
       setTimeout(() => {
         this.selectedProd = this.filterfinishforProds[nextIndex];
         if (this.selectedProd) {
@@ -340,7 +344,11 @@ onPageChange(newPage: number): void {
      if (this.selectedProd) {
        const currentIndex = this.filterfinishforProds.indexOf(this.selectedProd);
        const previousIndex = currentIndex === 0 ? this.filterfinishforProds.length - 1 : currentIndex - 1;
+       this.selectedProd.boxNumber = this.editedBoxNumber;
+       this.updateBoxNumber(this.selectedProd, this.editedBoxNumber);
        this.selectedProd = this.filterfinishforProds[previousIndex];
+       this.editedBoxNumber = this.selectedProd.boxNumber || undefined; 
+       this.cdRef.detectChanges();
        setTimeout(() => {
          this.selectedProd = this.filterfinishforProds[previousIndex];
          if (this.selectedProd) {
@@ -350,6 +358,28 @@ onPageChange(newPage: number): void {
      }
    }
  
+   updateBoxNumber(productdto: Productdto, editedBoxNumber: string | undefined) {
+    console.log(productdto);
+    console.log(productdto.serialNumber);
+    console.log(editedBoxNumber);
+    if(productdto && productdto.serialNumber && editedBoxNumber) {
+      const updateProductdto: Productdto = {
+        serialNumber: productdto.serialNumber,
+        boxNumber: editedBoxNumber
+      }
+      if(updateProductdto.serialNumber) {
+      this.stockservice.updateProduct(updateProductdto.serialNumber, updateProductdto).subscribe(
+        (response) => {
+          console.log('Product Updated successfully:', response);
+        },
+        (error) => {
+          console.error('Failed to add stock:', error);
+        }
+      );
+     }
+  
+    }
+  }
     
 }
     
