@@ -17,11 +17,16 @@
         <div class="listetalents-containershown">
             <div class="col-12">
              <div class="card mb-4 ">
-                     <div class="card-header pb-0" >
-                      <input type="checkbox" class="custom-checkbox" style="margin-right: 6px;" (change)="selectAllCheckbox($event)">Check ALL
-                      <h6 class="text-center">{{ campaignName }} Stock Products</h6>
-                     </div>
-                     <div class="card-body px-0 pt-0 pb-2">
+              <div class="card-header pb-0" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <input type="checkbox" class="custom-checkbox" style="margin-right: 6px;" (change)="selectAllCheckbox($event)">Check ALL
+                </div>
+                <h6 class="text-center" style="margin-top: -20px;">{{ campaignName }} Stock Products</h6>
+                <span style="margin-top: -5px;">
+                  <a (click)="navigateToAssignProduct()" class="no-hover" style="cursor: pointer;"><i class="fas fa-user-plus" style="margin-right: 5px;"></i>Assign Checked Items</a>
+                </span>                      
+              </div>
+              <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
                  <div class="table-responsive p-0">
                    <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
                      <thead>

@@ -5,10 +5,10 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class DataSharingService {
-  private uncheckedProdsSource = new BehaviorSubject<string[]>([]);
-  uncheckedProds$ = this.uncheckedProdsSource.asObservable();
+  private checkedBoxProdsSource = new BehaviorSubject<string[]>([]);
+  checkedBoxProds$ = this.checkedBoxProdsSource.asObservable();
 
-  updateUncheckedProds(uncheckedProds: string[]): void {
-    this.uncheckedProdsSource.next(uncheckedProds);
+  updatecheckedBoxProds(checkedBoxProds: string[]): void {
+    this.checkedBoxProdsSource.next(checkedBoxProds);
   }
 }

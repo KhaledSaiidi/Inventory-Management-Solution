@@ -1,6 +1,6 @@
 import {  ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  forkJoin } from 'rxjs';
+import {  forkJoin, toArray } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
@@ -8,6 +8,7 @@ import { StockService } from 'src/app/services/stock.service';
 import { QueryList } from '@angular/core';
 import { ProductPage } from 'src/app/models/inventory/ProductPage';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DataSharingService } from 'src/app/services/dataSharing.service';
 
 @Component({
   selector: 'app-products',
@@ -20,7 +21,8 @@ export class ProductsComponent implements OnInit{
     private router: Router,
     private stockservice: StockService,
     private cdRef: ChangeDetectorRef,
-    private sanitizer: DomSanitizer) {}
+    private sanitizer: DomSanitizer,
+    private dataSharingService: DataSharingService) {}
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
@@ -359,9 +361,6 @@ onPageChange(newPage: number): void {
    }
  
    updateBoxNumber(productdto: Productdto, editedBoxNumber: string | undefined) {
-    console.log(productdto);
-    console.log(productdto.serialNumber);
-    console.log(editedBoxNumber);
     if(productdto && productdto.serialNumber && editedBoxNumber) {
       const updateProductdto: Productdto = {
         serialNumber: productdto.serialNumber,
@@ -380,6 +379,13 @@ onPageChange(newPage: number): void {
   
     }
   }
-    
+  
+    navigateToAssignProduct() {
+      const serialNumbersArray = Array.from(this.selectedSerialNumbers);
+      this.dataSharingService.updatecheckedBoxProds(serialNumbersArray);
+      console.log(serialNumbersArray)
+      this.router.navigate(['/assignproducts'], { queryParams: { id: this.stockreference } });     
+         
+    }
 }
     

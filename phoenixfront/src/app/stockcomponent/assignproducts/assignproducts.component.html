@@ -1,0 +1,67 @@
+<div class="shadowed" (click)="navigateToProducts(stockreference)">
+    <app-products></app-products>
+</div>
+        <div class="appform-container">
+          <div class="container-fluid py-4" style="width: 100%;">
+              <div class="row" style="width: 100%;">
+                <div class="col-md-8" style="width: 100%;">
+                  <div class="card">
+                      <div class="card-body">
+                        <div id="pdf-content" class="container">
+                                <h4 class="mb-0">Assign Products to agents:</h4>                            
+                            <ng-container *ngIf="invalidCheckedBox"> 
+                                <br>
+                              <div class="row">
+                                <p style="color: red;"><b>No Products checked</b> </p>
+                                </div>
+                            </ng-container>
+                                <hr>
+                            <ng-container *ngIf="!invalidCheckedBox">
+                                <div class="table-responsive">
+                                    <table class="table custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="col">Product N°</th>
+                                                <th class="col">Serial Number</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let prod of compcheckedBoxProds; let i = index;">
+                                                <td>&nbsp; &nbsp; Product <b>{{ i+1 }}</b></td>
+                                                <td>{{ prod }}</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                   <hr>
+                                   <form>
+                                   <div class="row">
+                                    <div class="col-md-6">
+                                          <label for="manager">SENIOR ADVISOR</label>
+                                          <select class="form-control mt-2" formControlName="manager" id="manager">
+                                            <option> Mehdi Machout </option>  
+                                        </select>   
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label for="agent">AGENT ASSIGNED</label>
+                                        <select class="form-control mt-2" formControlName="agent" id="agent">
+                                          <option> Khaled Saidi </option>  
+                                      </select>   
+                                    </div>
+
+                                  </div>
+                                  <hr>
+                                  <div style="display: flex; justify-content: center;">
+                                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Assign</button>
+                                </div>
+                                </form>
+                          </ng-container>
+
+                          
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>

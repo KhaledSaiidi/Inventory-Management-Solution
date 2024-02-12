@@ -30,8 +30,8 @@ export class CheckprodsComponent implements OnInit{
         console.log(this.stockreference);
         }
       }); 
-        this.dataSharingService.uncheckedProds$.subscribe(uncheckedProds => {
-        this.compuncheckedProds = uncheckedProds;
+        this.dataSharingService.checkedBoxProds$.subscribe(checkedBoxProds => {
+        this.compuncheckedProds = checkedBoxProds;
         if(this.compuncheckedProds.length === 0){
           this.excelFileMatches = true;
         }

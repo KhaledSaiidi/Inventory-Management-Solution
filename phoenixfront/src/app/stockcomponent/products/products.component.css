@@ -62,4 +62,22 @@
       transition: background-color 0.2s ease;
     }
   
-    
+    .no-hover {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+  
+    .no-hover:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+  
+    .no-hover:hover i {
+      transform: translateX(3px);
+    }
+  
