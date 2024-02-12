@@ -6,6 +6,8 @@ import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
 import { QueryList } from '@angular/core';
+import { ProductPage } from 'src/app/models/inventory/ProductPage';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-products',
@@ -17,7 +19,8 @@ export class ProductsComponent implements OnInit{
     private route: ActivatedRoute,
     private router: Router,
     private stockservice: StockService,
-    private cdRef: ChangeDetectorRef ) {}
+    private cdRef: ChangeDetectorRef,
+    private sanitizer: DomSanitizer) {}
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
@@ -31,7 +34,7 @@ export class ProductsComponent implements OnInit{
   
   stockreference: string = '';
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
       if(id != null){
@@ -40,7 +43,12 @@ export class ProductsComponent implements OnInit{
       }
     }); 
     this.getStockbyRef(this.stockreference);
-    this.getProductsByStockReference(this.stockreference,0);
+    try {
+      await this.getProductsByStockReference(this.stockreference, 0, this.searchTerm);
+      this.cdRef.detectChanges();
+    } catch (error) {
+      this.filterfinishforProds = [];
+        }
 
   }
   navigateToAddProduct(ref?: string) {
@@ -76,23 +84,30 @@ export class ProductsComponent implements OnInit{
   pagedProducts: Productdto[][] = [];
   searchTerm: string = '';
 
-  getProductsByStockReference(ref: string, page: number) {
+  
+  getProductsByStockReference(ref: string, page: number, search: string) {
     this.loading = true;
-    this.stockservice.getProductsPaginatedByStockReference(ref, page, this.pageSize).subscribe(
-      (data) => {
-        this.totalElements = data.totalElements;
-        this.totalPages = data.totalPages;
-        this.currentPage = data.number + 1;
-        this.loading = false;
-        this.filterfinishforProds = data.content;
-        this.checkAndSetEmptyProducts();
-     },
-      (error) => {
-        console.error('Failed to get products:', error);
-        this.loading = false;
+    try {
+      this.stockservice.getProductsPaginatedByStockReference(ref, page, this.pageSize, search)
+        .subscribe(
+          (productPage: ProductPage) => {
+            this.loading = false;
+            this.currentPage = productPage.number + 1;
+            this.filterfinishforProds = productPage.content;
+            this.totalPages = productPage.totalPages;
+            this.checkAndSetEmptyProducts();
+              this.cdRef.detectChanges();
+          },
+          (error) => {
+            console.error('Error fetching stocks:', error);
+            this.loading = false;
           }
-    );
-  }    
+        );
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      this.loading = false;
+    }
+    }
 
 private checkAndSetEmptyProducts() {
   if(this.filterfinishforProds && this.filterfinishforProds.length > 0) {
@@ -102,11 +117,27 @@ private checkAndSetEmptyProducts() {
   }
 }
 
-  
-  
-  onPageChange(newPage: number): void {
-    this.getProductsByStockReference(this.stockreference, newPage - 1);
+searchDebounce: any;
+searchStocks() {
+  clearTimeout(this.searchDebounce);
+  this.searchDebounce = setTimeout(() => {
+    this.getProductsByStockReference(this.stockreference, 0, this.searchTerm);
+  }, 600);
+}
+
+highlightMatch(value: string) : SafeHtml {
+  if (this.searchTerm && value) {
+    const regex = new RegExp(`(${this.searchTerm})`, 'gi');
+    const highlightedValue = value.replace(regex, '<span style="background-color: yellow;">$1</span>');
+    return this.sanitizer.bypassSecurityTrustHtml(highlightedValue);
   }
+  return this.sanitizer.bypassSecurityTrustHtml(value);
+}
+
+
+onPageChange(newPage: number): void {
+    this.getProductsByStockReference(this.stockreference, newPage - 1, this.searchTerm);
+} 
         
 
   getStateText(state: string): string {
@@ -233,7 +264,7 @@ private checkAndSetEmptyProducts() {
   
       for (let page = 0; page < this.totalPages; page++) {
         observables.push(
-          this.stockservice.getProductsPaginatedByStockReference(this.stockreference, page, 20)
+          this.stockservice.getProductsPaginatedByStockReference(this.stockreference, page, 20, this.searchTerm)
         );
       }
   

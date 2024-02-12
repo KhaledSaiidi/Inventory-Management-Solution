@@ -69,12 +69,16 @@ getProductsByStockReference(stockreference: string): Observable<Productdto[]> {
   );
 }
 
-getProductsPaginatedByStockReference(stockReference: string, page: number, size: number): Observable<ProductPage> {
-  const url = `${this.apiUrl}/getProductsPaginatedByStockReference/${stockReference}`;
-  const searchTerm = '';
-  const params = { page: page.toString(), size: size.toString(), searchTerm: searchTerm.toString() };
-  console.log(url, { params });
-  return this.http.get<ProductPage>(url, { params });
+
+getProductsPaginatedByStockReference(stockReference: string, page: number, size: number, searchTerm: String): Observable<ProductPage> {
+  const apiUrl = this.apiUrl + '/getProductsPaginatedByStockReference/' + stockReference + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<ProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
 }
 
 
