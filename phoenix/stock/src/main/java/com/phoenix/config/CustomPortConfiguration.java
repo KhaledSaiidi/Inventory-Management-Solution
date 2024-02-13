@@ -28,7 +28,7 @@ public class CustomPortConfiguration implements WebServerFactoryCustomizer<Confi
         }
     }
     private int findAvailablePort() {
-        for (int port = 8080; port <= maxPort; port++) {
+        for (int port = minPort; port <= maxPort; port++) {
             try (ServerSocket socket = new ServerSocket(port)) {
                 return port;
             } catch (IOException e) {
