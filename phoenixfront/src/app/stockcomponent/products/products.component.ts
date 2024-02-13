@@ -41,7 +41,6 @@ export class ProductsComponent implements OnInit{
       const id = params.get('id');
       if(id != null){
       this.stockreference = id;
-      console.log(this.stockreference);
       }
     }); 
     this.getStockbyRef(this.stockreference);
@@ -59,7 +58,6 @@ export class ProductsComponent implements OnInit{
       return;
     }
    this.router.navigate(['/addproduct'], { queryParams: { id: ref } });     
-   console.log(ref);
   }
   stockdto!: Stockdto;
   campaignName!: string;
@@ -161,7 +159,6 @@ onPageChange(newPage: number): void {
       return;
     }
     this.router.navigate(['/updateproduct'], { queryParams: { id: ref1, prodId: ref2 } });
-    console.log(ref1, ref2);
   }
   
   selectedFile: File | null = null;
@@ -169,8 +166,6 @@ onPageChange(newPage: number): void {
   selectedSheetIndexToenter: number = 0;
   updateSheetIndex(): void {
     this.selectedSheetIndexToenter = Math.max(0, this.selectedSheetIndex - 1);
-    console.log(this.selectedSheetIndex);
-    console.log(this.selectedSheetIndexToenter);
 
   }
 
@@ -241,7 +236,6 @@ onPageChange(newPage: number): void {
       return;
     }
     this.router.navigate(['/checkprods'], { queryParams: { id: ref } });     
-    console.log(ref);
   }
 
   selectAllChecked: boolean = false;
@@ -383,7 +377,6 @@ onPageChange(newPage: number): void {
     navigateToAssignProduct() {
       const serialNumbersArray = Array.from(this.selectedSerialNumbers);
       this.dataSharingService.updatecheckedBoxProds(serialNumbersArray);
-      console.log(serialNumbersArray)
       this.router.navigate(['/assignproducts'], { queryParams: { id: this.stockreference } });     
          
     }
