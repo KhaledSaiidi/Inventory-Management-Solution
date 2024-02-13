@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Userdto } from 'src/app/models/agents/Userdto';
+import { AgentsService } from 'src/app/services/agents.service';
 import { DataSharingService } from 'src/app/services/dataSharing.service';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -13,7 +15,8 @@ export class AssignproductsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dataSharingService: DataSharingService,
-    private stockservice: StockService) {}
+    private stockservice: StockService,
+    private agentsService: AgentsService) {}
     stockreference: string = '';
     compcheckedBoxProds: string[] = [];
     invalidCheckedBox: boolean = false;
@@ -32,6 +35,7 @@ export class AssignproductsComponent implements OnInit {
         }
         console.log(this.compcheckedBoxProds);
             });
+            this.getUserscategorized();
     }
     navigateToProducts(ref?: string) {
       if (ref === undefined) {
@@ -40,5 +44,26 @@ export class AssignproductsComponent implements OnInit {
       }
       this.router.navigate(['/products'], { queryParams: { id: ref } });     
       console.log(ref);
+    }
+    allmembers: Userdto[] = [];
+    agentList: Userdto[] = [];
+    managerList: Userdto[] = [];  
+    getUserscategorized() {
+      this.agentsService.getagents().subscribe(
+        (data) => {
+          this.allmembers = data as Userdto[];
+          if(this.allmembers.length > 0){
+          this.agentList = this.allmembers.filter(user => user.realmRoles?.includes('AGENT'));
+          this.managerList = this.allmembers.filter(user => user.realmRoles?.includes('MANAGER'));
+          }
+          console.log(this.allmembers);
+          console.log(this.agentList);
+          console.log(this.managerList);
+
+        },
+        (error: any) => {
+          console.error('Error fetching agents:', error);
+        }
+      );
     }
   }

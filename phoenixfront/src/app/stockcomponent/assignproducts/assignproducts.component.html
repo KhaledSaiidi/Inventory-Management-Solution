@@ -37,15 +37,17 @@
                                    <form>
                                    <div class="row">
                                     <div class="col-md-6">
-                                          <label for="manager">SENIOR ADVISOR</label>
-                                          <select class="form-control mt-2" formControlName="manager" id="manager">
-                                            <option> Mehdi Machout </option>  
+                                          <label>SENIOR ADVISOR</label>
+                                          <select class="form-control mt-2">
+                                            <option disabled selected> Assign a senior advisor </option>  
+                                            <option *ngFor="let manager of managerList"> {{manager.firstName?.toLowerCase()}} {{manager.lastName?.toLowerCase()}} </option>  
                                         </select>   
                                       </div>
                                       <div class="col-md-6">
-                                        <label for="agent">AGENT ASSIGNED</label>
-                                        <select class="form-control mt-2" formControlName="agent" id="agent">
-                                          <option> Khaled Saidi </option>  
+                                        <label>AGENT ASSIGNED</label>
+                                        <select class="form-control mt-2">
+                                          <option disabled selected> Assign an agent </option>  
+                                          <option *ngFor="let agent of agentList"> {{agent.firstName?.toLowerCase()}} {{agent.lastName?.toLowerCase()}} </option>  
                                       </select>   
                                     </div>
 
