@@ -32,8 +32,24 @@
                                               </tr>
                                             </tbody>
                                           </table>
-                                        </div>
-                                   <hr>
+                                </div>
+                                <hr>
+                                <ng-container *ngIf="assignedToagent">
+                                  <div *ngFor="let prod of productsassignedToAgent">
+                                  <span style="margin-bottom: 5px;"><b style="color: orange;">*Warning: </b>The product with serial number: <u>{{prod.serialNumber}}</u> is already assigned 
+                                      to agent: <b>{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</b> are you sure you want to change this?  </span>
+                                </div>
+                                <hr>
+                                </ng-container>
+                                
+                                <ng-container *ngIf="assignedTomanager">
+                                  <div *ngFor="let prod of productsassignedToManager">
+                                    <span style="margin-bottom: 5px;"><b style="color: orange;">*Warning: </b>The product with serial number: <u>{{prod.serialNumber}}</u> is already assigned 
+                                        to senior Advisor: <b>{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</b> are you sure you want to change this?  </span>
+                                  </div>  
+                                  <hr>
+                                </ng-container>
+
                                    <form [formGroup]="assignForm" (ngSubmit)="onSubmit()">
                                     <div class="row">
                                     <div class="col-md-6">

@@ -35,28 +35,48 @@ export class AssignproductsComponent implements OnInit {
         this.stockreference = id;
         }
       }); 
-        this.dataSharingService.checkedBoxProds$.subscribe(checkedBoxProds => {
-        this.compcheckedBoxProds = checkedBoxProds;
-        if(this.compcheckedBoxProds.length === 0){
-          this.invalidCheckedBox = true;
-        } else {
-          for (let i = 0; i < this.compcheckedBoxProds.length; i++) {
-            const serialNumber = this.compcheckedBoxProds[i];
-            this.stockservice.getProductByserialNumber(serialNumber).subscribe(
-              (product: Productdto) => {
-                this.products.push(product);
-              },
-              (error) => {
-                console.error('Failed to add stock:', error);
-              }
-            );
-          }
-          console.log(this.products);
+      this.dataSharingService.checkedBoxProds$.subscribe(checkedBoxProds => {
+        this.handleCheckedBoxProds(checkedBoxProds);
+      });    
+        this.getStockbyRef(this.stockreference);
+        this.getUserscategorized();
+        this.initializeForm();
+    }
+    private handleCheckedBoxProds(checkedBoxProds: any[]): void {
+      this.compcheckedBoxProds = checkedBoxProds;
+      if (this.compcheckedBoxProds.length === 0) {
+        this.invalidCheckedBox = true;
+      } else {
+        for (let i = 0; i < this.compcheckedBoxProds.length; i++) {
+          const serialNumber = this.compcheckedBoxProds[i];
+          this.stockservice.getProductByserialNumber(serialNumber).subscribe(
+            (product: Productdto) => {
+              this.products.push(product);
+              this.checkProductassignements(product);
+            },
+            (error) => {
+              console.error('Failed to add stock:', error);
+            }
+          );
         }
-            });
-            this.getStockbyRef(this.stockreference);
-            this.getUserscategorized();
-            this.initializeForm();
+        console.log(this.products);
+      }
+    }
+    assignedToagent: boolean = false;
+    assignedTomanager: boolean = false;
+    productsassignedToAgent: Productdto[] = [];
+    productsassignedToManager: Productdto[] = [];
+    checkProductassignements(product: Productdto) {
+        if(product.agentProd != null){
+          this.assignedToagent = true;
+          console.log(this.assignedToagent);
+          this.productsassignedToAgent.push(product);
+        } 
+        if(product.managerProd != null){
+          this.assignedTomanager = true;
+          console.log(this.assignedTomanager);
+          this.productsassignedToManager.push(product);
+        }
     }
     navigateToProducts(ref?: string) {
       if (ref === undefined) {
@@ -130,6 +150,7 @@ export class AssignproductsComponent implements OnInit {
       this.stockservice.assignAgentsToProd(agentProdDtos).subscribe(
         (response) => {
           console.log('Agents and managers assigned successfully:', response);
+          this.navigateToProducts(this.stockreference);
         },
         (error) => {
           console.error('Error assigning agents and managers:', error);
