@@ -54,6 +54,15 @@ public class AgentProdService implements IAgentProdService{
                 StockDto stockDto = productDto.getStock();
                 product.setStock(iStockMapper.toEntity(stockDto));
             }
+            if(productDto.getAgentProd() != null) {
+                AgentProdDto agentProddto = productDto.getAgentProd();
+                product.setAgentProd(iAgentProdMapper.toEntity(agentProddto));
+            }
+            if(productDto.getManagerProd() != null) {
+                AgentProdDto managerProddto = productDto.getManagerProd();
+                product.setManagerProd(iAgentProdMapper.toEntity(managerProddto));
+            }
+
         }
         LocalDate currentDate = LocalDate.now();
         AgentProd agentProd = null;
@@ -74,6 +83,14 @@ public class AgentProdService implements IAgentProdService{
             iAgentProdRepository.saveAll(agentProdsToSave);
             agentProdsDtoSaved = iAgentProdMapper.toDtoList(agentProdsToSave);
             for(Product product: productsToassign) {
+                AgentProd ancientAgentProd = null;
+                AgentProd ancientManagerProd = null;
+                if (product.getAgentProd() != null) {
+                    ancientAgentProd = product.getAgentProd();
+                }
+                if (product.getManagerProd() != null) {
+                    ancientManagerProd = product.getManagerProd();
+                }
                 if (agentProd != null) {
                     product.setAgentProd(agentProd);
                 }
@@ -81,6 +98,12 @@ public class AgentProdService implements IAgentProdService{
                     product.setManagerProd(managerProd);
                 }
                 iProductRepository.save(product);
+                if(ancientAgentProd != null){
+                    iAgentProdRepository.delete(ancientAgentProd);
+                }
+                if(ancientManagerProd != null){
+                    iAgentProdRepository.delete(ancientManagerProd);
+                }
             }
         } else {
             throw new IllegalStateException("No AgentProd entities to save.");

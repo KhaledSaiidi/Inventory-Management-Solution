@@ -4,6 +4,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
+import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
 import com.phoenix.mapper.IAgentProdMapper;
@@ -89,6 +90,18 @@ public class ProductService implements IProductService{
         Stock stock = stockOptional.get();
         List<Product> products  = iProductRepository.findByStock(stock);
         List<ProductDto> productDtos = iProductMapper.toDtoList(products);
+        for (int i = 0; i < productDtos.size(); i++) {
+            Product product = products.get(i);
+            ProductDto productDto = productDtos.get(i);
+            if(product.getAgentProd() != null){
+                AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
+                productDto.setAgentProd(agentProdDto);
+            }
+            if(product.getManagerProd() != null){
+                AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
+                productDto.setManagerProd(managerProdDto);
+            }
+        }
         if (!searchTerm.isEmpty()) {
             productDtos = productDtos.parallelStream()
                     .filter(productDto -> filterBySearchTerm(productDto, searchTerm))

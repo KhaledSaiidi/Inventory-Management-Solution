@@ -34,9 +34,10 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 50px;">Status</th>
-                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product Type</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 60px;">Box</th>
-                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product State</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
@@ -74,7 +75,8 @@
                           <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
                             {{prod.checkedExistence ? '&#10003;' : '&#10008;'}}
                             </span></td> 
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
+                        <td style="word-wrap: break-word; white-space: normal;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
+                        <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</td>  
                         <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
                           <ng-container *ngIf="!isEditMode || prod !== selectedProd">
                             <span style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;" (dblclick)="enableEditMode(prod, i)">
@@ -92,7 +94,7 @@
                               (keydown.shift.TAB)="handleShiftTabKey($event)"/>
                             </ng-container>                        
                           </td>  
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.price ? prod.price + '$' : '0$'}}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>
                         <td style="word-wrap: break-word; white-space: normal;" *ngIf="prod.state">
                           {{ getStateText(prod.state.toString()) }}
                         </td>
