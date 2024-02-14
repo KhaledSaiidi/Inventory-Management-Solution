@@ -1,11 +1,14 @@
 package com.phoenix.controller;
 
+import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
+import com.phoenix.model.AgentProd;
 import com.phoenix.model.Product;
 import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.repository.IStockRepository;
+import com.phoenix.services.IAgentProdService;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,8 @@ public class Controller {
     IStockService iStockService;
     @Autowired
     IProductService iProductService;
+    @Autowired
+    IAgentProdService iAgentProdService;
 
     @PostMapping("/addStock/{campaignReference}")
     public ResponseEntity<StockDto> addStock(@PathVariable("campaignReference") String campaignReference, @RequestBody StockDto stockdto) {
@@ -128,5 +133,20 @@ public class Controller {
     )throws IOException {
         return ResponseEntity.ok(iProductService.addProductsByupload(file, stockReference));
     }
+
+
+    @PostMapping("/assignAgentsToProd")
+    public ResponseEntity<List<AgentProdDto>> assignAgentAndManager(@RequestBody List<AgentProdDto> agentProdDtos) {
+        AgentProdDto agentProd = null;
+        AgentProdDto managerProd = null;
+        for (AgentProdDto agent: agentProdDtos) {
+            if(agent.isSeniorAdvisor()){managerProd = agent;}
+            else {agentProd = agent;}
+        }
+        List<AgentProdDto> assignedAgentdtoProds = iAgentProdService.assignAgentandManager(agentProd, managerProd);
+        return ResponseEntity.ok(assignedAgentdtoProds);
+    }
+
+
 
 }

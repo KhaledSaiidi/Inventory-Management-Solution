@@ -2,6 +2,7 @@ package com.phoenix.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -11,12 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 public class AgentProdDto {
     private String agentRef;
+    private String username;
     private String firstname;
     private String lastname;
-
+    private LocalDate affectaiondate;
+    private LocalDate duesoldDate;
+    private LocalDate receivedDate;
+    private boolean seniorAdvisor;
     private List<ProductDto> productsManaged;
     private List<ProductDto> productsSoldBy;
     private List<ProductDto> productsAssociated;
-    private List<ReclamationDto> reclamations;
-
 }

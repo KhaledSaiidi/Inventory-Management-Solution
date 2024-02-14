@@ -1,9 +1,11 @@
 package com.phoenix.mapper;
 
 import com.phoenix.dto.AgentProdDto;
+import com.phoenix.dto.ProductDto;
 import com.phoenix.model.AgentProd;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,13 @@ public class AgentProdMapper implements IAgentProdMapper{
     public AgentProdDto toDto(AgentProd agentProd) {
         AgentProdDto agentProdDto = new AgentProdDto();
         agentProdDto.setAgentRef(agentProd.getAgentRef());
+        agentProdDto.setUsername(agentProd.getUsername());
         agentProdDto.setFirstname(agentProd.getFirstname());
         agentProdDto.setLastname(agentProd.getLastname());
-
+        agentProdDto.setAffectaiondate(agentProd.getAffectaiondate());
+        agentProdDto.setDuesoldDate(agentProd.getDuesoldDate());
+        agentProdDto.setReceivedDate(agentProd.getReceivedDate());
+        agentProdDto.setSeniorAdvisor(agentProd.isSeniorAdvisor());
         return agentProdDto;
     }
 
@@ -23,8 +29,13 @@ public class AgentProdMapper implements IAgentProdMapper{
     public AgentProd toEntity(AgentProdDto agentProdDto) {
         AgentProd agentProd = new AgentProd();
         agentProd.setAgentRef(agentProdDto.getAgentRef());
+        agentProd.setUsername(agentProdDto.getUsername());
         agentProd.setFirstname(agentProdDto.getFirstname());
         agentProd.setLastname(agentProdDto.getLastname());
+        agentProd.setAffectaiondate(agentProdDto.getAffectaiondate());
+        agentProd.setDuesoldDate(agentProdDto.getDuesoldDate());
+        agentProd.setReceivedDate(agentProdDto.getReceivedDate());
+        agentProd.setSeniorAdvisor(agentProdDto.isSeniorAdvisor());
 
         return agentProd;
     }

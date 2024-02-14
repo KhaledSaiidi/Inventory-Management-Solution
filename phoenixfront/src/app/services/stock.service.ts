@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { UncheckHistory } from '../models/inventory/UncheckHistory';
 import { StockPage } from '../models/inventory/StockPage';
 import { ProductPage } from '../models/inventory/ProductPage';
+import { AgentProdDto } from '../models/inventory/AgentProdDto';
 
 @Injectable({
   providedIn: 'root'
@@ -172,4 +173,18 @@ updateStock(reference: string, stockDto: Stockdto): Observable<Stockdto> {
     })
   );
 }
+
+
+
+assignAgentsToProd(agentProdDtos: AgentProdDto[]): Observable<AgentProdDto[]> {
+  return this.http.post<AgentProdDto[]>(this.apiUrl + '/assignAgentsToProd', agentProdDtos)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
 }

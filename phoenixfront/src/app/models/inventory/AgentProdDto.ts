@@ -1,16 +1,15 @@
 import { Productdto } from "./ProductDto";
-import { ReclamationDto } from "./ReclamationDto";
 
 export interface AgentProdDto {
      agentRef?: string;
      username?: string;
      firstname?: string;
      lastname?: string;
-     seniorAdvisorusername?: string;
-     seniorAdvisorFirstName?: string;
-     seniorAdvisorLastName?: string;
-
+     affectaiondate?: Date;
+     duesoldDate?: Date;
+     receivedDate?: Date;
+     seniorAdvisor?: boolean;
+     productsManaged?: Productdto[];
      productsSoldBy?: Productdto[];
      productsAssociated?: Productdto[];
-     reclamations?: ReclamationDto[];
 }

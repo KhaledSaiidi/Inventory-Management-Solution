@@ -22,6 +22,5 @@ public class ReclamationDto {
     private int quantityToAdd;
     private LocalDate reclamDate;
     private Boolean vued;
-    private AgentProdDto agentProd;
 
 }

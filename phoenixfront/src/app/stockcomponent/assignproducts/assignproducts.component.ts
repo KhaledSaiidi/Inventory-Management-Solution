@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentProdDto } from 'src/app/models/inventory/AgentProdDto';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
+import { Stockdto } from 'src/app/models/inventory/Stock';
 import { AgentsService } from 'src/app/services/agents.service';
 import { DataSharingService } from 'src/app/services/dataSharing.service';
 import { StockService } from 'src/app/services/stock.service';
@@ -52,6 +53,7 @@ export class AssignproductsComponent implements OnInit {
           }
         }
             });
+            this.getStockbyRef(this.stockreference);
             this.getUserscategorized();
             this.initializeForm();
     }
@@ -87,6 +89,18 @@ export class AssignproductsComponent implements OnInit {
         });
     }
 
+    stockdto!: Stockdto;
+    getStockbyRef(ref : string){
+      this.stockservice.getStockByreference(ref).subscribe(
+        (data) => {
+      this.stockdto = data as Stockdto;
+        },
+        (error) => {
+          console.error('Failed to get stock:', error);
+        }
+      );
+    }
+
     onSubmit() {
       const manager: Userdto = this.assignForm.get('manager')?.value;
       const agent: Userdto = this.assignForm.get('agent')?.value;
@@ -94,12 +108,32 @@ export class AssignproductsComponent implements OnInit {
         username: agent.username,
         firstname: agent.firstName,
         lastname: agent.lastName,
-        seniorAdvisorusername: manager.username,
-        seniorAdvisorFirstName: manager.firstName,
-        seniorAdvisorLastName: manager.lastName,
+        duesoldDate: this.stockdto.dueDate,
+        receivedDate: this.stockdto.receivedDate,
+        seniorAdvisor: false,
         productsAssociated: this.products
       };
-      console.log(agentOnProds);
-    }
+      const managerOnProds: AgentProdDto = {
+        username: manager.username,
+        firstname: manager.firstName,
+        lastname: manager.lastName,
+        duesoldDate: this.stockdto.dueDate,
+        receivedDate: this.stockdto.receivedDate,
+        seniorAdvisor: true,
+        productsManaged: this.products
+      };
+      const agentProdDtos: AgentProdDto[] = [];
+      agentProdDtos.push(agentOnProds, managerOnProds);
+      console.log(agentProdDtos);
+
+      this.stockservice.assignAgentsToProd(agentProdDtos).subscribe(
+        (response) => {
+          console.log('Agents and managers assigned successfully:', response);
+        },
+        (error) => {
+          console.error('Error assigning agents and managers:', error);
+        }
+      );
+        }
 
  }

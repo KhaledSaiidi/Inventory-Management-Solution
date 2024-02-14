@@ -29,7 +29,4 @@ public class Reclamation {
     private int quantityToAdd;
     private LocalDate reclamDate;
     private Boolean vued;
-    @ManyToOne
-    @JoinColumn(name = "agent_ref")
-    private AgentProd agentProd;
 }

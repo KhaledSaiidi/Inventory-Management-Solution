@@ -1,14 +1,12 @@
 package com.phoenix.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,14 +18,36 @@ import java.util.List;
 public class AgentProd {
     @jakarta.persistence.Id
     private String agentRef;
+    private String username;
     private String firstname;
     private String lastname;
-    @OneToMany(mappedBy = "managerProd")
+    private LocalDate affectaiondate;
+    private LocalDate duesoldDate;
+    private LocalDate receivedDate;
+    private boolean seniorAdvisor;
+    @OneToMany(mappedBy = "managerProd", cascade = CascadeType.ALL)
     private List<Product> productsManaged;
-    @OneToMany(mappedBy = "agentWhoSold")
+    @OneToMany(mappedBy = "agentWhoSold", cascade = CascadeType.ALL)
     private List<Product> productsSoldBy;
-    @OneToMany(mappedBy = "agentProd")
-    private List<Product> productsAssociated;
     @OneToMany(mappedBy = "agentProd", cascade = CascadeType.ALL)
-    private List<Reclamation> reclamations;
+    private List<Product> productsAssociated;
+
+    @PrePersist
+    private void generateReference() {
+        if (this.agentRef == null) {
+            this.agentRef = generateRandomString(6);
+        }
+    }
+
+    private String generateRandomString(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder randomString = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * characters.length());
+            randomString.append(characters.charAt(index));
+        }
+
+        return randomString.toString();
+    }
+
 }
