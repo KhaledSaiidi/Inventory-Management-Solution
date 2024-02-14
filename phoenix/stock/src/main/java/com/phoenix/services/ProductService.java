@@ -6,6 +6,7 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
+import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.*;
@@ -41,6 +42,9 @@ public class ProductService implements IProductService{
     private IProductRepository iProductRepository;
     @Autowired
     private IStockMapper iStockMapper;
+    @Autowired
+    private IAgentProdMapper iAgentProdMapper;
+
     @Autowired
     private IStockRepository iStockRepository;
 
@@ -155,6 +159,16 @@ public class ProductService implements IProductService{
         }
         Product product = productOptional.get();
         ProductDto productDto = iProductMapper.toDto(product);
+        productDto.setStock(iStockMapper.toDto(product.getStock()));
+        if(product.getAgentProd() != null) {
+            productDto.setAgentProd(iAgentProdMapper.toDto(product.getAgentProd()));
+        }
+        if(product.getManagerProd() != null) {
+            productDto.setManagerProd(iAgentProdMapper.toDto(product.getManagerProd()));
+        }
+        if(product.getAgentWhoSold() != null) {
+            productDto.setAgentWhoSold(iAgentProdMapper.toDto(product.getAgentWhoSold()));
+        }
         return productDto;
     }
 

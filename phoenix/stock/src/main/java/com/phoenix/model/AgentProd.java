@@ -25,11 +25,11 @@ public class AgentProd {
     private LocalDate duesoldDate;
     private LocalDate receivedDate;
     private boolean seniorAdvisor;
-    @OneToMany(mappedBy = "managerProd", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "managerProd")
     private List<Product> productsManaged;
-    @OneToMany(mappedBy = "agentWhoSold", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "agentWhoSold")
     private List<Product> productsSoldBy;
-    @OneToMany(mappedBy = "agentProd", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "agentProd")
     private List<Product> productsAssociated;
 
     @PrePersist

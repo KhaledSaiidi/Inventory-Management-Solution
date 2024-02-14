@@ -2,8 +2,10 @@ package com.phoenix.services;
 
 import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
+import com.phoenix.dto.StockDto;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
+import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.AgentProd;
 import com.phoenix.model.Product;
 import com.phoenix.model.State;
@@ -27,6 +29,9 @@ public class AgentProdService implements IAgentProdService{
     private IAgentProdMapper iAgentProdMapper;
     @Autowired
     private IProductMapper iProductMapper;
+    @Autowired
+    private IStockMapper iStockMapper;
+
 
     @Autowired
     private IAgentProdRepository iAgentProdRepository;
@@ -42,20 +47,24 @@ public class AgentProdService implements IAgentProdService{
         List<ProductDto> productsdtoToassign = agentOnProds != null ?
                 agentOnProds.getProductsAssociated() : managerOnProds.getProductsAssociated();
         List<Product> productsToassign = iProductMapper.toEntityList(productsdtoToassign);
-
+        for (int i = 0; i < productsToassign.size(); i++) {
+            Product product = productsToassign.get(i);
+            ProductDto productDto = productsdtoToassign.get(i);
+            if(productDto.getStock() != null) {
+                StockDto stockDto = productDto.getStock();
+                product.setStock(iStockMapper.toEntity(stockDto));
+            }
+        }
         LocalDate currentDate = LocalDate.now();
-
         AgentProd agentProd = null;
         AgentProd managerProd = null;
         if (agentOnProds != null) {
             agentProd = iAgentProdMapper.toEntity(agentOnProds);
             agentProd.setAffectaiondate(currentDate);
-            agentProd.setProductsAssociated(productsToassign);
         }
         if (managerOnProds != null) {
             managerProd = iAgentProdMapper.toEntity(managerOnProds);
             managerProd.setAffectaiondate(currentDate);
-            managerProd.setProductsManaged(productsToassign);
         }
         List<AgentProd> agentProdsToSave = new ArrayList<>();
         if (agentProd != null) agentProdsToSave.add(agentProd);
@@ -64,6 +73,15 @@ public class AgentProdService implements IAgentProdService{
         if (!agentProdsToSave.isEmpty()) {
             iAgentProdRepository.saveAll(agentProdsToSave);
             agentProdsDtoSaved = iAgentProdMapper.toDtoList(agentProdsToSave);
+            for(Product product: productsToassign) {
+                if (agentProd != null) {
+                    product.setAgentProd(agentProd);
+                }
+                if (managerProd != null) {
+                    product.setManagerProd(managerProd);
+                }
+                iProductRepository.save(product);
+            }
         } else {
             throw new IllegalStateException("No AgentProd entities to save.");
         }

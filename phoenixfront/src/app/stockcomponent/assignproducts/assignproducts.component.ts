@@ -51,6 +51,7 @@ export class AssignproductsComponent implements OnInit {
               }
             );
           }
+          console.log(this.products);
         }
             });
             this.getStockbyRef(this.stockreference);
