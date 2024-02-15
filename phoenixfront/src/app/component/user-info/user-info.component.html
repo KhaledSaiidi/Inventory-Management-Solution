@@ -57,9 +57,15 @@
             </a>
           </li>
           <li class="nav-item" [class.selected]="selectedTab === 1" style="cursor: pointer;">
-            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedTabMessages()" role="tab" [attr.aria-selected]="selectedTab === 1">
-              <i class="ni ni-chat-round"></i>
-              <span class="ms-2">Messages</span>
+            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedTabMyStock()" role="tab" [attr.aria-selected]="selectedTab === 1">
+              <i class="ni ni-box-2"></i>
+              <span class="ms-2">MyStock</span>
+            </a>
+          </li>
+          <li class="nav-item" [class.selected]="selectedTab === 2" style="cursor: pointer;">
+            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedTabMessages()" role="tab" [attr.aria-selected]="selectedTab === 2">
+              <i class="ni ni-notification-70"></i>
+              <span class="ms-2">Reclamations</span>
             </a>
           </li>
         </ul>
@@ -234,7 +240,82 @@
     </div>
     </ng-container>
     <ng-container *ngIf="selectedTab == 1">
-        kkk
+<div class="equipe-container" style="margin-top: 30px;">
+  <div class="listetalents-containershown">
+    <div class="col-12">
+
+      <div class="card mb-4">
+          <div class="card-header pb-0">
+              <h6 class="text-center" >{{user.firstName?.toUpperCase()}} PRODUCTS ALLOCATED</h6>
+            </div>
+        
+          <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
+            <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+      <thead>
+        <tr>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+          <ng-container *ngIf="!isManager">
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+        </ng-container>
+        <ng-container *ngIf="isManager">
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent</th>
+        </ng-container>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 60px;">Box</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product State</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Remaining Dates</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+       <ng-container>
+         <tr>
+         </tr>
+        <tr *ngFor="let prod of agentProds">
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
+         <ng-container *ngIf="!isManager">
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
+         </ng-container>
+         <ng-container *ngIf="isManager">
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</td>  
+          </ng-container>
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.boxNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.state}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.dueDate | date: 'medium' | slice: 0:12}}</td>  
+         <td style="word-wrap: break-word; white-space: normal; text-align: center;">{{ getRemainingDates(prod.stock?.dueDate) }}</td>  
+         <td style="word-wrap: break-word; white-space: normal; text-align: center;">{{ prod.soldDate ? (prod.soldDate | date: 'medium' | slice: 0:12) : 'X' }}</td>  
+        
+          <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-edit"></i></a></td>
+         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
+        </tr>
+        <tr>
+          <td colspan="13" style="margin-right: 5px;">
+            <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
+           </td>
+          </tr>
+        </ng-container>
+
+      </tbody>
+                </table>
+            </div>
+          </div>     
+      </div>
+    </div>
+  </div>
+</div>
+    </ng-container>
+    <ng-container *ngIf="selectedTab == 2">
+      KKK
     </ng-container>
     </div>
 

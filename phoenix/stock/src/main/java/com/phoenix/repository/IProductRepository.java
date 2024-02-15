@@ -1,5 +1,6 @@
 package com.phoenix.repository;
 
+import com.phoenix.model.AgentProd;
 import com.phoenix.model.Product;
 import com.phoenix.model.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public interface IProductRepository extends JpaRepository<Product, String> {
     List<Product> findByStock(Stock stock);
     Page<Product> findByStock(Stock stock, Pageable pageable);
+    Optional<Product> findByAgentProd (AgentProd agentProd);
+    Optional<Product> findByManagerProd (AgentProd agentProd);
 
 
 }

@@ -147,6 +147,15 @@ public class Controller {
         return ResponseEntity.ok(assignedAgentdtoProds);
     }
 
+    @GetMapping("getProductsPaginatedByusername/{username}")
+    public ResponseEntity<Page<ProductDto>> getProductsPaginatedByusername(
+            @PathVariable String username,
+            @RequestParam int page,
+            @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDto> productPage = iProductService.getProductsPaginatedByusername(pageable, username);
+        return ResponseEntity.ok(productPage);
+    }
 
 
 }

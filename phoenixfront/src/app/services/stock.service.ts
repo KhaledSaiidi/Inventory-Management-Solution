@@ -186,5 +186,14 @@ assignAgentsToProd(agentProdDtos: AgentProdDto[]): Observable<AgentProdDto[]> {
   );
 }
 
-
+getProductsPaginatedByusername(username: string, page: number, size: number): Observable<ProductPage> {
+  const apiUrl = this.apiUrl + '/getProductsPaginatedByusername/' + username + '?page=' + page + '&size=' + size;
+  return this.http.get<ProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
 }

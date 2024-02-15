@@ -1,9 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { Userdto } from 'src/app/models/agents/Userdto';
+import { Productdto } from 'src/app/models/inventory/ProductDto';
+import { ProductPage } from 'src/app/models/inventory/ProductPage';
 import { AgentsService } from 'src/app/services/agents.service';
+import { StockService } from 'src/app/services/stock.service';
 
 @Component({
   selector: 'app-user-info',
@@ -24,7 +27,9 @@ selectedImage: File | null = null;
   constructor(private agentsService: AgentsService, 
     private route: ActivatedRoute,
     private formBuilder: FormBuilder, 
-    private router: Router) {}
+    private router: Router,
+    private stockservice: StockService,
+    private cdRef: ChangeDetectorRef) {}
   username!: string;
   get isCodeDisabled(): boolean {
     return !this.isEditable;
@@ -32,7 +37,7 @@ selectedImage: File | null = null;
   }
   userForm!: FormGroup;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
       if(id != null){
@@ -61,6 +66,13 @@ selectedImage: File | null = null;
 
     });
   this.getUserscategorized();
+  try {
+    await   this.getProductsByusername(this.username, 0);
+    this.cdRef.detectChanges();
+  } catch (error) {
+    this.agentProds = [];
+      }
+
 
   }
 
@@ -115,10 +127,12 @@ getuserinfos(code : string){
         this.getuserinfos(this.username);
         this.selectedTab = 0;
       }
-      selectedTabMessages() {
+      selectedTabMyStock() {
         this.selectedTab = 1;
       }
-  
+      selectedTabMessages() {
+        this.selectedTab = 2;
+      }
    
             
 
@@ -216,6 +230,58 @@ getuserinfos(code : string){
         );
       }
       
+      pageSize: number = 20;
+      loading: boolean = true;
+      emptyProducts: boolean = true;
+      totalPages: number = 0;
+      totalElements: number = 0;
+      currentPage: number = 0;
+      agentProds: Productdto[] = [];
+      pagedProducts: Productdto[][] = [];
     
-      
+      getProductsByusername(username: string, page: number) {
+        this.loading = true;
+        try {
+          this.stockservice.getProductsPaginatedByusername(username, page, this.pageSize)
+            .subscribe(
+              (productPage: ProductPage) => {
+                this.currentPage = productPage.number + 1;
+                this.agentProds = productPage.content;
+                this.totalPages = productPage.totalPages;
+              },
+              (error) => {
+                console.error('Error fetching stocks:', error);
+                this.loading = false;
+              }
+            );
+        } catch (error) {
+          console.error('Unexpected error:', error);
+          this.loading = false;
+        }
+        }  
+
+        onPageChange(newPage: number): void {
+          this.getProductsByusername(this.username, newPage - 1);
+      } 
+
+
+      currentDate: Date = new Date();
+      getRemainingDates(date: any | undefined): number {
+        if (date && date instanceof Date) {
+          const timeDiff: number = date.getTime() - this.currentDate.getTime();
+          const daysDiff: number = Math.ceil(timeDiff / (1000 * 3600 * 24));
+          return daysDiff;
+        } else if(typeof date === 'string') {
+          const parsedDate: Date = new Date(date);
+          if (!isNaN(parsedDate.getTime())) {
+            const timeDiff: number = parsedDate.getTime() - this.currentDate.getTime();
+            const daysDiff: number = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            return daysDiff; 
+        } else {
+          return 0;
+        } } else {
+          return 0;
+        }
+    }
+
 }
