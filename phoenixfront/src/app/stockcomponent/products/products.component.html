@@ -34,7 +34,9 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 50px;">Status</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 50px; margin-right: -5px;"></th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 50px; margin-right: -5px;"></th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 60px;">Box</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
@@ -46,7 +48,7 @@
                      <tbody>
                       <ng-container  *ngIf="loading;">
                         <tr>
-                          <td colspan="10" style="text-align: center;">
+                          <td colspan="12" style="text-align: center;">
                             <div class="loading-container">
                               <div class="loading-spinner"></div>
                             </div>
@@ -55,7 +57,7 @@
                       </ng-container>
                       <ng-container  *ngIf="!loading && emptyProducts;">
                         <tr>
-                          <td colspan="10" style="text-align: center;">
+                          <td colspan="12" style="text-align: center;">
                             <p>No products found. Please check back later.</p>
                           </td>
                         </tr>
@@ -75,8 +77,29 @@
                           <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
                             {{prod.checkedExistence ? '&#10003;' : '&#10008;'}}
                             </span></td> 
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</td>  
+                           <ng-container *ngIf="prod.managerProd">
+                            <td style="max-width: 50px; margin-right: -5px;">
+                              <a class="icon-link">
+                                <i class="fas fa-minus-circle icon" style="font-size: 12px;"></i>
+                              </a>
+                            </td>     
+                          </ng-container>  
+                          <ng-container *ngIf="!prod.managerProd">
+                            <td></td>
+                          </ng-container>                   
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
+                        <ng-container *ngIf="prod.agentProd">
+                        <td style="max-width: 50px; margin-right: -5px;">
+                          <a class="icon-link">
+                            <i class="fas fa-minus-circle icon" style="font-size: 12px;"></i>
+                          </a>
+                        </td>  
+                      </ng-container>    
+                      <ng-container *ngIf="!prod.agentProd">
+                        <td></td>
+                      </ng-container>                   
+                                  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;">{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</td>  
                         <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
                           <ng-container *ngIf="!isEditMode || prod !== selectedProd">
                             <span style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;" (dblclick)="enableEditMode(prod, i)">
@@ -105,7 +128,7 @@
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
                        </tr>
                        <tr>
-                        <td colspan="10" style="margin-right: 5px;">
+                        <td colspan="12" style="margin-right: 5px;">
                           <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
                          </td>
                         </tr>

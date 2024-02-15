@@ -267,6 +267,7 @@
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 60px;">Box</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product State</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigned Date</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Remaining Dates</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
@@ -291,15 +292,17 @@
          <td style="word-wrap: break-word; white-space: normal;">{{prod.boxNumber}}</td>  
          <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
          <td style="word-wrap: break-word; white-space: normal;">{{prod.state}}</td>  
-         <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.dueDate | date: 'medium' | slice: 0:12}}</td>  
-         <td style="word-wrap: break-word; white-space: normal; text-align: center;">{{ getRemainingDates(prod.stock?.dueDate) }}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.affectaiondate | date: 'medium' | slice: 0:12}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.duesoldDate | date: 'medium' | slice: 0:12}}</td>  
+         <td style="word-wrap: break-word; white-space: normal; text-align: center;" [ngStyle]="{ 'background-color': getRemainingDates(prod.agentProd?.duesoldDate) < 0 ? 'red' : '', 'color': getRemainingDates(prod.agentProd?.duesoldDate) < 0 ? 'white' : 'black' }">
+          {{ getRemainingDates(prod.agentProd?.duesoldDate) }} </td>  
          <td style="word-wrap: break-word; white-space: normal; text-align: center;">{{ prod.soldDate ? (prod.soldDate | date: 'medium' | slice: 0:12) : 'X' }}</td>  
         
           <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-edit"></i></a></td>
          <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
         </tr>
         <tr>
-          <td colspan="13" style="margin-right: 5px;">
+          <td colspan="14" style="margin-right: 5px;">
             <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
            </td>
           </tr>

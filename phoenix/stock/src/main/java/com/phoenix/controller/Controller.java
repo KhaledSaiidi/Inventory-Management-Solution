@@ -3,14 +3,11 @@ package com.phoenix.controller;
 import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
-import com.phoenix.model.AgentProd;
-import com.phoenix.model.Product;
-import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
-import com.phoenix.repository.IStockRepository;
 import com.phoenix.services.IAgentProdService;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
+import jakarta.ws.rs.core.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,17 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 public class Controller {
@@ -155,6 +146,25 @@ public class Controller {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductDto> productPage = iProductService.getProductsPaginatedByusername(pageable, username);
         return ResponseEntity.ok(productPage);
+    }
+
+    @PutMapping("/UpdateAgentonProd/{agentRef}")
+    public AgentProdDto UpdateAgentonProd(@PathVariable String agentRef, @RequestBody AgentProdDto agentProdDto) {
+        return iAgentProdService.UpdateAgentonProd(agentRef, agentProdDto);
+    }
+
+    @DeleteMapping
+    @RequestMapping("/detachAgentFromProduct/{serialNumber}")
+    public Response detachAgentFromProduct(@PathVariable String serialNumber) {
+        iAgentProdService.detachAgentFromProduct(serialNumber);
+        return Response.ok().build();
+    }
+
+    @DeleteMapping
+    @RequestMapping("/detachManagerFromProduct/{serialNumber}")
+    public Response detachManagerFromProduct(@PathVariable String serialNumber) {
+        iAgentProdService.detachManagerFromProduct(serialNumber);
+        return Response.ok().build();
     }
 
 

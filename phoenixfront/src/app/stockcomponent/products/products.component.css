@@ -80,4 +80,13 @@
     .no-hover:hover i {
       transform: translateX(3px);
     }
-  
+    .icon-link {
+      cursor: pointer; 
+      display: inline-block;
+    }
+    
+    .icon-link .icon:hover {
+      color: #ff0000; 
+      transform: scale(1.1); 
+    }
+    

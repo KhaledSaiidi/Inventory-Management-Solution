@@ -196,4 +196,38 @@ getProductsPaginatedByusername(username: string, page: number, size: number): Ob
       })
     );
 }
+
+detachAgentFromProduct(serialNumber: string): Observable<any> {
+  return this.http.delete(this.apiUrl + '/detachAgentFromProduct/' + serialNumber)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+detachManagerFromProduct(serialNumber: string): Observable<any> {
+  return this.http.delete(this.apiUrl + '/detachManagerFromProduct/' + serialNumber)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
+UpdateAgentonProd(agentRef: string, agentProdDto: AgentProdDto): Observable<AgentProdDto> {
+  return this.http.put<AgentProdDto>(this.apiUrl + '/UpdateAgentonProd/'+ agentRef , agentProdDto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
+
 }

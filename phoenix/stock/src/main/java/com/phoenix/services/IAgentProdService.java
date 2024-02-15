@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface IAgentProdService {
     List<AgentProdDto> assignAgentandManager(AgentProdDto agentOnProds, AgentProdDto managerOnProds);
+    AgentProdDto UpdateAgentonProd(String agentRef, AgentProdDto agentProdDto);
+    void detachAgentFromProduct(String serialNumber);
+    void detachManagerFromProduct(String serialNumber);
     }

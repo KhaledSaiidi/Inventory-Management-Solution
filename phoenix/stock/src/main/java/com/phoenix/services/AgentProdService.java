@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -109,6 +110,48 @@ public class AgentProdService implements IAgentProdService{
             throw new IllegalStateException("No AgentProd entities to save.");
         }
         return agentProdsDtoSaved;
+    }
+
+    @Override
+    public AgentProdDto UpdateAgentonProd(String agentRef, AgentProdDto agentProdDto) {
+        AgentProd agentProd = iAgentProdRepository.findById(agentRef).orElse(null);
+
+        if (agentProdDto.getUsername() != null) {agentProd.setUsername(agentProdDto.getUsername());}
+        if (agentProdDto.getFirstname() != null) {agentProd.setFirstname(agentProdDto.getFirstname());}
+        if (agentProdDto.getLastname() != null) {agentProd.setLastname(agentProdDto.getLastname());}
+        if (agentProdDto.getAffectaiondate() != null) {agentProd.setAffectaiondate(agentProdDto.getAffectaiondate());}
+        if (agentProdDto.getDuesoldDate() != null) {agentProd.setDuesoldDate(agentProdDto.getDuesoldDate());}
+        if (agentProdDto.getReceivedDate() != null) {agentProd.setReceivedDate(agentProdDto.getReceivedDate());}
+        AgentProd savedagentProd = iAgentProdRepository.save(agentProd);
+        return agentProdDto;
+    }
+
+    @Override
+    public void detachAgentFromProduct(String serialNumber) {
+        Optional<Product> optionalProduct = iProductRepository.findById(serialNumber);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            if(product.getAgentProd() != null){
+                AgentProd agentProd = product.getAgentProd();
+                product.setAgentProd(null);
+                iProductRepository.save(product);
+                iAgentProdRepository.delete(agentProd);
+            }
+        }
+    }
+
+    @Override
+    public void detachManagerFromProduct(String serialNumber) {
+        Optional<Product> optionalProduct = iProductRepository.findById(serialNumber);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            if(product.getManagerProd() != null){
+                AgentProd managerProd = product.getManagerProd();
+                product.setManagerProd(null);
+                iProductRepository.save(product);
+                iAgentProdRepository.delete(managerProd);
+            }
+        }
     }
 
 }

@@ -1,10 +1,14 @@
 package com.phoenix.services;
 
+import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
 import com.phoenix.dtokeycloakuser.Campaigndto;
+import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
+import com.phoenix.model.AgentProd;
+import com.phoenix.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +48,11 @@ public class StockService implements IStockService{
     @Autowired
     private IUncheckHistoryRepository iUncheckHistoryRepository;
 
+    @Autowired
+    private IAgentProdService iAgentProdService;
+
+    @Autowired
+    private IAgentProdMapper iAgentProdMapper;
 
     @Override
     public void addStock(StockDto stockDto, String campaignReference) {
@@ -159,6 +168,27 @@ public class StockService implements IStockService{
         if (stockDto.getReceivedDate() != null) {
             stock.setReceivedDate(stockDto.getReceivedDate());
             stock.setDueDate(stockDto.getReceivedDate().plusDays(45));
+            if (stock.getProducts() != null) {
+                List<Product> products = stock.getProducts();
+                for(Product prod: products) {
+                    if(prod.getAgentProd() != null) {
+                        AgentProd agentProd = prod.getAgentProd();
+                        agentProd.setReceivedDate(stockDto.getReceivedDate());
+                        agentProd.setDuesoldDate(stockDto.getReceivedDate().plusDays(45));
+                        AgentProdDto agentProddto = iAgentProdMapper.toDto(agentProd);
+                        iAgentProdService.UpdateAgentonProd(agentProd.getAgentRef(), agentProddto);
+                    }
+                    if(prod.getManagerProd() != null) {
+                        AgentProd managerProd = prod.getManagerProd();
+                        managerProd.setReceivedDate(stockDto.getReceivedDate());
+                        managerProd.setDuesoldDate(stockDto.getReceivedDate().plusDays(45));
+                        AgentProdDto managerProdDto = iAgentProdMapper.toDto(managerProd);
+                        iAgentProdService.UpdateAgentonProd(managerProd.getAgentRef(), managerProdDto);
+                    }
+                }
+
+            }
+
         }
         if (stockDto.isChecked()) {
             stock.setChecked(stockDto.isChecked());}
