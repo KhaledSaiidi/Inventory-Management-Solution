@@ -197,7 +197,7 @@ getProductsPaginatedByusername(username: string, page: number, size: number): Ob
     );
 }
 
-detachAgentFromProduct(serialNumber: string): Observable<any> {
+detachAgentFromProduct(serialNumber: string) {
   return this.http.delete(this.apiUrl + '/detachAgentFromProduct/' + serialNumber)
   .pipe(
     catchError((error) => {
@@ -207,7 +207,7 @@ detachAgentFromProduct(serialNumber: string): Observable<any> {
   );
 }
 
-detachManagerFromProduct(serialNumber: string): Observable<any> {
+detachManagerFromProduct(serialNumber: string) {
   return this.http.delete(this.apiUrl + '/detachManagerFromProduct/' + serialNumber)
   .pipe(
     catchError((error) => {

@@ -386,7 +386,7 @@ onPageChange(newPage: number): void {
       + prod.serialNumber;
       const confirmation = confirm(message);
       if (confirmation) {
-        console.log(message);
+        this.deleteManager(prod);
       }
     }
     confirmAgentDeletion(prod: Productdto): void {
@@ -394,7 +394,40 @@ onPageChange(newPage: number): void {
       + prod.serialNumber;
       const confirmation = confirm(message);
       if (confirmation) {
-        console.log(message);
+        this.deleteAgent(prod);
+      }
+    }
+    deleteManager(prod: Productdto): void {
+      if (prod.serialNumber) {
+      this.stockservice.detachManagerFromProduct(prod.serialNumber).subscribe(
+        () => {
+          console.log('Manager deleted successfully.');
+          const productIndex = this.filterfinishforProds.findIndex(product => product.serialNumber === prod.serialNumber);
+          if (productIndex !== -1) {
+            this.filterfinishforProds[productIndex].managerProd = undefined;
+          }
+        },
+        (error) => {
+          console.error('Error deleting user:', error);
+        }
+      );
+      }
+
+    }
+    deleteAgent(prod: Productdto): void {
+      if (prod.serialNumber) {
+      this.stockservice.detachAgentFromProduct(prod.serialNumber).subscribe(
+        () => {
+          console.log('Agent deleted successfully.');
+          const productIndex = this.filterfinishforProds.findIndex(product => product.serialNumber === prod.serialNumber);
+          if (productIndex !== -1) {
+            this.filterfinishforProds[productIndex].agentProd = undefined;
+          }
+          },
+        (error) => {
+          console.error('Error deleting user:', error);
+        }
+      );
       }
     }
 }

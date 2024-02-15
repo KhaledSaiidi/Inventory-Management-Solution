@@ -7,7 +7,6 @@ import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IAgentProdService;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
-import jakarta.ws.rs.core.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -155,16 +154,14 @@ public class Controller {
 
     @DeleteMapping
     @RequestMapping("/detachAgentFromProduct/{serialNumber}")
-    public Response detachAgentFromProduct(@PathVariable String serialNumber) {
+    public void detachAgentFromProduct(@PathVariable String serialNumber) {
         iAgentProdService.detachAgentFromProduct(serialNumber);
-        return Response.ok().build();
     }
 
     @DeleteMapping
     @RequestMapping("/detachManagerFromProduct/{serialNumber}")
-    public Response detachManagerFromProduct(@PathVariable String serialNumber) {
+    public void detachManagerFromProduct(@PathVariable String serialNumber) {
         iAgentProdService.detachManagerFromProduct(serialNumber);
-        return Response.ok().build();
     }
 
 
