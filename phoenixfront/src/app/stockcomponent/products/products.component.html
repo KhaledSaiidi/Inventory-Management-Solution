@@ -79,7 +79,7 @@
                             </span></td> 
                            <ng-container *ngIf="prod.managerProd">
                             <td style="max-width: 50px; margin-right: -5px;">
-                              <a class="icon-link">
+                              <a class="icon-link" (click)="confirmManagerDeletion(prod)">
                                 <i class="fas fa-minus-circle icon" style="font-size: 12px;"></i>
                               </a>
                             </td>     
@@ -90,7 +90,7 @@
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
                         <ng-container *ngIf="prod.agentProd">
                         <td style="max-width: 50px; margin-right: -5px;">
-                          <a class="icon-link">
+                          <a class="icon-link" (click)="confirmAgentDeletion(prod)">
                             <i class="fas fa-minus-circle icon" style="font-size: 12px;"></i>
                           </a>
                         </td>  

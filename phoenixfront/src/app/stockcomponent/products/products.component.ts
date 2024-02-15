@@ -380,5 +380,22 @@ onPageChange(newPage: number): void {
       this.router.navigate(['/assignproducts'], { queryParams: { id: this.stockreference } });     
          
     }
+
+    confirmManagerDeletion(prod: Productdto): void {
+      const message = 'Are you sure you want to detach : ' + prod.managerProd?.firstname + ' ' + prod.managerProd?.lastname + ' From the product : '
+      + prod.serialNumber;
+      const confirmation = confirm(message);
+      if (confirmation) {
+        console.log(message);
+      }
+    }
+    confirmAgentDeletion(prod: Productdto): void {
+      const message = 'Are you sure you want to detach : ' + prod.agentProd?.firstname + ' ' + prod.agentProd?.lastname + ' From the product : '
+      + prod.serialNumber;
+      const confirmation = confirm(message);
+      if (confirmation) {
+        console.log(message);
+      }
+    }
 }
     
