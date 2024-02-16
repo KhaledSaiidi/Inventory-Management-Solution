@@ -176,8 +176,8 @@ updateStock(reference: string, stockDto: Stockdto): Observable<Stockdto> {
 
 
 
-assignAgentsToProd(agentProdDtos: AgentProdDto[]): Observable<AgentProdDto[]> {
-  return this.http.post<AgentProdDto[]>(this.apiUrl + '/assignAgentsToProd', agentProdDtos)
+assignAgentsToProd(agentProdDtos: AgentProdDto[]) {
+  return this.http.post(this.apiUrl + '/assignAgentsToProd', agentProdDtos)
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);

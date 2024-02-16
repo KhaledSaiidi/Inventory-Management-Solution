@@ -148,8 +148,8 @@ export class AssignproductsComponent implements OnInit {
       console.log(agentProdDtos);
 
       this.stockservice.assignAgentsToProd(agentProdDtos).subscribe(
-        (response) => {
-          console.log('Agents and managers assigned successfully:', response);
+        () => {
+          console.log('Agents and managers assigned successfully:');
           this.navigateToProducts(this.stockreference);
         },
         (error) => {

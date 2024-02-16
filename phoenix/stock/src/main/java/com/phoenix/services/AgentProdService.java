@@ -41,56 +41,43 @@ public class AgentProdService implements IAgentProdService{
 
     @Override
     @Transactional
-    public List<AgentProdDto> assignAgentandManager(AgentProdDto agentOnProds, AgentProdDto managerOnProds) {
+    public void assignAgentandManager(AgentProdDto agentOnProds, AgentProdDto managerOnProds) {
         if (agentOnProds == null && managerOnProds == null) {
             throw new IllegalArgumentException("At least one AgentProdDto must be provided");
         }
+        List<AgentProd> agentProdsToSave = new ArrayList<>();
+
+        LocalDate currentDate = LocalDate.now();
         List<ProductDto> productsdtoToassign = agentOnProds != null ?
                 agentOnProds.getProductsAssociated() : managerOnProds.getProductsAssociated();
         List<Product> productsToassign = iProductMapper.toEntityList(productsdtoToassign);
-        for (int i = 0; i < productsToassign.size(); i++) {
+        for(int i = 0; i < productsToassign.size(); i++) {
             Product product = productsToassign.get(i);
             ProductDto productDto = productsdtoToassign.get(i);
-            if(productDto.getStock() != null) {
-                StockDto stockDto = productDto.getStock();
-                product.setStock(iStockMapper.toEntity(stockDto));
-            }
-            if(productDto.getAgentProd() != null) {
-                AgentProdDto agentProddto = productDto.getAgentProd();
-                product.setAgentProd(iAgentProdMapper.toEntity(agentProddto));
-            }
-            if(productDto.getManagerProd() != null) {
-                AgentProdDto managerProddto = productDto.getManagerProd();
-                product.setManagerProd(iAgentProdMapper.toEntity(managerProddto));
-            }
 
-        }
-        LocalDate currentDate = LocalDate.now();
-        AgentProd agentProd = null;
-        AgentProd managerProd = null;
-        if (agentOnProds != null) {
-            agentProd = iAgentProdMapper.toEntity(agentOnProds);
-            agentProd.setAffectaiondate(currentDate);
-        }
-        if (managerOnProds != null) {
-            managerProd = iAgentProdMapper.toEntity(managerOnProds);
-            managerProd.setAffectaiondate(currentDate);
-        }
-        List<AgentProd> agentProdsToSave = new ArrayList<>();
-        if (agentProd != null) agentProdsToSave.add(agentProd);
-        if (managerProd != null) agentProdsToSave.add(managerProd);
-        List<AgentProdDto> agentProdsDtoSaved = new ArrayList<>();
-        if (!agentProdsToSave.isEmpty()) {
-            iAgentProdRepository.saveAll(agentProdsToSave);
-            agentProdsDtoSaved = iAgentProdMapper.toDtoList(agentProdsToSave);
-            for(Product product: productsToassign) {
+            AgentProd agentProd = null;
+            AgentProd managerProd = null;
+            if (agentOnProds != null && agentOnProds.getUsername() != null) {
+                agentProd = iAgentProdMapper.toEntity(agentOnProds);
+                agentProd.setAffectaiondate(currentDate);
+            }
+            if (managerOnProds != null && managerOnProds.getUsername() != null) {
+                managerProd = iAgentProdMapper.toEntity(managerOnProds);
+                managerProd.setAffectaiondate(currentDate);
+            }
+            if (agentProd != null) agentProdsToSave.add(agentProd);
+            if (managerProd != null) agentProdsToSave.add(managerProd);
+            if (!agentProdsToSave.isEmpty()) {
+                iAgentProdRepository.saveAll(agentProdsToSave);
                 AgentProd ancientAgentProd = null;
                 AgentProd ancientManagerProd = null;
-                if (product.getAgentProd() != null) {
-                    ancientAgentProd = product.getAgentProd();
+                if (productDto.getAgentProd() != null) {
+                    AgentProdDto ancientAgentProddto = productDto.getAgentProd();
+                    ancientAgentProd = iAgentProdMapper.toEntity(ancientAgentProddto);
                 }
-                if (product.getManagerProd() != null) {
-                    ancientManagerProd = product.getManagerProd();
+                if (productDto.getManagerProd() != null) {
+                    AgentProdDto ancientManagerDtoProd = productDto.getManagerProd();
+                    ancientManagerProd = iAgentProdMapper.toEntity(ancientManagerDtoProd);
                 }
                 if (agentProd != null) {
                     product.setAgentProd(agentProd);
@@ -98,19 +85,23 @@ public class AgentProdService implements IAgentProdService{
                 if (managerProd != null) {
                     product.setManagerProd(managerProd);
                 }
+                if(productDto.getStock() != null) {
+                    StockDto stockDto = productDto.getStock();
+                    product.setStock(iStockMapper.toEntity(stockDto));
+                }
                 iProductRepository.save(product);
-                if(ancientAgentProd != null){
+                if (ancientAgentProd != null) {
                     iAgentProdRepository.delete(ancientAgentProd);
                 }
-                if(ancientManagerProd != null){
+                if (ancientManagerProd != null) {
                     iAgentProdRepository.delete(ancientManagerProd);
                 }
             }
-        } else {
-            throw new IllegalStateException("No AgentProd entities to save.");
         }
-        return agentProdsDtoSaved;
     }
+
+
+
 
     @Override
     public AgentProdDto UpdateAgentonProd(String agentRef, AgentProdDto agentProdDto) {

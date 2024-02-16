@@ -126,15 +126,14 @@ public class Controller {
 
 
     @PostMapping("/assignAgentsToProd")
-    public ResponseEntity<List<AgentProdDto>> assignAgentAndManager(@RequestBody List<AgentProdDto> agentProdDtos) {
+    public void assignAgentAndManager(@RequestBody List<AgentProdDto> agentProdDtos) {
         AgentProdDto agentProd = null;
         AgentProdDto managerProd = null;
         for (AgentProdDto agent: agentProdDtos) {
             if(agent.isSeniorAdvisor()){managerProd = agent;}
             else {agentProd = agent;}
         }
-        List<AgentProdDto> assignedAgentdtoProds = iAgentProdService.assignAgentandManager(agentProd, managerProd);
-        return ResponseEntity.ok(assignedAgentdtoProds);
+        iAgentProdService.assignAgentandManager(agentProd, managerProd);
     }
 
     @GetMapping("getProductsPaginatedByusername/{username}")
