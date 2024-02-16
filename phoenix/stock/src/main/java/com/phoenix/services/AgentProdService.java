@@ -49,7 +49,7 @@ public class AgentProdService implements IAgentProdService{
 
         LocalDate currentDate = LocalDate.now();
         List<ProductDto> productsdtoToassign = agentOnProds != null ?
-                agentOnProds.getProductsAssociated() : managerOnProds.getProductsAssociated();
+                agentOnProds.getProductsAssociated() : managerOnProds.getProductsManaged();
         List<Product> productsToassign = iProductMapper.toEntityList(productsdtoToassign);
         for(int i = 0; i < productsToassign.size(); i++) {
             Product product = productsToassign.get(i);
@@ -79,21 +79,25 @@ public class AgentProdService implements IAgentProdService{
                     AgentProdDto ancientManagerDtoProd = productDto.getManagerProd();
                     ancientManagerProd = iAgentProdMapper.toEntity(ancientManagerDtoProd);
                 }
-                if (agentProd != null) {
+                if (agentProd != null && !agentProd.getUsername().isEmpty()) {
                     product.setAgentProd(agentProd);
+                } else {
+                    product.setAgentProd(ancientAgentProd);
                 }
-                if (managerProd != null) {
+                if (managerProd != null && !managerProd.getUsername().isEmpty()) {
                     product.setManagerProd(managerProd);
+                } else {
+                    product.setManagerProd(ancientManagerProd);
                 }
                 if(productDto.getStock() != null) {
                     StockDto stockDto = productDto.getStock();
                     product.setStock(iStockMapper.toEntity(stockDto));
                 }
                 iProductRepository.save(product);
-                if (ancientAgentProd != null) {
+                if (ancientAgentProd != null && agentProd != null) {
                     iAgentProdRepository.delete(ancientAgentProd);
                 }
-                if (ancientManagerProd != null) {
+                if (ancientManagerProd != null && managerProd != null) {
                     iAgentProdRepository.delete(ancientManagerProd);
                 }
             }
@@ -143,6 +147,31 @@ public class AgentProdService implements IAgentProdService{
                 iAgentProdRepository.delete(managerProd);
             }
         }
+    }
+
+    @Override
+    public List<AgentProdDto> getAssignementByusername(String username) {
+        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
+        List<AgentProdDto> agentProdDtos = new ArrayList<>();
+        if(!agentProds.isEmpty()){
+            agentProdDtos = iAgentProdMapper.toDtoList(agentProds);
+        }
+        return agentProdDtos;
+    }
+
+    @Override
+    public void UpdateAgentsbyUserssignementByusername(List<AgentProdDto> agentProdDtos) {
+        List<AgentProd> agentProds = iAgentProdMapper.toEntityList(agentProdDtos);
+        for (int i=0 ; i < agentProds.size(); i++){
+            AgentProd agentProd = agentProds.get(i);
+            AgentProdDto agentProdDto = agentProdDtos.get(i);
+            if (agentProdDto.getFirstname() != null) {agentProd.setFirstname(agentProdDto.getFirstname());}
+            if (agentProdDto.getLastname() != null) {agentProd.setLastname(agentProdDto.getLastname());}
+        }
+        System.out.println("received one : " + agentProdDtos);
+        System.out.println("executed one : " +agentProds);
+        iAgentProdRepository.saveAll(agentProds);
+
     }
 
 }

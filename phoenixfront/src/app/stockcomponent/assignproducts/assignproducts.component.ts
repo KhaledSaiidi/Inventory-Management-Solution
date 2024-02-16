@@ -125,7 +125,7 @@ export class AssignproductsComponent implements OnInit {
     onSubmit() {
       const manager: Userdto = this.assignForm.get('manager')?.value;
       const agent: Userdto = this.assignForm.get('agent')?.value;
-      const agentOnProds: AgentProdDto = {
+      const agentOnProds: AgentProdDto | null = agent?.username ? {
         username: agent.username,
         firstname: agent.firstName,
         lastname: agent.lastName,
@@ -133,8 +133,9 @@ export class AssignproductsComponent implements OnInit {
         receivedDate: this.stockdto.receivedDate,
         seniorAdvisor: false,
         productsAssociated: this.products
-      };
-      const managerOnProds: AgentProdDto = {
+      } : null;
+        
+      const managerOnProds: AgentProdDto | null = manager?.username ? {
         username: manager.username,
         firstname: manager.firstName,
         lastname: manager.lastName,
@@ -142,9 +143,18 @@ export class AssignproductsComponent implements OnInit {
         receivedDate: this.stockdto.receivedDate,
         seniorAdvisor: true,
         productsManaged: this.products
-      };
+      } : null;
+
       const agentProdDtos: AgentProdDto[] = [];
-      agentProdDtos.push(agentOnProds, managerOnProds);
+      if(agentOnProds && managerOnProds){
+        agentProdDtos.push(agentOnProds, managerOnProds);
+      }
+      if(agentOnProds){
+        agentProdDtos.push(agentOnProds);
+       }
+      if(managerOnProds) {
+        agentProdDtos.push(managerOnProds);
+      }
       console.log(agentProdDtos);
 
       this.stockservice.assignAgentsToProd(agentProdDtos).subscribe(

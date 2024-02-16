@@ -162,6 +162,16 @@ public class Controller {
     public void detachManagerFromProduct(@PathVariable String serialNumber) {
         iAgentProdService.detachManagerFromProduct(serialNumber);
     }
+    @GetMapping("getAssignedByusername/{username}")
+    public  List<AgentProdDto> getAssignedByusername(@PathVariable String username) {
+        List<AgentProdDto> agentProdDtos = iAgentProdService.getAssignementByusername(username);
+        return agentProdDtos;
+    }
+
+    @PutMapping("/UpdateAgentsbyUserssignementByusername")
+    public void UpdateAgentsbyUserssignementByusername(@RequestBody List<AgentProdDto> agentProdDtos) {
+        iAgentProdService.UpdateAgentsbyUserssignementByusername(agentProdDtos);
+    }
 
 
 }

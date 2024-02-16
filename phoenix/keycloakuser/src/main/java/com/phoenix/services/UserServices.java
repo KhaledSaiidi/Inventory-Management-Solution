@@ -3,6 +3,7 @@ package com.phoenix.services;
 import com.phoenix.config.KeycloakSecurityUtil;
 import com.phoenix.dto.UserMysqldto;
 import com.phoenix.dto.Userdto;
+import com.phoenix.dtostock.AgentProdDto;
 import com.phoenix.mapper.IMapper;
 import com.phoenix.mapper.UserMapper;
 import com.phoenix.model.UserMysql;
@@ -16,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 public class UserServices implements IUserServices {
     @Autowired
     KeycloakSecurityUtil keycloakUtil;
+    private final WebClient.Builder webClientBuilder;
 
     private final UserMysqlRepository userRepository;
     @Autowired
@@ -131,6 +136,37 @@ public class UserServices implements IUserServices {
 
             manager = userRepository.findByUsername(userDto.getManager().getUsername()).orElse(null);
             user.setManager(manager);
+        }
+        List<AgentProdDto> agentProdDtos =  webClientBuilder.build().get()
+                .uri("http://stock-service/stock/getAssignedByusername/{username}", userId)
+                .retrieve()
+                .bodyToFlux(AgentProdDto.class)
+                .collectList()
+                .block();
+        if(!agentProdDtos.isEmpty()){
+                for(AgentProdDto agentProdDto: agentProdDtos){
+                    if (userDto.getFirstName() != null) {
+                        agentProdDto.setFirstname(userDto.getFirstName());
+                    }
+                    if (userDto.getLastName() != null) {
+                        agentProdDto.setLastname(userDto.getLastName());
+                        }
+                    }
+            if (userDto.getFirstName() != null || userDto.getLastName() != null) {
+                System.out.println("agentProdDtos changes : " + agentProdDtos );
+                webClientBuilder.build().put()
+                        .uri("http://stock-service/stock/UpdateAgentsbyUserssignementByusername")
+                        .body(BodyInserters.fromValue(agentProdDtos))
+                        .exchangeToMono(response -> {
+                            if (response.statusCode().is2xxSuccessful()) {
+                                return Mono.empty();
+                            } else {
+                                return response.bodyToMono(String.class)
+                                        .flatMap(errorMsg -> Mono.error(new RuntimeException("Error: " + errorMsg)));
+                            }
+                        })
+                        .block();
+            }
         }
 
         UserMysql saveduser = userRepository.save(user);
