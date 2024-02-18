@@ -1,4 +1,4 @@
-<app-dashboard></app-dashboard>
+<!-- <app-dashboard></app-dashboard>
 <div class="popup-overlay" (click)="navigateToDashboard()">
   <div class="shadowed" (click)="navigateToDashboard()"></div>
   <div class="popup-content" (click)="$event.stopPropagation()">
@@ -6,30 +6,52 @@
       <h2>Barcode Scanning Options</h2>
     </div>
     <div class="popup-body">
-      <!-- Webcam placeholder -->
       <div *ngIf="!showCamera">
         <div class="webcam-placeholder-off">
           <p>Camera is off. Please enable it or choose an option to proceed.</p>
-          <!-- You can add a loading spinner or any other content here -->
         </div>
+      </div> -->
+      <div>
+        <audio id="barcodeSound" ></audio>
+        <div id="resultado"></div>
+        <div id="camera"></div>
+        <script src="quagga.min.js"></script>    
       </div>
-      <div *ngIf="showCamera" class="webcam-container mt-3">
-        <webcam
-          [trigger]="triggerObservable"
-          (imageCapture)="handleImage($event)"
-          (initError)="handleInitError($event)"
-        ></webcam>
-
-        <div class="text-center mt-3">
-          <button class="btn btn-danger btn-lg" type="button" (click)="handleCancel()">Cancel</button>
-        </div>
-      </div>
-      <div *ngIf="!showCamera">
+   <!--   <div *ngIf="!showCamera">
         <p class="action-text">Select an action: </p>
-        <button class="btn scan-btn add-btn" (click)="triggerSnapshot('add')">Register Product</button>
-        <button class="btn scan-btn sell-btn" (click)="triggerSnapshot('sell')">Confirm Sale</button>
-        <button class="btn scan-btn return-btn" (click)="triggerSnapshot('return')">Process Return</button>
+        <button class="btn scan-btn return-btn" (click)="scan()">Scan</button>
       </div>
     </div>
   </div>
-</div>
+</div> -->
+<script>
+  function playBarcodeSound() {
+      const audio = document.getElementById("barcodeSound");
+      audio.play();
+  }
+
+  Quagga.init({
+      inputStream: {
+          name: "Live",
+          type: "LiveStream",
+          target: document.querySelector('#camera')
+      },
+      decoder: {
+          readers: ["code_128_reader"]
+      }
+  }, function (err) {
+      if (err) {
+          console.log(err);
+          return
+      }
+      console.log("Initialization finished. Ready to start");
+      Quagga.start();
+  });
+
+  Quagga.onDetected(function (data) {
+      console.log(data.codeResult.code);
+      document.querySelector('#resultado').innerText = data.codeResult.code;
+      playBarcodeSound();
+  });
+
+</script>
