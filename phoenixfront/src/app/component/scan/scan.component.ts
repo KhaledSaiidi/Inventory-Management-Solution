@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BarcodescannerService } from 'src/app/services/barcodescanner.service';
 
 @Component({
   selector: 'app-scan',
@@ -9,17 +8,10 @@ import { BarcodescannerService } from 'src/app/services/barcodescanner.service';
 export class ScanComponent implements OnInit {
   barcodeData: string | null = null;
 
-  constructor(private barcodeScanner: BarcodescannerService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.barcodeScanner.initializeScanner();
-    this.barcodeScanner.startScanning();
 
   }
 
-
-  handleDetectedCode(code: string) {
-    this.barcodeData = code;
-    console.log("detected : " + code);
-  }
 }
