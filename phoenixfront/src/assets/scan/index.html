@@ -8,15 +8,16 @@
     <title> Ler Barcode </title>
     <style>
         #camera {
+
             max-height: 200px;
-            max-width: 400px;
+            max-width: 650px;
             position: relative;
             border: 2px solid blue;
             margin: 10px;
             overflow: hidden;
         }
         #camera video {
-            width: 400px !important; /* Set width of video */
+            width: 650px !important; /* Set width of video */
         }
 
         #overlay {
@@ -52,7 +53,6 @@
 <body>
     <audio id="barcodeSound" src="barcode.wav"></audio>
 
-    <div id="resultado"></div>
     <div id="camera">
         <div id="overlay">
             <div id="barcodeLine"></div>
@@ -61,6 +61,7 @@
     <script src="quagga.min.js"></script>
 
     <script>
+        const delayBetweenReads = 5000;
         function playBarcodeSound() {
             const audio = document.getElementById("barcodeSound");
             audio.play();
@@ -72,8 +73,8 @@
                 type: "LiveStream",
                 target: document.querySelector('#camera'),
                 constraints: {
-                    width: 640,
-                    height: 480,
+                    width: 650,
+                    height: 200,
                     facingMode: "environment"
                 }
 
@@ -87,15 +88,21 @@
                 console.log(err);
                 return
             }
-            console.log("Initialization finished. Ready to start");
             Quagga.start();
         });
 
-        Quagga.onDetected(function (data) {
-            console.log(data.codeResult.code);
-            document.querySelector('#resultado').innerText = data.codeResult.code;
-            playBarcodeSound();
-        });
+        let lastDetectionTime = 0;
+
+        Quagga.onDetected((data) => {
+  const currentTime = Date.now();
+
+  if (currentTime - lastDetectionTime >= delayBetweenReads) {
+    playBarcodeSound();
+    window.parent.postMessage({ barcode: data.codeResult.code }, '*');
+    lastDetectionTime = currentTime;
+
+  }  
+});
 
     </script>
 
