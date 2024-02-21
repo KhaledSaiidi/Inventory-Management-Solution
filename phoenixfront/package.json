@@ -22,6 +22,7 @@
     "html2pdf.js": "^0.10.1",
     "keycloak-angular": "^13.0.0",
     "ngx-webcam": "^0.4.1",
+    "quagga": "^0.12.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "xlsx": "^0.18.5",
