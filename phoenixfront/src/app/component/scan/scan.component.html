@@ -13,10 +13,19 @@
         
         <ng-container *ngIf="!showCamera else scan">
         <div>
+          <p>What is the stock you want to check ?</p>
+          <select class="form-control mt-2" type="text" style="margin-bottom: 15px;">   
+            <option>MMM</option>
+            <option>LLL</option>
+            <option>KKK</option>
+          </select>             
           <div class="webcam-placeholder-off">
-            <p>Camera is off. Please enable it to proceed products check.</p>
+            <p>Camera is off. Please enable it and choose a stock to proceed products check.</p>
           </div>
           <br>
+
+          <ng-container *ngIf="nostock" style="text-decoration:color(255, 0, 0);">You didn't choose a stock</ng-container>     
+                                                    <br>
           <button class="btn scan-btn add-btn" (click)="triggerSnapshot()">Enable Camera</button>  
         </div>
       </ng-container>

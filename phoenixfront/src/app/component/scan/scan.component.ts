@@ -1,5 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Stockdto } from 'src/app/models/inventory/Stock';
 
 @Component({
   selector: 'app-scan',
@@ -14,7 +15,7 @@ export class ScanComponent implements OnInit{
   containerWidth!: number | 'auto';
   barcodeData: string | null = null;
   barcodes: Set<string> = new Set(); 
-
+  stocks: Stockdto[] = [];
   ngOnInit() {
    this.listener();
   }
@@ -51,17 +52,21 @@ export class ScanComponent implements OnInit{
     }  
   }
 
-
+  nostock: boolean = false;
+  stockreference!: string;
   public triggerSnapshot(): void {
+    if(this.stockreference) {
     this.showCamera = true;
     const iframe = this.renderer.createElement('iframe');
     iframe.src = '../../../assets/scan/index.html';
     iframe.style.width = '700px';
     iframe.style.height = '250px'; 
     iframe.style.border = 'none';
-
     const container = this.renderer.selectRootElement('#scanner-container'); 
     this.renderer.appendChild(container, iframe);
+    } else {
+      this.nostock = true;
+    }
   }
 
   navigateToDashboard() {

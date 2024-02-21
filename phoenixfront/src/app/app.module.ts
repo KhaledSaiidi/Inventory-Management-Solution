@@ -11,7 +11,6 @@ import { SecurityService } from './services/security.service'
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
-import { OpenscanComponent } from './component/scanner/openscan/openscan.component';
 import { WebcamModule } from 'ngx-webcam';
 import { AgentsComponent } from './component/agents/agents.component';
 import { AddteamComponent } from './component/addteam/addteam.component';
@@ -40,7 +39,6 @@ import { ScanComponent } from './component/scan/scan.component';
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ,"AGENT"] }},
-  {path:'scan', component: OpenscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER", "AGENT"] }},
   {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ,"AGENT"] }},
   {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER","AGENT"] }},
@@ -94,7 +92,6 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     AppComponent,
     BaseComponent,
     DashboardComponent,
-    OpenscanComponent,
     AgentsComponent,
     AddteamComponent,
     UserInfoComponent,
