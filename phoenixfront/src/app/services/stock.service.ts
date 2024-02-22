@@ -230,4 +230,15 @@ UpdateAgentonProd(agentRef: string, agentProdDto: AgentProdDto): Observable<Agen
 
 
 
+getStocksByStocksReferences(): Observable<String[]> {
+  const apiUrl = this.apiUrl + '/getStocksByStocksReferences';
+  return this.http.get<String[]>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
 }

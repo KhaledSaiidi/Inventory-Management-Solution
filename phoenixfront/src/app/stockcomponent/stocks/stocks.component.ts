@@ -15,6 +15,7 @@ export class StocksComponent implements OnInit {
   constructor(private router: Router, private stockService: StockService, 
               private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef) {}
 
+  
   filterfinishforStocks!: Stockdto[];
   currentPage: number = 0;
   pageSize: number = 5;
@@ -24,9 +25,9 @@ export class StocksComponent implements OnInit {
   emptyStock: boolean = true;
   
   searchTerm: string = '';
-  async ngOnInit() {
+   ngOnInit() {
     try {
-      await this.getStocks(0, this.searchTerm);
+      this.getStocks(0, this.searchTerm);
       this.cdRef.detectChanges();
     } catch (error) {
       this.filterfinishforStocks = [];
@@ -44,7 +45,7 @@ export class StocksComponent implements OnInit {
             this.filterfinishforStocks = stocksPage.content;
             this.totalPages = stocksPage.totalPages;
             this.checkAndSetEmptyStocks();
-              this.cdRef.detectChanges();
+            this.cdRef.detectChanges();
           },
           (error) => {
             console.error('Error fetching stocks:', error);

@@ -19,4 +19,5 @@ public interface IStockService {
     List<UncheckHistory> getUncheckedHistorybyStockreference (String reference);
     StockDto UpdateStock(String reference, StockDto stockDto);
     List<StockDto> getStocksByCampaignRef(String campaignreference);
-}
+    List<String> getAllstockReferences();
+    }

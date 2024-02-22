@@ -21,7 +21,8 @@ public ngOnInit() {
   }
 
   navigateToscan() {
-    this.router.navigate(['/toscan']);
+    window.location.href = '/toscan';
+
   }
 
   

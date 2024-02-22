@@ -209,4 +209,19 @@ public class StockService implements IStockService{
             return null;
         }
     }
+
+    @Override
+    public List<String> getAllstockReferences() {
+        List<Stock> liststock = iStockRepository.findAll();
+        if (liststock.isEmpty()) {
+            return null;
+        }
+        List<String> liststockreferences = new ArrayList<>();
+        for(Stock stock: liststock) {
+            if(!stock.getStockReference().isEmpty()){
+                liststockreferences.add(stock.getStockReference());
+            }
+        }
+        return liststockreferences;
+    }
 }

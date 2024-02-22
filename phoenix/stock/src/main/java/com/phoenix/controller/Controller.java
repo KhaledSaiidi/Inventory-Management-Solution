@@ -173,5 +173,9 @@ public class Controller {
         iAgentProdService.UpdateAgentsbyUserssignementByusername(agentProdDtos);
     }
 
-
+    @GetMapping("getStocksByStocksReferences")
+    public List<String> getStocksByStocksReferences() {
+        List<String> liststockreferences = iStockService.getAllstockReferences();
+        return liststockreferences;
+    }
 }

@@ -1,14 +1,17 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import {  Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Stockdto } from 'src/app/models/inventory/Stock';
+import { StockService } from 'src/app/services/stock.service';
 
 @Component({
   selector: 'app-scan',
   templateUrl: './scan.component.html',
   styleUrls: ['./scan.component.css']
 })
-export class ScanComponent implements OnInit{
-  constructor(private renderer: Renderer2, private router: Router) {}
+export class ScanComponent implements OnInit {
+  constructor(private renderer: Renderer2, private router: Router,private stocksService: StockService) {}
+  
+
 
   showCamera = false;
   containerHeight!: number | 'auto';
@@ -19,7 +22,7 @@ export class ScanComponent implements OnInit{
   ngOnInit() {
    this.listener();
   }
-  
+
   public listener() {
     window.addEventListener('message', (event) => {
       if (event.data.barcode) {
@@ -53,7 +56,7 @@ export class ScanComponent implements OnInit{
   }
 
   nostock: boolean = false;
-  stockreference!: string;
+  stockreference: string = "kkk";
   public triggerSnapshot(): void {
     if(this.stockreference) {
     this.showCamera = true;
@@ -69,8 +72,20 @@ export class ScanComponent implements OnInit{
     }
   }
 
-  navigateToDashboard() {
-    this.router.navigate(['/dashboard']);
+  navigateTostocks() {
+    this.router.navigate(['/stocks']);
+  }
+
+  stockReferences: string[] = [];
+  getUserscategorized() {
+    this.stocksService.getStocksByStocksReferences().subscribe(
+      (data) => {
+        this.stockReferences = data as string[];        
+      },
+      (error: any) => {
+        console.error('Error fetching agents:', error);
+      }
+    );
   }
 }
 
