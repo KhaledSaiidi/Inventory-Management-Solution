@@ -1,5 +1,6 @@
 import {  Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject, debounceTime } from 'rxjs';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -18,11 +19,23 @@ export class ScanComponent implements OnInit {
   containerWidth!: number | 'auto';
   barcodeData: string | null = null;
   barcodes: Set<string> = new Set(); 
+  private barcodeChangeSubject: Subject<{ newValue: string, barcode: string }> = new Subject<{ newValue: string, barcode: string }>();
+
   stocks: Stockdto[] = [];
   ngOnInit() {
-   this.listener();
+    this.getStocksByStocksReferences();
+    this.listener();
+    this.barcodeChangeSubject.pipe(debounceTime(3000)).subscribe(({ newValue, barcode }) => {
+    this.barcodes.delete(barcode);
+    this.barcodes.add(newValue);
+  });
+
   }
 
+  onBarcodeChange(newValue: string, barcode: string) {
+    this.barcodeChangeSubject.next({ newValue, barcode });
+  }
+  
   public listener() {
     window.addEventListener('message', (event) => {
       if (event.data.barcode) {
@@ -32,9 +45,7 @@ export class ScanComponent implements OnInit {
         if (this.barcodeData.length >= 5 && !this.barcodes.has(this.barcodeData)) {
           this.barcodes.add(this.barcodeData);
 
-          this.barcodes.forEach((barcode) => {
-            console.log(`Barcode: ${barcode}`);
-          });
+          console.log(JSON.stringify([...this.barcodes]));
 
           } else if (this.barcodeData.length < 5) {
           console.warn("Ignoring barcode less than 5 characters:", this.barcodeData);
@@ -56,7 +67,7 @@ export class ScanComponent implements OnInit {
   }
 
   nostock: boolean = false;
-  stockreference: string = "kkk";
+  stockreference!: string;
   public triggerSnapshot(): void {
     if(this.stockreference) {
     this.showCamera = true;
@@ -77,7 +88,7 @@ export class ScanComponent implements OnInit {
   }
 
   stockReferences: string[] = [];
-  getUserscategorized() {
+  getStocksByStocksReferences() {
     this.stocksService.getStocksByStocksReferences().subscribe(
       (data) => {
         this.stockReferences = data as string[];        
@@ -86,6 +97,18 @@ export class ScanComponent implements OnInit {
         console.error('Error fetching agents:', error);
       }
     );
+  }
+
+  selectedStock: string ="Select a stock to proceed !";
+  extractStockReference(selectedValue: string) {
+    const stockReference = selectedValue.split(' ')[0];
+    this.stockreference = stockReference
+    console.log(stockReference);
+  }
+  
+
+  proceedCheck(){
+
   }
 }
 

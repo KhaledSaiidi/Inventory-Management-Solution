@@ -4,15 +4,15 @@
   position: relative;
   top: 200px;
   left: 28%;
-  width: 55%; 
+  width: 750px; 
   height: 50%;
-      justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
   }
   
   .popup-content {
     background: #fff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 700px;
@@ -39,13 +39,7 @@
     justify-content: center;
     align-items: center;
   }
-  
-  .webcam-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
+    
   .action-text {
     color: #333;
     font-size: 16px;
@@ -62,21 +56,7 @@
   .btn-danger:hover {
     background-color: #c82333;
   }
-  
-  .cancel-btn {
-    background-color: #dc3545;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .cancel-btn:hover {
-    background-color: #c82333;
-  }
-  
+    
   .btn {
     padding: 12px 20px;
     border-radius: 6px;
@@ -111,3 +91,19 @@
       .scanner-container {
         align-items: center;
       }
+
+      .cancel-icon {
+        position: absolute;
+        top: 10px;
+        right: 55px;
+        cursor: pointer;
+      }
+      
+      .cancel-icon:hover {
+        background-color: red;
+        border-radius: 30%;
+        padding: 5px; 
+        color: white;
+      }
+      
+      

@@ -218,7 +218,16 @@ public class StockService implements IStockService{
         }
         List<String> liststockreferences = new ArrayList<>();
         for(Stock stock: liststock) {
-            if(!stock.getStockReference().isEmpty()){
+            Campaigndto campaigndto = webClientBuilder.build().get()
+                    .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stock.getCampaignRef())
+                    .retrieve()
+                    .bodyToMono(Campaigndto.class)
+                    .block();
+            if(!stock.getStockReference().isEmpty() && !campaigndto.getCampaignName().isEmpty()){
+                String stockPlusCampaign = stock.getStockReference() +" - "+"Campain : " +campaigndto.getCampaignName();
+                liststockreferences.add(stockPlusCampaign);
+            }
+            else if(!stock.getStockReference().isEmpty()){
                 liststockreferences.add(stock.getStockReference());
             }
         }
