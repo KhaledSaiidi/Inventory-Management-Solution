@@ -27,10 +27,14 @@ public class AgentProd {
     private boolean seniorAdvisor;
     @OneToMany(mappedBy = "managerProd")
     private List<Product> productsManaged;
+    @OneToMany(mappedBy = "managerSoldProd")
+    private List<SoldProduct> soldproductsManaged;
     @OneToMany(mappedBy = "agentWhoSold")
-    private List<Product> productsSoldBy;
+    private List<SoldProduct> productsSoldBy;
     @OneToMany(mappedBy = "agentProd")
     private List<Product> productsAssociated;
+    @OneToMany(mappedBy = "agentSoldProd")
+    private List<SoldProduct> soldproductsAssociated;
 
     @PrePersist
     private void generateReference() {

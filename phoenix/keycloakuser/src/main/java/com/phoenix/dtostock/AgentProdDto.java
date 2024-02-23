@@ -20,7 +20,9 @@ public class AgentProdDto {
     private LocalDate receivedDate;
     private boolean seniorAdvisor;
     private List<ProductDto> productsManaged;
-    private List<ProductDto> productsSoldBy;
     private List<ProductDto> productsAssociated;
+    private List<SoldProductDto> soldproductsManaged;
+    private List<SoldProductDto> productsSoldBy;
+    private List<SoldProductDto> soldproductsAssociated;
 
 }

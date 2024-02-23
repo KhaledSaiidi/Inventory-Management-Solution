@@ -1,3 +1,3 @@
 package com.phoenix.dtostock;
 
-public enum State {soldProd, notSoldProd, returnedProd}
+public enum State {prod, returnedProd}

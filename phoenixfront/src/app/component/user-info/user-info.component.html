@@ -266,7 +266,6 @@
         </ng-container>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 60px;">Box</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product State</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigned Date</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Remaining Dates</th>
@@ -291,7 +290,6 @@
           </ng-container>
          <td style="word-wrap: break-word; white-space: normal;">{{prod.boxNumber}}</td>  
          <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
-         <td style="word-wrap: break-word; white-space: normal;">{{prod.state}}</td>  
          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.affectaiondate | date: 'medium' | slice: 0:12}}</td>  
          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.duesoldDate | date: 'medium' | slice: 0:12}}</td>  
          <td style="word-wrap: break-word; white-space: normal; text-align: center;" [ngStyle]="{ 'background-color': getRemainingDates(prod.agentProd?.duesoldDate) < 0 ? 'red' : '', 'color': getRemainingDates(prod.agentProd?.duesoldDate) < 0 ? 'white' : 'black' }">
@@ -302,7 +300,7 @@
          <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
         </tr>
         <tr>
-          <td colspan="14" style="margin-right: 5px;">
+          <td colspan="13" style="margin-right: 5px;">
             <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
            </td>
           </tr>

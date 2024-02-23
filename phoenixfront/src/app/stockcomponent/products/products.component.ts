@@ -140,18 +140,6 @@ onPageChange(newPage: number): void {
 } 
         
 
-  getStateText(state: string): string {
-    switch (state) {
-      case 'soldProd':
-        return 'Sold';
-      case 'notSoldProd':
-        return 'Not sold';
-      case 'returnedProd':
-        return 'Returned';
-      default:
-        return 'Unknown';
-    }
-  }
 
   navigateToUpdateProduct(ref1?: string, ref2?: string) {
     if (ref1 === undefined || ref2 === undefined) {

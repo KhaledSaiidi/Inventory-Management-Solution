@@ -1,28 +1,28 @@
-package com.phoenix.dtostock;
+package com.phoenix.dto;
 
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class SoldProductDto {
     private String serialNumber;
     private String simNumber;
+    private LocalDate checkout;
     private LocalDate checkin;
     private String boxNumber;
-    private String brand;
+    private boolean checkedSell;
     private String productType;
+    private String brand;
     private String prodName;
     private String comments;
     private BigDecimal price;
-    private State state;
-    private boolean checkedExistence;
     private StockDto stock;
-    private AgentProdDto agentProd;
-    private AgentProdDto managerProd;
+    private AgentProdDto managerSoldProd;
+    private AgentProdDto agentWhoSold;
+    private AgentProdDto agentSoldProd;
 }

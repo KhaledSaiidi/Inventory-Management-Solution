@@ -1,1 +1,1 @@
-export enum State {soldProd, notSoldProd, returnedProd}
+export enum State {prod, returnedProd}

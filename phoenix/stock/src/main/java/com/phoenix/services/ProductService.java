@@ -62,7 +62,7 @@ public class ProductService implements IProductService{
 
     @Override
     public void addProduct(ProductDto productDto) {
-        productDto.setState(State.notSoldProd);
+        productDto.setState(State.prod);
         Product product = iProductMapper.toEntity(productDto);
         Stock stock = iStockMapper.toEntity(productDto.getStock());
         if (stock.getStockValue() == null) {
@@ -146,17 +146,14 @@ public class ProductService implements IProductService{
         BigDecimal tochangeValue = BigDecimal.ZERO;
         if (product == null) {return null;}
         if (productDto.getSimNumber() != null) {product.setSimNumber(productDto.getSimNumber());}
-        if (productDto.getCheckout() != null) {product.setCheckout(productDto.getCheckout());}
         if (productDto.getCheckin() != null) {product.setCheckin(productDto.getCheckin());}
         if (productDto.getBoxNumber() != null) {product.setBoxNumber(productDto.getBoxNumber());}
-        if (productDto.isCheckedSell()) {product.setCheckedSell(productDto.isCheckedSell());}
         if (productDto.getBrand() != null) {product.setBrand(productDto.getBrand());}
         if (productDto.getProductType() != null) {product.setProductType(productDto.getProductType());}
         if (productDto.getProdName() != null) {product.setProdName(productDto.getProdName());}
         if (productDto.getComments() != null) {product.setComments(productDto.getComments());}
         if (productDto.getPrice() != null) {product.setPrice(productDto.getPrice());}
         if (productDto.getState() != null) {product.setState(productDto.getState());}
-        if (productDto.getSoldDate() != null) {product.setSoldDate(productDto.getSoldDate());}
         if (productDto.isCheckedExistence()) {product.setCheckedExistence(productDto.isCheckedExistence());}
         if (productDto.getPrice() != null) {
             tochangeValue = product.getPrice();
@@ -185,9 +182,6 @@ public class ProductService implements IProductService{
         }
         if(product.getManagerProd() != null) {
             productDto.setManagerProd(iAgentProdMapper.toDto(product.getManagerProd()));
-        }
-        if(product.getAgentWhoSold() != null) {
-            productDto.setAgentWhoSold(iAgentProdMapper.toDto(product.getAgentWhoSold()));
         }
         return productDto;
     }
@@ -292,7 +286,7 @@ public class ProductService implements IProductService{
                             .serialNumber(csvLine.getSerialNumber())
                             .simNumber(csvLine.getSimNumber())
                             .productType(csvLine.getProductType())
-                            .state(State.notSoldProd)
+                            .state(State.prod)
                             .build())
                     .collect(Collectors.toSet());
         }

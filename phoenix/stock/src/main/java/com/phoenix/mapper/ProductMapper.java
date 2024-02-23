@@ -14,17 +14,14 @@ public class ProductMapper implements IProductMapper{
         ProductDto productDto = new ProductDto();
         productDto.setSerialNumber(product.getSerialNumber());
         productDto.setSimNumber(product.getSimNumber());
-        productDto.setCheckout(product.getCheckout());
         productDto.setCheckin(product.getCheckin());
         productDto.setBoxNumber(product.getBoxNumber());
-        productDto.setCheckedSell(product.isCheckedSell());
         productDto.setBrand(product.getBrand());
         productDto.setProductType(product.getProductType());
         productDto.setProdName(product.getProdName());
         productDto.setComments(product.getComments());
         productDto.setPrice(product.getPrice());
         productDto.setState(product.getState());
-        productDto.setSoldDate(product.getSoldDate());
         productDto.setCheckedExistence(product.isCheckedExistence());
         return productDto;
     }
@@ -33,17 +30,14 @@ public class ProductMapper implements IProductMapper{
         Product product = new Product();
         product.setSerialNumber(productDto.getSerialNumber());
         product.setSimNumber(productDto.getSimNumber());
-        product.setCheckout(productDto.getCheckout());
         product.setCheckin(productDto.getCheckin());
         product.setBoxNumber(productDto.getBoxNumber());
-        product.setCheckedSell(productDto.isCheckedSell());
         product.setBrand(productDto.getBrand());
         product.setProductType(productDto.getProductType());
         product.setProdName(productDto.getProdName());
         product.setComments(productDto.getComments());
         product.setPrice(productDto.getPrice());
         product.setState(productDto.getState());
-        product.setSoldDate(productDto.getSoldDate());
         product.setCheckedExistence(productDto.isCheckedExistence());
         return product;
     }

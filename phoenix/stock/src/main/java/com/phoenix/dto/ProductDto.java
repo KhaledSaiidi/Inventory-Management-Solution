@@ -17,20 +17,16 @@ import java.time.LocalDate;
 public class ProductDto {
     private String serialNumber;
     private String simNumber;
-    private LocalDate checkout;
     private LocalDate checkin;
     private String boxNumber;
-    private boolean checkedSell;
     private String brand;
     private String productType;
     private String prodName;
     private String comments;
     private BigDecimal price;
     private State state;
-    private LocalDate soldDate;
     private boolean checkedExistence;
     private StockDto stock;
     private AgentProdDto agentProd;
     private AgentProdDto managerProd;
-    private AgentProdDto agentWhoSold;
 }
