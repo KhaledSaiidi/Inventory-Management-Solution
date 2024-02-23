@@ -108,6 +108,13 @@ export class ScanComponent implements OnInit {
   
 
   proceedCheck(){
+    this.stocksService.checkProducts(this.stockreference, this.barcodes)
+    .subscribe(response => {
+      console.log(response);
+      this.navigateTostocks();
+    }, error => {
+      console.error(error);
+    });
 
   }
 }

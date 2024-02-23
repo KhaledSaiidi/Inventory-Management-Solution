@@ -354,4 +354,29 @@ public class ProductService implements IProductService{
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
 
+
+    @Override
+    public void checkProds(String stockreference, Set<String> prodsref) {
+        Optional<Stock> optionalStock = iStockRepository.findById(stockreference);
+        if (optionalStock.isPresent()) {
+            Stock stock = optionalStock.get();
+            List<Product> products = iProductRepository.findByStock(stock);
+            List<Product> productsTosave = new ArrayList<>();
+            boolean stockchecked = true;
+            for (Product product : products) {
+                if (prodsref.contains(product.getSerialNumber()) || prodsref.contains(product.getSimNumber())) {
+                    product.setCheckedExistence(true);
+                    productsTosave.add(product);
+                } else {
+                    stockchecked = false;
+                }
+            }
+            if (stockchecked) {
+                stock.setChecked(true);
+            }
+            iProductRepository.saveAll(productsTosave);
+            iStockRepository.save(stock);
+        }
     }
+
+}

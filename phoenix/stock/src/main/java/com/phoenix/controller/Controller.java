@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class Controller {
@@ -178,4 +179,11 @@ public class Controller {
         List<String> liststockreferences = iStockService.getAllstockReferences();
         return liststockreferences;
     }
+
+    @PostMapping("/stockcheck/{stockReference}")
+    public ResponseEntity<String> checkProducts(@PathVariable String stockReference, @RequestBody Set<String> prodsRef) {
+            iProductService.checkProds(stockReference, prodsRef);
+            return ResponseEntity.ok("Products checked successfully.");
+    }
+
 }

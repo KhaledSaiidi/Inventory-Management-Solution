@@ -8,6 +8,7 @@ import { UncheckHistory } from '../models/inventory/UncheckHistory';
 import { StockPage } from '../models/inventory/StockPage';
 import { ProductPage } from '../models/inventory/ProductPage';
 import { AgentProdDto } from '../models/inventory/AgentProdDto';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -240,5 +241,16 @@ getStocksByStocksReferences(): Observable<String[]> {
       })
     );
 }
+
+checkProducts(stockReference: string, prodsRef: Set<string>): Observable<string> {
+  return this.http.post(this.apiUrl + '/stockcheck/' + stockReference, prodsRef, { responseType: 'arraybuffer' })
+    .pipe(
+      map(response => {
+        const decoder = new TextDecoder('utf-8');
+        return decoder.decode(response);
+      })
+    );
+}
+
 
 }
