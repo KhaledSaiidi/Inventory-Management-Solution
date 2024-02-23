@@ -368,12 +368,12 @@ public class ProductService implements IProductService{
                     product.setCheckedExistence(true);
                     productsTosave.add(product);
                 } else {
-                    stockchecked = false;
+                    if (!product.isCheckedExistence()) {
+                        stockchecked = false;
+                    }
                 }
             }
-            if (stockchecked) {
-                stock.setChecked(true);
-            }
+            stock.setChecked(stockchecked);
             iProductRepository.saveAll(productsTosave);
             iStockRepository.save(stock);
         }
