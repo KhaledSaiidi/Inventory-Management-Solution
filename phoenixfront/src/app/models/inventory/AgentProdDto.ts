@@ -1,4 +1,5 @@
 import { Productdto } from "./ProductDto";
+import { SoldProductDto } from "./SoldProductDto";
 
 export interface AgentProdDto {
      agentRef?: string;
@@ -10,6 +11,10 @@ export interface AgentProdDto {
      receivedDate?: Date;
      seniorAdvisor?: boolean;
      productsManaged?: Productdto[];
-     productsSoldBy?: Productdto[];
      productsAssociated?: Productdto[];
+
+     soldproductsManaged?: SoldProductDto[];
+     productsSoldBy?: SoldProductDto[];
+     agentproductsAssociated?: SoldProductDto[];
+ 
 }

@@ -21,11 +21,8 @@ public class StockDto {
     private LocalDate dueDate;
     private boolean checked;
     private String notes;
-
     private Campaigndto campaigndto;
     private BigDecimal stockValue;
-
     private List<ProductDto> products;
     private List<SoldProductDto> soldproducts;
-
 }

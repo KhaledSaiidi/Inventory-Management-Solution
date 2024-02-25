@@ -43,9 +43,10 @@ export class AddproductComponent implements OnInit{
     initializeForm() {
       this.prodForm = this.fb.group({
         serialNumber: [''],
+        sim: [''],
         productType: [''],
         productName: [''],
-        brand: [''],
+        boxNumber: [''],
         price: [''],
         productDescription: ['']
       });
@@ -76,10 +77,12 @@ export class AddproductComponent implements OnInit{
     onSubmit(){
     const productdto: Productdto = {
       serialNumber: this.prodForm.get('serialNumber')?.value,
+      simNumber: this.prodForm.get('sim')?.value,
       productType: this.prodForm.get('productType')?.value,
       prodName: this.prodForm.get('productName')?.value,
       price: this.prodForm.get('price')?.value,
-      brand: this.prodForm.get('brand')?.value,
+      boxNumber: this.prodForm.get('boxNumber')?.value,
+      comments: this.prodForm.get('productDescription')?.value,
       stock: this.stockdto
     }
     console.log(productdto);

@@ -124,7 +124,7 @@
             </ul>
           </div>
           <br>
-          <div class="sidenav-footer mx-3 " style="margin-top: 30px;">
+          <div class="sidenav-footer mx-3 ">
             <div class="card card-plain shadow-none" id="sidenavCard">
               <img class="w-20 mx-auto" src="../../assets/img/scanbarcode.png" alt="sidebar_illustration">
               <div class="card-body text-center p-3 w-100 pt-0">
@@ -135,6 +135,7 @@
             </div>
             
             <a class="btn btn-primary btn-sm mb-0 w-100" type="button" style="cursor: pointer;" (click)="navigateToscan()">Scan</a>
+            <a class="btn btn-primary btn-sm mb-0 w-100" type="button" style="cursor: pointer; margin-top: 10px; margin-bottom: 10px; "  (click)="navigateTosell(securityService.profile?.username)">Sell Prod</a>
           </div>
         </aside>
         </section>

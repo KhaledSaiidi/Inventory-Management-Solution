@@ -253,4 +253,15 @@ checkProducts(stockReference: string, prodsRef: Set<string>): Observable<string>
 }
 
 
+sellProduct(agentProdDto: AgentProdDto, prodRef: string): Observable<number> {
+  return this.http.post<number>(this.apiUrl + '/sellProduct/'+ prodRef, agentProdDto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
 }

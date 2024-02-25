@@ -264,6 +264,8 @@ public class ProductService implements IProductService{
             List<Product> products = iProductMapper.toEntityList(productDtos);
             products.forEach(product -> product.setStock(stock));
             iProductRepository.saveAll(products);
+            stock.setChecked(false);
+            iStockRepository.save(stock);
             return productDtos.size();
         }
     }

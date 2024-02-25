@@ -1,16 +1,23 @@
 import {  Component, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Userdto } from 'src/app/models/agents/Userdto';
+import { AgentProdDto } from 'src/app/models/inventory/AgentProdDto';
 import { Stockdto } from 'src/app/models/inventory/Stock';
+import { AgentsService } from 'src/app/services/agents.service';
+import { SecurityService } from 'src/app/services/security.service';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
-  selector: 'app-scan',
-  templateUrl: './scan.component.html',
-  styleUrls: ['./scan.component.css']
+  selector: 'app-sellprod',
+  templateUrl: './sellprod.component.html',
+  styleUrls: ['./sellprod.component.css']
 })
-export class ScanComponent implements OnInit {
-  constructor(private renderer: Renderer2, private router: Router,private stocksService: StockService) {}
+export class SellprodComponent implements OnInit {
+  constructor(private renderer: Renderer2, private router: Router,
+    private stocksService: StockService,
+    public securityService: SecurityService,
+    private route: ActivatedRoute) {}
   
 
 
@@ -23,15 +30,18 @@ export class ScanComponent implements OnInit {
 
   stocks: Stockdto[] = [];
   ngOnInit() {
+    this.route.queryParamMap.subscribe(params => {
+      const id = params.get('id');
+    });
     this.getStocksByStocksReferences();
     this.listener();
     this.barcodeChangeSubject.subscribe(({ newValue, barcode }) => {
       this.barcodes.delete(barcode);
       this.barcodes.add(newValue);
     });
-  
-  }
 
+  }
+  
   onBarcodeChange(newValue: string, barcode: string) {
     this.barcodeChangeSubject.next({ newValue, barcode });
     this.updateSomethingBasedOnBarcodeChange(newValue, barcode);
@@ -90,10 +100,6 @@ export class ScanComponent implements OnInit {
     }
   }
 
-  navigateTostocks() {
-    this.router.navigate(['/stocks']);
-  }
-
   stockReferences: string[] = [];
   getStocksByStocksReferences() {
     this.stocksService.getStocksByStocksReferences().subscribe(
@@ -114,16 +120,33 @@ export class ScanComponent implements OnInit {
   }
   
 
-  proceedCheck(){
-    this.stocksService.checkProducts(this.stockreference, this.barcodes)
-    .subscribe(response => {
-      console.log(response);
-      this.navigateTostocks();
-    }, error => {
-      console.error(error);
-    });
-
+  navigateToUserdetails(userName?: string) {
+    if (userName === undefined) {
+      console.log('Invalid Username');
+      return;
+    }
+    this.router.navigate(['/userdetails'], { queryParams: { id: userName } });      
   }
+
+  agentProd!: AgentProdDto;
+  proceedsell(){
+    if (this.barcodes.size > 0) {
+      const firstBarcode = this.barcodes.values().next().value;
+      this.agentProd = {
+          username: this.securityService.profile?.username,
+          firstname: this.securityService.profile?.firstName,
+          lastname: this.securityService.profile?.lastName
+      }
+      this.stocksService.sellProduct(this.agentProd, firstBarcode)
+      .subscribe(response => {
+      this.navigateToUserdetails(this.securityService.profile?.username);
+        }, error => {
+            console.error(error);
+        });
+  } else {
+      console.log("No barcodes available");
+  }
+}
 }
 
  

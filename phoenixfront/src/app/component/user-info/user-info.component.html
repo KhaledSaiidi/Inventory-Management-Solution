@@ -47,7 +47,7 @@
               </div>
             </div>
             
-           <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
+    <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
       <div class="nav-wrapper position-relative end-0" style="height: 100%;">
         <ul class="nav nav-pills nav-fill p-1" role="tablist">
           <li class="nav-item" [class.selected]="selectedTab === 0" style="cursor: pointer;">
@@ -269,7 +269,6 @@
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigned Date</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Remaining Dates</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
         </tr>
       </thead>
@@ -294,13 +293,12 @@
          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.duesoldDate | date: 'medium' | slice: 0:12}}</td>  
          <td style="word-wrap: break-word; white-space: normal; text-align: center;" [ngStyle]="{ 'background-color': getRemainingDates(prod.agentProd?.duesoldDate) < 0 ? 'red' : '', 'color': getRemainingDates(prod.agentProd?.duesoldDate) < 0 ? 'white' : 'black' }">
           {{ getRemainingDates(prod.agentProd?.duesoldDate) }} </td>  
-         <td style="word-wrap: break-word; white-space: normal; text-align: center;">{{ prod.soldDate ? (prod.soldDate | date: 'medium' | slice: 0:12) : 'X' }}</td>  
         
           <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-edit"></i></a></td>
          <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
         </tr>
         <tr>
-          <td colspan="13" style="margin-right: 5px;">
+          <td colspan="12" style="margin-right: 5px;">
             <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
            </td>
           </tr>

@@ -35,6 +35,7 @@ import { CustomPaginationComponent } from './services/custom-pagination/custom-p
 import { StocksComponent } from './stockcomponent/stocks/stocks.component';
 import { AssignproductsComponent } from './stockcomponent/assignproducts/assignproducts.component';
 import { ScanComponent } from './component/scan/scan.component';
+import { SellprodComponent } from './component/sellprod/sellprod.component';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -59,7 +60,9 @@ const appRoute: Routes = [
   {path:'checkhistory', component: CheckhistoryComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'updatestock', component: UpdatestockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'assignproducts', component: AssignproductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'toscan', component: ScanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
+  {path:'toscan', component: ScanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'scantosell', component: SellprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
+
 
 ]
 
@@ -114,7 +117,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     CustomPaginationComponent,
     StocksComponent,
     AssignproductsComponent,
-    ScanComponent
+    ScanComponent,
+    SellprodComponent
   ],
   imports: [
     BrowserModule,

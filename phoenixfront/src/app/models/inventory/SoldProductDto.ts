@@ -1,20 +1,20 @@
 import { AgentProdDto } from "./AgentProdDto";
-import { State } from "./State";
 import { Stockdto } from "./Stock";
 
-export interface Productdto {
+export interface SoldProductDto {
     serialNumber?: string;
     simNumber?: string;
-    checkin?: Date;
-    boxNumber?: string;
+    checkout?: Date;
+    checkedSell?: boolean;
     brand?: string;
     productType?: string;
     prodName?: string;
     comments?: string;
     price?: number;
-    state?: State;
-    checkedExistence?: boolean;
+    soldDate?: Date;
     stock?: Stockdto;
-    agentProd?: AgentProdDto;
-    managerProd?: AgentProdDto;
+    managerSoldProd?: AgentProdDto;
+    agentAssociatedProd?: AgentProdDto;
+    agentWhoSold?: AgentProdDto;
+
 }

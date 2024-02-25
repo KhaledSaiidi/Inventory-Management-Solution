@@ -15,10 +15,16 @@
               <div class="card-body">
                 <p class="text-uppercase text-sm">Product Information</p>  
                 <form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
+                  <div class="row"> 
                   <div class="col-md-6">
                     <label for="serialNumber">Serial Number</label>
                     <input type="text" class="form-control mt-2" id="serialNumber" formControlName="serialNumber" >
-                </div> 
+                </div>
+                <div class="col-md-6">
+                  <label for="serialNumber">SIM Number</label>
+                  <input type="text" class="form-control mt-2" id="sim" formControlName="sim" >
+              </div>
+              </div>
                   <div class="row"> 
                   <div class="col-md-6">
                           <label for="productType">Product Type</label>
@@ -28,8 +34,8 @@
                             
                       </div>
                       <div class="col-md-6">
-                        <label for="brand">Brand</label>
-                        <input type="text" class="form-control mt-2" id="brand" formControlName="brand" >
+                        <label for="boxNumber">Box Number</label>
+                        <input type="number" class="form-control mt-2" id="boxNumber" formControlName="boxNumber" >
                     </div> 
                   <div class="col-md-6">
                             <label for="productName">Product Model</label>
@@ -40,7 +46,7 @@
                       <input type="text" class="form-control mt-2" id="price" formControlName="price" appNumericOnly>
                   </div> 
                   <div class="col-md-12">
-                      <label for="productDescription">Product Description</label>
+                      <label for="productDescription">Comments</label>
                       <textarea class="form-control mt-2" id="productDescription" formControlName="productDescription" rows="3"></textarea>
                   </div>
                    

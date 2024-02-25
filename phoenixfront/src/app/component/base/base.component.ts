@@ -22,9 +22,15 @@ public ngOnInit() {
 
   navigateToscan() {
     window.location.href = '/toscan';
-
   }
-
+  
+  navigateTosell(userName?: string) {
+    if (userName === undefined) {
+      console.log('Invalid Username');
+      return;
+    }
+    this.router.navigate(['/scantosell'], { queryParams: { id: userName } });      
+  }
   
   navigateToUserdetails(userName?: string) {
     if (userName === undefined) {

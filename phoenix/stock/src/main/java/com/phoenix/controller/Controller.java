@@ -191,9 +191,10 @@ public class Controller {
 
 
     @PostMapping("/sellProduct/{prodRef}")
-    public ResponseEntity<String> sellProduct(@PathVariable("prodRef") String prodRef, @RequestBody AgentProdDto agentProdDto) {
+    public ResponseEntity<AgentProdDto> sellProduct(@PathVariable("prodRef") String prodRef, @RequestBody AgentProdDto agentProdDto) {
         isoldProductService.sellProduct(prodRef, agentProdDto);
-        return ResponseEntity.ok("Product sold");
+        return ResponseEntity.ok(agentProdDto);
+
     }
 
 }

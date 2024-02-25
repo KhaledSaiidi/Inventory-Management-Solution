@@ -25,3 +25,4 @@ public class SoldProductDto {
     private AgentProdDto agentWhoSold;
     private AgentProdDto agentAssociatedProd;
 }
+

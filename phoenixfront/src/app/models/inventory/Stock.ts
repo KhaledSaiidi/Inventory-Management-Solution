@@ -1,5 +1,6 @@
 import { Campaigndto } from "../agents/Campaigndto";
 import { Productdto } from "./ProductDto";
+import { SoldProductDto } from "./SoldProductDto";
 
 export interface Stockdto {
     stockReference?: string;
@@ -13,4 +14,5 @@ export interface Stockdto {
     products?: Productdto[];
     campaigndto?: Campaigndto;
     stockValue?: number;
+    soldproducts?: SoldProductDto[];
 }

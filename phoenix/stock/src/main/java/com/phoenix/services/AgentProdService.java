@@ -65,6 +65,14 @@ public class AgentProdService implements IAgentProdService{
                 managerProd = iAgentProdMapper.toEntity(managerOnProds);
                 managerProd.setAffectaiondate(currentDate);
             }
+            //
+
+
+
+
+
+
+            //
             if (agentProd != null) agentProdsToSave.add(agentProd);
             if (managerProd != null) agentProdsToSave.add(managerProd);
             if (!agentProdsToSave.isEmpty()) {
