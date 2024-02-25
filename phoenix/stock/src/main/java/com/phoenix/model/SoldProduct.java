@@ -21,8 +21,7 @@ public class SoldProduct {
     private String serialNumber;
     private String simNumber;
     private LocalDate checkout;
-    private LocalDate checkin;
-    private String boxNumber;
+    private LocalDate soldDate;
     private boolean checkedSell;
     private String productType;
     private String brand;
@@ -40,7 +39,7 @@ public class SoldProduct {
     @JoinColumn(name = "agent_who_sold_ref")
     private AgentProd agentWhoSold;
     @ManyToOne
-    @JoinColumn(name = "agent_sold_prod_ref")
-    private AgentProd agentSoldProd;
+    @JoinColumn(name = "agent_associated_prod_ref")
+    private AgentProd agentAssociatedProd;
 
 }

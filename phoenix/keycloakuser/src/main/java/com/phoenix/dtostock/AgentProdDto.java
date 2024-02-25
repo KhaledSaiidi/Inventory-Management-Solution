@@ -23,6 +23,6 @@ public class AgentProdDto {
     private List<ProductDto> productsAssociated;
     private List<SoldProductDto> soldproductsManaged;
     private List<SoldProductDto> productsSoldBy;
-    private List<SoldProductDto> soldproductsAssociated;
+    private List<SoldProductDto> agentproductsAssociated;
 
 }

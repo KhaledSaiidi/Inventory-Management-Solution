@@ -33,8 +33,8 @@ public class AgentProd {
     private List<SoldProduct> productsSoldBy;
     @OneToMany(mappedBy = "agentProd")
     private List<Product> productsAssociated;
-    @OneToMany(mappedBy = "agentSoldProd")
-    private List<SoldProduct> soldproductsAssociated;
+    @OneToMany(mappedBy = "agentAssociatedProd")
+    private List<SoldProduct> agentproductsAssociated;
 
     @PrePersist
     private void generateReference() {

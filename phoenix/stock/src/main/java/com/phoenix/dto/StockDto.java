@@ -26,4 +26,6 @@ public class StockDto {
     private BigDecimal stockValue;
 
     private List<ProductDto> products;
+    private List<SoldProductDto> soldproducts;
+
 }

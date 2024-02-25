@@ -13,8 +13,6 @@ public class SoldProductDtoMapper implements ISoldProductDtoMapper{
         soldProductDto.setSerialNumber(soldProduct.getSerialNumber());
         soldProductDto.setSimNumber(soldProduct.getSimNumber());
         soldProductDto.setCheckout(soldProduct.getCheckout());
-        soldProductDto.setCheckin(soldProduct.getCheckin());
-        soldProductDto.setBoxNumber(soldProduct.getBoxNumber());
         soldProductDto.setCheckedSell(soldProduct.isCheckedSell());
         soldProductDto.setProductType(soldProduct.getProductType());
         soldProductDto.setBrand(soldProduct.getBrand());
@@ -30,8 +28,6 @@ public class SoldProductDtoMapper implements ISoldProductDtoMapper{
         soldProduct.setSerialNumber(soldProductDto.getSerialNumber());
         soldProduct.setSimNumber(soldProductDto.getSimNumber());
         soldProduct.setCheckout(soldProductDto.getCheckout());
-        soldProduct.setCheckin(soldProductDto.getCheckin());
-        soldProduct.setBoxNumber(soldProductDto.getBoxNumber());
         soldProduct.setCheckedSell(soldProductDto.isCheckedSell());
         soldProduct.setProductType(soldProductDto.getProductType());
         soldProduct.setBrand(soldProductDto.getBrand());

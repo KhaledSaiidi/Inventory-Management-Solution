@@ -30,6 +30,8 @@ public class Stock {
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<Product> products;
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    private List<SoldProduct> soldproducts;
 
     @PrePersist
     private void generateReference() {

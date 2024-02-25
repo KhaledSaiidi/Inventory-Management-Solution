@@ -7,6 +7,7 @@ import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IAgentProdService;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
+import com.phoenix.services.IsoldProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,8 @@ public class Controller {
     IProductService iProductService;
     @Autowired
     IAgentProdService iAgentProdService;
+    @Autowired
+    IsoldProductService isoldProductService;
 
     @PostMapping("/addStock/{campaignReference}")
     public ResponseEntity<StockDto> addStock(@PathVariable("campaignReference") String campaignReference, @RequestBody StockDto stockdto) {
@@ -184,6 +187,13 @@ public class Controller {
     public ResponseEntity<String> checkProducts(@PathVariable String stockReference, @RequestBody Set<String> prodsRef) {
             iProductService.checkProds(stockReference, prodsRef);
             return ResponseEntity.ok("Products checked successfully.");
+    }
+
+
+    @PostMapping("/sellProduct/{prodRef}")
+    public ResponseEntity<String> sellProduct(@PathVariable("prodRef") String prodRef, @RequestBody AgentProdDto agentProdDto) {
+        isoldProductService.sellProduct(prodRef, agentProdDto);
+        return ResponseEntity.ok("Product sold");
     }
 
 }

@@ -13,8 +13,7 @@ public class SoldProductDto {
     private String serialNumber;
     private String simNumber;
     private LocalDate checkout;
-    private LocalDate checkin;
-    private String boxNumber;
+    private LocalDate soldDate;
     private boolean checkedSell;
     private String productType;
     private String brand;
@@ -24,5 +23,5 @@ public class SoldProductDto {
     private StockDto stock;
     private AgentProdDto managerSoldProd;
     private AgentProdDto agentWhoSold;
-    private AgentProdDto agentSoldProd;
+    private AgentProdDto agentAssociatedProd;
 }
