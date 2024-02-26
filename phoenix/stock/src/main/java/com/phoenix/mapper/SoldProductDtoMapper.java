@@ -1,11 +1,16 @@
 package com.phoenix.mapper;
 
+import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.SoldProductDto;
+import com.phoenix.dto.StockDto;
 import com.phoenix.model.SoldProduct;
+import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Service
 public class SoldProductDtoMapper implements ISoldProductDtoMapper{
     @Override
     public SoldProductDto toDto(SoldProduct soldProduct) {
@@ -13,6 +18,7 @@ public class SoldProductDtoMapper implements ISoldProductDtoMapper{
         soldProductDto.setSerialNumber(soldProduct.getSerialNumber());
         soldProductDto.setSimNumber(soldProduct.getSimNumber());
         soldProductDto.setCheckout(soldProduct.getCheckout());
+        soldProductDto.setSoldDate(soldProduct.getSoldDate());
         soldProductDto.setCheckedSell(soldProduct.isCheckedSell());
         soldProductDto.setProductType(soldProduct.getProductType());
         soldProductDto.setBrand(soldProduct.getBrand());
@@ -28,6 +34,7 @@ public class SoldProductDtoMapper implements ISoldProductDtoMapper{
         soldProduct.setSerialNumber(soldProductDto.getSerialNumber());
         soldProduct.setSimNumber(soldProductDto.getSimNumber());
         soldProduct.setCheckout(soldProductDto.getCheckout());
+        soldProduct.setSoldDate(soldProductDto.getSoldDate());
         soldProduct.setCheckedSell(soldProductDto.isCheckedSell());
         soldProduct.setProductType(soldProductDto.getProductType());
         soldProduct.setBrand(soldProductDto.getBrand());
@@ -36,6 +43,7 @@ public class SoldProductDtoMapper implements ISoldProductDtoMapper{
         soldProduct.setPrice(soldProductDto.getPrice());
         return soldProduct;
     }
+
 
     @Override
     public List<SoldProductDto> toDtoList(List<SoldProduct> soldProducts) {

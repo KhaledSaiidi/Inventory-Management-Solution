@@ -9,6 +9,7 @@ import { StockPage } from '../models/inventory/StockPage';
 import { ProductPage } from '../models/inventory/ProductPage';
 import { AgentProdDto } from '../models/inventory/AgentProdDto';
 import { map } from 'rxjs/operators';
+import { SoldProductPage } from '../models/inventory/SoldProductPage';
 
 @Injectable({
   providedIn: 'root'
@@ -263,5 +264,15 @@ sellProduct(agentProdDto: AgentProdDto, prodRef: string): Observable<number> {
   );
 }
 
+getSoldProductsPaginatedByStockReference(stockReference: string, page: number, size: number, searchTerm: String): Observable<SoldProductPage> {
+  const apiUrl = this.apiUrl + '/getSoldProductsPaginatedByStockReference/' + stockReference + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<SoldProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
 
 }

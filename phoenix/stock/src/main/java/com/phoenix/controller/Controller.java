@@ -2,6 +2,7 @@ package com.phoenix.controller;
 
 import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
+import com.phoenix.dto.SoldProductDto;
 import com.phoenix.dto.StockDto;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IAgentProdService;
@@ -195,6 +196,18 @@ public class Controller {
         isoldProductService.sellProduct(prodRef, agentProdDto);
         return ResponseEntity.ok(agentProdDto);
 
+    }
+
+
+    @GetMapping("getSoldProductsPaginatedByStockReference/{stockreference}")
+    public ResponseEntity<Page<SoldProductDto>> getSoldProductsPaginatedByStockReference(
+            @PathVariable String stockreference,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SoldProductDto> soldproductPage = isoldProductService.getSoldProductsPaginatedBystockReference(pageable, stockreference, searchTerm);
+        return ResponseEntity.ok(soldproductPage);
     }
 
 }

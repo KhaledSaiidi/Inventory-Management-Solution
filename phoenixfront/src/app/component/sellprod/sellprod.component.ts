@@ -1,6 +1,6 @@
 import {  Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentProdDto } from 'src/app/models/inventory/AgentProdDto';
 import { Stockdto } from 'src/app/models/inventory/Stock';
@@ -25,32 +25,31 @@ export class SellprodComponent implements OnInit {
   containerHeight!: number | 'auto';
   containerWidth!: number | 'auto';
   barcodeData: string | null = null;
-  barcodes: Set<string> = new Set(); 
-  private barcodeChangeSubject: Subject<{ newValue: string, barcode: string }> = new Subject<{ newValue: string, barcode: string }>();
-
+  firstBarcode!: string;
   stocks: Stockdto[] = [];
+  firstBarcodeChangeSubject = new Subject<string>();
+
+
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
     });
     this.getStocksByStocksReferences();
     this.listener();
-    this.barcodeChangeSubject.subscribe(({ newValue, barcode }) => {
-      this.barcodes.delete(barcode);
-      this.barcodes.add(newValue);
+
+    this.firstBarcodeChangeSubject
+    .pipe(debounceTime(1000)) 
+    .subscribe(newValue => {
+      this.firstBarcode = newValue;
+      console.log("new value :" + this.firstBarcode);
     });
 
   }
   
-  onBarcodeChange(newValue: string, barcode: string) {
-    this.barcodeChangeSubject.next({ newValue, barcode });
-    this.updateSomethingBasedOnBarcodeChange(newValue, barcode);
-  }
+onBarcodeChange(newValue: string) {
+  this.firstBarcodeChangeSubject.next(newValue);
+}
 
-  updateSomethingBasedOnBarcodeChange(newValue: string, barcode: string) {
-    console.log(`Barcode changed: ${barcode} -> ${newValue}`);
-    console.log('Barcodes : ' + JSON.stringify([...this.barcodes]));
-  }
   
   
   public listener() {
@@ -59,10 +58,10 @@ export class SellprodComponent implements OnInit {
         this.barcodeData = event.data.barcode;
         console.log("barcode angular received : " + this.barcodeData);
         if(this.barcodeData) {
-        if (this.barcodeData.length >= 5 && !this.barcodes.has(this.barcodeData)) {
-          this.barcodes.add(this.barcodeData);
+        if (this.barcodeData.length >= 6) {
+          this.firstBarcode = this.barcodeData;
 
-          console.log(JSON.stringify([...this.barcodes]));
+          console.log("barcode :" + this.firstBarcode);
 
           } else if (this.barcodeData.length < 5) {
           console.warn("Ignoring barcode less than 5 characters:", this.barcodeData);
@@ -130,22 +129,17 @@ export class SellprodComponent implements OnInit {
 
   agentProd!: AgentProdDto;
   proceedsell(){
-    if (this.barcodes.size > 0) {
-      const firstBarcode = this.barcodes.values().next().value;
       this.agentProd = {
           username: this.securityService.profile?.username,
           firstname: this.securityService.profile?.firstName,
           lastname: this.securityService.profile?.lastName
       }
-      this.stocksService.sellProduct(this.agentProd, firstBarcode)
+      this.stocksService.sellProduct(this.agentProd, this.firstBarcode)
       .subscribe(response => {
       this.navigateToUserdetails(this.securityService.profile?.username);
         }, error => {
             console.error(error);
         });
-  } else {
-      console.log("No barcodes available");
-  }
 }
 }
 

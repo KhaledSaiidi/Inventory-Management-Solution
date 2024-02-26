@@ -1,6 +1,6 @@
 import {  Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -25,16 +25,18 @@ export class ScanComponent implements OnInit {
   ngOnInit() {
     this.getStocksByStocksReferences();
     this.listener();
-    this.barcodeChangeSubject.subscribe(({ newValue, barcode }) => {
+    this.barcodeChangeSubject
+    .pipe(debounceTime(1000))
+    .subscribe(({ newValue, barcode }) => {
       this.barcodes.delete(barcode);
       this.barcodes.add(newValue);
+      this.updateSomethingBasedOnBarcodeChange(newValue, barcode);
     });
   
   }
-
+  
   onBarcodeChange(newValue: string, barcode: string) {
     this.barcodeChangeSubject.next({ newValue, barcode });
-    this.updateSomethingBasedOnBarcodeChange(newValue, barcode);
   }
 
   updateSomethingBasedOnBarcodeChange(newValue: string, barcode: string) {

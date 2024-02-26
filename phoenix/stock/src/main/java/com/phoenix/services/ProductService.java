@@ -128,15 +128,18 @@ public class ProductService implements IProductService{
     }
     private boolean filterBySearchTerm(ProductDto productDto, String searchTerm) {
         String searchString = searchTerm.toLowerCase();
+        StringBuilder searchFields = new StringBuilder();
+        searchFields.append(productDto.getSerialNumber().toLowerCase())
+                .append(productDto.getSimNumber().toLowerCase());
         if (productDto.getAgentProd() != null) {
-            return productDto.getSerialNumber().toLowerCase().contains(searchString)
-                    || productDto.getSimNumber().toLowerCase().contains(searchString)
-                    || productDto.getAgentProd().getFirstname().toLowerCase().contains(searchString)
-                    || productDto.getAgentProd().getLastname().toLowerCase().contains(searchString);
-        } else {
-            return productDto.getSerialNumber().toLowerCase().contains(searchString)
-                    || productDto.getSimNumber().toLowerCase().contains(searchString);
+            searchFields.append(productDto.getAgentProd().getFirstname().toLowerCase())
+                    .append(productDto.getAgentProd().getLastname().toLowerCase());
         }
+        if (productDto.getManagerProd() != null) {
+            searchFields.append(productDto.getManagerProd().getFirstname().toLowerCase())
+                    .append(productDto.getManagerProd().getLastname().toLowerCase());
+        }
+        return searchFields.toString().contains(searchString);
     }
 
     @Override

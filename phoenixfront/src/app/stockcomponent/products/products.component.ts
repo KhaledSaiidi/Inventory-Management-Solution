@@ -9,6 +9,8 @@ import { QueryList } from '@angular/core';
 import { ProductPage } from 'src/app/models/inventory/ProductPage';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DataSharingService } from 'src/app/services/dataSharing.service';
+import { SoldProductDto } from 'src/app/models/inventory/SoldProductDto';
+import { SoldProductPage } from 'src/app/models/inventory/SoldProductPage';
 
 @Component({
   selector: 'app-products',
@@ -49,6 +51,13 @@ export class ProductsComponent implements OnInit{
       this.cdRef.detectChanges();
     } catch (error) {
       this.filterfinishforProds = [];
+        }
+    
+    try {
+      await this.getSoldProductsByStockReference(this.stockreference, 0, this.searchTerm);
+      this.cdRef.detectChanges();
+    } catch (error) {
+      this.filterfinishforSoldProds = [];
         }
 
   }
@@ -118,11 +127,19 @@ private checkAndSetEmptyProducts() {
 }
 
 searchDebounce: any;
+searchWithoutspaces!: string;
 searchStocks() {
+  this.searchWithoutspaces = this.searchTerm.replace(/\s/g, '');
+
   clearTimeout(this.searchDebounce);
+  if(this.selectedTab === 0){
   this.searchDebounce = setTimeout(() => {
-    this.getProductsByStockReference(this.stockreference, 0, this.searchTerm);
-  }, 600);
+    this.getProductsByStockReference(this.stockreference, 0, this.searchWithoutspaces);
+  }, 600); }
+  if(this.selectedTab === 1){
+    this.searchDebounce = setTimeout(() => {
+      this.getSoldProductsByStockReference(this.stockreference, 0, this.searchWithoutspaces);
+    }, 600); }
 }
 
 highlightMatch(value: string) : SafeHtml {
@@ -418,5 +435,68 @@ onPageChange(newPage: number): void {
       );
       }
     }
+
+    selectedTab = 0;
+    selectedTabProf(){
+      this.selectedTab = 0;
+      this.searchTerm = '';
+      this.getProductsByStockReference(this.stockreference, 0, this.searchTerm);
+    }
+    selectedTabMyStock() {
+      this.selectedTab = 1;
+      this.searchTerm = '';
+      this.getSoldProductsByStockReference(this.stockreference, 0, this.searchTerm);
+
+    }
+    selectedTabMessages() {
+      this.selectedTab = 2;
+      this.searchTerm = '';
+    }
+
+
+    loadingSold: boolean = true;
+    emptySoldProducts: boolean = true;
+    totalPagesSoldProd: number = 0;
+    totalElementsSoldProd: number = 0;
+    currentPageSoldProd: number = 0;
+    filterfinishforSoldProds: SoldProductDto[] = [];
+    pagedsoldProducts: SoldProductDto[][] = [];
+  
+    getSoldProductsByStockReference(ref: string, page: number, search: string) {
+      this.loading = true;
+      try {
+        this.stockservice.getSoldProductsPaginatedByStockReference(ref, page, this.pageSize, search)
+          .subscribe(
+            (soldproductPage: SoldProductPage) => {
+              this.loadingSold = false;
+              this.currentPageSoldProd = soldproductPage.number + 1;
+              this.filterfinishforSoldProds = soldproductPage.content;
+              this.totalPagesSoldProd = soldproductPage.totalPages;
+              this.checkAndSetEmptySoldProducts();
+                this.cdRef.detectChanges();
+            },
+            (error) => {
+              console.error('Error fetching stocks:', error);
+              this.loading = false;
+            }
+          );
+      } catch (error) {
+        console.error('Unexpected error:', error);
+        this.loadingSold = false;
+      }
+      }
+
+      private checkAndSetEmptySoldProducts() {
+        if(this.filterfinishforSoldProds && this.filterfinishforSoldProds.length > 0) {
+          this.emptySoldProducts = false;
+        } else {
+          this.emptySoldProducts = true;
+        }
+      }
+      
+      onSoldProdPageChange(newPage: number): void {
+        this.getSoldProductsByStockReference(this.stockreference, newPage - 1, this.searchTerm);
+    } 
+    
 }
     
