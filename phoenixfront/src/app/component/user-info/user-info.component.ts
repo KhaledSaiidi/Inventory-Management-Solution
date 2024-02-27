@@ -323,9 +323,14 @@ getuserinfos(code : string){
         this.stockservice.getSoldProductsByusername(username, page, this.pageSize)
           .subscribe(
             (soldproductPage: SoldProductPage) => {
+              this.loadingsold = false;
+              console.log(this.loadingsold  + "xx" + this.emptysoldProducts);
               this.currentsoldPage = soldproductPage.number + 1;
               this.agentsoldProds = soldproductPage.content;
               this.totalsoldPages = soldproductPage.totalPages;
+              if(this.agentsoldProds){
+                this.emptysoldProducts = false;
+              }
             },
             (error) => {
               console.error('Error fetching stocks:', error);

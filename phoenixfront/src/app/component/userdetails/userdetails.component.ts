@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { ProductPage } from 'src/app/models/inventory/ProductPage';
+import { SoldProductDto } from 'src/app/models/inventory/SoldProductDto';
+import { SoldProductPage } from 'src/app/models/inventory/SoldProductPage';
 import { AgentsService } from 'src/app/services/agents.service';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -81,7 +83,13 @@ selectedImage: File | null = null;
     } catch (error) {
       this.agentProds = [];
         }
-  
+        try {
+          await   this.getSoldProductsByusername(this.username, 0);
+          this.cdRef.detectChanges();
+        } catch (error) {
+          this.agentsoldProds = [];
+            }
+      
   }
 
 
@@ -298,6 +306,59 @@ getuserinfos(code : string){
           return 0;
         }
     }
+
+
+
+    selectedProdTab = 0;
+    selectedProdTabProf(){
+      this.selectedProdTab = 0;
+    }
+    selectedProdTabMyStock() {
+      this.selectedProdTab = 1;
+
+    }
+    selectedProdTabMessages() {
+      this.selectedProdTab = 2;
+    }
+
+
+    agentsoldProds: SoldProductDto[] = [];
+    loadingsold: boolean = true;
+    emptysoldProducts: boolean = true;
+    totalsoldPages: number = 0;
+    totalsoldElements: number = 0;
+    currentsoldPage: number = 0;
+    pagedsoldProducts: SoldProductDto[][] = [];
+  
+    getSoldProductsByusername(username: string, page: number) {
+      this.loadingsold = true;
+      try {
+        this.stockservice.getSoldProductsByusername(username, page, this.pageSize)
+          .subscribe(
+            (soldproductPage: SoldProductPage) => {
+              this.loadingsold = false;
+              console.log(this.loadingsold  + "xx" + this.emptysoldProducts);
+              this.currentsoldPage = soldproductPage.number + 1;
+              this.agentsoldProds = soldproductPage.content;
+              this.totalsoldPages = soldproductPage.totalPages;
+              if(this.agentsoldProds){
+                this.emptysoldProducts = false;
+              }
+            },
+            (error) => {
+              console.error('Error fetching stocks:', error);
+              this.loadingsold = false;
+            }
+          );
+      } catch (error) {
+        console.error('Unexpected error:', error);
+        this.loadingsold = false;
+      }
+      }  
+
+      onsoldPageChange(newPage: number): void {
+        this.getSoldProductsByusername(this.username, newPage - 1);
+    } 
 
 
 }

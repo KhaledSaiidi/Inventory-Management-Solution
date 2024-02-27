@@ -351,6 +351,7 @@
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" >check Sell</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Assigned</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Sold</th>
@@ -360,14 +361,35 @@
         </tr>
       </thead>
       <tbody>
-       <ng-container>
-         <tr>
-         </tr>
-        <tr *ngFor="let prod of agentsoldProds">
+        <ng-container  *ngIf="loadingsold;">
+          <tr>
+            <td colspan="11" style="text-align: center;">
+              <div class="loading-container">
+                <div class="loading-spinner"></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container  *ngIf="!loadingsold && emptysoldProducts;">
+          <tr>
+            <td colspan="11" style="text-align: center;">
+              <p>No sold products found. Please check back later.</p>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container  *ngIf="!loadingsold && !emptysoldProducts; ">
+          <tr>
+          </tr>
+          <tr *ngFor="let prod of agentsoldProds">
           <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
           <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
          <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>  
          <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
+          <span style="font-size: 20px;" [style.color]="prod.checkedSell ? 'green' : 'red'">
+            {{prod.checkedSell ? '&#10003;' : '&#10008;'}}
+            </span></td> 
+
          <td style="word-wrap: break-word; white-space: normal;">{{prod.managerSoldProd?.firstname?.toUpperCase()}} {{prod.managerSoldProd?.lastname?.toUpperCase()}}</td>  
           <td style="word-wrap: break-word; white-space: normal;">{{prod.agentAssociatedProd?.firstname?.toUpperCase()}} {{prod.agentAssociatedProd?.lastname?.toUpperCase()}}</td>  
           <td style="word-wrap: break-word; white-space: normal;">{{prod.agentWhoSold?.firstname?.toUpperCase()}} {{prod.agentWhoSold?.lastname?.toUpperCase()}}</td>  
@@ -383,6 +405,7 @@
            </td>
           </tr>
         </ng-container>
+
 
       </tbody>
                 </table>
