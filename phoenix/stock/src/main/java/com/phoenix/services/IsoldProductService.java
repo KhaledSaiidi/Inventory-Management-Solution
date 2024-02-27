@@ -9,4 +9,7 @@ import org.springframework.data.domain.Pageable;
 public interface IsoldProductService {
     void sellProduct(String ProdRef, AgentProdDto agentsoldProdDto);
     Page<SoldProductDto> getSoldProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
+
+    Page<SoldProductDto> getSoldProductsByusername(Pageable pageable, String username);
+
 }

@@ -3,8 +3,11 @@ package com.phoenix.services;
 import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.SoldProductDto;
+import com.phoenix.dto.StockDto;
+import com.phoenix.dtokeycloakuser.Campaigndto;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.ISoldProductDtoMapper;
+import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.AgentProd;
 import com.phoenix.model.Product;
 import com.phoenix.model.SoldProduct;
@@ -19,12 +22,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +39,8 @@ public class SoldProductService  implements IsoldProductService{
     private final IAgentProdMapper iAgentProdMapper;
     private final IAgentProdRepository iAgentProdRepository;
     private final IStockRepository iStockRepository;
+    private final IStockMapper iStockMapper;
+    private final WebClient.Builder webClientBuilder;
 
     @Override
     public void sellProduct(String prodRef, AgentProdDto agentsoldProdDto){
@@ -136,5 +139,66 @@ public class SoldProductService  implements IsoldProductService{
     }
 
 
+
+
+    @Override
+    public Page<SoldProductDto> getSoldProductsByusername(Pageable pageable, String username) {
+        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
+        List<SoldProduct> soldproducts = new ArrayList<>();
+        for (AgentProd agentProd: agentProds){
+            Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findByAgentWhoSold(agentProd);
+            if(optionalSoldProduct.isPresent()){
+                SoldProduct soldproduct = optionalSoldProduct.get();
+                soldproducts.add(soldproduct);
+            }
+        }
+        if(soldproducts.isEmpty()){
+            for (AgentProd agentProd: agentProds){
+                Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findByManagerSoldProd(agentProd);
+                if(optionalSoldProduct.isPresent()){
+                    SoldProduct soldproduct = optionalSoldProduct.get();
+                    soldproducts.add(soldproduct);
+                }
+            }
+        }
+        List<SoldProductDto> soldproductDtos = iSoldProductDtoMapper.toDtoList(soldproducts);
+        for (int i = 0; i < soldproducts.size(); i++) {
+            SoldProduct soldproduct = soldproducts.get(i);
+            SoldProductDto soldProductDto = soldproductDtos.get(i);
+            if(soldproduct.getStock() != null){
+                StockDto stockDto = iStockMapper.toDto(soldproduct.getStock());
+                Campaigndto campaigndto = webClientBuilder.build().get()
+                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", soldproduct.getStock().getCampaignRef())
+                        .retrieve()
+                        .bodyToMono(Campaigndto.class)
+                        .block();
+                stockDto.setCampaigndto(campaigndto);
+                soldProductDto.setStock(stockDto);
+            }
+            if(soldproduct.getAgentWhoSold() != null){
+                AgentProdDto agentProdDto = iAgentProdMapper.toDto(soldproduct.getAgentWhoSold());
+                soldProductDto.setAgentWhoSold(agentProdDto);
+            }
+            if(soldproduct.getManagerSoldProd() != null){
+                AgentProdDto managerProdDto = iAgentProdMapper.toDto(soldproduct.getManagerSoldProd());
+                soldProductDto.setManagerSoldProd(managerProdDto);
+            }
+            if(soldproduct.getAgentAssociatedProd() != null){
+                AgentProdDto agentAssociatedProd = iAgentProdMapper.toDto(soldproduct.getAgentAssociatedProd());
+                soldProductDto.setAgentAssociatedProd(agentAssociatedProd);
+            }
+        }
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<SoldProductDto> pageContent;
+        if (soldproductDtos.size() < startItem) {
+            pageContent = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, soldproductDtos.size());
+            pageContent = soldproductDtos.subList(startItem, toIndex);
+        }
+        return new PageImpl<>(pageContent, pageable, soldproductDtos.size());
+    }
 
 }

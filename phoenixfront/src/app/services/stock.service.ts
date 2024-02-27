@@ -275,4 +275,16 @@ getSoldProductsPaginatedByStockReference(stockReference: string, page: number, s
     );
 }
 
+
+getSoldProductsByusername(username: string, page: number, size: number): Observable<SoldProductPage> {
+  const apiUrl = this.apiUrl + '/getSoldProductsByusername/' + username + '?page=' + page + '&size=' + size;
+  return this.http.get<SoldProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
 }

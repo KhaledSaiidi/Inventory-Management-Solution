@@ -245,10 +245,37 @@
     <div class="col-12">
 
       <div class="card mb-4">
+              <!-- To add Div -->
+              <div class="col-lg-4 col-md-6 my-sm-auto mt-3" style="padding: 10px;">
+                <div class="nav-wrapper position-relative end-0" style="height: 100%;">
+                  <ul class="nav nav-pills nav-fill p-1" role="tablist">
+                    <li class="nav-item" [class.selected]="selectedProdTab === 0" style="cursor: pointer;">
+                      <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedProdTabProf()" role="tab" [attr.aria-selected]="selectedProdTab === 0">
+                        <i class="ni ni-box-2"></i>
+                        <span class="ms-2">Products</span>
+                      </a>
+                    </li>
+                    <li class="nav-item" [class.selected]="selectedProdTab === 1" style="cursor: pointer;">
+                      <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedProdTabMyStock()" role="tab" [attr.aria-selected]="selectedProdTab === 1">
+                        <i class="ni ni-money-coins"></i>
+                        <span class="ms-2">Sold Products</span>
+                      </a>
+                    </li>
+                    <li class="nav-item" [class.selected]="selectedProdTab === 2" style="cursor: pointer;">
+                      <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedProdTabMessages()" role="tab" [attr.aria-selected]="selectedProdTab === 2">
+                        <i class="ni ni-archive-2"></i>
+                        <span class="ms-2">Returned Products</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- End "To add Div" -->
+
+              <ng-container *ngIf="selectedProdTab === 0">
           <div class="card-header pb-0">
               <h6 class="text-center" >{{user.firstName?.toUpperCase()}} PRODUCTS ALLOCATED</h6>
             </div>
-        
           <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
             <div class="table-responsive p-0">
                 <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
@@ -307,7 +334,69 @@
       </tbody>
                 </table>
             </div>
-          </div>     
+          </div>  
+          </ng-container>   
+
+          <ng-container *ngIf="selectedProdTab === 1">
+          <div class="card-header pb-0">
+            <h6 class="text-center" >{{user.firstName?.toUpperCase()}} PRODUCTS SOLD</h6>
+          </div>
+
+          <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
+            <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+      <thead>
+        <tr>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Assigned</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Sold</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+       <ng-container>
+         <tr>
+         </tr>
+        <tr *ngFor="let prod of agentsoldProds">
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.managerSoldProd?.firstname?.toUpperCase()}} {{prod.managerSoldProd?.lastname?.toUpperCase()}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentAssociatedProd?.firstname?.toUpperCase()}} {{prod.agentAssociatedProd?.lastname?.toUpperCase()}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentWhoSold?.firstname?.toUpperCase()}} {{prod.agentWhoSold?.lastname?.toUpperCase()}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.soldDate | date: 'medium' | slice: 0:12}}</td>  
+        
+          <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-edit"></i></a></td>
+         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
+        </tr>
+        <tr>
+          <td colspan="11" style="margin-right: 5px;">
+            <app-custom-pagination [currentPage]="currentsoldPage" [totalPages]="totalsoldPages" (pageChange)="onsoldPageChange($event)"></app-custom-pagination>                    
+           </td>
+          </tr>
+        </ng-container>
+
+      </tbody>
+                </table>
+            </div>
+          </div>  
+
+          </ng-container>
+
+          <ng-container *ngIf="selectedProdTab === 2">
+            <div class="card-header pb-0">
+              <h6 class="text-center" >{{user.firstName?.toUpperCase()}} PRODUCTS RETURNED</h6>
+            </div>
+            </ng-container>
+
       </div>
     </div>
   </div>

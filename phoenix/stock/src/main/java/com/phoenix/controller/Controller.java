@@ -210,4 +210,14 @@ public class Controller {
         return ResponseEntity.ok(soldproductPage);
     }
 
+    @GetMapping("getSoldProductsByusername/{username}")
+    public ResponseEntity<Page<SoldProductDto>> getSoldProductsByusername(
+            @PathVariable String username,
+            @RequestParam int page,
+            @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SoldProductDto> soldproductPage = isoldProductService.getSoldProductsByusername(pageable, username);
+        return ResponseEntity.ok(soldproductPage);
+    }
+
 }
