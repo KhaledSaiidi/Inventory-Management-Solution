@@ -5,11 +5,18 @@ import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.SoldProductDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public interface IsoldProductService {
     void sellProduct(String ProdRef, AgentProdDto agentsoldProdDto);
     Page<SoldProductDto> getSoldProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
 
     Page<SoldProductDto> getSoldProductsByusername(Pageable pageable, String username);
+    List<String> uploadcsvTocheckSell(MultipartFile file, String stockReference) throws IOException;
+    Map<String, Integer> getSoldProductsInfosBystockReference(String stockreference);
 
-}
+    }

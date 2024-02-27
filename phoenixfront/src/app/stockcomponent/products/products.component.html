@@ -4,14 +4,24 @@
     <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
     <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" (keyup)="searchStocks()" style="margin-left: 10px;" placeholder="Search by Serial Number or Sim Number">
   </div>
-    
-  <div class="d-flex">
-    <input type="file" style="width: 230px; max-height: 40px; margin-right: 5px;"  class="form-control" id="image" (change)="onFileSelected($event)">
-    <input type="number" class="form-control"style="width: 55px; max-height: 40px;"  [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" />
+  
+
+  <div class="d-flex" style="justify-content: space-between;">
+  <div class="firstclass d-flex">
+    <!-- Content for firstclass div -->
+    <input type="file" style="width: 230px; max-height: 40px; margin-right: 5px;" class="form-control" id="image" (change)="onFileSelected($event)">
+    <input type="number" class="form-control" style="width: 55px; max-height: 40px;" [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" />
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFile()">Add Products</a>
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="navigateToAddProduct(stockreference)">Add Product</a>
   </div>
-  
+
+  <div class="secondclass d-flex">
+    <!-- Content for secondclass div -->
+    <input type="file" style="width: 230px; max-height: 40px; margin-right: 5px;" class="form-control" id="image" (change)="onFileSelectForSell($event)">
+    <input type="number" class="form-control" style="width: 55px; max-height: 40px;" [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" />
+    <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFileTocheckSell()">Check Sell</a>
+  </div>
+</div>
       
     <div class="equipe-container">
         <div class="listetalents-containershown">

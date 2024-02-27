@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface IProductService {
@@ -22,4 +23,5 @@ public interface IProductService {
     Integer addProductsByupload(MultipartFile file, String stockReference) throws IOException;
     Page<ProductDto> getProductsPaginatedByusername(Pageable pageable, String username);
     void checkProds(String stockreference, Set<String> prodsref);
+    Map<String, Integer> getProductsInfosBystockReference(String stockreference);
 }

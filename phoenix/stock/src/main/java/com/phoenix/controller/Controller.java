@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -219,5 +220,25 @@ public class Controller {
         Page<SoldProductDto> soldproductPage = isoldProductService.getSoldProductsByusername(pageable, username);
         return ResponseEntity.ok(soldproductPage);
     }
+
+
+    @PostMapping(value = "/uploadcsvTocheckSell/{stockReference}", consumes = {"multipart/form-data"})
+    public List<String> uploadcsvTocheckSell(
+            @PathVariable String stockReference,
+            @RequestPart("file")MultipartFile file
+    )throws IOException {
+        return isoldProductService.uploadcsvTocheckSell(file, stockReference);
+    }
+
+    @GetMapping("/products-info")
+    public Map<String, Integer> getProductsInfoByStockReference(@RequestParam String stockReference) {
+        return iProductService.getProductsInfosBystockReference(stockReference);
+    }
+
+    @GetMapping("/soldproducts-info")
+    public Map<String, Integer> getsoldProductsInfoByStockReference(@RequestParam String stockReference) {
+        return isoldProductService.getSoldProductsInfosBystockReference(stockReference);
+    }
+
 
 }

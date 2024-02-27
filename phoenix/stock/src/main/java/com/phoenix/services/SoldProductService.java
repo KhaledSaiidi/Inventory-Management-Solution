@@ -1,5 +1,9 @@
 package com.phoenix.services;
 
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
 import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.SoldProductDto;
@@ -8,10 +12,7 @@ import com.phoenix.dtokeycloakuser.Campaigndto;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.ISoldProductDtoMapper;
 import com.phoenix.mapper.IStockMapper;
-import com.phoenix.model.AgentProd;
-import com.phoenix.model.Product;
-import com.phoenix.model.SoldProduct;
-import com.phoenix.model.Stock;
+import com.phoenix.model.*;
 import com.phoenix.repository.IAgentProdRepository;
 import com.phoenix.repository.IProductRepository;
 import com.phoenix.repository.ISoldProductRepository;
@@ -22,8 +23,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -200,5 +206,78 @@ public class SoldProductService  implements IsoldProductService{
         }
         return new PageImpl<>(pageContent, pageable, soldproductDtos.size());
     }
+
+
+
+    @Override
+    public List<String> uploadcsvTocheckSell(MultipartFile file, String stockReference) throws IOException {
+        Map<String, String> serialNumberStatus = parseCsvCheck(file);
+        List<String> notFoundserialNumbers = new ArrayList<>();
+        Optional<Stock> stockOptional = iStockRepository.findById(stockReference);
+        if(stockOptional.isPresent()) {
+            Stock stock = stockOptional.get();
+            List<SoldProduct> soldProducts = iSoldProductRepository.findByStock(stock);
+            for (Map.Entry<String, String> entry : serialNumberStatus.entrySet()) {
+                String serialNumber = entry.getKey();
+                String status = entry.getValue();
+                boolean found = false;
+                for (SoldProduct soldproduct : soldProducts) {
+                    if (soldproduct.getSerialNumber().equalsIgnoreCase(serialNumber) && status.equalsIgnoreCase("ACTIVE")) {
+                        soldproduct.setCheckedSell(true);
+                        iSoldProductRepository.save(soldproduct);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    notFoundserialNumbers.add(serialNumber);
+                }
+            }
+        }
+        return notFoundserialNumbers;
+    }
+
+    private Map<String, String> parseCsvCheck(MultipartFile file) throws IOException {
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            HeaderColumnNameMappingStrategy<SerialNumbersCsvRepresentation> strategy =
+                    new HeaderColumnNameMappingStrategy<>();
+            strategy.setType(SerialNumbersCsvRepresentation.class);
+            CsvToBean<SerialNumbersCsvRepresentation> csvToBean =
+                    new CsvToBeanBuilder<SerialNumbersCsvRepresentation>(reader)
+                            .withMappingStrategy(strategy)
+                            .withIgnoreEmptyLine(true)
+                            .withIgnoreLeadingWhiteSpace(true)
+                            .withSeparator(',')
+                            .build();
+
+            return csvToBean.parse()
+                    .stream()
+                    .filter(entry -> !entry.getSerialNumber().isEmpty())
+                    .collect(Collectors.toMap(
+                            SerialNumbersCsvRepresentation::getSerialNumber,
+                            SerialNumbersCsvRepresentation::getStatus,
+                            (existing, replacement) -> existing));
+        }
+    }
+
+
+    @Override
+    public Map<String, Integer> getSoldProductsInfosBystockReference(String stockreference) {
+        Map<String, Integer> soldproductsInfo = new HashMap<>();
+        Optional<Stock> stockOptional = iStockRepository.findById(stockreference);
+        if (stockOptional.isEmpty()) {
+            return null;
+        }
+        Stock stock = stockOptional.get();
+        List<SoldProduct> soldproducts = iSoldProductRepository.findByStock(stock);
+        if(!soldproducts.isEmpty()) {
+            long checked = soldproducts.stream().filter(SoldProduct::isCheckedSell).count();
+            int soldprods = soldproducts.size();
+            soldproductsInfo.put("prods", soldprods);
+            soldproductsInfo.put("checked", (int) checked);
+        }
+        return soldproductsInfo;
+    }
+
 
 }

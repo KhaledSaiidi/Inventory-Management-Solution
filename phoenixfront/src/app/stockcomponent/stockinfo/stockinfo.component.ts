@@ -28,7 +28,8 @@ export class StockinfoComponent implements OnInit{
         }
       }); 
       this.getStockbyRef(this.stockreference);
-      this.getProdsbyStockRef(this.stockreference);
+      this.getProductInfo(this.stockreference);
+      this.getSoldProductInfo(this.stockreference);
     }
 
 
@@ -76,41 +77,8 @@ export class StockinfoComponent implements OnInit{
     }
 
     productsDto!: Productdto[];
-    uniqueProductMap: Map<string, { prodName: string, brand: string, price: number, count: number }> = new Map();
-    uniqueProducts: Array<{ prodName: string, brand: string, price: number, count: number }> = [];
 
-    getProdsbyStockRef(ref : string){
-      this.stockservice.getProductsByStockReference(ref).subscribe(
-        (data) => {
-          this.productsDto = data as Productdto[];
-          this.productsDto.forEach(product => {
-            this.updateUniqueProductMap(product);
-          });
-           this.uniqueProducts = Array.from(this.uniqueProductMap.values());
-           console.log(this.uniqueProducts);
-        },
-        (error) => {
-          console.error('Failed to get prods:', error);
-        }
-      );
-    }
 
-    private updateUniqueProductMap(product: Productdto): void {
-      const prodName = product.prodName?.toLowerCase();
-      const brand = product.brand?.toLowerCase();
-      const price = product.price;
-      if (!prodName || !brand || !price) {
-        return;
-      }        
-      const key = `${prodName}-${brand}`;
-      const existingProduct = this.uniqueProductMap.get(key);
-  
-      if (existingProduct) {
-        existingProduct.count++;
-      } else {
-        this.uniqueProductMap.set(key, { prodName, brand, price, count: 1 });
-      }
-    }
 
     downloadPdf() {
       const originalElement = document.getElementById('pdf-content');
@@ -130,6 +98,30 @@ export class StockinfoComponent implements OnInit{
     }
       
     }
+
+
+    prods: number = 0;
+    checked: number = 0;
+    returned: number = 0;
+  
+    sold: number = 0;
+    soldchecked: number = 0;
+    getProductInfo(stockReference: string): void {
+      this.stockservice.getProductsInfo(stockReference).subscribe(data => {
+        this.prods = data.prods;
+        this.checked = data.checked;
+        this.returned = data.returned;
+      });
+    }
+
+    getSoldProductInfo(stockReference: string): void {
+      this.stockservice.getSoldProductsInfo(stockReference).subscribe(data => {
+        this.sold = data.prods;
+        this.soldchecked = data.checked;
+      });
+    }
+
+  
   
 
 }

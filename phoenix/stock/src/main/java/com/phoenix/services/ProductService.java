@@ -378,4 +378,25 @@ public class ProductService implements IProductService{
         }
     }
 
+
+    @Override
+    public Map<String, Integer> getProductsInfosBystockReference(String stockreference) {
+        Map<String, Integer> productsInfo = new HashMap<>();
+        Optional<Stock> stockOptional = iStockRepository.findById(stockreference);
+        if (stockOptional.isEmpty()) {
+            return null;
+        }
+        Stock stock = stockOptional.get();
+        List<Product> products = iProductRepository.findByStock(stock);
+        if(!products.isEmpty()) {
+            long checked = products.stream().filter(Product::isCheckedExistence).count();
+            long returned = products.stream().filter(product -> product.getState() == State.returnedProd).count();
+
+            int prods = products.size();
+            productsInfo.put("prods", prods);
+            productsInfo.put("checked", (int) checked);
+            productsInfo.put("returned", (int) returned);
+        }
+        return productsInfo;
+    }
 }

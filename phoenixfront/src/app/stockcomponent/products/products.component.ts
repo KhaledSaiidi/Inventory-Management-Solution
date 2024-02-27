@@ -497,6 +497,40 @@ onPageChange(newPage: number): void {
       onSoldProdPageChange(newPage: number): void {
         this.getSoldProductsByStockReference(this.stockreference, newPage - 1, this.searchTerm);
     } 
+ 
     
+    onFileSelectForSell(event: any): void {
+      const file: File = event.target.files[0] as File;
+      const allowedExtensions = ['csv', 'xlsx'];
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+      if (fileExtension && allowedExtensions.includes(fileExtension)) {
+        if (fileExtension === 'xlsx') {
+          this.convertExcelToCsv(file, this.selectedSheetIndexToenter);
+        } else {
+          this.selectedFile = file;
+        }
+      } else {
+        console.error('Invalid file type. Please select a CSV or Excel file.');
+      }
+      }
+  
+      uploadFileTocheckSell(): void {
+        if (this.selectedFile) {
+          this.stockservice.uploadcsvTocheckSell(this.selectedFile, this.stockreference).subscribe(
+            result => {
+              console.log(result);
+              location.reload();
+
+            },
+            error => {
+              console.error('Error uploading file:', error);
+            }
+          ); 
+        } else {
+          console.error('No file selected.');
+        }
+    
+      }
+  
 }
     

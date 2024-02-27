@@ -44,22 +44,26 @@
                         </div>
                         </div>
                         <br>
-                        <div class="table-responsive">
+                        <div class="table-responsive container">
                             <table class="table custom-table" style="text-align: center;">
                                 <thead>
                                 <tr>
-                                    <th class="col">Product Model</th>
-                                    <th class="col">Product Brand</th>
-                                    <th class="col">Product Price</th>
-                                    <th class="col">Qty</th>
+                                    <th >Product Number</th>
+                                    <th >Product checked</th>
+                                    <th >Product Sold</th>
+                                    <th >Product Sold Checked</th>
+                                    <th >Returned</th>
                                 </tr>
+                                <tr>
+                                  <td >{{prods}}</td>
+                                  <td >{{checked}}</td>
+                                  <td >{{sold}}</td>
+                                  <td >{{soldchecked}}</td>
+                                  <td >{{returned}}</td>
+                              </tr>
                                 </thead>
                                 <tbody>
-                                <tr class="avoid-page-break" *ngFor="let prodmap of uniqueProducts">
-                                    <td>{{ prodmap.prodName }}</td>
-                                    <td>{{ prodmap.brand }}</td>
-                                    <td>{{ prodmap.price }} $</td>
-                                    <td>{{ prodmap.count }}</td>
+                                <tr class="avoid-page-break">
                                 </tr>
                                 </tbody>
                             </table>

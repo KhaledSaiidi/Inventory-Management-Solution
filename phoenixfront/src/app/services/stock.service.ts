@@ -287,4 +287,24 @@ getSoldProductsByusername(username: string, page: number, size: number): Observa
     );
 }
 
+
+
+uploadcsvTocheckSell(file: File, stockReference: string): Observable<string[]> {
+  const formData: FormData = new FormData();
+  formData.append('file', file, file.name);
+
+  return this.http.post<string[]>(this.apiUrl + "/uploadcsvTocheckSell/" + stockReference , formData);
+}
+
+getProductsInfo(stockReference: string): Observable<any> {
+  const url = `${this.apiUrl}/products-info?stockReference=${stockReference}`;
+  return this.http.get<any>(url);
+}
+
+getSoldProductsInfo(stockReference: string): Observable<any> {
+  const url = `${this.apiUrl}/soldproducts-info?stockReference=${stockReference}`;
+  return this.http.get<any>(url);
+}
+
+
 }

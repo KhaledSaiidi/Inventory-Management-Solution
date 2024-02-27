@@ -9,6 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class SerialNumbersCsvRepresentation {
-    @CsvBindByName(column = "serialnumber")
+    @CsvBindByName(column = "SHIPPED ESN")
     private String serialNumber;
+    @CsvBindByName(column = "STATUS")
+    private String status;
 }
