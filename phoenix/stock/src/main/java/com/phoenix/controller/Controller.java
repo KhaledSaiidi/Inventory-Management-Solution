@@ -241,4 +241,11 @@ public class Controller {
     }
 
 
+    @PostMapping("/returnProduct/{prodRef}")
+    public void returnProduct(@PathVariable("prodRef") String prodRef) {
+        isoldProductService.returnProduct(prodRef);
+
+    }
+
+
 }
