@@ -529,7 +529,6 @@ onPageChange(newPage: number): void {
         } else {
           console.error('No file selected.');
         }
-    
       }
   
 }

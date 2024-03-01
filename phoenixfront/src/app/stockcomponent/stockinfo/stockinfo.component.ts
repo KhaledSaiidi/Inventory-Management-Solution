@@ -105,7 +105,6 @@ export class StockinfoComponent implements OnInit{
     returned: number = 0;
   
     sold: number = 0;
-    soldchecked: number = 0;
     getProductInfo(stockReference: string): void {
       this.stockservice.getProductsInfo(stockReference).subscribe(data => {
         this.prods = data.prods;
@@ -117,7 +116,6 @@ export class StockinfoComponent implements OnInit{
     getSoldProductInfo(stockReference: string): void {
       this.stockservice.getSoldProductsInfo(stockReference).subscribe(data => {
         this.sold = data.prods;
-        this.soldchecked = data.checked;
       });
     }
 

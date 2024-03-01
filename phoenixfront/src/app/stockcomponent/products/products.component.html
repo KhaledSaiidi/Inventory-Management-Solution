@@ -124,6 +124,8 @@
                             <td></td>
                           </ng-container>                   
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && prod.managerProd.firstname && prod.managerProd.lastname"><span [innerHTML]="highlightMatch(prod.managerProd.firstname.toUpperCase() + ' ' +prod.managerProd.lastname.toUpperCase())"></span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.managerProd"></td>  
+
                         <ng-container *ngIf="prod.agentProd">
                         <td style="max-width: 50px; margin-right: -5px;">
                           <a class="icon-link" (click)="confirmAgentDeletion(prod)">
@@ -136,6 +138,8 @@
                       </ng-container>                   
                                   
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && prod.agentProd.firstname && prod.agentProd.lastname"><span [innerHTML]="highlightMatch(prod.agentProd.firstname.toUpperCase() + ' ' +  prod.agentProd.lastname.toUpperCase())"> </span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentProd"></td>  
+
                         <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
                           <ng-container *ngIf="!isEditMode || prod !== selectedProd">
                             <span style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;" (dblclick)="enableEditMode(prod, i)">

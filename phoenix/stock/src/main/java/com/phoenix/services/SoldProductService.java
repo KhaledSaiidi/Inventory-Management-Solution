@@ -280,4 +280,27 @@ public class SoldProductService  implements IsoldProductService{
     }
 
 
+    @Override
+    public void returnProduct(String prodRef){
+        LocalDate returnDate = LocalDate.now();
+        Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findById(prodRef);
+        if(optionalSoldProduct.isPresent()){
+
+
+            SoldProduct soldProduct = optionalSoldProduct.get();
+            Product product = iSoldTProductMapper.toProduct(soldProduct);
+
+            if(soldProduct.getAgentWhoSold() != null) {
+                AgentProd agentsoldProd = soldProduct.getAgentWhoSold();
+                iAgentProdRepository.delete(agentsoldProd);
+            }
+            product.setCheckin(returnDate);
+            //add atributs solddate and agent who sold and returned to product
+            product.setState(State.returnedProd);
+            iSoldProductRepository.delete(soldProduct);
+            iProductRepository.save(product);
+
+        }
+    }
+
 }
