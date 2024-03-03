@@ -40,11 +40,11 @@
                 </div>
 
                 <div class="d-flex mb-5 align-items-center">
-                  <label class="control control--checkbox mb-0">
+               <label class="control control--checkbox mb-0">
                     <span class="caption">Remember me</span>
-                    <input type="checkbox" checked="checked" name="rememberMe"/>
+                    <input tabindex="3" id="rememberMe" name="rememberMe" type="checkbox">
                     <div class="control__indicator"></div>
-                  </label>
+                </label>
                   <span class="ml-auto"><a href="${url.loginResetCredentialsUrl}" class="forgot-pass">Forgot Password</a></span> 
                 </div>
 
