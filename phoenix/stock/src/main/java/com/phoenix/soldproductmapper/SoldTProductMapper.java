@@ -29,6 +29,7 @@ public class SoldTProductMapper implements ISoldTProductMapper {
         Product product = new Product();
         product.setSerialNumber(soldProduct.getSerialNumber());
         product.setSimNumber(soldProduct.getSimNumber());
+        product.setCheckout(soldProduct.getSoldDate());
         product.setBrand(soldProduct.getBrand());
         product.setProductType(soldProduct.getProductType());
         product.setProdName(soldProduct.getProdName());

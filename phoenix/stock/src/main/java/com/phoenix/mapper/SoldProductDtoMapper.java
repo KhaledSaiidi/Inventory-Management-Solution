@@ -17,7 +17,6 @@ public class SoldProductDtoMapper implements ISoldProductDtoMapper{
         SoldProductDto soldProductDto = new SoldProductDto();
         soldProductDto.setSerialNumber(soldProduct.getSerialNumber());
         soldProductDto.setSimNumber(soldProduct.getSimNumber());
-        soldProductDto.setCheckout(soldProduct.getCheckout());
         soldProductDto.setSoldDate(soldProduct.getSoldDate());
         soldProductDto.setCheckedSell(soldProduct.isCheckedSell());
         soldProductDto.setProductType(soldProduct.getProductType());
@@ -33,7 +32,6 @@ public class SoldProductDtoMapper implements ISoldProductDtoMapper{
         SoldProduct soldProduct = new SoldProduct();
         soldProduct.setSerialNumber(soldProductDto.getSerialNumber());
         soldProduct.setSimNumber(soldProductDto.getSimNumber());
-        soldProduct.setCheckout(soldProductDto.getCheckout());
         soldProduct.setSoldDate(soldProductDto.getSoldDate());
         soldProduct.setCheckedSell(soldProductDto.isCheckedSell());
         soldProduct.setProductType(soldProductDto.getProductType());

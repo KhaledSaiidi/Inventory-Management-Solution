@@ -20,6 +20,10 @@ public class Product {
     private String serialNumber;
     private String simNumber;
     private LocalDate checkin;
+
+    // adding this attribute
+    private LocalDate checkout;
+
     private String boxNumber;
     private String productType;
     private String brand;

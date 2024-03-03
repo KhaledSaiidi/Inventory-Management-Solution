@@ -1,17 +1,25 @@
-package com.phoenix.dtostock;
+package com.phoenix.model;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Data
+@Entity
+@Table(name = "t_reclamation")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReclamationDto {
+public class Reclamation {
+    @Id
     private Long id;
+    @Enumerated(EnumType.STRING)
     private ReclamType reclamationType;
+    @Lob
     private String reclamationText;
     private String senderReference;
     private String receiverReference;
@@ -21,5 +29,4 @@ public class ReclamationDto {
     private int quantityToAdd;
     private LocalDate reclamDate;
     private Boolean vued;
-
 }

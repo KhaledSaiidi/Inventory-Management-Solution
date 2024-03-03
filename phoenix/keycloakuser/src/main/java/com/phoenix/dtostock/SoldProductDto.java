@@ -12,7 +12,6 @@ import java.time.LocalDate;
 public class SoldProductDto {
     private String serialNumber;
     private String simNumber;
-    private LocalDate checkout;
     private LocalDate soldDate;
     private boolean checkedSell;
     private String productType;

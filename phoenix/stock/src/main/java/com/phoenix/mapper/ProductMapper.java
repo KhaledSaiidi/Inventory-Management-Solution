@@ -15,6 +15,7 @@ public class ProductMapper implements IProductMapper{
         productDto.setSerialNumber(product.getSerialNumber());
         productDto.setSimNumber(product.getSimNumber());
         productDto.setCheckin(product.getCheckin());
+        productDto.setCheckout(product.getCheckout());
         productDto.setBoxNumber(product.getBoxNumber());
         productDto.setBrand(product.getBrand());
         productDto.setProductType(product.getProductType());
@@ -31,6 +32,7 @@ public class ProductMapper implements IProductMapper{
         product.setSerialNumber(productDto.getSerialNumber());
         product.setSimNumber(productDto.getSimNumber());
         product.setCheckin(productDto.getCheckin());
+        product.setCheckout(productDto.getCheckout());
         product.setBoxNumber(productDto.getBoxNumber());
         product.setBrand(productDto.getBrand());
         product.setProductType(productDto.getProductType());

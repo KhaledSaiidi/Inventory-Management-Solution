@@ -14,6 +14,7 @@ public class ProductDto {
     private String serialNumber;
     private String simNumber;
     private LocalDate checkin;
+    private LocalDate checkout;
     private String boxNumber;
     private String brand;
     private String productType;

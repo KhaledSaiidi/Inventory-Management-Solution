@@ -20,6 +20,7 @@
         <module>discovery-server</module>
         <module>config-server</module>
         <module>gateway</module>
+        <module>notification</module>
     </modules>
 
     <properties>

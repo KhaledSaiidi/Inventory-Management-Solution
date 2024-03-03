@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="config-server" />
+        <module name="notification" />
         <module name="discovery-server" />
         <module name="stock" />
         <module name="gateway" />
@@ -21,6 +22,7 @@
       <module name="discovery-server" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="keycloakuser" options="-parameters" />
+      <module name="notification" options="-parameters" />
       <module name="stock" options="-parameters" />
     </option>
   </component>

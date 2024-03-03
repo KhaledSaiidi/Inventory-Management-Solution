@@ -20,7 +20,6 @@ public class SoldProduct {
     @jakarta.persistence.Id
     private String serialNumber;
     private String simNumber;
-    private LocalDate checkout;
     private LocalDate soldDate;
     private boolean checkedSell;
     private String productType;
