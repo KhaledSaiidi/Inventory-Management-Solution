@@ -65,7 +65,7 @@ public class Controller {
         if (response.getStatus() == 201) { // User created successfully
             iUserServices.addUser(userdto);
             String userId = keycloak.realm(realm).users().search(userdto.getUsername()).get(0).getId();
-            iUserServices.ass   ignRoles(userId, userdto.getRealmRoles());
+            iUserServices.assignRoles(userId, userdto.getRealmRoles());
             return Response.ok(userdto).build();
         } else {
             return Response.status(response.getStatus()).entity(response.getEntity()).build(); // Return Keycloak's error response
