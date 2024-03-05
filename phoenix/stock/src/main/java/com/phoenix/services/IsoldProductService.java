@@ -18,6 +18,6 @@ public interface IsoldProductService {
     Page<SoldProductDto> getSoldProductsByusername(Pageable pageable, String username);
     List<String> uploadcsvTocheckSell(MultipartFile file, String stockReference) throws IOException;
     Map<String, Integer> getSoldProductsInfosBystockReference(String stockreference);
-    void returnProduct(String prodRef);
+    void returnProduct(String prodRef, AgentProdDto returnagentProd);
 
     }

@@ -44,4 +44,12 @@ public class Product {
     @JoinColumn(name = "agent_prod_ref")
     private AgentProd agentProd;
 
+
+    @ManyToOne
+    @JoinColumn(name = "agent_soldiT_prod_ref")
+    private AgentProd agentwhoSoldProd;
+    @ManyToOne
+    @JoinColumn(name = "agent_returned_prod_ref")
+    private AgentProd agentReturnedProd;
+
 }

@@ -36,6 +36,12 @@ public class AgentProd {
     @OneToMany(mappedBy = "agentAssociatedProd")
     private List<SoldProduct> agentproductsAssociated;
 
+
+    @OneToMany(mappedBy = "agentwhoSoldProd")
+    private List<Product> productssoldAndreturnedAssociated;
+    @OneToMany(mappedBy = "agentReturnedProd")
+    private List<Product> productsreturnedAssociated;
+
     @PrePersist
     private void generateReference() {
         if (this.agentRef == null) {

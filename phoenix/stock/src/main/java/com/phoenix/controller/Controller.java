@@ -242,8 +242,8 @@ public class Controller {
 
 
     @PostMapping("/returnProduct/{prodRef}")
-    public void returnProduct(@PathVariable("prodRef") String prodRef) {
-        isoldProductService.returnProduct(prodRef);
+    public void returnProduct(@PathVariable("prodRef") String prodRef ,@RequestBody AgentProdDto agentProdDto) {
+        isoldProductService.returnProduct(prodRef, agentProdDto);
 
     }
 

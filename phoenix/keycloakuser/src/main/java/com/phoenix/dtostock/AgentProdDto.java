@@ -24,5 +24,7 @@ public class AgentProdDto {
     private List<SoldProductDto> soldproductsManaged;
     private List<SoldProductDto> productsSoldBy;
     private List<SoldProductDto> agentproductsAssociated;
+    private List<ProductDto> productssoldAndreturnedAssociated;
+    private List<ProductDto> productsreturnedAssociated;
 
 }

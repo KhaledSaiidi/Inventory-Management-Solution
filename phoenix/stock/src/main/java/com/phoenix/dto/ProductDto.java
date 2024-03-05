@@ -3,6 +3,8 @@ package com.phoenix.dto;
 import com.phoenix.model.AgentProd;
 import com.phoenix.model.State;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -30,4 +32,6 @@ public class ProductDto {
     private StockDto stock;
     private AgentProdDto agentProd;
     private AgentProdDto managerProd;
+    private AgentProdDto agentwhoSoldProd;
+    private AgentProdDto agentReturnedProd;
 }

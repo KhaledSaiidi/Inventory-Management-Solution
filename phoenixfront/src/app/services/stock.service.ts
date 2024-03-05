@@ -307,4 +307,14 @@ getSoldProductsInfo(stockReference: string): Observable<any> {
 }
 
 
+
+returnProduct(prodRef: string, agentProdDto: AgentProdDto): Observable<any> {
+  return this.http.post<any>(this.apiUrl + '/returnProduct/'+ prodRef, agentProdDto)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
 }

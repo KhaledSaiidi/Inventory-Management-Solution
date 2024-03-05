@@ -26,4 +26,7 @@ public class ProductDto {
     private StockDto stock;
     private AgentProdDto agentProd;
     private AgentProdDto managerProd;
+    private AgentProdDto agentwhoSoldProd;
+    private AgentProdDto agentReturnedProd;
+
 }

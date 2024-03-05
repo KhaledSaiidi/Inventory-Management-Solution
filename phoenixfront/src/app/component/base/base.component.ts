@@ -31,6 +31,14 @@ public ngOnInit() {
     }
     this.router.navigate(['/scantosell'], { queryParams: { id: userName } });      
   }
+
+  navigateToreturn(userName?: string) {
+    if (userName === undefined) {
+      console.log('Invalid Username');
+      return;
+    }
+    this.router.navigate(['/scantoreturn'], { queryParams: { id: userName } });      
+  }
   
   navigateToUserdetails(userName?: string) {
     if (userName === undefined) {

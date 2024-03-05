@@ -102,7 +102,7 @@ export class ProductsComponent implements OnInit{
           (productPage: ProductPage) => {
             this.loading = false;
             this.currentPage = productPage.number + 1;
-            this.filterfinishforProds = productPage.content;
+            this.filterfinishforProds = productPage.content
             this.totalPages = productPage.totalPages;
             this.checkAndSetEmptyProducts();
               this.cdRef.detectChanges();

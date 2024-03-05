@@ -38,6 +38,7 @@ public class SoldTProductMapper implements ISoldTProductMapper {
         product.setStock(soldProduct.getStock());
         product.setManagerProd(soldProduct.getManagerSoldProd());
         product.setAgentProd(soldProduct.getAgentAssociatedProd());
+        product.setAgentwhoSoldProd(soldProduct.getAgentWhoSold());
         return product;
     }
 
