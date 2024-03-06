@@ -317,4 +317,17 @@ returnProduct(prodRef: string, agentProdDto: AgentProdDto): Observable<any> {
     })
   );
 }
+
+getReturnedProductsPaginatedByStockReference(stockReference: string, page: number, size: number, searchTerm: String): Observable<ProductPage> {
+  const apiUrl = this.apiUrl + '/getReturnedProductsPaginatedByStockReference/' + stockReference + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<ProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
+
 }

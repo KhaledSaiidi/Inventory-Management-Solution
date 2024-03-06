@@ -64,13 +64,16 @@ public class ProductService implements IProductService{
     public void addProduct(ProductDto productDto) {
         productDto.setState(State.prod);
         Product product = iProductMapper.toEntity(productDto);
+        product.setState(State.prod);
         Stock stock = iStockMapper.toEntity(productDto.getStock());
         if (stock.getStockValue() == null) {
             stock.setStockValue(BigDecimal.ZERO);
         }
         product.setStock(stock);
         iProductRepository.save(product);
-        stock.setStockValue(stock.getStockValue().add(product.getPrice()));
+        if(product.getPrice() != null) {
+          stock.setStockValue(stock.getStockValue().add(product.getPrice()));
+        }
         stock.setChecked(false);
         iStockRepository.save(stock);
     }
@@ -100,13 +103,17 @@ public class ProductService implements IProductService{
         for (int i = 0; i < productDtos.size(); i++) {
             Product product = products.get(i);
             ProductDto productDto = productDtos.get(i);
-            if(product.getAgentProd() != null){
-                AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
-                productDto.setAgentProd(agentProdDto);
-            }
-            if(product.getManagerProd() != null){
-                AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
-                productDto.setManagerProd(managerProdDto);
+            if(productDto.getState() == State.prod) {
+                if (product.getAgentProd() != null) {
+                    AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
+                    productDto.setAgentProd(agentProdDto);
+                }
+                if (product.getManagerProd() != null) {
+                    AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
+                    productDto.setManagerProd(managerProdDto);
+                }
+            } else {
+                productDtos.remove(productDto);
             }
         }
         if (!searchTerm.isEmpty()) {
@@ -138,6 +145,14 @@ public class ProductService implements IProductService{
         if (productDto.getManagerProd() != null) {
             searchFields.append(productDto.getManagerProd().getFirstname().toLowerCase())
                     .append(productDto.getManagerProd().getLastname().toLowerCase());
+        }
+        if (productDto.getAgentwhoSoldProd() != null) {
+            searchFields.append(productDto.getAgentwhoSoldProd().getFirstname().toLowerCase())
+                    .append(productDto.getAgentwhoSoldProd().getLastname().toLowerCase());
+        }
+        if (productDto.getAgentReturnedProd() != null) {
+            searchFields.append(productDto.getAgentReturnedProd().getFirstname().toLowerCase())
+                    .append(productDto.getAgentReturnedProd().getLastname().toLowerCase());
         }
         return searchFields.toString().contains(searchString);
     }
@@ -204,6 +219,7 @@ public class ProductService implements IProductService{
                 for (Product product : products) {
                     if (product.getSerialNumber().equalsIgnoreCase(serial)) {
                         product.setCheckedExistence(true);
+                        product.setState(State.prod);
                         iProductRepository.save(product);
                         found = true;
                         break;
@@ -398,5 +414,58 @@ public class ProductService implements IProductService{
             productsInfo.put("returned", (int) returned);
         }
         return productsInfo;
+    }
+
+
+    @Override
+    public Page<ProductDto> getReturnedProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm) {
+
+        Optional<Stock> stockOptional = iStockRepository.findById(stockreference);
+        if (stockOptional.isEmpty()) {
+            return new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
+        Stock stock = stockOptional.get();
+        List<Product> products  = iProductRepository.findByStock(stock);
+        List<ProductDto> productDtos = iProductMapper.toDtoList(products);
+        for (int i = 0; i < productDtos.size(); i++) {
+            Product product = products.get(i);
+            ProductDto productDto = productDtos.get(i);
+            if(productDto.getState() == State.returnedProd) {
+                if (product.getAgentProd() != null) {
+                    AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
+                    productDto.setAgentProd(agentProdDto);
+                }
+                if (product.getManagerProd() != null) {
+                    AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
+                    productDto.setManagerProd(managerProdDto);
+                }
+                if (product.getAgentwhoSoldProd() != null) {
+                    AgentProdDto agentwhoSoldProd = iAgentProdMapper.toDto(product.getAgentwhoSoldProd());
+                    productDto.setAgentwhoSoldProd(agentwhoSoldProd);
+                }
+                if (product.getAgentReturnedProd() != null) {
+                    AgentProdDto agentReturnedProd = iAgentProdMapper.toDto(product.getAgentReturnedProd());
+                    productDto.setAgentReturnedProd(agentReturnedProd);
+                }
+            } else {
+                productDtos.remove(productDto);
+            }
+        }
+        if (!searchTerm.isEmpty()) {
+            productDtos = productDtos.parallelStream()
+                    .filter(productDto -> filterBySearchTerm(productDto, searchTerm))
+                    .collect(Collectors.toList());
+        }
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<ProductDto> pageContent;
+        if (productDtos.size() < startItem) {
+            pageContent = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, productDtos.size());
+            pageContent = productDtos.subList(startItem, toIndex);
+        }
+        return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
 }

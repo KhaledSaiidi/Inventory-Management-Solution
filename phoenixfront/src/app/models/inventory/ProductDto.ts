@@ -17,4 +17,7 @@ export interface Productdto {
     stock?: Stockdto;
     agentProd?: AgentProdDto;
     managerProd?: AgentProdDto;
+     agentwhoSoldProd?: AgentProdDto;
+     agentReturnedProd?: AgentProdDto;
+
 }

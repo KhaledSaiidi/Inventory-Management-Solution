@@ -24,4 +24,6 @@ public interface IProductService {
     Page<ProductDto> getProductsPaginatedByusername(Pageable pageable, String username);
     void checkProds(String stockreference, Set<String> prodsref);
     Map<String, Integer> getProductsInfosBystockReference(String stockreference);
+
+    Page<ProductDto> getReturnedProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
 }

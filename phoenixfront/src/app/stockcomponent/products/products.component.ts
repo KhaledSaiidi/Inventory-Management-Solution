@@ -60,6 +60,14 @@ export class ProductsComponent implements OnInit{
       this.filterfinishforSoldProds = [];
         }
 
+    try {
+      await this.getReturnedProductsByStockReference(this.stockreference, 0, this.searchTerm);
+      this.cdRef.detectChanges();
+    } catch (error) {
+     this.returnProds = [];
+       }
+        
+
   }
   navigateToAddProduct(ref?: string) {
     if (ref === undefined) {
@@ -82,7 +90,6 @@ export class ProductsComponent implements OnInit{
       }
     );
   }
-  state!: State;
   loading: boolean = true;
   emptyProducts: boolean = true;
   totalPages: number = 0;
@@ -104,6 +111,7 @@ export class ProductsComponent implements OnInit{
             this.currentPage = productPage.number + 1;
             this.filterfinishforProds = productPage.content
             this.totalPages = productPage.totalPages;
+            console.log(this.filterfinishforProds);
             this.checkAndSetEmptyProducts();
               this.cdRef.detectChanges();
           },
@@ -140,6 +148,10 @@ searchStocks() {
     this.searchDebounce = setTimeout(() => {
       this.getSoldProductsByStockReference(this.stockreference, 0, this.searchWithoutspaces);
     }, 600); }
+    if(this.selectedTab === 2){
+      this.searchDebounce = setTimeout(() => {
+      this.getReturnedProductsByStockReference(this.stockreference, 0, this.searchWithoutspaces);
+      }, 600); }
 }
 
 highlightMatch(value: string) : SafeHtml {
@@ -216,24 +228,6 @@ onPageChange(newPage: number): void {
   
     }
         
- /* uncheckedProds!: string[];
-  uploadFile(): void {
-    if (this.selectedFile) {
-      this.stockservice.uploadFile(this.selectedFile, this.stockreference).subscribe(
-        result => {
-          this.uncheckedProds = result as string[];
-          console.log(this.uncheckedProds);
-          this.dataSharingService.updateUncheckedProds(this.uncheckedProds);
-          this.navigateToCheckProds(this.stockreference);
-        },
-        error => {
-          console.error('Error uploading file:', error);
-        }
-      );
-    } else {
-      console.error('No file selected.');
-    }
-  } */
 
   navigateToCheckProds(ref?: string) {
     if (ref === undefined) {
@@ -530,6 +524,54 @@ onPageChange(newPage: number): void {
           console.error('No file selected.');
         }
       }
+  
+
+
+
+      returnloading: boolean = true;
+      emptyReturnProducts: boolean = true;
+      totalReturnPages: number = 0;
+      totalReturnlements: number = 0;  
+      currentReturnPage: number = 0;
+      returnProds: Productdto[] = [];
+      pagedReturnProducts: Productdto[][] = [];
+    
+      
+      getReturnedProductsByStockReference(ref: string, page: number, search: string) {
+        this.returnloading = true;
+        try {
+          this.stockservice.getReturnedProductsPaginatedByStockReference(ref, page, this.pageSize, search)
+            .subscribe(
+              (productPage: ProductPage) => {
+                this.returnloading = false;
+                this.currentReturnPage = productPage.number + 1;
+                this.returnProds = productPage.content
+                this.totalReturnPages = productPage.totalPages;
+                this.checkAndSetEmptyReturnProducts();
+                  this.cdRef.detectChanges();
+              },
+              (error) => {
+                console.error('Error fetching stocks:', error);
+                this.returnloading = false;
+              }
+            );
+        } catch (error) {
+          console.error('Unexpected error:', error);
+          this.returnloading = false;
+        }
+        }
+    
+    private checkAndSetEmptyReturnProducts() {
+      if(this.returnProds && this.returnProds.length > 0) {
+        this.emptyReturnProducts = false;
+      } else {
+        this.emptyReturnProducts = true;
+      }
+    }
+    
+    onReturnProdPageChange(newPage: number): void {
+      this.getReturnedProductsByStockReference(this.stockreference, newPage - 1, this.searchTerm);
+  } 
   
 }
     

@@ -16,5 +16,6 @@ export interface AgentProdDto {
      soldproductsManaged?: SoldProductDto[];
      productsSoldBy?: SoldProductDto[];
      agentproductsAssociated?: SoldProductDto[];
- 
+     productssoldAndreturnedAssociated?: Productdto[];
+     productsreturnedAssociated?: Productdto[];
 }

@@ -248,4 +248,16 @@ public class Controller {
     }
 
 
+    @GetMapping("getReturnedProductsPaginatedByStockReference/{stockreference}")
+    public ResponseEntity<Page<ProductDto>> getReturnedProductsPaginatedByStockReference(
+            @PathVariable String stockreference,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDto> productPage = iProductService.getReturnedProductsPaginatedBystockReference(pageable, stockreference, searchTerm);
+        return ResponseEntity.ok(productPage);
+    }
+
+
 }
