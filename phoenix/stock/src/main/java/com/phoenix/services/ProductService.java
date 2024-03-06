@@ -62,9 +62,8 @@ public class ProductService implements IProductService{
 
     @Override
     public void addProduct(ProductDto productDto) {
-        productDto.setState(State.prod);
         Product product = iProductMapper.toEntity(productDto);
-        product.setState(State.prod);
+        product.setReturned(false);
         Stock stock = iStockMapper.toEntity(productDto.getStock());
         if (stock.getStockValue() == null) {
             stock.setStockValue(BigDecimal.ZERO);
@@ -98,12 +97,11 @@ public class ProductService implements IProductService{
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
         Stock stock = stockOptional.get();
-        List<Product> products  = iProductRepository.findByStock(stock);
+        List<Product> products  = iProductRepository.findByStockAndReturned(stock, false);
         List<ProductDto> productDtos = iProductMapper.toDtoList(products);
         for (int i = 0; i < productDtos.size(); i++) {
             Product product = products.get(i);
             ProductDto productDto = productDtos.get(i);
-            if(productDto.getState() == State.prod) {
                 if (product.getAgentProd() != null) {
                     AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
                     productDto.setAgentProd(agentProdDto);
@@ -112,9 +110,6 @@ public class ProductService implements IProductService{
                     AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
                     productDto.setManagerProd(managerProdDto);
                 }
-            } else {
-                productDtos.remove(productDto);
-            }
         }
         if (!searchTerm.isEmpty()) {
             productDtos = productDtos.parallelStream()
@@ -171,7 +166,7 @@ public class ProductService implements IProductService{
         if (productDto.getProdName() != null) {product.setProdName(productDto.getProdName());}
         if (productDto.getComments() != null) {product.setComments(productDto.getComments());}
         if (productDto.getPrice() != null) {product.setPrice(productDto.getPrice());}
-        if (productDto.getState() != null) {product.setState(productDto.getState());}
+        if (productDto.isReturned()) {product.setReturned(productDto.isReturned());}
         if (productDto.isCheckedExistence()) {product.setCheckedExistence(productDto.isCheckedExistence());}
         if (productDto.getPrice() != null) {
             tochangeValue = product.getPrice();
@@ -206,71 +201,7 @@ public class ProductService implements IProductService{
 
 
 
-    @Override
-    public List<String> uploadProducts(MultipartFile file, String stockReference) throws IOException {
-        Set<String> serialNumbers = parseCsvCheck(file);
-        List<String> notFoundserialNumbers = new ArrayList<>();
-        Optional<Stock> stockOptional = iStockRepository.findById(stockReference);
-        if(stockOptional.isPresent()) {
-            Stock stock = stockOptional.get();
-            List<Product> products = iProductRepository.findByStock(stock);
-            for (String serial : serialNumbers) {
-                boolean found = false;
-                for (Product product : products) {
-                    if (product.getSerialNumber().equalsIgnoreCase(serial)) {
-                        product.setCheckedExistence(true);
-                        product.setState(State.prod);
-                        iProductRepository.save(product);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    notFoundserialNumbers.add(serial);
-                }
-            }
-            List<Product> productsafterChange = iProductRepository.findByStock(stock);
-            Boolean productsAreChecked = true;
-            for (Product product : productsafterChange) {
-                if (!product.isCheckedExistence()) {
-                    productsAreChecked = false;
-                    break;
-                }
-            }
-            if (!notFoundserialNumbers.isEmpty()) {
-                UncheckHistory uncheckHistory = new UncheckHistory();
-                uncheckHistory.setNotFoundserialNumbers(notFoundserialNumbers);
-                uncheckHistory.setStockreference(stockReference);
-                uncheckHistory.setCheckDate(LocalDate.now());
-                iUncheckHistoryRepository.save(uncheckHistory);
-            }
-            if (notFoundserialNumbers.isEmpty() && productsAreChecked) {
-                stock.setChecked(true);
-                iStockRepository.save(stock);
-            }
-        }
-        return notFoundserialNumbers;
-    }
 
-    private Set<String> parseCsvCheck(MultipartFile file) throws IOException {
-        try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))){
-            CaseInsensitiveHeaderColumnNameMappingStrategy<SerialNumbersCsvRepresentation> strategy =
-                    new CaseInsensitiveHeaderColumnNameMappingStrategy<>();
-            strategy.setType(SerialNumbersCsvRepresentation.class);
-            CsvToBean<SerialNumbersCsvRepresentation> csvToBean =
-                    new CsvToBeanBuilder<SerialNumbersCsvRepresentation>(reader)
-                            .withMappingStrategy(strategy)
-                            .withIgnoreEmptyLine(true)
-                            .withIgnoreLeadingWhiteSpace(true)
-                            .withSeparator(',')
-                            .build();
-            return csvToBean.parse()
-                    .stream()
-                    .map(SerialNumbersCsvRepresentation::getSerialNumber)
-                    .filter(serialNumber -> !serialNumber.isEmpty())
-                    .collect(Collectors.toSet());
-        }
-    }
 
     @Override
     public Integer addProductsByupload(MultipartFile file, String stockReference) throws IOException {
@@ -307,7 +238,7 @@ public class ProductService implements IProductService{
                             .serialNumber(csvLine.getSerialNumber())
                             .simNumber(csvLine.getSimNumber())
                             .productType(csvLine.getProductType())
-                            .state(State.prod)
+                            .returned(false)
                             .build())
                     .collect(Collectors.toSet());
         }
@@ -406,7 +337,7 @@ public class ProductService implements IProductService{
         List<Product> products = iProductRepository.findByStock(stock);
         if(!products.isEmpty()) {
             long checked = products.stream().filter(Product::isCheckedExistence).count();
-            long returned = products.stream().filter(product -> product.getState() == State.returnedProd).count();
+            long returned = products.stream().filter(product -> product.isReturned()).count();
 
             int prods = products.size();
             productsInfo.put("prods", prods);
@@ -425,12 +356,11 @@ public class ProductService implements IProductService{
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
         Stock stock = stockOptional.get();
-        List<Product> products  = iProductRepository.findByStock(stock);
+        List<Product> products  = iProductRepository.findByStockAndReturned(stock, true);
         List<ProductDto> productDtos = iProductMapper.toDtoList(products);
         for (int i = 0; i < productDtos.size(); i++) {
             Product product = products.get(i);
             ProductDto productDto = productDtos.get(i);
-            if(productDto.getState() == State.returnedProd) {
                 if (product.getAgentProd() != null) {
                     AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
                     productDto.setAgentProd(agentProdDto);
@@ -447,9 +377,6 @@ public class ProductService implements IProductService{
                     AgentProdDto agentReturnedProd = iAgentProdMapper.toDto(product.getAgentReturnedProd());
                     productDto.setAgentReturnedProd(agentReturnedProd);
                 }
-            } else {
-                productDtos.remove(productDto);
-            }
         }
         if (!searchTerm.isEmpty()) {
             productDtos = productDtos.parallelStream()

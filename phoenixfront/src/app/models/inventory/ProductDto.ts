@@ -1,5 +1,4 @@
 import { AgentProdDto } from "./AgentProdDto";
-import { State } from "./State";
 import { Stockdto } from "./Stock";
 
 export interface Productdto {
@@ -12,7 +11,7 @@ export interface Productdto {
     prodName?: string;
     comments?: string;
     price?: number;
-    state?: State;
+    returned?: boolean;
     checkedExistence?: boolean;
     stock?: Stockdto;
     agentProd?: AgentProdDto;

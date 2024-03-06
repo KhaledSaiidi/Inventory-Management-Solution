@@ -269,6 +269,9 @@
 
             <ng-container *ngIf="selectedTab === 2">
               <div class="card-header pb-0" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <input type="checkbox" class="custom-checkbox" style="margin-right: 6px;">Check ALL
+                </div>
                 <h6 class="text-center" style="margin-top: -20px;">{{ campaignName }} Stock Returned Products</h6>
                 <span style="margin-top: -5px;">
                   <a (click)="navigateToAssignProduct()" class="no-hover" style="cursor: pointer;"><i class="fas fa-user-plus" style="margin-right: 5px;"></i>Assign Checked Items</a>
@@ -296,7 +299,7 @@
                      <tbody>
                       <ng-container  *ngIf="returnloading;">
                         <tr>
-                          <td colspan="10" style="text-align: center;">
+                          <td colspan="13" style="text-align: center;">
                             <div class="loading-container">
                               <div class="loading-spinner"></div>
                             </div>
@@ -305,7 +308,7 @@
                       </ng-container>
                       <ng-container  *ngIf="!returnloading && emptyReturnProducts;">
                         <tr>
-                          <td colspan="10" style="text-align: center;">
+                          <td colspan="13" style="text-align: center;">
                             <p>No products Returned. Please check back later.</p>
                           </td>
                         </tr>
@@ -380,7 +383,7 @@
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
                        </tr>
                        <tr>
-                        <td colspan="10" style="margin-right: 5px;">
+                        <td colspan="13" style="margin-right: 5px;">
                           <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
                          </td>
                         </tr>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
-import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
 

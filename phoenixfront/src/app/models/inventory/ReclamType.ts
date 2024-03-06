@@ -1,1 +1,0 @@
-export enum ReclamType {prodReturnType, prodAddType, otherReclamType}

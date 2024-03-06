@@ -8,8 +8,6 @@ import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.AgentProd;
 import com.phoenix.model.Product;
-import com.phoenix.model.State;
-import com.phoenix.model.Stock;
 import com.phoenix.repository.IAgentProdRepository;
 import com.phoenix.repository.IProductRepository;
 import jakarta.transaction.Transactional;
@@ -17,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,14 +62,6 @@ public class AgentProdService implements IAgentProdService{
                 managerProd = iAgentProdMapper.toEntity(managerOnProds);
                 managerProd.setAffectaiondate(currentDate);
             }
-            //
-
-
-
-
-
-
-            //
             if (agentProd != null) agentProdsToSave.add(agentProd);
             if (managerProd != null) agentProdsToSave.add(managerProd);
             if (!agentProdsToSave.isEmpty()) {

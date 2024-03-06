@@ -97,13 +97,6 @@ public class Controller {
         return productDto;
     }
 
-    @PostMapping(value = "/uploadcsv/{stockReference}", consumes = {"multipart/form-data"})
-    public List<String> uploadProducts(
-            @PathVariable String stockReference,
-            @RequestPart("file")MultipartFile file
-            )throws IOException {
-        return iProductService.uploadProducts(file, stockReference);
-    }
 
     @GetMapping("getUncheckedHistorybyStockreference/{stockreference}")
     public List<UncheckHistory> getUncheckedHistorybyStockreference(@PathVariable String stockreference) {

@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface IProductRepository extends JpaRepository<Product, String> {
     List<Product> findByStock(Stock stock);
+    List<Product> findByStockAndReturned(Stock stock, boolean returned);
+
     Page<Product> findByStock(Stock stock, Pageable pageable);
     Optional<Product> findByAgentProd (AgentProd agentProd);
     Optional<Product> findByManagerProd (AgentProd agentProd);

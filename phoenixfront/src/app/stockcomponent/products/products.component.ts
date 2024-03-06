@@ -2,7 +2,6 @@ import {  ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewChild
 import { ActivatedRoute, Router } from '@angular/router';
 import {  forkJoin, toArray } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
-import { State } from 'src/app/models/inventory/State';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
 import { QueryList } from '@angular/core';

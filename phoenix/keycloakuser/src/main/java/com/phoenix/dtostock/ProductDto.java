@@ -21,7 +21,7 @@ public class ProductDto {
     private String prodName;
     private String comments;
     private BigDecimal price;
-    private State state;
+    private boolean returned;
     private boolean checkedExistence;
     private StockDto stock;
     private AgentProdDto agentProd;

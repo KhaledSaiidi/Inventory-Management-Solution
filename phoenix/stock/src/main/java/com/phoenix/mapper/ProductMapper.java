@@ -22,7 +22,7 @@ public class ProductMapper implements IProductMapper{
         productDto.setProdName(product.getProdName());
         productDto.setComments(product.getComments());
         productDto.setPrice(product.getPrice());
-        productDto.setState(product.getState());
+        productDto.setReturned(product.isReturned());
         productDto.setCheckedExistence(product.isCheckedExistence());
         return productDto;
     }
@@ -39,7 +39,7 @@ public class ProductMapper implements IProductMapper{
         product.setProdName(productDto.getProdName());
         product.setComments(productDto.getComments());
         product.setPrice(productDto.getPrice());
-        product.setState(productDto.getState());
+        product.setReturned(productDto.isReturned());
         product.setCheckedExistence(productDto.isCheckedExistence());
         return product;
     }

@@ -292,7 +292,6 @@ public class SoldProductService  implements IsoldProductService{
             product.setAgentReturnedProd(returnedagentProd);
             product.setCheckedExistence(false);
             product.setCheckin(returnDate);
-            product.setState(State.returnedProd);
 
             iProductRepository.save(product);
             iSoldProductRepository.delete(soldProduct);

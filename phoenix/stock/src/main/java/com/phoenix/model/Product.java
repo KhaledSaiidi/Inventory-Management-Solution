@@ -21,7 +21,6 @@ public class Product {
     private String simNumber;
     private LocalDate checkin;
 
-    // adding this attribute
     private LocalDate checkout;
 
     private String boxNumber;
@@ -31,8 +30,7 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String comments;
     private BigDecimal price;
-    @Enumerated(EnumType.STRING)
-    private State state;
+    private boolean returned;
     private boolean checkedExistence;
     @ManyToOne
     @JoinColumn(name = "stock_reference")

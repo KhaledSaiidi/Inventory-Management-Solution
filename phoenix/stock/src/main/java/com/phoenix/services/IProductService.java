@@ -19,7 +19,6 @@ public interface IProductService {
     ProductDto UpdateProduct(String serialNumber, ProductDto productDto);
     ProductDto getProductByserialNumber(String serialNumber);
 
-    List<String> uploadProducts(MultipartFile file, String stockReference) throws IOException;
     Integer addProductsByupload(MultipartFile file, String stockReference) throws IOException;
     Page<ProductDto> getProductsPaginatedByusername(Pageable pageable, String username);
     void checkProds(String stockreference, Set<String> prodsref);
