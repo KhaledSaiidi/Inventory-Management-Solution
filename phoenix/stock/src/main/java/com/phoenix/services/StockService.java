@@ -1,7 +1,7 @@
 package com.phoenix.services;
 
+import com.phoenix.config.AuthorizationUtils;
 import com.phoenix.dto.AgentProdDto;
-import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.StockDto;
 import com.phoenix.dtokeycloakuser.Campaigndto;
 import com.phoenix.mapper.IAgentProdMapper;
@@ -12,7 +12,7 @@ import com.phoenix.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
@@ -20,18 +20,12 @@ import com.phoenix.repository.IStockRepository;
 import com.phoenix.repository.IUncheckHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +47,8 @@ public class StockService implements IStockService{
 
     @Autowired
     private IAgentProdMapper iAgentProdMapper;
+    @Autowired
+    private AuthorizationUtils authorizationUtils;
 
     @Override
     public void addStock(StockDto stockDto, String campaignReference) {
@@ -70,6 +66,20 @@ public class StockService implements IStockService{
         iStockRepository.save(stock);
 
     }
+ /*   private String addAuthorizationHeader() {
+        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            Jwt jwt = authentication.getToken();
+            if (jwt != null) {
+                System.out.println("jwt is :" + jwt);
+                String token = jwt.getTokenValue();
+                System.out.println("Token is : " +token);
+
+                return token;
+            }
+        }
+        return null;
+    } */
 
     @Override
     public Page<StockDto> getStocks(String searchTerm,Pageable pageable) {
@@ -78,6 +88,7 @@ public class StockService implements IStockService{
         List<Mono<Campaigndto>> campaignMonos = stockDtos.stream()
                 .map(stockDto -> webClientBuilder.build().get()
                         .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockDto.getCampaignRef())
+                     //   .header(HttpHeaders.AUTHORIZATION, "Bearer " + authorizationUtils.addAuthorizationHeader())
                         .retrieve()
                         .bodyToMono(Campaigndto.class))
                 .collect(Collectors.toList());
