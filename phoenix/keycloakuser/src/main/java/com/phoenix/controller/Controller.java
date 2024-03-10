@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.NotFoundException;
@@ -45,6 +46,7 @@ public class Controller {
 
     @GetMapping
     @RequestMapping("/users")
+    // @PreAuthorize("hasRole('IMANAGER')")
     public List<Userdto> getUsers() {
         Keycloak keycloak = keycloakUtil.getKeycloakInstance();
         List<UserRepresentation> userRepresentations =
