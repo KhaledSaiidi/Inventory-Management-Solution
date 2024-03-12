@@ -252,5 +252,9 @@ public class Controller {
         return ResponseEntity.ok(productPage);
     }
 
+    @PostMapping("/placeStock")
+    public String placeStock(@RequestParam String body) {
+        return iStockService.placeStock(body);
+    }
 
 }

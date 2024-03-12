@@ -20,4 +20,5 @@ public interface IStockService {
     StockDto UpdateStock(String reference, StockDto stockDto);
     List<StockDto> getStocksByCampaignRef(String campaignreference);
     List<String> getAllstockReferences();
+    String placeStock(String body);
     }

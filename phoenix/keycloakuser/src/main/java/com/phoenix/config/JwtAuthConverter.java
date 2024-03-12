@@ -23,7 +23,11 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter();
+    @Value("${jwt.auth.converter.principle-attribute}")
     private final String principleAttribute = "preferred_username";
+
+    @Value("${jwt.auth.converter.resource-id}")
+    private String resourceId;
 
     @Override
     public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
@@ -51,10 +55,10 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         Map<String, Object> resourceAccess;
         Map<String, Object> resource;
         Collection<String> resourceRoles;
-        if (jwt.getClaim("realm_access") == null) {
+        if (jwt.getClaim(resourceId) == null) {
             return Set.of();
         }
-        resourceAccess = jwt.getClaim("realm_access");
+        resourceAccess = jwt.getClaim(resourceId);
 
         resourceRoles = (Collection<String>) resourceAccess.get("roles");
         return resourceRoles

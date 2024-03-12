@@ -3,7 +3,9 @@ package com.phoenix.services;
 import com.phoenix.config.AuthorizationUtils;
 import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.StockDto;
+import com.phoenix.dto.StockEvent;
 import com.phoenix.dtokeycloakuser.Campaigndto;
+import com.phoenix.kafka.StockProducer;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
@@ -49,6 +51,9 @@ public class StockService implements IStockService{
     private IAgentProdMapper iAgentProdMapper;
     @Autowired
     private AuthorizationUtils authorizationUtils;
+
+    @Autowired
+    private StockProducer stockProducer;
 
     @Override
     public void addStock(StockDto stockDto, String campaignReference) {
@@ -243,5 +248,15 @@ public class StockService implements IStockService{
             }
         }
         return liststockreferences;
+    }
+
+    @Override
+    public String placeStock(String body){
+        StockEvent stockEvent = new StockEvent();
+        stockEvent.setStatus("PENDING");
+        stockEvent.setMessage("STOCK STATUS IS PENDING STATE");
+        stockEvent.setBody(body);
+        stockProducer.sendMessage(stockEvent);
+        return "Stock placed successfully";
     }
 }
