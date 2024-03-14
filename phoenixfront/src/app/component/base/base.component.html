@@ -7,7 +7,7 @@
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                   <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                     
-                  </div>
+                  </div> 
                   <ul class="navbar-nav  justify-content-end">
                 
                     
@@ -26,20 +26,38 @@
                         <i class="fa fa-sign-out fixed-plugin-button-nav cursor-pointer" style="font-size: 24px;"></i>
                       </a>
                     </li>
-                    <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                      <a  href="javascript:;" class="nav-link text-white p-0 position-relative" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-bell cursor-pointer" style="font-size: 24px;"></i>
-                        <span class="notification-badge"></span>
+                     <li class="nav-item dropdown pe-2 d-flex align-items-center" >
+                      <a  href="javascript:;" class="nav-link text-white p-0 position-relative" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" >
+                        <i class="fa fa-bell cursor-pointer" style="font-size: 24px;" ></i>
+                        <span *ngIf="notificationnumber > 0" class="notification-badge" >{{ notificationnumber }}</span>
                       </a>
-                      <div class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4 custom-dropdown-menu custom-dropdown-scroll" aria-labelledby="dropdownMenuButton">
-                        <div >
+                      
+                      <div class="dropdown-menu dropdown-menu-end px-2 me-sm-n4 custom-dropdown-menu" >
+                    
+                        <div *ngIf="!emptyreclamaations; else noNotifications">
                           <div class="notification-header">
                             <h6 class="m-0">Notifications</h6>
                           </div>
                           <ul class="notification-list">
-                            
+                            <li *ngFor="let notif of reclamations" class="notification-item">
+                              <div class="media">
+                                <div class="media-body" >
+                                  <h6 class="notification-sender">
+                                    <i class="fa fa-info-circle"></i>  {{ notif.senderReference }}
+                                    {{ notif.reclamationType }}
+                                    <small class="text-muted notification-date">{{ notif.reclamDate|  date:'HH:mm, dd MMM' }}</small>
+                                  </h6>
+                                  <div class="notification-content">
+                                    <span class="notification-message">{{ notif.reclamationText }}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
                           </ul>
                         </div>
+                        <ng-template #noNotifications>
+                          <div class="empty-notification">No Notifications yet..</div>
+                        </ng-template>
                       </div>
                      </li>
                   </ul>

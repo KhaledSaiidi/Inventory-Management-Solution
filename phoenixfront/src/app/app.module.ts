@@ -37,6 +37,7 @@ import { AssignproductsComponent } from './stockcomponent/assignproducts/assignp
 import { ScanComponent } from './component/scan/scan.component';
 import { SellprodComponent } from './component/sellprod/sellprod.component';
 import { ReturnbyscanComponent } from './component/returnbyscan/returnbyscan.component';
+import { StompService } from './services/stomp.service'
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -131,17 +132,19 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     ReactiveFormsModule,
     FormsModule,
     KeycloakAngularModule,
-    WebcamModule,
+    WebcamModule
   ],
   providers: [
     KeycloakService,
     SecurityService,
+    StompService,
     {
       provide: APP_INITIALIZER,
       useFactory: kcFactory,
       multi: true,
       deps: [KeycloakService, SecurityService],
     },
-    ],  bootstrap: [AppComponent]
+    ],  
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,4 +1,4 @@
-package com.phoenix.config;
+ package com.phoenix.config;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;

@@ -4,6 +4,7 @@ import com.phoenix.model.ReclamType;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Getter
@@ -20,7 +21,7 @@ public class ReclamationDto {
     private String campaignReference;
     private String productType;
     private int quantityToAdd;
-    private LocalDate reclamDate;
+    private LocalDateTime reclamDate;
     private Boolean vued;
 
 }

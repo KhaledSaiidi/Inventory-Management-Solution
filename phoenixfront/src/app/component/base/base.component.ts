@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ReclamationDto } from 'src/app/models/notifications/ReclamationDto';
+import { NotificationService } from 'src/app/services/notification.service';
 import { SecurityService } from 'src/app/services/security.service';
+import { StompService } from 'src/app/services/stomp.service';
 
 @Component({
   selector: 'app-base',
@@ -8,12 +11,17 @@ import { SecurityService } from 'src/app/services/security.service';
   styleUrls: ['./base.component.css']
 })
 export class BaseComponent implements OnInit{
-constructor (public securityService: SecurityService, private router: Router) { 
+constructor (public securityService: SecurityService, private router: Router,
+             public stompService: StompService, public notificationService: NotificationService) { 
+              this.refreshnotifications();
 }
 public ngOnInit() {
   if (this.securityService.profile) {
     console.log(this.securityService.profile);
   }
+  this.stompService.subscribe('/topic/notification', (): any => {
+    this.refreshnotifications();
+  }); 
 }
 
   onLogout() {
@@ -50,4 +58,34 @@ public ngOnInit() {
   navigateToStocks(){
     window.location.href = '/stocks';
   }
+
+  refreshnotifications(){
+    this.getreclamations();
+  }
+
+  reclamations: ReclamationDto[] = [];
+  emptyreclamaations: boolean = true;
+  notificationnumber : number = 0;
+
+  getreclamations(){
+    this.notificationService.getReclamations().subscribe(
+      (data) => {
+    this.reclamations = data as ReclamationDto[];
+    this.notificationnumber = 0;
+    if(this.reclamations.length > 0){
+      this.emptyreclamaations =false;
+      this.reclamations.forEach(reclamation => {
+        if(reclamation.vued === false){
+          this.notificationnumber++;
+        }
+        
+      });
+      }
+      },
+      (error) => {
+        console.error('Failed to get reclamations:', error);
+      }
+    );
+  }
+
 }

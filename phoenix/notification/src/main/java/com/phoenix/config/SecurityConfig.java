@@ -1,4 +1,4 @@
-package com.phoenix.config;
+ package com.phoenix.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,4 +31,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

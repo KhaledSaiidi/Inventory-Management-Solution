@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "t_reclamation")
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Reclamation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
     private ReclamType reclamationType;
@@ -27,6 +29,6 @@ public class Reclamation {
     private String campaignReference;
     private String productType;
     private int quantityToAdd;
-    private LocalDate reclamDate;
+    private LocalDateTime reclamDate;
     private Boolean vued;
 }

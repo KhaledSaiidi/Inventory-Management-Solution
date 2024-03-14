@@ -37,7 +37,7 @@ public class SecurityConfig {
             ServerHttpResponse response = exchange.getResponse();
             HttpHeaders headers = response.getHeaders();
 
-            headers.setAccessControlAllowOrigin("*");
+            headers.setAccessControlAllowOrigin("http://localhost:4200");
             headers.setAccessControlAllowCredentials(true);
             headers.setAccessControlAllowHeaders(Arrays.asList("Authorization", "Content-Type"));
 
