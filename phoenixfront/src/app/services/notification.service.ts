@@ -7,7 +7,7 @@ import { ReclamationDto } from '../models/notifications/ReclamationDto';
   providedIn: 'root'
 })
 export class NotificationService {
-  readonly apiUrl = "http://localhost:9000";
+  readonly apiUrl = "http://localhost:9000/notification";
 
   constructor(private http: HttpClient) { }
 

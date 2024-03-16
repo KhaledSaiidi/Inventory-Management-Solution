@@ -1,5 +1,7 @@
 package com.phoenix.config;
 
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +14,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
+import java.net.http.WebSocket;
 import java.util.Arrays;
 
 @Configuration
@@ -23,7 +26,7 @@ public class SecurityConfig {
         serverHttpSecurity
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange ->
-                        exchange.pathMatchers("/eureka/**")
+                        exchange.pathMatchers("/eureka/**", "/notification/notif-websocket/**")
                                 .permitAll()
                                 .anyExchange()
                                 .authenticated())
@@ -36,23 +39,24 @@ public class SecurityConfig {
         return exchange -> {
             ServerHttpResponse response = exchange.getResponse();
             HttpHeaders headers = response.getHeaders();
+            String path = exchange.getRequest().getURI().getPath();
+            if (!path.startsWith("/notification/notif-websocket/")) {
+                headers.setAccessControlAllowOrigin("http://localhost:4200");
+                headers.setAccessControlAllowCredentials(true);
+                headers.setAccessControlAllowHeaders(Arrays.asList("Authorization", "Content-Type"));
 
-            headers.setAccessControlAllowOrigin("http://localhost:4200");
-            headers.setAccessControlAllowCredentials(true);
-            headers.setAccessControlAllowHeaders(Arrays.asList("Authorization", "Content-Type"));
-
-            if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
-                headers.setAccessControlAllowMethods(Arrays.asList(
-                        HttpMethod.GET,
-                        HttpMethod.POST,
-                        HttpMethod.PUT,
-                        HttpMethod.DELETE
-                ));
-                headers.setAccessControlMaxAge(3600L);
-                return new CorsConfiguration().applyPermitDefaultValues();
+                if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
+                    headers.setAccessControlAllowMethods(Arrays.asList(
+                            HttpMethod.GET,
+                            HttpMethod.POST,
+                            HttpMethod.PUT,
+                            HttpMethod.DELETE
+                    ));
+                    headers.setAccessControlMaxAge(3600L);
+                    return new CorsConfiguration().applyPermitDefaultValues();
+                }
             }
             return null;
         };
     }
-
 }

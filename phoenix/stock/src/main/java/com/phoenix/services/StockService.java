@@ -55,6 +55,7 @@ public class StockService implements IStockService{
     @Autowired
     private StockProducer stockProducer;
 
+
     @Override
     public void addStock(StockDto stockDto, String campaignReference) {
        Campaigndto campaigndto =  webClientBuilder.build().get()

@@ -59,6 +59,4 @@
             <artifactId>spring-security-messaging</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>

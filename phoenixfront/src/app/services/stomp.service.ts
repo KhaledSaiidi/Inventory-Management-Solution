@@ -7,7 +7,7 @@ import { Stomp } from '@stomp/stompjs';
 })
 export class StompService {
   
-  socket = new SockJS('http://localhost:9000/notif-websocket');
+  socket = new SockJS('http://localhost:9000/notification/notif-websocket');
   stompClient = Stomp.over(this.socket);
 
   subscribe(topic: string, callback: any): void {
