@@ -1,28 +1,19 @@
-package com.phoenix.model;
+package com.phoenix.dto;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "t_reclamation")
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Reclamation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ReclamationDto {
     private Long id;
-    @Enumerated(EnumType.STRING)
     private ReclamType reclamationType;
-    @Lob
     private String reclamationText;
     private String senderReference;
     private List<String> receiverReference;

@@ -1,3 +1,3 @@
 package com.phoenix.model;
 
-public enum ReclamType {prodReturnType, prodAddType, otherReclamType }
+public enum ReclamType {prodReturnType, prodSoldType, restockingType, stockExpirationReminder, otherReclamType }

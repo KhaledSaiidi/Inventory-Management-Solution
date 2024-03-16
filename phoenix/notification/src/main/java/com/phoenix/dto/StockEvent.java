@@ -10,5 +10,5 @@ import lombok.*;
 public class StockEvent {
     private String message;
     private String status;
-    private String body;
+    private ReclamationDto reclamationDto;
 }

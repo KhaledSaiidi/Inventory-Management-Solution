@@ -5,11 +5,14 @@ export interface ReclamationDto {
     reclamationType?: ReclamType;
     reclamationText?: string;
     senderReference?: string;
-    receiverReference?: string;
-    serialNumberOfReturnedStock?: string;
-    campaignReference?: string;
-    productType?: string;
+    receiverReference?: string[];
+    vuedreceivers?: string[];
+    serialNumberOfSolddProduct?: String;
+    soldDate?: Date;
+    serialNumberOfReturnedProduct?: String;
+    returnedDate?: Date;
+    expirationDate?: Date;
     quantityToAdd?: number;
     reclamDate?: Date;
-    vued?: Boolean;
+
 }

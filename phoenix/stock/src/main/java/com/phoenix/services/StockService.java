@@ -14,7 +14,6 @@ import com.phoenix.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import com.phoenix.model.Stock;
 import com.phoenix.model.UncheckHistory;
@@ -256,7 +255,6 @@ public class StockService implements IStockService{
         StockEvent stockEvent = new StockEvent();
         stockEvent.setStatus("PENDING");
         stockEvent.setMessage("STOCK STATUS IS PENDING STATE");
-        stockEvent.setBody(body);
         stockProducer.sendMessage(stockEvent);
         return "Stock placed successfully";
     }

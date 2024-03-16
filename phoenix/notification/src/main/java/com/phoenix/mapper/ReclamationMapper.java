@@ -1,9 +1,12 @@
 package com.phoenix.mapper;
 
 import com.phoenix.dto.ReclamationDto;
+import com.phoenix.model.ReclamType;
 import com.phoenix.model.Reclamation;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,13 +19,17 @@ public class ReclamationMapper implements IReclamationMapper {
         reclamationDto.setReclamationType(reclamation.getReclamationType());
         reclamationDto.setReclamationText(reclamation.getReclamationText());
         reclamationDto.setSenderReference(reclamation.getSenderReference());
+
         reclamationDto.setReceiverReference(reclamation.getReceiverReference());
-        reclamationDto.setSerialNumberOfReturnedStock(reclamation.getSerialNumberOfReturnedStock());
-        reclamationDto.setCampaignReference(reclamation.getCampaignReference());
-        reclamationDto.setProductType(reclamation.getProductType());
+        reclamationDto.setVuedreceivers(reclamation.getVuedreceivers());
+        reclamationDto.setSerialNumberOfSolddProduct(reclamation.getSerialNumberOfSolddProduct());
+        reclamationDto.setSoldDate(reclamation.getSoldDate());
+        reclamationDto.setSerialNumberOfReturnedProduct(reclamation.getSerialNumberOfReturnedProduct());
+        reclamationDto.setReturnedDate(reclamation.getReturnedDate());
+        reclamationDto.setExpirationDate(reclamation.getExpirationDate());
+
         reclamationDto.setQuantityToAdd(reclamation.getQuantityToAdd());
         reclamationDto.setReclamDate(reclamation.getReclamDate());
-        reclamationDto.setVued(reclamation.getVued());
         return reclamationDto;
     }
     @Override
@@ -33,12 +40,14 @@ public class ReclamationMapper implements IReclamationMapper {
         reclamation.setReclamationText(reclamationDto.getReclamationText());
         reclamation.setSenderReference(reclamationDto.getSenderReference());
         reclamation.setReceiverReference(reclamationDto.getReceiverReference());
-        reclamation.setSerialNumberOfReturnedStock(reclamationDto.getSerialNumberOfReturnedStock());
-        reclamation.setCampaignReference(reclamationDto.getCampaignReference());
-        reclamation.setProductType(reclamationDto.getProductType());
+        reclamation.setVuedreceivers(reclamationDto.getVuedreceivers());
+        reclamation.setSerialNumberOfSolddProduct(reclamationDto.getSerialNumberOfSolddProduct());
+        reclamation.setSoldDate(reclamationDto.getSoldDate());
+        reclamation.setSerialNumberOfReturnedProduct(reclamationDto.getSerialNumberOfReturnedProduct());
+        reclamation.setReturnedDate(reclamationDto.getReturnedDate());
+        reclamation.setExpirationDate(reclamationDto.getExpirationDate());
         reclamation.setQuantityToAdd(reclamationDto.getQuantityToAdd());
         reclamation.setReclamDate(reclamationDto.getReclamDate());
-        reclamation.setVued(reclamationDto.getVued());
         return reclamation;
     }
     @Override

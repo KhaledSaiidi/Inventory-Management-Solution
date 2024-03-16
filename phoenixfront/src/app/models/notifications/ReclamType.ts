@@ -1,1 +1,1 @@
-export enum ReclamType {prodReturnType, prodAddType, otherReclamType}
+export enum ReclamType {prodReturnType, prodSoldType,restockingType , stockExpirationReminder, otherReclamType}

@@ -36,7 +36,7 @@ public class ReclamationService implements IReclamationService, ApplicationListe
 
     @Override
     public void onApplicationEvent(KafkaMessageArrivedEvent event) {
-        String productSerialNumber = getBody();
+        ReclamationDto reclamationDto = getBody();
     }
 
 
@@ -66,13 +66,13 @@ public class ReclamationService implements IReclamationService, ApplicationListe
         return iReclamationMapper.toDtoList(reclamations);
     }
 
-    public String  getBody() {
+    public ReclamationDto  getBody() {
         StockEvent event = notificationConsumer.latestEvent;
-        String productSerialNumber = "";
+        ReclamationDto reclamationDto = new ReclamationDto();
         if (event != null) {
-            productSerialNumber = event.getBody();
-            System.out.println("Heyyyy works!!" + productSerialNumber);
+            reclamationDto = event.getReclamationDto();
+            System.out.println("Heyyyy works!!" + reclamationDto);
         }
-        return productSerialNumber;
+        return reclamationDto;
     }
 }
