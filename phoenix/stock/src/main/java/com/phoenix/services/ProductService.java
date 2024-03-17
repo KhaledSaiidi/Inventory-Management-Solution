@@ -406,7 +406,7 @@ public class ProductService implements IProductService{
         List<Stock> stocksForAlert = iStockRepository.findStocksDueWithinSevenDays(currentDate, sevenDaysLater);
         List<Product> products = iProductRepository.findByStockIn(stocksForAlert);
         List<Userdto> managers = getAllmanagers();
-        List<ReclamationDto> reclamationDtos = products.parallelStream()
+        return products.parallelStream()
                 .map(product -> {
                     String serialNumbersExpired = product.getSerialNumber();
                     Date dueDate;
@@ -418,7 +418,6 @@ public class ProductService implements IProductService{
                     return createReclamationDto(serialNumbersExpired, dueDate, managers);
                 })
                 .collect(Collectors.toList());
-        return reclamationDtos;
     }
 
     private List<Userdto> getAllmanagers() {
@@ -431,18 +430,14 @@ public class ProductService implements IProductService{
         List<Userdto> managers = new ArrayList<>();
         if (userdtos != null) {
             managers = userdtos.stream()
-                    .filter(Userdto::isUsertypemanager)
-                    .toList();
-        }
+                    .filter(Userdto::isUsertypemanager).toList();}
         return managers;
     }
     private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers) {
         List<String> usernames = null;
         if (managers != null) {
             usernames = managers.stream()
-                    .map(Userdto::getUsername)
-                    .toList();
-        }
+                    .map(Userdto::getUsername).toList();}
         ReclamationDto reclamationDto = new ReclamationDto();
         reclamationDto.setSenderReference("PhoenixStock Keeper");
         reclamationDto.setReceiverReference(usernames);

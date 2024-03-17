@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +37,7 @@ public class ReclamationService implements IReclamationService, ApplicationListe
 
     @Override
     public void onApplicationEvent(KafkaMessageArrivedEvent event) {
-        ReclamationDto reclamationDto = getBody();
+        List<ReclamationDto> reclamationDtos = getBody();
     }
 
 
@@ -66,13 +67,13 @@ public class ReclamationService implements IReclamationService, ApplicationListe
         return iReclamationMapper.toDtoList(reclamations);
     }
 
-    public ReclamationDto  getBody() {
+    public List<ReclamationDto>  getBody() {
         StockEvent event = notificationConsumer.latestEvent;
-        ReclamationDto reclamationDto = new ReclamationDto();
+        List<ReclamationDto> reclamationDtos = new ArrayList<>();
         if (event != null) {
-            reclamationDto = event.getReclamationDto();
-            System.out.println("Heyyyy works!!" + reclamationDto);
+            reclamationDtos = event.getReclamationDtos();
+            System.out.println("Heyyyy works!!" + reclamationDtos);
         }
-        return reclamationDto;
+        return reclamationDtos;
     }
 }
