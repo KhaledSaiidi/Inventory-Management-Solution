@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -62,9 +63,13 @@ public class ReclamationService implements IReclamationService, ApplicationListe
     }
 
     @Override
-    public List<ReclamationDto> getReclamations() {
-        List<Reclamation> reclamations = iReclamationRepository.findAll();
-        return iReclamationMapper.toDtoList(reclamations);
+    public List<ReclamationDto> get30NewestReclamationsforReceiver(List<String> receiverReference) {
+        List<Reclamation> reclamations = iReclamationRepository.findByReceiverReferenceContaining(receiverReference);
+        List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamations);
+        reclamationDtos.sort(Comparator.comparing(ReclamationDto::getReclamDate).reversed());
+        int limit = Math.min(reclamationDtos.size(), 30);
+        reclamationDtos = reclamationDtos.subList(0, limit);
+        return reclamationDtos;
     }
 
     public List<ReclamationDto>  getBody() {
@@ -75,5 +80,17 @@ public class ReclamationService implements IReclamationService, ApplicationListe
             System.out.println("Heyyyy works!!" + reclamationDtos);
         }
         return reclamationDtos;
+    }
+
+    public void addReclamations() {
+        StockEvent event = notificationConsumer.latestEvent;
+        if (event != null) {
+            List<ReclamationDto> reclamationDtos = event.getReclamationDtos();
+            LocalDateTime now = LocalDateTime.now();
+            reclamationDtos.forEach(dto -> dto.setReclamDate(now));
+            List<Reclamation> reclamations = iReclamationMapper.toEntityList(reclamationDtos);
+            iReclamationRepository.saveAll(reclamations);
+            notifyFrontend();
+        }
     }
 }
