@@ -2,9 +2,11 @@ package com.phoenix.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Getter
@@ -22,7 +24,7 @@ public class ReclamationDto {
     private Date soldDate;
     private String serialNumberOfReturnedProduct;
     private Date returnedDate;
-    private Date expirationDate;
+    private Map<String, LocalDate> serialNumberExpired;
     private int quantityToAdd;
     private LocalDateTime reclamDate;
 

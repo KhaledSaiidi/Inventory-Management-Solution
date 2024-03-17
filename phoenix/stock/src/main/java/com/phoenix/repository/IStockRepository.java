@@ -41,4 +41,7 @@ public interface IStockRepository extends JpaRepository<Stock, String>{
         return stocks;
     }
 
+    @Query("SELECT s FROM Stock s WHERE s.dueDate BETWEEN :currentDate AND :sevenDaysLater")
+    List<Stock> findStocksDueWithinSevenDays(LocalDate currentDate, LocalDate sevenDaysLater);
+
 }

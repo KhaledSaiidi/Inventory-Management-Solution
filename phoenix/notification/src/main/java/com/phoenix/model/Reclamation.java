@@ -30,6 +30,7 @@ public class Reclamation {
     private String serialNumberOfSolddProduct;
     private Date soldDate;
     private String serialNumberOfReturnedProduct;
+    private List<String> serialNumberExpired;
     private Date returnedDate;
     private Date expirationDate;
     private int quantityToAdd;

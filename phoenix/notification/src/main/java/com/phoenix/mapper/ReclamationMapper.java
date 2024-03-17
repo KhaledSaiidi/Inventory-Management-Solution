@@ -27,7 +27,7 @@ public class ReclamationMapper implements IReclamationMapper {
         reclamationDto.setSerialNumberOfReturnedProduct(reclamation.getSerialNumberOfReturnedProduct());
         reclamationDto.setReturnedDate(reclamation.getReturnedDate());
         reclamationDto.setExpirationDate(reclamation.getExpirationDate());
-
+        reclamationDto.setSerialNumberExpired(reclamation.getSerialNumberExpired());
         reclamationDto.setQuantityToAdd(reclamation.getQuantityToAdd());
         reclamationDto.setReclamDate(reclamation.getReclamDate());
         return reclamationDto;
@@ -46,6 +46,7 @@ public class ReclamationMapper implements IReclamationMapper {
         reclamation.setSerialNumberOfReturnedProduct(reclamationDto.getSerialNumberOfReturnedProduct());
         reclamation.setReturnedDate(reclamationDto.getReturnedDate());
         reclamation.setExpirationDate(reclamationDto.getExpirationDate());
+        reclamation.setSerialNumberExpired(reclamationDto.getSerialNumberExpired());
         reclamation.setQuantityToAdd(reclamationDto.getQuantityToAdd());
         reclamation.setReclamDate(reclamationDto.getReclamDate());
         return reclamation;

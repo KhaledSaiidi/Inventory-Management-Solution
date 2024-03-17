@@ -4,10 +4,10 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
-import com.phoenix.dto.AgentProdDto;
-import com.phoenix.dto.ProductDto;
-import com.phoenix.dto.StockDto;
+import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.Campaigndto;
+import com.phoenix.dtokeycloakuser.UserMysqldto;
+import com.phoenix.dtokeycloakuser.Userdto;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
@@ -33,7 +33,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -395,4 +397,50 @@ public class ProductService implements IProductService{
         }
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
+
+
+    @Override
+    public ReclamationDto  getProductsForAlert() {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate sevenDaysLater = currentDate.plusDays(7);
+        List<Stock> stocksForAlert = iStockRepository.findStocksDueWithinSevenDays(currentDate, sevenDaysLater);
+        List<Product> products = iProductRepository.findByStockIn(stocksForAlert);
+        Map<String, LocalDate> serialNumbersToDueDates = products.parallelStream()
+                .collect(Collectors.toMap(
+                        Product::getSerialNumber,
+                        product -> product.getAgentProd() != null ? product.getAgentProd().getDuesoldDate() : product.getStock().getDueDate(),
+                        (existing, replacement) -> existing
+                ));
+        return createReclamationDto(serialNumbersToDueDates);
+    }
+
+
+    private ReclamationDto createReclamationDto(Map<String, LocalDate> serialNumbersToDueDates) {
+        List<Userdto> userdtos = webClientBuilder.build().get()
+                .uri("http://keycloakuser-service/people/allusers")
+                .retrieve()
+                .bodyToFlux(Userdto.class)
+                .collectList()
+                .block();
+        List<Userdto> managers = null;
+        if (userdtos != null) {
+            managers = userdtos.stream()
+                    .filter(Userdto::isUsertypemanager)
+                    .toList();
+        }
+        List<String> usernames = null;
+        if (managers != null) {
+            usernames = managers.stream()
+                    .map(Userdto::getUsername)
+                    .toList();
+        }
+        ReclamationDto reclamationDto = new ReclamationDto();
+        reclamationDto.setSenderReference("PhoenixStock Keeper");
+        reclamationDto.setReceiverReference(usernames);
+        reclamationDto.setReclamationType(ReclamType.stockExpirationReminder);
+        reclamationDto.setSerialNumberExpired(serialNumbersToDueDates);
+        return reclamationDto;
+    }
+
+
 }

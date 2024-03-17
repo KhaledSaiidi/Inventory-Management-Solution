@@ -1,6 +1,7 @@
 package com.phoenix.services;
 
 import com.phoenix.dto.ProductDto;
+import com.phoenix.dto.ReclamationDto;
 import com.phoenix.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,5 @@ public interface IProductService {
     Map<String, Integer> getProductsInfosBystockReference(String stockreference);
 
     Page<ProductDto> getReturnedProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
-}
+    ReclamationDto  getProductsForAlert();
+    }

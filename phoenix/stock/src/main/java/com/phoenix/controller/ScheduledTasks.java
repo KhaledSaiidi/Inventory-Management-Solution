@@ -1,22 +1,35 @@
 package com.phoenix.controller;
 
+import com.phoenix.dto.ReclamationDto;
+import com.phoenix.dto.StockEvent;
+import com.phoenix.kafka.StockProducer;
+import com.phoenix.model.Product;
 import com.phoenix.repository.IUncheckHistoryRepository;
+import com.phoenix.services.IProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class ScheduledTasks {
-    @Autowired
-    private IUncheckHistoryRepository iUncheckHistoryRepository;
-    @Scheduled(cron = "0 0 0 1 * *")
-    public void deleteOldUncheckHistory() {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate cutoffDate = currentDate.minusDays(60); // Records older than 60 days will be deleted
-        iUncheckHistoryRepository.deleteByCheckDateBefore(cutoffDate);
-        System.out.println("Deleted old UncheckHistory records.");
+
+    private IProductService iProductService;
+    private StockProducer stockProducer;
+
+    @Scheduled(cron = "0 0 9 * * *")
+    public void checkProductsDueDate() {
+        ReclamationDto reclamationDto = iProductService.getProductsForAlert();
+        if(reclamationDto != null){
+            StockEvent stockEvent = new StockEvent();
+            stockEvent.setReclamationDto(reclamationDto);
+            stockProducer.sendMessage(stockEvent);
+
+        }
     }
 
 }
