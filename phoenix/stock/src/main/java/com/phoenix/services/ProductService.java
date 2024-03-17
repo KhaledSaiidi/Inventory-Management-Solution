@@ -400,34 +400,43 @@ public class ProductService implements IProductService{
 
 
     @Override
-    public ReclamationDto  getProductsForAlert() {
+    public List<ReclamationDto>  getProductsForAlert() {
         LocalDate currentDate = LocalDate.now();
         LocalDate sevenDaysLater = currentDate.plusDays(7);
         List<Stock> stocksForAlert = iStockRepository.findStocksDueWithinSevenDays(currentDate, sevenDaysLater);
         List<Product> products = iProductRepository.findByStockIn(stocksForAlert);
-        Map<String, LocalDate> serialNumbersToDueDates = products.parallelStream()
-                .collect(Collectors.toMap(
-                        Product::getSerialNumber,
-                        product -> product.getAgentProd() != null ? product.getAgentProd().getDuesoldDate() : product.getStock().getDueDate(),
-                        (existing, replacement) -> existing
-                ));
-        return createReclamationDto(serialNumbersToDueDates);
+        List<Userdto> managers = getAllmanagers();
+        List<ReclamationDto> reclamationDtos = products.parallelStream()
+                .map(product -> {
+                    String serialNumbersExpired = product.getSerialNumber();
+                    Date dueDate;
+                    if (product.getAgentProd() != null) {
+                        dueDate = Date.from(product.getAgentProd().getDuesoldDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    } else {
+                        dueDate = Date.from(product.getStock().getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    }
+                    return createReclamationDto(serialNumbersExpired, dueDate, managers);
+                })
+                .collect(Collectors.toList());
+        return reclamationDtos;
     }
 
-
-    private ReclamationDto createReclamationDto(Map<String, LocalDate> serialNumbersToDueDates) {
+    private List<Userdto> getAllmanagers() {
         List<Userdto> userdtos = webClientBuilder.build().get()
                 .uri("http://keycloakuser-service/people/allusers")
                 .retrieve()
                 .bodyToFlux(Userdto.class)
                 .collectList()
                 .block();
-        List<Userdto> managers = null;
+        List<Userdto> managers = new ArrayList<>();
         if (userdtos != null) {
             managers = userdtos.stream()
                     .filter(Userdto::isUsertypemanager)
                     .toList();
         }
+        return managers;
+    }
+    private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers) {
         List<String> usernames = null;
         if (managers != null) {
             usernames = managers.stream()
@@ -438,7 +447,9 @@ public class ProductService implements IProductService{
         reclamationDto.setSenderReference("PhoenixStock Keeper");
         reclamationDto.setReceiverReference(usernames);
         reclamationDto.setReclamationType(ReclamType.stockExpirationReminder);
-        reclamationDto.setSerialNumberExpired(serialNumbersToDueDates);
+        reclamationDto.setSerialNumberExpired(serialNumbersExpired);
+        reclamationDto.setExpirationDate(dueDate);
+
         return reclamationDto;
     }
 

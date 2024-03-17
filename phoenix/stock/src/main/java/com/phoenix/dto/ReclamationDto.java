@@ -24,7 +24,8 @@ public class ReclamationDto {
     private Date soldDate;
     private String serialNumberOfReturnedProduct;
     private Date returnedDate;
-    private Map<String, LocalDate> serialNumberExpired;
+    private String serialNumberExpired;
+    private Date expirationDate;
     private int quantityToAdd;
     private LocalDateTime reclamDate;
 

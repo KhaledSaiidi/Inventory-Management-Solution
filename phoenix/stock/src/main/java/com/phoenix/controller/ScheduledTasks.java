@@ -23,10 +23,10 @@ public class ScheduledTasks {
 
     @Scheduled(cron = "0 0 9 * * *")
     public void checkProductsDueDate() {
-        ReclamationDto reclamationDto = iProductService.getProductsForAlert();
-        if(reclamationDto != null){
+        List<ReclamationDto> reclamationDtos = iProductService.getProductsForAlert();
+        if(!reclamationDtos.isEmpty()){
             StockEvent stockEvent = new StockEvent();
-            stockEvent.setReclamationDto(reclamationDto);
+            stockEvent.setReclamationDtos(reclamationDtos);
             stockProducer.sendMessage(stockEvent);
 
         }

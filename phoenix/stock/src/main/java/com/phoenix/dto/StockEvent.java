@@ -2,6 +2,8 @@ package com.phoenix.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Getter
 @Setter
@@ -10,5 +12,5 @@ import lombok.*;
 public class StockEvent {
     private String message;
     private String status;
-    private ReclamationDto reclamationDto;
+    private List<ReclamationDto> reclamationDtos;
 }
