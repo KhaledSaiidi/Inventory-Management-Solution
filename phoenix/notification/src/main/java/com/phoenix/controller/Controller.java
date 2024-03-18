@@ -26,8 +26,13 @@ public class Controller {
     }
 
     @GetMapping("/getReclamations")
-    public ResponseEntity<List<ReclamationDto>> getReclamations(@RequestParam List<String> receivers) {
-        List<ReclamationDto> reclamationDtos = iReclamationService.get30NewestReclamationsforReceiver(receivers);
+    public ResponseEntity<List<ReclamationDto>> getReclamations(@RequestParam String receiver) {
+        List<ReclamationDto> reclamationDtos = iReclamationService.get30NewestReclamationsforReceiver(receiver);
+        return ResponseEntity.ok(reclamationDtos);
+    }
+    @GetMapping("/getAllReclamations")
+    public ResponseEntity<List<ReclamationDto>> getReclamations() {
+        List<ReclamationDto> reclamationDtos = iReclamationService.getAll();
         return ResponseEntity.ok(reclamationDtos);
     }
 

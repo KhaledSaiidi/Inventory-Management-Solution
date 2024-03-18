@@ -15,10 +15,13 @@ constructor (public securityService: SecurityService, private router: Router,
              public stompService: StompService, public notificationService: NotificationService) { 
               this.refreshnotifications();
 }
+username: string = "";
 public ngOnInit() {
-  if (this.securityService.profile) {
+  if (this.securityService.profile && this.securityService.profile.username) {
     console.log(this.securityService.profile);
+    this.username = this.securityService.profile.username;
   }
+  this.getreclamations();
   this.stompService.subscribe('/topic/notification', (): any => {
     this.refreshnotifications();
   }); 
@@ -66,25 +69,35 @@ public ngOnInit() {
   reclamations: ReclamationDto[] = [];
   emptyreclamaations: boolean = true;
   notificationnumber : number = 0;
-
+  receiver: string= "";
   getreclamations(){
-    this.notificationService.getReclamations().subscribe(
+    this.receiver = this.username;
+    this.notificationService.getReclamations(this.receiver).subscribe(
       (data) => {
     this.reclamations = data as ReclamationDto[];
     this.notificationnumber = 0;
     if(this.reclamations.length > 0){
       this.emptyreclamaations =false;
       this.reclamations.forEach(reclamation => {
-          this.notificationnumber++;
-        
-        
-      });
+        if (!reclamation.vuedreceivers || !reclamation.vuedreceivers.includes(this.username)) {
+            this.notificationnumber++;
+        }
+    }); 
       }
       },
       (error) => {
         console.error('Failed to get reclamations:', error);
       }
     );
-  }
+  
+}
 
+
+
+ifUserSeentrue(notification: ReclamationDto): boolean {
+  if (notification.vuedreceivers != null && notification.vuedreceivers.includes(this.username)) {
+    return true;
+  } 
+  return false; 
+  }
 }

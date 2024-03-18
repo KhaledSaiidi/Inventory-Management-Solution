@@ -20,6 +20,7 @@ import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -50,6 +52,8 @@ public class ProductService implements IProductService{
     private IStockMapper iStockMapper;
     @Autowired
     private IAgentProdMapper iAgentProdMapper;
+    @Autowired
+    private final KeycloakTokenFetcher tokenFetcher;
 
     private final WebClient.Builder webClientBuilder;
 
@@ -420,26 +424,35 @@ public class ProductService implements IProductService{
                 .collect(Collectors.toList());
     }
 
+
     private List<Userdto> getAllmanagers() {
+        String token = tokenFetcher.getToken();
         List<Userdto> userdtos = webClientBuilder.build().get()
                 .uri("http://keycloakuser-service/people/allusers")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .retrieve()
                 .bodyToFlux(Userdto.class)
                 .collectList()
                 .block();
-        List<Userdto> managers = new ArrayList<>();
-        if (userdtos != null) {
-            managers = userdtos.stream()
-                    .filter(Userdto::isUsertypemanager).toList();}
+        System.out.println("Our users "+userdtos);
+        assert userdtos != null;
+        List<Userdto> managers = userdtos.stream()
+                .filter(userdto -> userdto.getRealmRoles().contains("MANAGER") || userdto.getRealmRoles().contains("IMANAGER"))
+                    .collect(Collectors.toList());
+            System.out.println("Our managers "+managers);
         return managers;
     }
     private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers) {
-        List<String> usernames = null;
-        if (managers != null) {
-            usernames = managers.stream()
-                    .map(Userdto::getUsername).toList();}
+        List<String> usernames = managers.stream()
+                    .map(Userdto::getUsername).toList();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
+        String formattedDueDate = sdf.format(dueDate);
+
         ReclamationDto reclamationDto = new ReclamationDto();
-        reclamationDto.setSenderReference("PhoenixStock Keeper");
+        reclamationDto.setSenderReference("PhoenixStock Keeper :");
+        reclamationDto.setReclamationText("The expiration date for this product is less than 7 days away. " +
+                                          "Please check the situation, the product will expire on" +
+                                          formattedDueDate);
         reclamationDto.setReceiverReference(usernames);
         reclamationDto.setReclamationType(ReclamType.stockExpirationReminder);
         reclamationDto.setSerialNumberExpired(serialNumbersExpired);

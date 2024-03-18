@@ -18,10 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduledTasks {
 
+    @Autowired
     private IProductService iProductService;
+    @Autowired
     private StockProducer stockProducer;
 
-    @Scheduled(cron = "0 0 9 * * *")
+    //@Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void checkProductsDueDate() {
         List<ReclamationDto> reclamationDtos = iProductService.getProductsForAlert();
         if(!reclamationDtos.isEmpty()){

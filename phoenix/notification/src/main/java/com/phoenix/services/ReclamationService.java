@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,13 +64,24 @@ public class ReclamationService implements IReclamationService, ApplicationListe
     }
 
     @Override
-    public List<ReclamationDto> get30NewestReclamationsforReceiver(List<String> receiverReference) {
-        List<Reclamation> reclamations = iReclamationRepository.findByReceiverReferenceContaining(receiverReference);
-        List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamations);
+    public List<ReclamationDto> get30NewestReclamationsforReceiver(String receiverReference) {
+        List<Reclamation> reclamationsRelated = iReclamationRepository.findAll()
+                .stream()
+                .filter(reclamation -> reclamation.getReceiverReference().contains(receiverReference))
+                .collect(Collectors.toList());
+
+        List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamationsRelated);
         reclamationDtos.sort(Comparator.comparing(ReclamationDto::getReclamDate).reversed());
         int limit = Math.min(reclamationDtos.size(), 30);
         reclamationDtos = reclamationDtos.subList(0, limit);
         return reclamationDtos;
+    }
+    @Override
+    public List<ReclamationDto> getAll(){
+        List<Reclamation> reclamations = iReclamationRepository.findAll();
+        List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamations);
+        return reclamationDtos;
+
     }
 
     public List<ReclamationDto>  getBody() {

@@ -7,5 +7,7 @@ import java.util.List;
 public interface IReclamationService {
 
     void addReclamation(ReclamationDto reclamationDto);
-    List<ReclamationDto> get30NewestReclamationsforReceiver(List<String> receiverReference);
+    List<ReclamationDto> get30NewestReclamationsforReceiver(String receiverReference);
+    List<ReclamationDto> getAll();
+
 }

@@ -39,14 +39,15 @@
                             <h6 class="m-0">Notifications</h6>
                           </div>
                           <ul class="notification-list">
-                            <li *ngFor="let notif of reclamations" class="notification-item">
+                            <li *ngFor="let notif of reclamations" class="notification-item new-notification" 
+                            [ngStyle]="{ 'background-color': !ifUserSeentrue(notif) ? '#f2f2f2' : 'white' }">
                               <div class="media">
                                 <div class="media-body" >
                                   <h6 class="notification-sender">
                                     <i class="fa fa-info-circle"></i>  {{ notif.senderReference }}
-                                    {{ notif.reclamationType }}
                                     <small class="text-muted notification-date">{{ notif.reclamDate|  date:'HH:mm, dd MMM' }}</small>
                                   </h6>
+                                
                                   <div class="notification-content">
                                     <span class="notification-message">{{ notif.reclamationText }}</span>
                                   </div>
@@ -54,6 +55,9 @@
                               </div>
                             </li>
                           </ul>
+                          <div style="display: flex; justify-content: center; align-items: center; height: 100%; margin-top: 4px;">
+                            <a class="m-0"><u>Check All</u></a>
+                        </div>                        
                         </div>
                         <ng-template #noNotifications>
                           <div class="empty-notification">No Notifications yet..</div>

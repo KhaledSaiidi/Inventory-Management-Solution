@@ -11,14 +11,9 @@ export class NotificationService {
 
   constructor(private http: HttpClient) { }
 
-  getReclamations(): Observable<ReclamationDto[]> {
-    const apiUrl = this.apiUrl + '/getReclamations';
-    return this.http.get<ReclamationDto[]>(apiUrl)
-      .pipe(
-        catchError((error) => {
-          console.error('An error occurred:', error);
-          return throwError(error);
-        })
-      );
+
+  getReclamations(receiver: string): Observable<ReclamationDto[]> {
+    return this.http.get<ReclamationDto[]>(`${this.apiUrl}/getReclamations?receiver=${receiver}`);
   }
+
 }

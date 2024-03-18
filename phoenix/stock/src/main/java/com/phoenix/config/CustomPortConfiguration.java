@@ -4,10 +4,12 @@ package com.phoenix.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 import java.net.ServerSocket;
 import java.io.IOException;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @Slf4j
@@ -37,4 +39,10 @@ public class CustomPortConfiguration implements WebServerFactoryCustomizer<Confi
         }
         throw new IllegalStateException("No available port found within the specified range");
     }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
 }
