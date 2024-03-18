@@ -75,9 +75,8 @@ public ngOnInit() {
     if(this.reclamations.length > 0){
       this.emptyreclamaations =false;
       this.reclamations.forEach(reclamation => {
-        if(reclamation.vued === false){
           this.notificationnumber++;
-        }
+        
         
       });
       }

@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface IReclamationRepository extends JpaRepository<Reclamation, Long> {
-    @Query("SELECT r FROM Reclamation r WHERE :receiverReferences MEMBER OF r.receiverReference")
-    List<Reclamation> findByReceiverReferenceContaining(@Param("receiverReferences") List<String> receiverReferences);
+    @Query("SELECT r FROM Reclamation r WHERE :receiverReference IN (r.receiverReference)")
+    List<Reclamation> findByReceiverReferenceContaining(@Param("receiverReference") List<String> receiverReference);
 }

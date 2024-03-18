@@ -38,7 +38,7 @@ public class ReclamationService implements IReclamationService, ApplicationListe
 
     @Override
     public void onApplicationEvent(KafkaMessageArrivedEvent event) {
-        List<ReclamationDto> reclamationDtos = getBody();
+        addReclamations();
     }
 
 
