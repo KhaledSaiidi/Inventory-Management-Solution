@@ -36,5 +36,12 @@ public class Controller {
         return ResponseEntity.ok(reclamationDtos);
     }
 
+    @PutMapping("/terminateNotification/{username}")
+    public ResponseEntity<Void> terminateNotification(@PathVariable("username") String username,
+                                                      @RequestBody ReclamationDto reclamationDto) {
+        iReclamationService.addReclamation(reclamationDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
 
 }
