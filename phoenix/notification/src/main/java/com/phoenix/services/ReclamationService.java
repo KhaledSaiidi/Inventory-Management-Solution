@@ -84,16 +84,6 @@ public class ReclamationService implements IReclamationService, ApplicationListe
 
     }
 
-    public List<ReclamationDto>  getBody() {
-        StockEvent event = notificationConsumer.latestEvent;
-        List<ReclamationDto> reclamationDtos = new ArrayList<>();
-        if (event != null) {
-            reclamationDtos = event.getReclamationDtos();
-            System.out.println("Heyyyy works!!" + reclamationDtos);
-        }
-        return reclamationDtos;
-    }
-
     public void addReclamations() {
         StockEvent event = notificationConsumer.latestEvent;
         if (event != null) {
@@ -105,4 +95,15 @@ public class ReclamationService implements IReclamationService, ApplicationListe
             notifyFrontend();
         }
     }
-}
+
+    public void terminatenotif(String username, List<ReclamationDto> reclamationsnotSeen) {
+        List<Reclamation> reclamations = iReclamationMapper.toEntityList(reclamationsnotSeen);
+        for (Reclamation reclamation: reclamations){
+            List<String> vuedPersons = reclamation.getVuedreceivers();
+            vuedPersons.add(username);
+            reclamation.setVuedreceivers(vuedPersons);
+        }
+        iReclamationRepository.saveAll(reclamations);
+    }
+
+    }

@@ -27,7 +27,7 @@
                       </a>
                     </li>
                      <li class="nav-item dropdown pe-2 d-flex align-items-center" >
-                      <a  href="javascript:;" class="nav-link text-white p-0 position-relative" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" >
+                      <a (click)="terminatenotif()" href="javascript:;" class="nav-link text-white p-0 position-relative" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" >
                         <i class="fa fa-bell cursor-pointer" style="font-size: 24px;" ></i>
                         <span *ngIf="notificationnumber > 0" class="notification-badge" >{{ notificationnumber }}</span>
                       </a>
@@ -56,7 +56,7 @@
                             </li>
                           </ul>
                           <div style="display: flex; justify-content: center; align-items: center; height: 100%; margin-top: 4px;">
-                            <a class="m-0"><u>Check All</u></a>
+                            <a><u>Check All</u></a>
                         </div>                        
                         </div>
                         <ng-template #noNotifications>

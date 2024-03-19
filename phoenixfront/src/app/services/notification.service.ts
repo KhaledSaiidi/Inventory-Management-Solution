@@ -16,4 +16,14 @@ export class NotificationService {
     return this.http.get<ReclamationDto[]>(`${this.apiUrl}/getReclamations?receiver=${receiver}`);
   }
 
+
+  terminateNotification(username: string, reclamations: ReclamationDto[]): Observable<number> {
+    return this.http.put<number>(this.apiUrl + '/terminateNotification/'+ username, reclamations)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+  }
 }
