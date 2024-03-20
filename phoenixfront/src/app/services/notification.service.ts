@@ -17,8 +17,8 @@ export class NotificationService {
   }
 
 
-  terminateNotification(username: string, reclamations: ReclamationDto[]): Observable<number> {
-    return this.http.put<number>(this.apiUrl + '/terminateNotification/'+ username, reclamations)
+  terminateNotification(username: string, reclamationDtos: ReclamationDto[]): Observable<number> {
+    return this.http.put<number>(this.apiUrl + '/terminateNotification/'+ username, reclamationDtos)
     .pipe(
       catchError((error) => {
         console.error('An error occurred:', error);

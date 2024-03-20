@@ -24,7 +24,7 @@ public class ScheduledTasks {
     private StockProducer stockProducer;
 
     //@Scheduled(cron = "0 0 9 * * *")
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 */5 * * * *")
     public void checkProductsDueDate() {
         List<ReclamationDto> reclamationDtos = iProductService.getProductsForAlert();
         if(!reclamationDtos.isEmpty()){

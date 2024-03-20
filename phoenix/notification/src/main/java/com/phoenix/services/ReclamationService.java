@@ -96,10 +96,14 @@ public class ReclamationService implements IReclamationService, ApplicationListe
         }
     }
 
+    @Override
     public void terminatenotif(String username, List<ReclamationDto> reclamationsnotSeen) {
         List<Reclamation> reclamations = iReclamationMapper.toEntityList(reclamationsnotSeen);
         for (Reclamation reclamation: reclamations){
             List<String> vuedPersons = reclamation.getVuedreceivers();
+            if(vuedPersons == null){
+                vuedPersons = new ArrayList<>();
+            }
             vuedPersons.add(username);
             reclamation.setVuedreceivers(vuedPersons);
         }

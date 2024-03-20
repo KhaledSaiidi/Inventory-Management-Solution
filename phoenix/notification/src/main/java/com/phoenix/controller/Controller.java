@@ -38,8 +38,8 @@ public class Controller {
 
     @PutMapping("/terminateNotification/{username}")
     public ResponseEntity<Void> terminateNotification(@PathVariable("username") String username,
-                                                      @RequestBody ReclamationDto reclamationDto) {
-        iReclamationService.addReclamation(reclamationDto);
+                                                      @RequestBody List<ReclamationDto> reclamationDtos) {
+        iReclamationService.terminatenotif(username, reclamationDtos);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

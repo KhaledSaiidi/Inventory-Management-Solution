@@ -90,7 +90,7 @@ private initializeWebSocket(): void {
             this.reclamationsnotSeen.push(reclamation);
         }
     }); 
-    console.log("reclamations not seen" + this.reclamationsnotSeen.toString());
+    console.log("reclamations not seen" + this.reclamationsnotSeen.map(obj => JSON.stringify(obj)));
       }
       },
       (error) => {

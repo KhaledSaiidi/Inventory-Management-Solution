@@ -414,12 +414,14 @@ public class ProductService implements IProductService{
                 .map(product -> {
                     String serialNumbersExpired = product.getSerialNumber();
                     Date dueDate;
+                    String agentAsignedToo = "";
                     if (product.getAgentProd() != null) {
                         dueDate = Date.from(product.getAgentProd().getDuesoldDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                        agentAsignedToo = product.getAgentProd().getFirstname() + " " + product.getAgentProd().getLastname();
                     } else {
                         dueDate = Date.from(product.getStock().getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
                     }
-                    return createReclamationDto(serialNumbersExpired, dueDate, managers);
+                    return createReclamationDto(serialNumbersExpired, dueDate, managers, agentAsignedToo);
                 })
                 .collect(Collectors.toList());
     }
@@ -442,16 +444,24 @@ public class ProductService implements IProductService{
             System.out.println("Our managers "+managers);
         return managers;
     }
-    private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers) {
+    private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers, String agentAsignedToo) {
         List<String> usernames = managers.stream()
                     .map(Userdto::getUsername).toList();
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
         String formattedDueDate = sdf.format(dueDate);
-
+        Date now = new Date();
+        long differenceMillis = dueDate.getTime() - now.getTime();
+        long differenceDays = (differenceMillis / (1000 * 60 * 60 * 24)) + 1;
         ReclamationDto reclamationDto = new ReclamationDto();
         reclamationDto.setSenderReference("PhoenixStock Keeper :");
-        reclamationDto.setReclamationText("The expiration date for this product is less than 7 days away. " +
-                                          "Please check the situation, the product will expire on" +
+        reclamationDto.setReclamationText("The expiration date for this product " +
+                                           serialNumbersExpired +
+                                            " assigned to " +
+                                            agentAsignedToo +
+                                            " in " +
+                                           + differenceDays +
+                                          " days. " +
+                                          " Please check the situation, the product will expire on " +
                                           formattedDueDate);
         reclamationDto.setReceiverReference(usernames);
         reclamationDto.setReclamationType(ReclamType.stockExpirationReminder);
