@@ -12,8 +12,16 @@ export class NotificationService {
   constructor(private http: HttpClient) { }
 
 
-  getReclamations(receiver: string): Observable<ReclamationDto[]> {
-    return this.http.get<ReclamationDto[]>(`${this.apiUrl}/getReclamations?receiver=${receiver}`);
+  getNewReclamations(receiver: string): Observable<ReclamationDto[]> {
+    return this.http.get<ReclamationDto[]>(`${this.apiUrl}/getNewReclamations?receiver=${receiver}`);
+  }
+
+  getAllReclamationsForReceiver(username: string): Observable<ReclamationDto[]> {
+    return this.http.get<ReclamationDto[]>(`${this.apiUrl}/getAllReclamationsForReceiver?username=${username}`);
+  }
+
+  getAllReclamationsForsender(username: string): Observable<ReclamationDto[]> {
+    return this.http.get<ReclamationDto[]>(`${this.apiUrl}/getAllReclamationsForsender?username=${username}`);
   }
 
 

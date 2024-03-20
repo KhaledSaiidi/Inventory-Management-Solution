@@ -8,7 +8,8 @@ public interface IReclamationService {
 
     void addReclamation(ReclamationDto reclamationDto);
     List<ReclamationDto> get30NewestReclamationsforReceiver(String receiverReference);
-    List<ReclamationDto> getAll();
+    List<ReclamationDto> getAllReclamationsForReceiver(String receiverReference);
+    List<ReclamationDto> getAllReclamationsForsender(String senderReference);
     void terminatenotif(String username, List<ReclamationDto> reclamationsnotSeen);
 
 }

@@ -6,7 +6,9 @@ import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { ProductPage } from 'src/app/models/inventory/ProductPage';
 import { SoldProductDto } from 'src/app/models/inventory/SoldProductDto';
 import { SoldProductPage } from 'src/app/models/inventory/SoldProductPage';
+import { ReclamationDto } from 'src/app/models/notifications/ReclamationDto';
 import { AgentsService } from 'src/app/services/agents.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
@@ -44,7 +46,8 @@ selectedImage: File | null = null;
     private formBuilder: FormBuilder, 
     private router: Router,
     private stockservice: StockService,
-    private cdRef: ChangeDetectorRef) {}
+    private cdRef: ChangeDetectorRef,
+    private notificationService: NotificationService) {}
   username!: string;
   get isCodeDisabled(): boolean {
     return !this.isEditable;
@@ -89,7 +92,8 @@ selectedImage: File | null = null;
         } catch (error) {
           this.agentsoldProds = [];
             }
-      
+    this.getAllReclamationsForsender();
+    this.getAllReclamationsForReceiver();
   }
 
 
@@ -360,5 +364,40 @@ getuserinfos(code : string){
         this.getSoldProductsByusername(this.username, newPage - 1);
     } 
 
+
+    selectedNotificationTab = 0;
+    selectedNotificationTabSent(){
+      this.selectedNotificationTab = 0;
+    }
+    selectedNotificationTabReceived() {
+      this.selectedNotificationTab = 1;
+    }
+
+    sentreclamations: ReclamationDto[] = [];
+
+    getAllReclamationsForsender(){
+      this.notificationService.getAllReclamationsForsender(this.username).subscribe(
+        (data) => {
+      this.sentreclamations = data as ReclamationDto[];
+        },
+        (error) => {
+          console.error('Failed to get reclamations:', error);
+        }
+      );
+  }
+
+  receivedreclamations: ReclamationDto[] = [];
+
+  getAllReclamationsForReceiver(){
+    this.notificationService.getAllReclamationsForReceiver(this.username).subscribe(
+      (data) => {
+    this.receivedreclamations = data as ReclamationDto[];
+      },
+      (error) => {
+        console.error('Failed to get reclamations:', error);
+      }
+    );
+  
+}
 
 }

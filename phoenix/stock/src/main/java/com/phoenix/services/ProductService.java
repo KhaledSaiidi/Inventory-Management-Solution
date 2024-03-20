@@ -455,7 +455,7 @@ public class ProductService implements IProductService{
         ReclamationDto reclamationDto = new ReclamationDto();
         reclamationDto.setSenderReference("PhoenixStock Keeper :");
         reclamationDto.setReclamationText("The expiration date for this product " +
-                                           serialNumbersExpired +
+                                           "'"+serialNumbersExpired+"'" +
                                             " assigned to " +
                                             agentAsignedToo +
                                             " in " +
@@ -465,9 +465,6 @@ public class ProductService implements IProductService{
                                           formattedDueDate);
         reclamationDto.setReceiverReference(usernames);
         reclamationDto.setReclamationType(ReclamType.stockExpirationReminder);
-        reclamationDto.setSerialNumberExpired(serialNumbersExpired);
-        reclamationDto.setExpirationDate(dueDate);
-
         return reclamationDto;
     }
 

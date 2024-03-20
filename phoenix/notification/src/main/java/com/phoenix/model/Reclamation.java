@@ -27,13 +27,6 @@ public class Reclamation {
     private String senderReference;
     private List<String> receiverReference;
     private List<String> vuedreceivers;
-    private String serialNumberOfSolddProduct;
-    private Date soldDate;
-    private String serialNumberOfReturnedProduct;
-    private String serialNumberExpired;
-    private Date returnedDate;
-    private Date expirationDate;
-    private int quantityToAdd;
     private LocalDateTime reclamDate;
 
 }

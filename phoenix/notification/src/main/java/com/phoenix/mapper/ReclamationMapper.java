@@ -22,13 +22,6 @@ public class ReclamationMapper implements IReclamationMapper {
 
         reclamationDto.setReceiverReference(reclamation.getReceiverReference());
         reclamationDto.setVuedreceivers(reclamation.getVuedreceivers());
-        reclamationDto.setSerialNumberOfSolddProduct(reclamation.getSerialNumberOfSolddProduct());
-        reclamationDto.setSoldDate(reclamation.getSoldDate());
-        reclamationDto.setSerialNumberOfReturnedProduct(reclamation.getSerialNumberOfReturnedProduct());
-        reclamationDto.setReturnedDate(reclamation.getReturnedDate());
-        reclamationDto.setExpirationDate(reclamation.getExpirationDate());
-        reclamationDto.setSerialNumberExpired(reclamation.getSerialNumberExpired());
-        reclamationDto.setQuantityToAdd(reclamation.getQuantityToAdd());
         reclamationDto.setReclamDate(reclamation.getReclamDate());
         return reclamationDto;
     }
@@ -41,13 +34,6 @@ public class ReclamationMapper implements IReclamationMapper {
         reclamation.setSenderReference(reclamationDto.getSenderReference());
         reclamation.setReceiverReference(reclamationDto.getReceiverReference());
         reclamation.setVuedreceivers(reclamationDto.getVuedreceivers());
-        reclamation.setSerialNumberOfSolddProduct(reclamationDto.getSerialNumberOfSolddProduct());
-        reclamation.setSoldDate(reclamationDto.getSoldDate());
-        reclamation.setSerialNumberOfReturnedProduct(reclamationDto.getSerialNumberOfReturnedProduct());
-        reclamation.setReturnedDate(reclamationDto.getReturnedDate());
-        reclamation.setExpirationDate(reclamationDto.getExpirationDate());
-        reclamation.setSerialNumberExpired(reclamationDto.getSerialNumberExpired());
-        reclamation.setQuantityToAdd(reclamationDto.getQuantityToAdd());
         reclamation.setReclamDate(reclamationDto.getReclamDate());
         return reclamation;
     }

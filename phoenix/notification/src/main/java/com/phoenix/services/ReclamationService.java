@@ -77,11 +77,25 @@ public class ReclamationService implements IReclamationService, ApplicationListe
         return reclamationDtos;
     }
     @Override
-    public List<ReclamationDto> getAll(){
-        List<Reclamation> reclamations = iReclamationRepository.findAll();
-        List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamations);
+    public List<ReclamationDto> getAllReclamationsForReceiver(String receiverReference){
+        List<Reclamation> reclamationsRelated = iReclamationRepository.findAll()
+                .stream()
+                .filter(reclamation -> reclamation.getReceiverReference().contains(receiverReference))
+                .collect(Collectors.toList());
+        List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamationsRelated);
+        reclamationDtos.sort(Comparator.comparing(ReclamationDto::getReclamDate).reversed());
         return reclamationDtos;
+    }
 
+    @Override
+    public List<ReclamationDto> getAllReclamationsForsender(String senderReference){
+        List<Reclamation> reclamationsRelated = iReclamationRepository.findAll()
+                .stream()
+                .filter(reclamation -> reclamation.getSenderReference().equals(senderReference))
+                .collect(Collectors.toList());
+        List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamationsRelated);
+        reclamationDtos.sort(Comparator.comparing(ReclamationDto::getReclamDate).reversed());
+        return reclamationDtos;
     }
 
     public void addReclamations() {

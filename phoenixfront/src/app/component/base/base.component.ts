@@ -78,7 +78,7 @@ private initializeWebSocket(): void {
 
   getreclamations(){
     this.receiver = this.username;
-    this.notificationService.getReclamations(this.receiver).subscribe(
+    this.notificationService.getNewReclamations(this.receiver).subscribe(
       (data) => {
     this.reclamations = data as ReclamationDto[];
     this.notificationnumber = 0;

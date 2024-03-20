@@ -25,14 +25,19 @@ public class Controller {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/getReclamations")
+    @GetMapping("/getNewReclamations")
     public ResponseEntity<List<ReclamationDto>> getReclamations(@RequestParam String receiver) {
         List<ReclamationDto> reclamationDtos = iReclamationService.get30NewestReclamationsforReceiver(receiver);
         return ResponseEntity.ok(reclamationDtos);
     }
-    @GetMapping("/getAllReclamations")
-    public ResponseEntity<List<ReclamationDto>> getReclamations() {
-        List<ReclamationDto> reclamationDtos = iReclamationService.getAll();
+    @GetMapping("/getAllReclamationsForReceiver")
+    public ResponseEntity<List<ReclamationDto>> getAllReclamationsForReceiver(@RequestParam String username) {
+        List<ReclamationDto> reclamationDtos = iReclamationService.getAllReclamationsForReceiver(username);
+        return ResponseEntity.ok(reclamationDtos);
+    }
+    @GetMapping("/getAllReclamationsForsender")
+    public ResponseEntity<List<ReclamationDto>> getAllReclamationsForsender(@RequestParam String username) {
+        List<ReclamationDto> reclamationDtos = iReclamationService.getAllReclamationsForsender(username);
         return ResponseEntity.ok(reclamationDtos);
     }
 

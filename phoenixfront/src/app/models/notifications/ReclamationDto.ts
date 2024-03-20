@@ -7,12 +7,6 @@ export interface ReclamationDto {
     senderReference?: string;
     receiverReference?: string[];
     vuedreceivers?: string[];
-    serialNumberOfSolddProduct?: String;
-    soldDate?: Date;
-    serialNumberOfReturnedProduct?: String;
-    returnedDate?: Date;
-    expirationDate?: Date;
-    quantityToAdd?: number;
     reclamDate?: Date;
 
 }
