@@ -37,7 +37,9 @@ import { AssignproductsComponent } from './stockcomponent/assignproducts/assignp
 import { ScanComponent } from './component/scan/scan.component';
 import { SellprodComponent } from './component/sellprod/sellprod.component';
 import { ReturnbyscanComponent } from './component/returnbyscan/returnbyscan.component';
-import { StompService } from './services/stomp.service'
+import { StompService } from './services/stomp.service';
+import { ComplaintComponent } from './component/complaint/complaint.component';
+import { RestockingComponent } from './component/restocking/restocking.component'
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -64,7 +66,10 @@ const appRoute: Routes = [
   {path:'assignproducts', component: AssignproductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'toscan', component: ScanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'scantosell', component: SellprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'scantoreturn', component: ReturnbyscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
+  {path:'scantoreturn', component: ReturnbyscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'restocking', component: RestockingComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'complaint', component: ComplaintComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
+
 
 
 ]
@@ -122,7 +127,9 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     AssignproductsComponent,
     ScanComponent,
     SellprodComponent,
-    ReturnbyscanComponent
+    ReturnbyscanComponent,
+    ComplaintComponent,
+    RestockingComponent
   ],
   imports: [
     BrowserModule,

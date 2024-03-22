@@ -404,11 +404,17 @@
           <ng-container *ngIf="selectedTab == 2">
             
             
+          <div style="margin-top: 10px;">
+          <a (click)="navigateToRestocking()" class="btn-primary btn" style="color: white; margin-right: 5px;">
+            <span class="">&nbsp; Restocking Request</span>
+          </a>
+          <a (click)="navigateToComplaint()" class="btn-primary btn" style="color: white;">
+            <span class="">&nbsp; Complaint</span>
+          </a>
+        </div>
 
 
-
-
-            <div class="equipe-container" style="margin-top: 30px;">
+            <div class="equipe-container" style="margin-top: 10px;">
               <div class="listetalents-containershown">
                 <div class="col-12">
             
@@ -442,7 +448,7 @@
                 <thead>
                   <tr>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Type</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Body</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 40%;">Notification Body</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Receivers</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SeenBy</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Time</th>
@@ -452,8 +458,12 @@
                     <tr>
                     </tr>
                     <tr *ngFor="let notif of sentreclamations">
-                    <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamationType}}</td>  
-                    <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamationText}}</td>  
+                      <td style="word-wrap: break-word; white-space: normal;">
+                        <span *ngIf="notif.reclamationType" >
+                          {{ getReclamationTypeText(notif.reclamationType) }}
+                        </span>
+                      </td>
+                          <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamationText}}</td>  
                    <td style="word-wrap: break-word; white-space: normal;">{{notif.receiverReference}}</td>  
                    <td style="word-wrap: break-word; white-space: normal;">{{notif.vuedreceivers}}</td>            
                    <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamDate| date: 'medium' | slice: 0:12}}</td>  
@@ -471,7 +481,7 @@
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Type</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Body</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 40%;">Notification Body</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sender</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SeenBy</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Time</th>
@@ -481,11 +491,15 @@
                   <tr>
                   </tr>
                   <tr *ngFor="let notif of receivedreclamations">
-                  <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamationType}}</td>  
-                  <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamationText}}</td>  
+                 <td style="word-wrap: break-word; white-space: normal;">
+                  <span *ngIf="notif.reclamationType" >
+                    {{ getReclamationTypeText(notif.reclamationType) }}
+                  </span>
+                </td>
+                 <td style="max-height: 100px; overflow-y: auto; word-wrap: break-word; white-space: normal;">{{notif.reclamationText}}</td>  
                  <td style="word-wrap: break-word; white-space: normal;">{{notif.senderReference}}</td>  
                  <td style="word-wrap: break-word; white-space: normal;">{{notif.vuedreceivers}}</td>            
-                 <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamDate| date: 'medium' | slice: 0:12}}</td>  
+                 <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamDate| date: 'medium'}}</td>  
                 
                 </tr>                  
               </tbody>

@@ -6,6 +6,7 @@ import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { ProductPage } from 'src/app/models/inventory/ProductPage';
 import { SoldProductDto } from 'src/app/models/inventory/SoldProductDto';
 import { SoldProductPage } from 'src/app/models/inventory/SoldProductPage';
+import { ReclamType } from 'src/app/models/notifications/ReclamType';
 import { ReclamationDto } from 'src/app/models/notifications/ReclamationDto';
 import { AgentsService } from 'src/app/services/agents.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -25,7 +26,6 @@ export class UserdetailsComponent implements OnInit{
     this.isEditable = !this.isEditable;
     console.log(this.isEditable);
 }
-
 
 selectedImage: File | null = null;
   user: Userdto = {
@@ -396,8 +396,41 @@ getuserinfos(code : string){
       (error) => {
         console.error('Failed to get reclamations:', error);
       }
-    );
-  
+    ); 
+}
+
+getReclamationTypeText(reclamationType: ReclamType): string {
+  const typo: string = reclamationType.toString();
+  if (typo === "prodReturnType") {
+    return 'Returned Product';
+  } else if (typo === "prodSoldType") {
+    return 'Sold Product';
+  } else if (typo === "restockingType") {
+    return 'Restocking Request';
+  } else if (typo === "stockExpirationReminder") {
+    return 'Product Expiration Alert';
+  } else if (typo === "otherReclamType") {
+    return 'Complaint';
+  }
+      return 'Unknown';
+}
+
+navigateToRestocking() {
+  if (this.username === undefined) {
+    console.log('Invalid Username');
+    return;
+  }
+  this.router.navigate(['/restocking'], { queryParams: { id: this.username } });      
+}
+
+navigateToComplaint() {
+  if (this.username === undefined) {
+    console.log('Invalid Username');
+    return;
+  }
+  this.router.navigate(['/complaint'], { queryParams: { id: this.username } });      
 }
 
 }
+
+

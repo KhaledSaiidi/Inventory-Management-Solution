@@ -453,7 +453,7 @@ public class ProductService implements IProductService{
         long differenceMillis = dueDate.getTime() - now.getTime();
         long differenceDays = (differenceMillis / (1000 * 60 * 60 * 24)) + 1;
         ReclamationDto reclamationDto = new ReclamationDto();
-        reclamationDto.setSenderReference("PhoenixStock Keeper :");
+        reclamationDto.setSenderReference("PhoenixStock Keeper");
         reclamationDto.setReclamationText("The expiration date for this product " +
                                            "'"+serialNumbersExpired+"'" +
                                             " assigned to " +
