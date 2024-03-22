@@ -13,47 +13,37 @@
                 </div>
               </div>
               <div class="card-body">
-                <form>
+                <form [formGroup]="notifForm" (ngSubmit)="onSubmit()">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                           <label for="stock">Stock</label>
-                          <select class="form-control mt-2" formControlName="stock" id="stock">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
+                          <select class="form-control mt-2" formControlName="stock" id="stock" *ngFor="let stockref of stocksReferences">
+                            <option>{{stockref}}</option>
                           </select>
                         </div>
-                      </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="type">Product Type</label>
-                        <select class="form-control mt-2" formControlName="type" id="type">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                        </select>                    
                     </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="manager">Senior Advisor</label>
+                        <select class="form-control mt-2" formControlName="manager" id="manager" *ngFor="let manager of managerList">
+                          <option selected>{{manager.username}}</option>
+                        </select>
+                    </div>
+                    </div>                  
                   </div>
-                  </div>
-                  <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="quantity">Quantity</label>
                         <input class="form-control mt-2" type="number" formControlName="quantity" id="quantity">
                       </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="manager">Senior Advisor</label>
-                        <select class="form-control mt-2" formControlName="manager" id="manager">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                        </select>
-                    </div>
-                    </div>
-                 </div>
+                    </div>  
+                 <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="text">Demand</label>
+                    <textarea class="form-control mt-2" formControlName="text" id="text" rows="3"></textarea>
+                  </div>
+                </div>
                   <div style="display: flex; justify-content: center;">
                     <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Request</button>
                 </div>

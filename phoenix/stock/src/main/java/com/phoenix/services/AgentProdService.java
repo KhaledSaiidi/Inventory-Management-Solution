@@ -171,4 +171,19 @@ public class AgentProdService implements IAgentProdService{
 
     }
 
+    @Override
+    public List<String> productsInPossession(String username) {
+        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
+        List<String> productsInPossession= new ArrayList<>();
+        for (AgentProd agentProd: agentProds){
+            Optional<Product> optionalproduct = iProductRepository.findByAgentProd(agentProd);
+            if(optionalproduct.isPresent()){
+                Product product = optionalproduct.get();
+                productsInPossession.add(product.getSerialNumber());
+            }
+        }
+        return productsInPossession;
+    }
+
+
 }

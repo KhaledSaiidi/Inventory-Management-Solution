@@ -460,7 +460,7 @@ public class ProductService implements IProductService{
                                             agentAsignedToo +
                                             " in " +
                                            + differenceDays +
-                                          " days. " +
+                                          " day(s). " +
                                           " Please check the situation, the product will expire on " +
                                           formattedDueDate);
         reclamationDto.setReceiverReference(usernames);

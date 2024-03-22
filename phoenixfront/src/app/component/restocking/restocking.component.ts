@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
 
@@ -15,6 +15,7 @@ export class RestockingComponent implements OnInit{
     private router: Router,
     private notificationService: NotificationService) {}
     username!: string;
+    notifForm!: FormGroup;
 
     ngOnInit() {
       this.route.queryParamMap.subscribe(params => {
@@ -24,6 +25,7 @@ export class RestockingComponent implements OnInit{
         console.log(this.username);
         }
       });
+      this.initForm();
     }
 
     navigateToUserdetails() {
@@ -33,6 +35,21 @@ export class RestockingComponent implements OnInit{
       }
       this.router.navigate(['/userdetails'], { queryParams: { id: this.username } });      
     }
-  
+    initForm(): void {
+      this.notifForm = this.formBuilder.group({
+        stock: [''],
+        type: [''],
+        quantity: [''],
+        manager: ['']
+      });
+    }
 
+    /*
+    this.campaignForm.patchValue({
+      reference: this.clients[0].reference
+    });
+
+*/
+    onSubmit(): void {
+    }
 }

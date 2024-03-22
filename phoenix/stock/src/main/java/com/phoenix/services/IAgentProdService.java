@@ -13,4 +13,6 @@ public interface IAgentProdService {
     void detachManagerFromProduct(String serialNumber);
     List<AgentProdDto> getAssignementByusername(String username);
     void UpdateAgentsbyUserssignementByusername(List<AgentProdDto> agentProdDtos);
+
+    List<String> productsInPossession(String username);
     }

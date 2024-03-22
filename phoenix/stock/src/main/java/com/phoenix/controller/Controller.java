@@ -257,4 +257,9 @@ public class Controller {
         return iStockService.placeStock(body);
     }
 
+    @GetMapping("/productsInPossession/{username}")
+    public List<String> productsInPossession(@PathVariable String username) {
+        return iAgentProdService.productsInPossession(username);
+    }
+
 }
