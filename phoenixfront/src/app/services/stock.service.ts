@@ -10,6 +10,7 @@ import { ProductPage } from '../models/inventory/ProductPage';
 import { AgentProdDto } from '../models/inventory/AgentProdDto';
 import { map } from 'rxjs/operators';
 import { SoldProductPage } from '../models/inventory/SoldProductPage';
+import { ReclamationDto } from '../models/notifications/ReclamationDto';
 
 @Injectable({
   providedIn: 'root'
@@ -334,4 +335,5 @@ productsInPossession(username: string): Observable<String[]> {
     })
   );
 }
+
 }

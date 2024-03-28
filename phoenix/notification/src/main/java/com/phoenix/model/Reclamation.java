@@ -22,7 +22,7 @@ public class Reclamation {
     private Long id;
     @Enumerated(EnumType.STRING)
     private ReclamType reclamationType;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String reclamationText;
     private String senderReference;
     private List<String> receiverReference;

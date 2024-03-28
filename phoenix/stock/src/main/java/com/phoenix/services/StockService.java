@@ -240,7 +240,7 @@ public class StockService implements IStockService{
                     .bodyToMono(Campaigndto.class)
                     .block();
             if(!stock.getStockReference().isEmpty() && !campaigndto.getCampaignName().isEmpty()){
-                String stockPlusCampaign = stock.getStockReference() +" - "+"Campain : " +campaigndto.getCampaignName();
+                String stockPlusCampaign = stock.getStockReference() +" - "+"Stock : " +campaigndto.getCampaignName();
                 liststockreferences.add(stockPlusCampaign);
             }
             else if(!stock.getStockReference().isEmpty()){

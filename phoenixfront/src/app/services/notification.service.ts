@@ -34,4 +34,14 @@ export class NotificationService {
       })
     );
   }
+
+  addReclamation(notification: ReclamationDto): Observable<any> {
+    return this.http.post<any>(this.apiUrl + '/addReclamation', notification)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+  }
 }
