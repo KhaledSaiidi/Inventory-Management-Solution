@@ -122,4 +122,18 @@ ifUserSeentrue(notification: ReclamationDto): boolean {
         }
       );
   }
+
+  navigateToUserNotifications(userName?: string) {
+    if (userName === undefined) {
+      console.log('Invalid Username');
+      return;
+    }
+    this.router.navigate(['/userdetails'], { 
+      queryParams: { 
+        id: userName,
+        selectedTab: 2
+      } 
+    });      
+  }
+  
 }

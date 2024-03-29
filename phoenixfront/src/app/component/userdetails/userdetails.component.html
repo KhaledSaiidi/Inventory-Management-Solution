@@ -423,17 +423,18 @@
                       <div class="nav-wrapper position-relative end-0" style="height: 100%;">
                         <ul class="nav nav-pills nav-fill p-1" role="tablist">
                           <li class="nav-item" [class.selected]="selectedNotificationTab === 0" style="cursor: pointer;">
-                            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedNotificationTabSent()" role="tab" [attr.aria-selected]="selectedNotificationTab === 0">
-                              <i class="ni ni-send"></i>
-                              <span class="ms-2">Notifications sent</span>
-                            </a>
-                          </li>
-                          <li class="nav-item" [class.selected]="selectedNotificationTab === 1" style="cursor: pointer;">
-                            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedNotificationTabReceived()" role="tab" [attr.aria-selected]="selectedNotificationTab === 1">
+                            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedNotificationTabReceived()" role="tab" [attr.aria-selected]="selectedNotificationTab === 0">
                               <i class="ni ni-email-83"></i>
                               <span class="ms-2">Notifications received</span>
                             </a>
                           </li>
+                          <li class="nav-item" [class.selected]="selectedNotificationTab === 1" style="cursor: pointer;">
+                            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedNotificationTabSent()" role="tab" [attr.aria-selected]="selectedNotificationTab === 1">
+                              <i class="ni ni-send"></i>
+                              <span class="ms-2">Notifications sent</span>
+                            </a>
+                          </li>
+                          
                         </ul>
                       </div>
                     </div>
@@ -441,7 +442,40 @@
                     <div class="card-header pb-0">
                       <h6 class="text-center" >{{user.firstName?.toUpperCase()}} Notifications</h6>
                     </div>
-                <ng-container *ngIf="selectedNotificationTab === 0">
+                    <ng-container *ngIf="selectedNotificationTab === 0">
+                      <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Type</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 40%;">Notification Body</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sender</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SeenBy</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                      </tr>
+                      <tr *ngFor="let notif of receivedreclamations">
+                     <td style="word-wrap: break-word; white-space: normal;">
+                      <span *ngIf="notif.reclamationType" >
+                        {{ getReclamationTypeText(notif.reclamationType) }}
+                      </span>
+                    </td>
+                     <td style="max-height: 100px; overflow-y: auto; word-wrap: break-word; white-space: normal;">{{notif.reclamationText}}</td>  
+                     <td style="word-wrap: break-word; white-space: normal;">{{notif.senderReference}}</td>  
+                     <td style="word-wrap: break-word; white-space: normal;">{{notif.vuedreceivers}}</td>            
+                     <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamDate| date: 'medium'}}</td>  
+                    
+                    </tr>                  
+                  </tbody>
+                            </table>
+                        </div>
+                      </div>  
+                    </ng-container>  
+                <ng-container *ngIf="selectedNotificationTab === 1">
                     <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
                       <div class="table-responsive p-0">
                           <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
@@ -474,39 +508,7 @@
                       </div>
                     </div>  
                 </ng-container>
-                <ng-container *ngIf="selectedNotificationTab === 1">
-                  <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
-              <thead>
-                <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Type</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 40%;">Notification Body</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sender</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SeenBy</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Notification Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                  </tr>
-                  <tr *ngFor="let notif of receivedreclamations">
-                 <td style="word-wrap: break-word; white-space: normal;">
-                  <span *ngIf="notif.reclamationType" >
-                    {{ getReclamationTypeText(notif.reclamationType) }}
-                  </span>
-                </td>
-                 <td style="max-height: 100px; overflow-y: auto; word-wrap: break-word; white-space: normal;">{{notif.reclamationText}}</td>  
-                 <td style="word-wrap: break-word; white-space: normal;">{{notif.senderReference}}</td>  
-                 <td style="word-wrap: break-word; white-space: normal;">{{notif.vuedreceivers}}</td>            
-                 <td style="word-wrap: break-word; white-space: normal;">{{notif.reclamDate| date: 'medium'}}</td>  
                 
-                </tr>                  
-              </tbody>
-                        </table>
-                    </div>
-                  </div>  
-                </ng-container>  
                   </div>
                 </div>
               </div>

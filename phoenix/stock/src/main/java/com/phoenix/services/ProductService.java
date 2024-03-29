@@ -408,8 +408,13 @@ public class ProductService implements IProductService{
         LocalDate currentDate = LocalDate.now();
         LocalDate sevenDaysLater = currentDate.plusDays(7);
         List<Stock> stocksForAlert = iStockRepository.findStocksDueWithinSevenDays(currentDate, sevenDaysLater);
-        List<Product> products = iProductRepository.findByStockIn(stocksForAlert);
+        List<Product> productsByStock = iProductRepository.findByStockIn(stocksForAlert);
+        List<AgentProd> alertsByAgent = iAgentProdRepository.findAgentsDueWithinSevenDays(currentDate, sevenDaysLater);
         List<Userdto> managers = getAllmanagers();
+
+        Set<Product> products = new HashSet<>();
+        alertsByAgent.forEach(agent -> products.addAll(agent.getProductsAssociated()));
+        products.addAll(productsByStock);
         return products.parallelStream()
                 .map(product -> {
                     String serialNumbersExpired = product.getSerialNumber();
@@ -436,12 +441,10 @@ public class ProductService implements IProductService{
                 .bodyToFlux(Userdto.class)
                 .collectList()
                 .block();
-        System.out.println("Our users "+userdtos);
         assert userdtos != null;
         List<Userdto> managers = userdtos.stream()
                 .filter(userdto -> userdto.getRealmRoles().contains("MANAGER") || userdto.getRealmRoles().contains("IMANAGER"))
                     .collect(Collectors.toList());
-            System.out.println("Our managers "+managers);
         return managers;
     }
     private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers, String agentAsignedToo) {

@@ -62,9 +62,10 @@ selectedImage: File | null = null;
       this.username = id;
       console.log(this.username);
       }
+      const selectedTabParam = params.get('selectedTab');
+      this.selectedTab = selectedTabParam !== null ? +selectedTabParam : 0;
     });
     this.getuserinfos(this.username);
-    this.selectedTab = history.state.selectedTab || 0;
 
     this.userForm = this.formBuilder.group({
       firstName: new FormControl({ value: this.user.firstName, disabled: this.isCodeDisabled }),
@@ -366,10 +367,11 @@ getuserinfos(code : string){
 
 
     selectedNotificationTab = 0;
-    selectedNotificationTabSent(){
+    
+    selectedNotificationTabReceived() {
       this.selectedNotificationTab = 0;
     }
-    selectedNotificationTabReceived() {
+    selectedNotificationTabSent(){
       this.selectedNotificationTab = 1;
     }
 

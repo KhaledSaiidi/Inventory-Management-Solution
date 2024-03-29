@@ -23,11 +23,14 @@ public class ScheduledTasks {
     @Autowired
     private StockProducer stockProducer;
 
-    //@Scheduled(cron = "0 0 9 * * *")
-    @Scheduled(cron = "0 */5 * * * *")
+    // @Scheduled(cron = "0 0 9 * * *")
+    // @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 0 * * MON")
     public void checkProductsDueDate() {
         List<ReclamationDto> reclamationDtos = iProductService.getProductsForAlert();
+        System.out.println("triggered");
         if(!reclamationDtos.isEmpty()){
+            System.out.println(reclamationDtos);
             StockEvent stockEvent = new StockEvent();
             stockEvent.setReclamationDtos(reclamationDtos);
             stockProducer.sendMessage(stockEvent);

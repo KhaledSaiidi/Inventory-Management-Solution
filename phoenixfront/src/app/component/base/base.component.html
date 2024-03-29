@@ -34,7 +34,7 @@
                       
                       <div class="dropdown-menu dropdown-menu-end px-2 me-sm-n4 custom-dropdown-menu" >
                     
-                        <div *ngIf="!emptyreclamaations; else noNotifications">
+                        <div *ngIf="!emptyreclamaations; else noNotifications" style="cursor: default;">
                           <div class="notification-header">
                             <h6 class="m-0">Notifications</h6>
                           </div>
@@ -44,7 +44,8 @@
                               <div class="media">
                                 <div class="media-body" >
                                   <h6 class="notification-sender">
-                                    <i class="fa fa-info-circle"></i>  {{ notif.senderReference }} :
+                                    <i class="fa fa-info-circle" style="font-size: 18px; color: #336699;"></i>
+                                    Sent by {{ notif.senderReference?.toUpperCase() }} :
                                     <small class="text-muted notification-date">{{ notif.reclamDate|  date:'HH:mm, dd MMM' }}</small>
                                   </h6>
                                 
@@ -55,8 +56,9 @@
                               </div>
                             </li>
                           </ul>
+                          <hr style="border: 0; border-top: 1px solid #999; margin-bottom: 4px;">
                           <div style="display: flex; justify-content: center; align-items: center; height: 100%; margin-top: 4px;">
-                            <a><u>Check All</u></a>
+                            <a style="cursor: pointer;" (click)="navigateToUserNotifications(securityService.profile?.username)"><u>Check All</u></a>
                         </div>                        
                         </div>
                         <ng-template #noNotifications>
