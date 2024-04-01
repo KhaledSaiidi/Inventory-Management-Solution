@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { delay, switchMap, timer } from 'rxjs';
+import { ReclamType } from 'src/app/models/notifications/ReclamType';
 import { ReclamationDto } from 'src/app/models/notifications/ReclamationDto';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SecurityService } from 'src/app/services/security.service';
@@ -135,5 +136,6 @@ ifUserSeentrue(notification: ReclamationDto): boolean {
       } 
     });      
   }
+   
   
 }

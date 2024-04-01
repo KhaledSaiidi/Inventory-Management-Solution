@@ -26,7 +26,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     @Value("${jwt.auth.converter.principle-attribute}")
     private final String principleAttribute = "preferred_username";
 
-    @Value("${jwt.auth.converter.resource-id}")
+    @Value("${ }")
     private String resourceId;
 
     @Override

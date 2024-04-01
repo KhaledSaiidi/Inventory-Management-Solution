@@ -4,11 +4,9 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
-import com.phoenix.dto.AgentProdDto;
-import com.phoenix.dto.ProductDto;
-import com.phoenix.dto.SoldProductDto;
-import com.phoenix.dto.StockDto;
+import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.Campaigndto;
+import com.phoenix.kafka.StockProducer;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.ISoldProductDtoMapper;
 import com.phoenix.mapper.IStockMapper;
@@ -19,6 +17,7 @@ import com.phoenix.repository.ISoldProductRepository;
 import com.phoenix.repository.IStockRepository;
 import com.phoenix.soldproductmapper.ISoldTProductMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +36,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SoldProductService  implements IsoldProductService{
+
+    @Autowired
+    private StockProducer stockProducer;
 
     private final IProductRepository iProductRepository;
     private final ISoldProductRepository iSoldProductRepository;
@@ -76,10 +78,25 @@ public class SoldProductService  implements IsoldProductService{
 
         iProductRepository.delete(product);
         iSoldProductRepository.save(soldProduct);
-
+        sendNotificationForSell (soldProduct);
         }
     }
 
+    public void sendNotificationForSell (SoldProduct soldProduct){
+        List<ReclamationDto> reclamationDtos = new ArrayList<>();
+        ReclamationDto reclamationDto = new ReclamationDto();
+        reclamationDto.setReclamationType(ReclamType.prodSoldType);
+        reclamationDto.setSenderReference(soldProduct.getAgentWhoSold().getUsername());
+        reclamationDto.setReceiverReference(Collections.singletonList(soldProduct.getManagerSoldProd().getUsername()));
+        reclamationDto.setReclamationText("We're pleased to inform you that " +
+                soldProduct.getAgentWhoSold().getUsername() + " has successfully closed a sale for the product with Serial Number: " +
+                soldProduct.getSerialNumber() + " beloging to "+ soldProduct.getStock().getStockReference() +" stock. " +
+                "As his manager, you are receiving this notification as part of our systematic update on recent events.");
+        reclamationDtos.add(reclamationDto);
+        StockEvent stockEvent = new StockEvent();
+        stockEvent.setReclamationDtos(reclamationDtos);
+        stockProducer.sendMessage(stockEvent);
+        }
 
     @Override
     public Page<SoldProductDto> getSoldProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm) {
@@ -295,9 +312,32 @@ public class SoldProductService  implements IsoldProductService{
 
             iProductRepository.save(product);
             iSoldProductRepository.delete(soldProduct);
-
-
+            sendNotificationForReturn(product);
         }
+    }
+
+    public void sendNotificationForReturn (Product product){
+        List<ReclamationDto> reclamationDtos = new ArrayList<>();
+        ReclamationDto reclamationDto = new ReclamationDto();
+        String soldby;
+        if(Objects.equals(product.getAgentwhoSoldProd().getUsername(), product.getAgentReturnedProd().getUsername())) {
+            soldby = "his";
+        } else {
+            soldby = product.getAgentwhoSoldProd().getUsername();
+        }
+        reclamationDto.setReclamationType(ReclamType.prodReturnType);
+        reclamationDto.setSenderReference(product.getAgentReturnedProd().getUsername());
+        reclamationDto.setReceiverReference(Collections.singletonList(product.getManagerProd().getUsername()));
+        reclamationDto.setReclamationText(product.getAgentReturnedProd().getUsername().toUpperCase() +
+                " has returned the product with Serial Number " +
+                product.getSerialNumber() + " beloging to "+ product.getStock().getStockReference() +
+                " stock, previously sold under " +
+                soldby +
+                " name. As his manager, you're being informed as part of our regular updates on recent returns.");
+        reclamationDtos.add(reclamationDto);
+        StockEvent stockEvent = new StockEvent();
+        stockEvent.setReclamationDtos(reclamationDtos);
+        stockProducer.sendMessage(stockEvent);
     }
 
 }

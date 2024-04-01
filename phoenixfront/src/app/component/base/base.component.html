@@ -43,14 +43,31 @@
                             [ngStyle]="{ 'background-color': !ifUserSeentrue(notif) ? '#f2f2f2' : 'white' }">
                               <div class="media">
                                 <div class="media-body" >
-                                  <h6 class="notification-sender">
-                                    <i class="fa fa-info-circle" style="font-size: 18px; color: #336699;"></i>
+                                  <h6 class="notification-sender" style="margin-bottom: 0px;">
+                                    <i class="fa fa-info-circle" style="font-size: 16px; color: #336699;"></i>
                                     Sent by {{ notif.senderReference?.toUpperCase() }} :
                                     <small class="text-muted notification-date">{{ notif.reclamDate|  date:'HH:mm, dd MMM' }}</small>
                                   </h6>
                                 
-                                  <div class="notification-content">
-                                    <span class="notification-message">{{ notif.reclamationText }}</span>
+                                  <div class="notification-content" style="margin-top: 0px;">
+                                    <p style="size: 6px; margin-bottom: 0px; margin-top: 0px;">
+                                      <b [ngStyle]="{
+                                        'color': 
+                                          notif.reclamationType?.toString() === 'prodReturnType' ? 'orange' :
+                                          notif.reclamationType?.toString() === 'prodSoldType' ? 'green' :
+                                          notif.reclamationType?.toString() === 'restockingType' ? 'blue' :
+                                          'red'
+                                      }">
+                                        {{ 
+                                          notif.reclamationType?.toString() === 'prodReturnType' ? 'Product Return' :
+                                          notif.reclamationType?.toString() === 'prodSoldType' ? 'Product Sold' :
+                                          notif.reclamationType?.toString() === 'restockingType' ? 'Restocking' :
+                                          notif.reclamationType?.toString() === 'stockExpirationReminder' ? 'Stock Expiration Reminder' :
+                                          notif.reclamationType?.toString() === 'otherReclamType' ? 'Complaint' : ''
+                                        }}
+                                      </b>
+                                     </p>
+                                    <span class="notification-message" style="margin-top: 0px;">{{ notif.reclamationText }}</span>
                                   </div>
                                 </div>
                               </div>
