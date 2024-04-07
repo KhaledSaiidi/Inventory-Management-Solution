@@ -16,6 +16,7 @@ import com.phoenix.repository.IAgentProdRepository;
 import com.phoenix.repository.IProductRepository;
 import com.phoenix.repository.IStockRepository;
 import com.phoenix.repository.IUncheckHistoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -541,6 +542,13 @@ public class ProductService implements IProductService{
             pageContent = productDtos.subList(startItem, toIndex);
         }
         return new PageImpl<>(pageContent, pageable, productDtos.size());
+    }
+    @Override
+    public void checkReturn(String serialNumber) {
+        Product existingProduct = iProductRepository.findById(serialNumber)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        existingProduct.setReturnedstatus(true);
+        iProductRepository.save(existingProduct);
     }
 
 }

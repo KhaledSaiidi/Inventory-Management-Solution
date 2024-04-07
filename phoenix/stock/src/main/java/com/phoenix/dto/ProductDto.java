@@ -23,6 +23,7 @@ public class ProductDto {
     private String comments;
     private BigDecimal price;
     private boolean returned;
+    private boolean returnedstatus;
     private boolean checkedExistence;
     private StockDto stock;
     private AgentProdDto agentProd;

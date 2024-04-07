@@ -4,11 +4,13 @@ import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.SoldProductDto;
 import com.phoenix.dto.StockDto;
+import com.phoenix.model.Product;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IAgentProdService;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
 import com.phoenix.services.IsoldProductService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -271,5 +273,10 @@ public class Controller {
         Page<ProductDto> productPage = iProductService.getProductsReturnedPaginatedByusername(pageable, username);
         return ResponseEntity.ok(productPage);
     }
+    @PutMapping("checkReturn/{serialNumber}")
+    public void checkReturn(@PathVariable("serialNumber") String serialNumber) {
+        iProductService.checkReturn(serialNumber);
+    }
+
 
 }

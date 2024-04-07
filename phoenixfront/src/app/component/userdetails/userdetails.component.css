@@ -75,4 +75,13 @@
     white-space: nowrap; /* Prevent text from wrapping */
   }
  
-  
+  .return-icon {
+    font-size: 16px; /* Initial size */
+    color: black; /* Initial color */
+    transition: all 0.3s ease; /* Transition effect for smooth change */
+}
+
+.return-icon:hover {
+    color: green; /* Color change on hover */
+    transform: scale(1.1); /* Scale up on hover */
+}

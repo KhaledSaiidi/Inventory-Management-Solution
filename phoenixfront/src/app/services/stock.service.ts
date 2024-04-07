@@ -347,4 +347,15 @@ getProductsReturnedPaginatedByusername(username: string, page: number, size: num
       })
     );
 }
+
+checkReturn(serialNumber: string){
+  return this.http.put<void>(this.apiUrl + '/checkReturn/' + serialNumber, null)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+
+}
 }

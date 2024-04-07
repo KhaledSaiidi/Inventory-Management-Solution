@@ -13,6 +13,7 @@ export interface Productdto {
     comments?: string;
     price?: number;
     returned?: boolean;
+    returnedstatus?: boolean;
     checkedExistence?: boolean;
     stock?: Stockdto;
     agentProd?: AgentProdDto;

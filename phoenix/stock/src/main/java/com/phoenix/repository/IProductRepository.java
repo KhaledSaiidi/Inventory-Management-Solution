@@ -23,5 +23,4 @@ public interface IProductRepository extends JpaRepository<Product, String> {
     Optional<Product> findByManagerProd (AgentProd agentProd);
     List<Product> findByStockIn(List<Stock> stocksForAlert);
 
-
 }

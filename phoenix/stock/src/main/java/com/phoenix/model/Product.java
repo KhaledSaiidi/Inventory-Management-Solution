@@ -31,6 +31,7 @@ public class Product {
     private String comments;
     private BigDecimal price;
     private boolean returned;
+    private boolean returnedstatus;
     private boolean checkedExistence;
     @ManyToOne
     @JoinColumn(name = "stock_reference")

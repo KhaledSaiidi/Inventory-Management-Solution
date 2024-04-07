@@ -466,6 +466,24 @@ getProductsReturnedPaginatedByusername(username: string, page: number) {
   onPageReturnChange(newPage: number): void {
     this.getProductsReturnedPaginatedByusername(this.username, newPage - 1);
 } 
+
+checkReturn(serialNumber: string | undefined){
+  if(serialNumber){
+    this.stockservice.checkReturn(serialNumber)
+    .subscribe(
+      (response) => {
+        console.log("checked");
+        try {
+         this.getProductsReturnedPaginatedByusername(this.username, 0);
+          this.cdRef.detectChanges();
+        } catch (error) {
+          this.agentProds = [];
+            }
+      },
+      (error) => {
+       console.error('Error checking:', error);
+      }
+    );
+    }
+  }
 }
-
-

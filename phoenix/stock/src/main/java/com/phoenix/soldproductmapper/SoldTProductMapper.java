@@ -36,6 +36,7 @@ public class SoldTProductMapper implements ISoldTProductMapper {
         product.setComments(soldProduct.getComments());
         product.setPrice(soldProduct.getPrice());
         product.setReturned(true);
+        product.setReturnedstatus(false);
         product.setStock(soldProduct.getStock());
         product.setManagerProd(soldProduct.getManagerSoldProd());
         product.setAgentProd(soldProduct.getAgentAssociatedProd());

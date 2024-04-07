@@ -402,7 +402,7 @@
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">CHECK RETURN</th>
                 <ng-container *ngIf="!isManager">
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
               </ng-container>
@@ -426,8 +426,10 @@
                 <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
                 <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
                <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>  
-               <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
-               <ng-container *ngIf="!isManager">
+               <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
+                <span style="font-size: 20px;" [style.color]="prod.returnedstatus ? 'green' : 'red'">
+                  {{prod.returnedstatus ? '&#10003;' : '&#10008;'}}
+                  </span></td>                <ng-container *ngIf="!isManager">
                <td style="word-wrap: break-word; white-space: normal;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
                </ng-container>
                <ng-container *ngIf="isManager">
@@ -441,8 +443,8 @@
                <td style="word-wrap: break-word; white-space: normal;">{{prod.checkout | date: 'medium' | slice: 0:12}}</td>  
                <td style="word-wrap: break-word; white-space: normal;">{{prod.checkin | date: 'medium' | slice: 0:12}}</td>  
 
-                <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-edit"></i></a></td>
-               <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
+                <td style="word-wrap: break-word; white-space: normal;  text-align: right;"><a (click)="checkReturn(prod.serialNumber)"><i style="cursor: pointer;" class="fa fas fa-check-circle return-icon"></i></a></td>
+               <td style="word-wrap: break-word; white-space: normal; text-align: right;"><a><i style="cursor: pointer;" class="fa fas fa-trash"></i></a></td>
               </tr>
               <tr>
                 <td colspan="12" style="margin-right: 5px;">

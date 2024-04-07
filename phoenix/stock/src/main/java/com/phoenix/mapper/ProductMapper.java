@@ -23,6 +23,7 @@ public class ProductMapper implements IProductMapper{
         productDto.setComments(product.getComments());
         productDto.setPrice(product.getPrice());
         productDto.setReturned(product.isReturned());
+        productDto.setReturnedstatus(product.isReturnedstatus());
         productDto.setCheckedExistence(product.isCheckedExistence());
         return productDto;
     }
@@ -40,6 +41,7 @@ public class ProductMapper implements IProductMapper{
         product.setComments(productDto.getComments());
         product.setPrice(productDto.getPrice());
         product.setReturned(productDto.isReturned());
+        product.setReturnedstatus(productDto.isReturnedstatus());
         product.setCheckedExistence(productDto.isCheckedExistence());
         return product;
     }
