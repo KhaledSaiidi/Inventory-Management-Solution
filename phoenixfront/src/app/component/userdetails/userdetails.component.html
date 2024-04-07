@@ -394,6 +394,68 @@
                 <div class="card-header pb-0">
                   <h6 class="text-center" >{{user.firstName?.toUpperCase()}} PRODUCTS RETURNED</h6>
                 </div>
+                <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
+                  <div class="table-responsive p-0">
+                      <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+                <ng-container *ngIf="!isManager">
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+              </ng-container>
+              <ng-container *ngIf="isManager">
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Associated</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">AGENT RETURNED</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">AGENT SOLD	</th>
+              </ng-container>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigned Date</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Return Date</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+             <ng-container>
+               <tr>
+               </tr>
+              <tr *ngFor="let prod of agentReturnProds">
+                <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
+                <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
+               <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>  
+               <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
+               <ng-container *ngIf="!isManager">
+               <td style="word-wrap: break-word; white-space: normal;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
+               </ng-container>
+               <ng-container *ngIf="isManager">
+                <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</td>  
+                <td style="word-wrap: break-word; white-space: normal;">{{prod.agentReturnedProd?.firstname?.toUpperCase()}} {{prod.agentReturnedProd?.lastname?.toUpperCase()}}</td>  
+                <td style="word-wrap: break-word; white-space: normal;">{{prod.agentwhoSoldProd?.firstname?.toUpperCase()}} {{prod.agentwhoSoldProd?.lastname?.toUpperCase()}}</td>  
+  
+              </ng-container>
+               <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.affectaiondate | date: 'medium' | slice: 0:12}}</td>  
+               <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.duesoldDate | date: 'medium' | slice: 0:12}}</td>  
+               <td style="word-wrap: break-word; white-space: normal;">{{prod.checkout | date: 'medium' | slice: 0:12}}</td>  
+               <td style="word-wrap: break-word; white-space: normal;">{{prod.checkin | date: 'medium' | slice: 0:12}}</td>  
+
+                <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-edit"></i></a></td>
+               <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-trash"></i></a></td>
+              </tr>
+              <tr>
+                <td colspan="12" style="margin-right: 5px;">
+                  <app-custom-pagination [currentPage]="currentReturnPage" [totalPages]="totalReturnPages" (pageChange)="onPageReturnChange($event)"></app-custom-pagination>                    
+                 </td>
+                </tr>
+              </ng-container>
+      
+            </tbody>
+                      </table>
+                  </div>
+                </div>     
+
                 </ng-container>
     
             </div>

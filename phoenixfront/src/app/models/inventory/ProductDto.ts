@@ -5,6 +5,7 @@ export interface Productdto {
     serialNumber?: string;
     simNumber?: string;
     checkin?: Date;
+    checkout?: Date;
     boxNumber?: string;
     brand?: string;
     productType?: string;

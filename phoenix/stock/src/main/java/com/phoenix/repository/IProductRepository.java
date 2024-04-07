@@ -18,6 +18,8 @@ public interface IProductRepository extends JpaRepository<Product, String> {
 
     Page<Product> findByStock(Stock stock, Pageable pageable);
     Optional<Product> findByAgentProd (AgentProd agentProd);
+    Optional<Product> findByAgentReturnedProd (AgentProd agentProd);
+
     Optional<Product> findByManagerProd (AgentProd agentProd);
     List<Product> findByStockIn(List<Stock> stocksForAlert);
 

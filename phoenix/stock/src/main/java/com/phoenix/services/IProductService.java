@@ -27,4 +27,5 @@ public interface IProductService {
 
     Page<ProductDto> getReturnedProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
     List<ReclamationDto>  getProductsForAlert();
+    Page<ProductDto> getProductsReturnedPaginatedByusername(Pageable pageable, String username);
     }

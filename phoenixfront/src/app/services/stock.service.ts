@@ -336,4 +336,15 @@ productsInPossession(username: string): Observable<String[]> {
   );
 }
 
+
+getProductsReturnedPaginatedByusername(username: string, page: number, size: number): Observable<ProductPage> {
+  const apiUrl = this.apiUrl + '/getProductsReturnedPaginatedByusername/' + username + '?page=' + page + '&size=' + size;
+  return this.http.get<ProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
 }

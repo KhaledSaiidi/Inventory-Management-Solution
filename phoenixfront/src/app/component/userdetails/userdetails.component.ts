@@ -24,7 +24,6 @@ export class UserdetailsComponent implements OnInit{
   isEditable: boolean = false;
   toggleEditable(){
     this.isEditable = !this.isEditable;
-    console.log(this.isEditable);
 }
 
 selectedImage: File | null = null;
@@ -60,7 +59,6 @@ selectedImage: File | null = null;
       const id = params.get('id');
       if(id != null){
       this.username = id;
-      console.log(this.username);
       }
       const selectedTabParam = params.get('selectedTab');
       this.selectedTab = selectedTabParam !== null ? +selectedTabParam : 0;
@@ -80,19 +78,27 @@ selectedImage: File | null = null;
       username: [{value:this.username, disabled: this.isCodeDisabled }]
     });
     this.initForm();
-
+    
     try {
       await   this.getProductsByusername(this.username, 0);
       this.cdRef.detectChanges();
     } catch (error) {
       this.agentProds = [];
         }
-        try {
-          await   this.getSoldProductsByusername(this.username, 0);
-          this.cdRef.detectChanges();
-        } catch (error) {
-          this.agentsoldProds = [];
-            }
+
+    try {
+      await   this.getSoldProductsByusername(this.username, 0);
+      this.cdRef.detectChanges();
+    } catch (error) {
+      this.agentsoldProds = [];
+        }
+
+    try {
+      await   this.getProductsReturnedPaginatedByusername(this.username, 0);
+      this.cdRef.detectChanges();
+    } catch (error) {
+      this.agentProds = [];
+        }
     this.getAllReclamationsForsender();
     this.getAllReclamationsForReceiver();
   }
@@ -123,13 +129,11 @@ selectedImage: File | null = null;
   updatePassword(): void {
     const username = this.username;
     const newPassword = this.passwordForm.get('newPassword')?.value;
-    console.log('newPassword:', newPassword);
     const confPassword = this.passwordForm.get('confirmPassword')?.value;
     if (this.checkPasswordValidity(newPassword)) {
     if (newPassword === confPassword) {
     this.agentsService.updatePassword(username, newPassword).subscribe(
       (response) => {
-        console.log('Password updated successfully:', response);
         window.location.reload();
       },
       (error) => {
@@ -157,7 +161,6 @@ handleFileInput(event: any) {
   } else {
     this.selectedImage = null;
   }
-  console.log(this.selectedImage);
 }
 isManager: boolean = false;
 getuserinfos(code : string){
@@ -165,7 +168,6 @@ getuserinfos(code : string){
   this.agentsService.getuserbycode(code).subscribe((data) => {
     // handle the retrieved data here
     this.user = data as Userdto;
-    console.log(this.user);
     if(this.user.usertypemanager == true) {
       this.isManager = true;
     }
@@ -342,7 +344,6 @@ getuserinfos(code : string){
           .subscribe(
             (soldproductPage: SoldProductPage) => {
               this.loadingsold = false;
-              console.log(this.loadingsold  + "xx" + this.emptysoldProducts);
               this.currentsoldPage = soldproductPage.number + 1;
               this.agentsoldProds = soldproductPage.content;
               this.totalsoldPages = soldproductPage.totalPages;
@@ -419,7 +420,6 @@ getReclamationTypeText(reclamationType: ReclamType): string {
 
 navigateToRestocking() {
   if (this.username === undefined) {
-    console.log('Invalid Username');
     return;
   }
   this.router.navigate(['/restocking'], { queryParams: { id: this.username } });      
@@ -427,12 +427,45 @@ navigateToRestocking() {
 
 navigateToComplaint() {
   if (this.username === undefined) {
-    console.log('Invalid Username');
     return;
   }
   this.router.navigate(['/complaint'], { queryParams: { id: this.username } });      
 }
 
+
+loadingReturn: boolean = true;
+emptyReturnProducts: boolean = true;
+totalReturnPages: number = 0;
+totalReturnElements: number = 0;
+currentReturnPage: number = 0;
+agentReturnProds: Productdto[] = [];
+pagedReturnProducts: Productdto[][] = [];
+
+getProductsReturnedPaginatedByusername(username: string, page: number) {
+  this.loadingReturn = true;
+  try {
+    this.stockservice.getProductsReturnedPaginatedByusername(username, page, this.pageSize)
+      .subscribe(
+        (productPage: ProductPage) => {
+          this.currentReturnPage = productPage.number + 1;
+          this.agentReturnProds = productPage.content;
+          console.log("this.agentReturnProds :" + this.agentReturnProds)
+          this.totalReturnElements = productPage.totalPages;
+        },
+        (error) => {
+          console.error('Error fetching stocks:', error);
+          this.loadingReturn = false;
+        }
+      );
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    this.loadingReturn = false;
+  }
+  }  
+
+  onPageReturnChange(newPage: number): void {
+    this.getProductsReturnedPaginatedByusername(this.username, newPage - 1);
+} 
 }
 
 

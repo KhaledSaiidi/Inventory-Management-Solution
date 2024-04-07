@@ -270,28 +270,33 @@ public class ProductService implements IProductService{
                 }
             }
         }
-        List<ProductDto> productDtos = iProductMapper.toDtoList(products);
+        List<ProductDto> productDtos = products.stream()
+                .filter(product -> !product.isReturned())
+                .map(iProductMapper::toDto)
+                .collect(Collectors.toList());
+
         for (int i = 0; i < productDtos.size(); i++) {
             Product product = products.get(i);
             ProductDto productDto = productDtos.get(i);
-            if(product.getStock() != null){
-                StockDto stockDto = iStockMapper.toDto(product.getStock());
-                Campaigndto campaigndto = webClientBuilder.build().get()
-                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
-                        .retrieve()
-                        .bodyToMono(Campaigndto.class)
-                        .block();
-                stockDto.setCampaigndto(campaigndto);
-                productDto.setStock(stockDto);
-            }
-            if(product.getAgentProd() != null){
-                AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
-                productDto.setAgentProd(agentProdDto);
-            }
-            if(product.getManagerProd() != null){
-                AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
-                productDto.setManagerProd(managerProdDto);
-            }
+                if (product.getStock() != null) {
+                    StockDto stockDto = iStockMapper.toDto(product.getStock());
+                    Campaigndto campaigndto = webClientBuilder.build().get()
+                            .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
+                            .retrieve()
+                            .bodyToMono(Campaigndto.class)
+                            .block();
+                    stockDto.setCampaigndto(campaigndto);
+                    productDto.setStock(stockDto);
+                }
+                if (product.getAgentProd() != null) {
+                    AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
+                    productDto.setAgentProd(agentProdDto);
+                }
+                if (product.getManagerProd() != null) {
+                    AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
+                    productDto.setManagerProd(managerProdDto);
+                }
+
         }
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
@@ -471,5 +476,71 @@ public class ProductService implements IProductService{
         return reclamationDto;
     }
 
+    @Override
+    public Page<ProductDto> getProductsReturnedPaginatedByusername(Pageable pageable, String username) {
+        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
+        List<Product> products = new ArrayList<>();
+        for (AgentProd agentProd: agentProds){
+            Optional<Product> optionalProduct = iProductRepository.findByAgentReturnedProd(agentProd);
+            if(optionalProduct.isPresent()){
+                Product product = optionalProduct.get();
+                products.add(product);
+            }
+        }
+        if(products.isEmpty()){
+            for (AgentProd agentProd: agentProds){
+                Optional<Product> optionalProduct = iProductRepository.findByManagerProd(agentProd);
+                if(optionalProduct.isPresent()){
+                    Product product = optionalProduct.get();
+                    products.add(product);
+                }
+            }
+        }
+        List<ProductDto> productDtos = products.stream()
+                .filter(Product::isReturned)
+                .map(iProductMapper::toDto)
+                .collect(Collectors.toList());
+        for (int i = 0; i < productDtos.size(); i++) {
+            Product product = products.get(i);
+            ProductDto productDto = productDtos.get(i);
+                if (product.getStock() != null) {
+                    StockDto stockDto = iStockMapper.toDto(product.getStock());
+                    Campaigndto campaigndto = webClientBuilder.build().get()
+                            .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
+                            .retrieve()
+                            .bodyToMono(Campaigndto.class)
+                            .block();
+                    stockDto.setCampaigndto(campaigndto);
+                    productDto.setStock(stockDto);
+                }
+                if (product.getAgentProd() != null) {
+                    AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
+                    productDto.setAgentProd(agentProdDto);
+                }
+                if (product.getAgentReturnedProd() != null) {
+                    AgentProdDto agentReturnedProd = iAgentProdMapper.toDto(product.getAgentReturnedProd());
+                    productDto.setAgentReturnedProd(agentReturnedProd);
+                }
+                if (product.getAgentwhoSoldProd() != null) {
+                    AgentProdDto agentwhoSoldProd = iAgentProdMapper.toDto(product.getAgentwhoSoldProd());
+                    productDto.setAgentwhoSoldProd(agentwhoSoldProd);
+                }
+                if (product.getManagerProd() != null) {
+                    AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
+                    productDto.setManagerProd(managerProdDto);
+                }
+        }
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<ProductDto> pageContent;
+        if (productDtos.size() < startItem) {
+            pageContent = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, productDtos.size());
+            pageContent = productDtos.subList(startItem, toIndex);
+        }
+        return new PageImpl<>(pageContent, pageable, productDtos.size());
+    }
 
 }
