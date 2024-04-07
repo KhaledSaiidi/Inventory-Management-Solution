@@ -40,6 +40,7 @@ import { ReturnbyscanComponent } from './component/returnbyscan/returnbyscan.com
 import { StompService } from './services/stomp.service';
 import { ComplaintComponent } from './component/complaint/complaint.component';
 import { RestockingComponent } from './component/restocking/restocking.component'
+import { UserDetailsGuard } from './guards/UserDetailsGuard';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -47,7 +48,7 @@ const appRoute: Routes = [
   {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ,"AGENT"] }},
   {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER","AGENT"] }},
-  {path:'userdetails', component: UserdetailsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'userdetails', component: UserdetailsComponent, canActivate: [AuthGuard, UserDetailsGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'camapigns', component: CampaignsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addclient', component: AddClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addcampaign', component: AddcampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},

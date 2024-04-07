@@ -171,18 +171,18 @@
                     <h6 class="mb-0">Last sells</h6>
                   </div>
                   <div class="col-6 text-end">
-                    <button class="btn btn-outline-primary btn-sm mb-0">View All</button>
+                    <button class="btn btn-outline-primary btn-sm mb-0"(click)="navigateToSold()">View All</button>
                   </div>
                 </div>
               </div>
               <div class="card-body p-3 pb-0">
-                <ul class="list-group">
+                <ul class="list-group" *ngFor="let soldProd of lastsoldProds">
                   <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                     <div class="d-flex flex-column">
-                      <h6 class="mb-1 text-dark font-weight-bold text-sm">2023-07-17</h6>
-                      <span class="text-xs"> Products: 3 Laptop(s)</span>
+                      <h6 class="mb-1 text-dark font-weight-bold text-sm">{{soldProd.soldDate | date: 'medium' | slice: 0:12}}</h6>
+                      <span class="text-xs"> {{soldProd.serialNumber }}</span>
                     </div>
-                    <div class="d-flex align-items-center text-sm">Orange Laptop Campaign</div>
+                    <div class="d-flex align-items-center text-sm">{{soldProd.agentWhoSold?.firstname?.toUpperCase() }} {{soldProd.agentWhoSold?.lastname?.toUpperCase() }}</div>
                   </li>
                 </ul>
               </div>
@@ -192,20 +192,19 @@
                     <h6 class="mb-0">Last returns</h6>
                   </div>
                   <div class="col-6 text-end">
-                    <button class="btn btn-outline-primary btn-sm mb-0">View All</button>
+                    <button class="btn btn-outline-primary btn-sm mb-0"(click)="navigateToReturn()">View All</button>
                   </div>
                 </div>
               </div>
               <div class="card-body p-3 pb-0">
-                <ul class="list-group">
+                <ul class="list-group"  *ngFor="let returnedProd of lastreturnedProds">
                   <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                     <div class="d-flex flex-column">
-                      <h6 class="mb-1 text-dark font-weight-bold text-sm">2023-07-17</h6>
-                      <span class="text-xs">Products: 1 Laptop(s)</span>
+                      <h6 class="mb-1 text-dark font-weight-bold text-sm">{{returnedProd.checkin | date: 'medium' | slice: 0:12}}</h6>
+                      <span class="text-xs">{{returnedProd.serialNumber }}</span>
                     </div>
-                    <div class="d-flex align-items-center text-sm">Orange Laptop Campaign</div>
+                    <div class="d-flex align-items-center text-sm">{{returnedProd.agentReturnedProd?.firstname?.toUpperCase() }} {{returnedProd.agentReturnedProd?.lastname?.toUpperCase() }}</div>
                   </li>
-                  
                 </ul>
               </div>
             </div>
@@ -415,13 +414,12 @@
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Return Date</th>
+                <ng-container *ngIf="isManager">
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+                  </ng-container>
               </tr>
             </thead>
             <tbody>
-             <ng-container>
-               <tr>
-               </tr>
               <tr *ngFor="let prod of agentReturnProds">
                 <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
                 <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
@@ -442,17 +440,17 @@
                <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.duesoldDate | date: 'medium' | slice: 0:12}}</td>  
                <td style="word-wrap: break-word; white-space: normal;">{{prod.checkout | date: 'medium' | slice: 0:12}}</td>  
                <td style="word-wrap: break-word; white-space: normal;">{{prod.checkin | date: 'medium' | slice: 0:12}}</td>  
-
+               <ng-container *ngIf="isManager">
                 <td style="word-wrap: break-word; white-space: normal;  text-align: right;"><a (click)="checkReturn(prod.serialNumber)"><i style="cursor: pointer;" class="fa fas fa-check-circle return-icon"></i></a></td>
                <td style="word-wrap: break-word; white-space: normal; text-align: right;"><a><i style="cursor: pointer;" class="fa fas fa-trash"></i></a></td>
+              </ng-container>
               </tr>
               <tr>
-                <td colspan="12" style="margin-right: 5px;">
-                  <app-custom-pagination [currentPage]="currentReturnPage" [totalPages]="totalReturnPages" (pageChange)="onPageReturnChange($event)"></app-custom-pagination>                    
+                <td colspan="13" style="margin-right: 5px;">
+                  <app-custom-pagination [currentPage]="currentReturnPage" [totalPages]="totalReturnElements" (pageChange)="onPageReturnChange($event)"></app-custom-pagination>                    
                  </td>
                 </tr>
-              </ng-container>
-      
+  
             </tbody>
                       </table>
                   </div>

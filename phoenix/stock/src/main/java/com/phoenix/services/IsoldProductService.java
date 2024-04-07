@@ -19,5 +19,5 @@ public interface IsoldProductService {
     List<String> uploadcsvTocheckSell(MultipartFile file, String stockReference) throws IOException;
     Map<String, Integer> getSoldProductsInfosBystockReference(String stockreference);
     void returnProduct(String prodRef, AgentProdDto returnagentProd);
-
+    List<SoldProductDto> getThelast2SoldProdsByusername(String username);
     }

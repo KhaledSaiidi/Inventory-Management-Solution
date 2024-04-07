@@ -340,4 +340,29 @@ public class SoldProductService  implements IsoldProductService{
         stockProducer.sendMessage(stockEvent);
     }
 
+    @Override
+    public List<SoldProductDto> getThelast2SoldProdsByusername(String username) {
+        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
+        List<SoldProductDto> soldProductDtos = new ArrayList<>();
+        int[] count = {0};
+
+        for (AgentProd agentProd : agentProds) {
+            Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findByAgentWhoSold(agentProd);
+            if (!optionalSoldProduct.isPresent()) {
+                optionalSoldProduct = iSoldProductRepository.findByManagerSoldProd(agentProd);
+            }
+            optionalSoldProduct.ifPresent(product -> {
+                if (count[0] < 2) {
+                    SoldProductDto soldProductDto = iSoldProductDtoMapper.toDto(product);
+                    soldProductDto.setAgentWhoSold(iAgentProdMapper.toDto(product.getAgentWhoSold()));
+                    soldProductDtos.add(soldProductDto);
+                    count[0]++;
+                }
+            });
+        }
+        soldProductDtos.sort(Comparator.comparing(SoldProductDto::getSoldDate).reversed());
+
+        return soldProductDtos;
+    }
+
 }

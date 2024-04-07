@@ -11,6 +11,7 @@ import { AgentProdDto } from '../models/inventory/AgentProdDto';
 import { map } from 'rxjs/operators';
 import { SoldProductPage } from '../models/inventory/SoldProductPage';
 import { ReclamationDto } from '../models/notifications/ReclamationDto';
+import { SoldProductDto } from '../models/inventory/SoldProductDto';
 
 @Injectable({
   providedIn: 'root'
@@ -356,6 +357,27 @@ checkReturn(serialNumber: string){
       return throwError(error);
     })
   );
-
 }
+
+getThelast2ReturnedProdsByusername(username: string): Observable<Productdto[]> {
+  return this.http.get<Productdto[]>(this.apiUrl + '/getThelast2ReturnedProdsByusername/' + username)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+getThelast2SoldProdsByusername(username: string): Observable<SoldProductDto[]> {
+  return this.http.get<SoldProductDto[]>(this.apiUrl + '/getThelast2SoldProdsByusername/' + username)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
 }

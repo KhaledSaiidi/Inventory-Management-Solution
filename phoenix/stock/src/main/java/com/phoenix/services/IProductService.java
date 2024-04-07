@@ -29,4 +29,5 @@ public interface IProductService {
     List<ReclamationDto>  getProductsForAlert();
     Page<ProductDto> getProductsReturnedPaginatedByusername(Pageable pageable, String username);
     void checkReturn(String serialNumber);
+    List<ProductDto> getThelast2ReturnedProdsByusername(String username);
 }

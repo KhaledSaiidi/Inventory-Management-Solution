@@ -26,6 +26,7 @@ export class UserdetailsComponent implements OnInit{
     this.isEditable = !this.isEditable;
 }
 
+
 selectedImage: File | null = null;
   user: Userdto = {
     firstName: '',
@@ -101,6 +102,9 @@ selectedImage: File | null = null;
         }
     this.getAllReclamationsForsender();
     this.getAllReclamationsForReceiver();
+    this.getThelast2ReturnedProdsByusername(this.username);
+    this.getThelast2SoldProdsByusername(this.username);
+
   }
 
 
@@ -267,7 +271,6 @@ getuserinfos(code : string){
       totalElements: number = 0;
       currentPage: number = 0;
       agentProds: Productdto[] = [];
-      pagedProducts: Productdto[][] = [];
     
       getProductsByusername(username: string, page: number) {
         this.loading = true;
@@ -328,7 +331,14 @@ getuserinfos(code : string){
       this.selectedProdTab = 2;
     }
 
-
+    navigateToSold(){
+      this.selectedTab = 1;
+      this.selectedProdTab = 1;
+    }
+    navigateToReturn(){
+      this.selectedTab = 1;
+      this.selectedProdTab = 2;
+    }
     agentsoldProds: SoldProductDto[] = [];
     loadingsold: boolean = true;
     emptysoldProducts: boolean = true;
@@ -439,7 +449,6 @@ totalReturnPages: number = 0;
 totalReturnElements: number = 0;
 currentReturnPage: number = 0;
 agentReturnProds: Productdto[] = [];
-pagedReturnProducts: Productdto[][] = [];
 
 getProductsReturnedPaginatedByusername(username: string, page: number) {
   this.loadingReturn = true;
@@ -486,4 +495,30 @@ checkReturn(serialNumber: string | undefined){
     );
     }
   }
+
+  lastsoldProds: SoldProductDto[] = [];
+  lastreturnedProds: Productdto[] = [];
+  getThelast2ReturnedProdsByusername(username: string) {
+      this.stockservice.getThelast2ReturnedProdsByusername(username)
+        .subscribe(
+          (products: Productdto[]) => {
+            this.lastreturnedProds = products;
+          },
+          (error) => {
+            console.error('Error fetching last products returned:', error);
+          }
+        );
+    }  
+
+    getThelast2SoldProdsByusername(username: string) {
+      this.stockservice.getThelast2SoldProdsByusername(username)
+        .subscribe(
+          (products: SoldProductDto[]) => {
+            this.lastsoldProds = products;
+          },
+          (error) => {
+            console.error('Error fetching last products returned:', error);
+          }
+        );
+    }  
 }
