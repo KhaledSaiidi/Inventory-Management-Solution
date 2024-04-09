@@ -31,4 +31,5 @@ public interface IProductService {
     void checkReturn(String serialNumber);
     List<ProductDto> getThelast2ReturnedProdsByusername(String username);
     List<ProductDto> getThelastMonthlyReturnedProds();
+    List<Integer> getUserStat(String username);
 }

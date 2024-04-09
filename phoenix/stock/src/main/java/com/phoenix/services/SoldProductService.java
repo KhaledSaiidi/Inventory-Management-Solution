@@ -6,6 +6,7 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
 import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.Campaigndto;
+import com.phoenix.dtokeycloakuser.UserMysqldto;
 import com.phoenix.kafka.StockProducer;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.ISoldProductDtoMapper;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -364,5 +366,40 @@ public class SoldProductService  implements IsoldProductService{
 
         return soldProductDtos;
     }
+
+    @Override
+    public Map<UserMysqldto, Integer> getlastMonthlySoldProds() {
+        YearMonth currentYearMonth = YearMonth.now();
+        List<SoldProduct> monthlySoldProducts = iSoldProductRepository.findMonthlySoldProducts(
+                currentYearMonth.getYear(), currentYearMonth.getMonthValue());
+        monthlySoldProducts.sort(Comparator.comparing(SoldProduct::getSoldDate).reversed());
+        Map<String, Integer> salesByAgent =new LinkedHashMap<>();
+        for (SoldProduct soldProduct : monthlySoldProducts) {
+            String username = soldProduct.getAgentWhoSold().getUsername();
+            salesByAgent.put(username, salesByAgent.getOrDefault(username, 0) + 1);
+        }
+        Map<UserMysqldto, Integer> salesByagentMap= new LinkedHashMap<>();
+        for (String username : salesByAgent.keySet()) {
+            UserMysqldto userMysqldto = fetchUserDetails(username);
+            if (userMysqldto != null) {
+                salesByagentMap.put(userMysqldto, salesByAgent.get(username));
+            }
+        }
+        return salesByagentMap;
+    }
+    private UserMysqldto fetchUserDetails(String username) {
+        try {
+            UserMysqldto userMysqldto = webClientBuilder.build().get()
+                    .uri("http://keycloakuser-service/people/userdetails/{username}", username)
+                    .retrieve()
+                    .bodyToMono(UserMysqldto.class)
+                    .block();
+            userMysqldto.setImage(null);
+            return userMysqldto;
+        }catch (Exception e) {
+            return null;
+        }
+    }
+
 
 }

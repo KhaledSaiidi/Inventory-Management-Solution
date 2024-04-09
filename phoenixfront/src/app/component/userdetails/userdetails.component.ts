@@ -104,7 +104,7 @@ selectedImage: File | null = null;
     this.getAllReclamationsForReceiver();
     this.getThelast2ReturnedProdsByusername(this.username);
     this.getThelast2SoldProdsByusername(this.username);
-
+    this.getUserStat(this.username);
   }
 
 
@@ -519,4 +519,23 @@ checkReturn(serialNumber: string | undefined){
           }
         );
     }  
+
+    associatedProds: number = 0;
+    returnedProds: number = 0;
+    soldProds: number = 0;
+
+    getUserStat(username: string) {
+      this.stockservice.getUserStat(username)
+        .subscribe(
+          (stats: number[]) => {
+            this.associatedProds = stats[0];
+            this.returnedProds = stats[1];
+            this.soldProds = stats[2];
+                  },
+          (error) => {
+            console.error('Error fetching last stats :', error);
+          }
+        );
+    }  
+
 }

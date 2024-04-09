@@ -83,7 +83,7 @@ selectedImage: File | null = null;
       }
     
       this.getProductsReturnedPaginatedByusername(this.username, 0);
-
+      this.getUserStat(this.username);
   }
 
 
@@ -373,5 +373,22 @@ getuserinfos(code : string){
       onPageReturnChange(newPage: number): void {
         this.getProductsReturnedPaginatedByusername(this.username, newPage - 1);
     } 
-    
+    associatedProds: number = 0;
+    returnedProds: number = 0;
+    soldProds: number = 0;
+
+    getUserStat(username: string) {
+      this.stockservice.getUserStat(username)
+        .subscribe(
+          (stats: number[]) => {
+            this.associatedProds = stats[0];
+            this.returnedProds = stats[1];
+            this.soldProds = stats[2];
+                  },
+          (error) => {
+            console.error('Error fetching last stats :', error);
+          }
+        );
+    }  
+  
 }

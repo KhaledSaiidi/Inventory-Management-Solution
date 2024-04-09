@@ -5,6 +5,7 @@ import com.phoenix.model.Product;
 import com.phoenix.model.SoldProduct;
 import com.phoenix.model.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +18,9 @@ public interface ISoldProductRepository extends JpaRepository<SoldProduct, Strin
 
     Optional<SoldProduct> findByAgentWhoSold(AgentProd agentProd);
     Optional<SoldProduct> findByManagerSoldProd(AgentProd agentProd);
-
+    @Query("SELECT sp FROM SoldProduct sp WHERE FUNCTION('YEAR', sp.soldDate) = :year " +
+            "AND FUNCTION('MONTH', sp.soldDate) = :month")
+    List<SoldProduct> findMonthlySoldProducts(int year, int month);
 
 }
 

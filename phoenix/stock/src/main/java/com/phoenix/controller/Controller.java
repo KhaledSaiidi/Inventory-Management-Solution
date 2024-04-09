@@ -4,6 +4,7 @@ import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.SoldProductDto;
 import com.phoenix.dto.StockDto;
+import com.phoenix.dtokeycloakuser.UserMysqldto;
 import com.phoenix.model.Product;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IAgentProdService;
@@ -307,5 +308,26 @@ public class Controller {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("getUserStat/{username}")
+    public ResponseEntity<List<Integer>> getUserStat(@PathVariable String username) {
+        List<Integer> userStat = iProductService.getUserStat(username);
+        if (userStat != null) {
+            return ResponseEntity.ok(userStat);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("getlastMonthlySoldProds")
+    public ResponseEntity<Map<UserMysqldto, Integer>> getlastMonthlySoldProds() {
+        Map<UserMysqldto, Integer> salesByagentMap = isoldProductService.getlastMonthlySoldProds();
+        if (salesByagentMap != null) {
+            return ResponseEntity.ok(salesByagentMap);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

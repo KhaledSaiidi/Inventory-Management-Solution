@@ -12,10 +12,7 @@ import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.*;
-import com.phoenix.repository.IAgentProdRepository;
-import com.phoenix.repository.IProductRepository;
-import com.phoenix.repository.IStockRepository;
-import com.phoenix.repository.IUncheckHistoryRepository;
+import com.phoenix.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
 import org.springframework.data.domain.Page;
@@ -50,6 +47,10 @@ public class ProductService implements IProductService{
     private IProductMapper iProductMapper;
     @Autowired
     private IProductRepository iProductRepository;
+
+    @Autowired
+    private ISoldProductRepository iSoldProductRepository;
+
     @Autowired
     private IStockMapper iStockMapper;
     @Autowired
@@ -610,4 +611,46 @@ public class ProductService implements IProductService{
     }
 
 
+    @Override
+    public List<Integer> getUserStat(String username) {
+        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
+        int associatedProducts = 0;
+        int returneddProducts = 0;
+        int soldProducts = 0;
+        for (AgentProd agentProd : agentProds) {
+            Optional<Product> optionalReturnedProduct = iProductRepository.findByAgentReturnedProd(agentProd);
+            if (!optionalReturnedProduct.isPresent()) {
+                optionalReturnedProduct = iProductRepository.findByManagerProd(agentProd);
+            }
+            if (optionalReturnedProduct.isPresent()) {
+                Product returnedproduct = optionalReturnedProduct.get();
+                if(returnedproduct.isReturned()){
+                    returneddProducts++;
+                }
+            }
+            Optional<Product> optionalAssociatedProduct = iProductRepository.findByAgentProd(agentProd);
+            if (!optionalAssociatedProduct.isPresent()) {
+                optionalAssociatedProduct = iProductRepository.findByManagerProd(agentProd);
+            }
+            if (optionalAssociatedProduct.isPresent()) {
+                Product associatedProduct = optionalAssociatedProduct.get();
+                if(!associatedProduct.isReturned()) {
+                    associatedProducts++;
+                }
+            }
+            Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findByAgentWhoSold(agentProd);
+            if (!optionalSoldProduct.isPresent()) {
+                optionalSoldProduct = iSoldProductRepository.findByManagerSoldProd(agentProd);
+            }
+            if (optionalSoldProduct.isPresent()) {
+                soldProducts++;
+            }
+        }
+        List<Integer> statList = new ArrayList<>();
+        statList.add(associatedProducts);
+        statList.add(returneddProducts);
+        statList.add(soldProducts);
+
+        return statList;
+    }
 }

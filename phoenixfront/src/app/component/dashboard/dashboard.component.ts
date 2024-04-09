@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { LastMonthlySoldProdsResponse } from 'src/app/models/agents/LastMonthlySoldProdsResponse';
+import { UserMysqldto } from 'src/app/models/agents/UserMysqldto';
+import { Userdto } from 'src/app/models/agents/Userdto';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -44,7 +47,8 @@ export class DashboardComponent implements OnInit{
     this.nextSlide();
   }, 4000);
   this.getThelast2ReturnedProdsByusername();
-  }
+  this.getlastMonthlySoldProds();  
+}
 
   initializeChart(): void {
     var ctx: any = document.getElementById("chart-line");
@@ -136,5 +140,19 @@ export class DashboardComponent implements OnInit{
         }
       );
   }  
+
+  getlastMonthlySoldProds() {
+    this.stockservice.getlastMonthlySoldProds()
+      .subscribe(
+        (lastSells: LastMonthlySoldProdsResponse[]) => {
+          console.log(lastSells);
+        },
+        (error) => {
+          console.error('Error fetching lastSells:', error);
+        }
+      );
+  }
+
+  
 
 }

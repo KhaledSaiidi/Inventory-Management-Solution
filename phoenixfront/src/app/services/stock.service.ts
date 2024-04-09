@@ -12,6 +12,9 @@ import { map } from 'rxjs/operators';
 import { SoldProductPage } from '../models/inventory/SoldProductPage';
 import { ReclamationDto } from '../models/notifications/ReclamationDto';
 import { SoldProductDto } from '../models/inventory/SoldProductDto';
+import { Userdto } from '../models/agents/Userdto';
+import { UserMysqldto } from '../models/agents/UserMysqldto';
+import { LastMonthlySoldProdsResponse } from '../models/agents/LastMonthlySoldProdsResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -381,6 +384,26 @@ getThelast2SoldProdsByusername(username: string): Observable<SoldProductDto[]> {
 
 getThelastMonthlyReturnedProds(): Observable<Productdto[]> {
   return this.http.get<Productdto[]>(this.apiUrl + '/getThelastMonthlyReturnedProds')
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+getUserStat(username: string): Observable<number[]> {
+  return this.http.get<number[]>(this.apiUrl + '/getUserStat/' + username)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+getlastMonthlySoldProds(): Observable<LastMonthlySoldProdsResponse[]> {
+  return this.http.get<LastMonthlySoldProdsResponse[]>(this.apiUrl + '/getlastMonthlySoldProds')
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);

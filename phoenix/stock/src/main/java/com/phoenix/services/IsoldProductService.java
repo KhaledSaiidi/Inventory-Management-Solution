@@ -3,6 +3,7 @@ package com.phoenix.services;
 import com.phoenix.dto.AgentProdDto;
 import com.phoenix.dto.ProductDto;
 import com.phoenix.dto.SoldProductDto;
+import com.phoenix.dtokeycloakuser.UserMysqldto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,4 +21,5 @@ public interface IsoldProductService {
     Map<String, Integer> getSoldProductsInfosBystockReference(String stockreference);
     void returnProduct(String prodRef, AgentProdDto returnagentProd);
     List<SoldProductDto> getThelast2SoldProdsByusername(String username);
+    Map<UserMysqldto, Integer> getlastMonthlySoldProds();
     }
