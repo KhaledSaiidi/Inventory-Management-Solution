@@ -270,7 +270,7 @@
           
         </div>
         <div class="col-lg-5">
-          <div class="card">
+          <div class="card" style="max-height: 300px; min-height: 300px; overflow-y: auto;">
             <div class="card-header pb-0 p-3">
               <h6 class="mb-0">Monthly Returned Products</h6>
             </div>
@@ -279,44 +279,19 @@
               <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
                 <thead>
                   <tr style="width: 100%;">
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Manager</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Returned Product 1 -->
-                  <tr>
-                    <td>SN12345</td>
-                    <td>John Doe</td>
-                    <td>Orange</td>
-                    <td>$50.00</td>
-                  </tr>
-          
-                  <!-- Returned Product 2 -->
-                  <tr>
-                    <td>SN67890</td>
-                    <td>Jane Smith</td>
-                    <td>Ooredoo</td>
-                    <td>$30.00</td>
-                  </tr>
-          
-                  <!-- Returned Product 3 -->
-                  <tr>
-                    <td>SN98765</td>
-                    <td>Mike Johnson</td>
-                    <td>Vodafone</td>
-                    <td>$20.00</td>
-                  </tr>
-          
-                  <!-- Returned Product 4 -->
-                  <tr>
-                    <td>SN54321</td>
-                    <td>Sara Williams</td>
-                    <td>Microsoft</td>
-                    <td>$40.00</td>
-                  </tr>
+                <tr *ngFor="let returned of returnedMonthly">
+                  <td>{{ returned.stock?.stockReference }}</td>
+                  <td>{{ returned.serialNumber }}</td>
+                  <td>{{ returned.agentReturnedProd?.firstname?.toUpperCase() }}  {{ returned.agentReturnedProd?.lastname?.toUpperCase() }}</td>
+                  <td>{{ returned.managerProd?.firstname?.toUpperCase() }}  {{ returned.managerProd?.lastname?.toUpperCase() }}</td>
+                </tr>
                 </tbody>
               </table>
             </div>

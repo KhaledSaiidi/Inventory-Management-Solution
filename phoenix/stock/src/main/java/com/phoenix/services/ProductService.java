@@ -36,6 +36,7 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -575,5 +576,38 @@ public class ProductService implements IProductService{
 
         return productDtos;
     }
+
+
+
+    @Override
+    public List<ProductDto> getThelastMonthlyReturnedProds() {
+        List<AgentProd> agentProds = iAgentProdRepository.findAll();
+        List<ProductDto> productDtos = new ArrayList<>();
+        YearMonth currentYearMonth = YearMonth.now();
+
+        for (AgentProd agentProd : agentProds) {
+            Optional<Product> optionalProduct = iProductRepository.findByAgentReturnedProd(agentProd);
+            optionalProduct.ifPresent(product -> {
+                if (product.isReturned()) {
+                    LocalDate checkinDate = product.getCheckin();
+                    if (checkinDate != null && checkinDate.getYear() == currentYearMonth.getYear() &&
+                            checkinDate.getMonth() == currentYearMonth.getMonth()) {
+
+                        ProductDto productDto = iProductMapper.toDto(product);
+                        productDto.setAgentReturnedProd(iAgentProdMapper.toDto(product.getAgentReturnedProd()));
+                        productDto.setManagerProd(iAgentProdMapper.toDto(product.getManagerProd()));
+                        productDto.setStock(iStockMapper.toDto(product.getStock()));
+                        productDtos.add(productDto);
+                    }
+                }
+            });
+        }
+        productDtos.sort(Comparator.comparing(ProductDto::getCheckin).reversed());
+        if(productDtos.isEmpty()){
+            return null;
+        }
+        return productDtos;
+    }
+
 
 }

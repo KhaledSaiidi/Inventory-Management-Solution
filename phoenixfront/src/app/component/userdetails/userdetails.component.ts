@@ -138,7 +138,7 @@ selectedImage: File | null = null;
     if (newPassword === confPassword) {
     this.agentsService.updatePassword(username, newPassword).subscribe(
       (response) => {
-        window.location.reload();
+        this.securityTab = false;
       },
       (error) => {
         console.error('Error updating password:', error);
@@ -234,7 +234,7 @@ getuserinfos(code : string){
               this.agentsService.updateUser(this.username, userdto).subscribe(
                 response => {
                   console.log('Agent updated successfully:', response);
-                  window.location.reload();
+                  this.getuserinfos(this.username);
                 },
                 error => {
                   console.log('Error updating Agent:', error);
@@ -248,9 +248,7 @@ getuserinfos(code : string){
             this.agentsService.updateUser(this.username, userdto).subscribe(
               response => {
                 console.log('Agent updated successfully:', response);
-                // Reset the form
-                window.location.reload();
-
+                this.getuserinfos(this.username);
               },
               error => {
                 console.log('Error updating Agent:', error);

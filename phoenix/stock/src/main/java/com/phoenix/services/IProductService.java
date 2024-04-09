@@ -30,4 +30,5 @@ public interface IProductService {
     Page<ProductDto> getProductsReturnedPaginatedByusername(Pageable pageable, String username);
     void checkReturn(String serialNumber);
     List<ProductDto> getThelast2ReturnedProdsByusername(String username);
+    List<ProductDto> getThelastMonthlyReturnedProds();
 }

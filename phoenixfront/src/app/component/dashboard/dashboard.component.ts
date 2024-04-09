@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { Productdto } from 'src/app/models/inventory/ProductDto';
+import { StockService } from 'src/app/services/stock.service';
 
 
 @Component({
@@ -8,6 +10,9 @@ import Chart from 'chart.js/auto';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit{
+
+  constructor(private stockservice: StockService) {}
+
   slides = [
     {
       image: '../../../assets/img/phoenixres.png',
@@ -38,7 +43,7 @@ export class DashboardComponent implements OnInit{
    setInterval(() => {
     this.nextSlide();
   }, 4000);
-
+  this.getThelast2ReturnedProdsByusername();
   }
 
   initializeChart(): void {
@@ -117,5 +122,19 @@ export class DashboardComponent implements OnInit{
       },
     });
   }
+
+
+  returnedMonthly: Productdto[] = [];
+  getThelast2ReturnedProdsByusername() {
+    this.stockservice.getThelastMonthlyReturnedProds()
+      .subscribe(
+        (products: Productdto[]) => {
+          this.returnedMonthly = products;
+        },
+        (error) => {
+          console.error('Error fetching last products returned:', error);
+        }
+      );
+  }  
 
 }

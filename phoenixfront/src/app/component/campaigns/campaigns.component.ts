@@ -78,7 +78,7 @@ export class CampaignsComponent implements OnInit {
     this.agentsService.archiveCampaign(campreference).subscribe(
       () => {
         console.log('Campaign Archived successfully.');
-        window.location.reload();
+        this.getcampaigns();
       },
       (error) => {
         console.error('Error deleting campaign:', error);

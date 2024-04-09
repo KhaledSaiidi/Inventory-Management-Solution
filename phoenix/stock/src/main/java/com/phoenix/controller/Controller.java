@@ -279,7 +279,7 @@ public class Controller {
     }
 
     @GetMapping("getThelast2ReturnedProdsByusername/{username}")
-    public ResponseEntity<List<ProductDto>> getThelast4ReturnedProdsByusername(@PathVariable String username) {
+    public ResponseEntity<List<ProductDto>> getThelast2ReturnedProdsByusername(@PathVariable String username) {
         List<ProductDto> productDtos = iProductService.getThelast2ReturnedProdsByusername(username);
         if (productDtos != null) {
             return ResponseEntity.ok(productDtos);
@@ -293,6 +293,16 @@ public class Controller {
         List<SoldProductDto> soldProductDtos = isoldProductService.getThelast2SoldProdsByusername(username);
         if (soldProductDtos != null) {
             return ResponseEntity.ok(soldProductDtos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("getThelastMonthlyReturnedProds")
+    public ResponseEntity<List<ProductDto>> getThelastMonthlyReturnedProds() {
+        List<ProductDto> productDtos = iProductService.getThelastMonthlyReturnedProds();
+        if (productDtos != null) {
+            return ResponseEntity.ok(productDtos);
         } else {
             return ResponseEntity.notFound().build();
         }

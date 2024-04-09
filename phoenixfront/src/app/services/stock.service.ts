@@ -379,5 +379,15 @@ getThelast2SoldProdsByusername(username: string): Observable<SoldProductDto[]> {
   );
 }
 
+getThelastMonthlyReturnedProds(): Observable<Productdto[]> {
+  return this.http.get<Productdto[]>(this.apiUrl + '/getThelastMonthlyReturnedProds')
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
 
 }

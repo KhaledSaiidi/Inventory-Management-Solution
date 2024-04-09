@@ -82,7 +82,7 @@ selectedImage: File | null = null;
     this.agentsoldProds = [];
       }
     
-
+      this.getProductsReturnedPaginatedByusername(this.username, 0);
 
   }
 
@@ -140,9 +140,6 @@ getuserinfos(code : string){
       selectedTabMyStock() {
         this.selectedTab = 1;
       }
-      selectedTabMessages() {
-        this.selectedTab = 2;
-      }
    
             
 
@@ -173,7 +170,7 @@ getuserinfos(code : string){
               this.agentsService.updateUser(this.username, userdto).subscribe(
                 response => {
                   console.log('Agent updated successfully:', response);
-                  window.location.reload();
+                  this.getuserinfos(this.username);
                 },
                 error => {
                   console.log('Error updating Agent:', error);
@@ -187,9 +184,7 @@ getuserinfos(code : string){
             this.agentsService.updateUser(this.username, userdto).subscribe(
               response => {
                 console.log('Agent updated successfully:', response);
-
-                window.location.reload();
-
+                this.getuserinfos(this.username);
               },
               error => {
                 console.log('Error updating Agent:', error);
@@ -346,5 +341,37 @@ getuserinfos(code : string){
       onsoldPageChange(newPage: number): void {
         this.getSoldProductsByusername(this.username, newPage - 1);
     } 
-
+    loadingReturn: boolean = true;
+    emptyReturnProducts: boolean = true;
+    totalReturnPages: number = 0;
+    totalReturnElements: number = 0;
+    currentReturnPage: number = 0;
+    agentReturnProds: Productdto[] = [];
+    
+    getProductsReturnedPaginatedByusername(username: string, page: number) {
+      this.loadingReturn = true;
+      try {
+        this.stockservice.getProductsReturnedPaginatedByusername(username, page, this.pageSize)
+          .subscribe(
+            (productPage: ProductPage) => {
+              this.currentReturnPage = productPage.number + 1;
+              this.agentReturnProds = productPage.content;
+              console.log("this.agentReturnProds :" + this.agentReturnProds)
+              this.totalReturnElements = productPage.totalPages;
+            },
+            (error) => {
+              console.error('Error fetching stocks:', error);
+              this.loadingReturn = false;
+            }
+          );
+      } catch (error) {
+        console.error('Unexpected error:', error);
+        this.loadingReturn = false;
+      }
+      }  
+    
+      onPageReturnChange(newPage: number): void {
+        this.getProductsReturnedPaginatedByusername(this.username, newPage - 1);
+    } 
+    
 }
