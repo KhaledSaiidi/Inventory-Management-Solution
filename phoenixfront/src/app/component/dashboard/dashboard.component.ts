@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { TopSalesDto } from 'src/app/models/agents/TopSalesDto';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { StockService } from 'src/app/services/stock.service';
@@ -139,29 +140,14 @@ export class DashboardComponent implements OnInit{
       );
   }  
 
-  salesData: Map<string, number> = new Map();
-  mapEntries: (string | number)[][] = [];
-  isNumber(value: unknown): value is number {
-    return typeof value === 'number';
-  }
+  salesData: TopSalesDto[] = [];
   
   getlastMonthlySoldProds() {
     this.stockservice.getlastMonthlySoldProds()
       .subscribe(
-        (data: any) => {
-          const salesDataMap = new Map<string, number>();
-          for (const [key, value] of Object.entries(data)) {
-            if (this.isNumber(value)) {
-              salesDataMap.set(key, value);
-            } else {
-              console.warn(`Skipping key '${key}' due to non-numeric value`);
-            }
-          }
-          this.salesData = salesDataMap;
+        (data: TopSalesDto[]) => {
+          this.salesData = data;
           console.log(this.salesData);
-
-          this.mapEntries = Array.from(this.salesData.entries());
-
         },
         (error) => {
           console.error('Error fetching lastSells:', error);
@@ -172,4 +158,3 @@ export class DashboardComponent implements OnInit{
   
 
 }
-            // console.log(Array.from(this.salesData.entries()));

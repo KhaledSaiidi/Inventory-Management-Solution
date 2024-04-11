@@ -13,6 +13,7 @@ import { SoldProductPage } from '../models/inventory/SoldProductPage';
 import { ReclamationDto } from '../models/notifications/ReclamationDto';
 import { SoldProductDto } from '../models/inventory/SoldProductDto';
 import { Userdto } from '../models/agents/Userdto';
+import { TopSalesDto } from '../models/agents/TopSalesDto';
 
 @Injectable({
   providedIn: 'root'
@@ -400,8 +401,8 @@ getUserStat(username: string): Observable<number[]> {
   );
 }
 
-getlastMonthlySoldProds(): Observable<Map<string, number>> {
-  return this.http.get<Map<string, number>>(this.apiUrl + '/getlastMonthlySoldProds')
+getlastMonthlySoldProds(): Observable<TopSalesDto[]> {
+  return this.http.get<TopSalesDto[]>(this.apiUrl + '/getlastMonthlySoldProds')
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);

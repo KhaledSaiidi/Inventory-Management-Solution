@@ -368,34 +368,75 @@ public class SoldProductService  implements IsoldProductService{
     }
 
     @Override
-    public Map<String, Integer> getlastMonthlySoldProds() {
+    public List<TopSalesDto> getlastMonthlySoldProds() {
         YearMonth currentYearMonth = YearMonth.now();
+        YearMonth previousYearMonth = currentYearMonth.minusMonths(1);
+
         List<SoldProduct> monthlySoldProducts = iSoldProductRepository.findMonthlySoldProducts(
                 currentYearMonth.getYear(), currentYearMonth.getMonthValue());
         monthlySoldProducts.sort(Comparator.comparing(SoldProduct::getSoldDate).reversed());
-        Map<String, Integer> salesByAgent =new HashMap<>();
+
+        List<SoldProduct> lastMonthlySoldProducts = iSoldProductRepository.findMonthlySoldProducts(
+                previousYearMonth.getYear(), previousYearMonth.getMonthValue());
+        lastMonthlySoldProducts.sort(Comparator.comparing(SoldProduct::getSoldDate).reversed());
+
+        Set<TopSalesDto> salesByAgent = new HashSet<>();
+
         for (SoldProduct soldProduct : monthlySoldProducts) {
             String username = soldProduct.getAgentWhoSold().getUsername();
-            salesByAgent.put(username, salesByAgent.getOrDefault(username, 0) + 1);
-        }
-        Map<String, Integer> salesByagentMap= new HashMap<>();
-        for (String username : salesByAgent.keySet()) {
-            UserMysqldto userMysqldto = fetchUserDetails(username);
-            if (userMysqldto != null) {
-                String fullName = (userMysqldto.getFirstName() +" " + userMysqldto.getLastName()).toUpperCase();
-                salesByagentMap.put(fullName, salesByAgent.get(username));
+            String fullName = (fetchUserDetails(username).getFirstName() + " " +
+                    fetchUserDetails(username).getLastName()).toUpperCase();
+            Optional<TopSalesDto> optionalDto = salesByAgent.stream()
+                    .filter(dto -> dto.getFullname().equals(fullName))
+                    .findFirst();
+            if (optionalDto.isPresent()) {
+                optionalDto.get().setTotalsales(optionalDto.get().getTotalsales() + 1);
+            } else {
+                TopSalesDto topSalesDto = new TopSalesDto();
+                topSalesDto.setFullname(fullName);
+                topSalesDto.setTotalsales(1);
+                topSalesDto.setGrowth(0);
+                topSalesDto.setTotalsalesLastMonth(0);
+                salesByAgent.add(topSalesDto);
             }
         }
-        LinkedHashMap<String, Integer> sortedSalesByAgentMap = salesByagentMap.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(
-                        LinkedHashMap::new,
-                        (map, entry) -> map.put(entry.getKey(), entry.getValue()),
-                        LinkedHashMap::putAll
-                );
-        return sortedSalesByAgentMap;
+
+        for (SoldProduct soldProduct : lastMonthlySoldProducts) {
+            String username = soldProduct.getAgentWhoSold().getUsername();
+            String fullName = (fetchUserDetails(username).getFirstName() + " " +
+                    fetchUserDetails(username).getLastName()).toUpperCase();
+            Optional<TopSalesDto> optionalDto = salesByAgent.stream()
+                    .filter(dto -> dto.getFullname().equals(fullName))
+                    .findFirst();
+            if (optionalDto.isPresent()) {
+                optionalDto.get().setTotalsalesLastMonth(optionalDto.get().getTotalsalesLastMonth() + 1);
+            }
+        }
+
+        // Process  and calculate growth
+        for (TopSalesDto dto : salesByAgent) {
+            int currentMonthSales = dto.getTotalsales();
+            int lastMonthSales = dto.getTotalsalesLastMonth();
+            if (lastMonthSales != 0 && currentMonthSales != 0) {
+                float growth = ((float) (currentMonthSales - lastMonthSales) / lastMonthSales) * 100;
+                dto.setGrowth(growth);
+            } else if (lastMonthSales == 0 && currentMonthSales != 0) {
+                dto.setGrowth(100);
+            } else if (lastMonthSales != 0 && currentMonthSales == 0) {
+                dto.setGrowth(-100);
+            } else {
+                dto.setGrowth(0);
+            }
+        }
+        List<TopSalesDto> salesList = new ArrayList<>(salesByAgent);
+
+        salesList.sort(Comparator.comparingInt(TopSalesDto::getTotalsales).reversed());
+
+        return salesList;
     }
+
+
+
     private UserMysqldto fetchUserDetails(String username) {
         try {
             UserMysqldto userMysqldto = webClientBuilder.build().get()

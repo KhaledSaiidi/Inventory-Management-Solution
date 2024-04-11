@@ -162,49 +162,55 @@
               <table class="table align-items-center">
                 <thead>
                   <tr>
-                    <th>Ranking</th>
                     <th>Agent</th>
-                    <th>Total Sales</th>
-                    <th>Earnings</th>
+                    <th>This Month Sales</th>
+                    <th>Last Month Sales</th>
+                    <th>Growth</th>
                   </tr>
                 </thead>
                 <tbody>
                   
-                    <tr *ngFor="let entry of mapEntries; let i = index">
-
-                    <td>
-                      <div class="ms-4">
-                        <p class="text-xs font-weight-bold mb-0">Agent Rank :</p>          
-                        <h6 class="text-sm mb-0">
-                          <ng-container *ngIf="i === 0">
-                            <i class="champion-icon fas fa-trophy" style="color: gold;"></i>
-                          </ng-container>
-                          <ng-container *ngIf="i !== 0">
-                            &nbsp; &nbsp; &nbsp; 
-
-                          </ng-container>
-                          {{i + 1}}
-                        </h6>
-                      </div>
-                    </td>
+                    <tr *ngFor="let saleData of salesData; let i = index">
                     <td>
                       <div class="d-flex align-items-center">
                         <div class="text-center">
                           <p class="text-xs font-weight-bold mb-0">Full Name:</p>
-                          <h6 class="text-sm mb-0">{{entry[0]}}</h6>
+                          <h6 class="text-sm mb-0">
+                            <ng-container *ngIf="i === 0">
+                              <i class="champion-icon fas fa-trophy" style="color: gold;"></i> &nbsp;
+                            </ng-container>  
+                            <ng-container *ngIf="i !== 0">
+                              &nbsp; &nbsp; &nbsp; &nbsp;
+                            </ng-container>  
+                            {{saleData.fullname}}
+                          </h6>
                         </div>
                       </div>
                     </td>
                     <td>
                       <div class="text-center">
-                        <p class="text-xs font-weight-bold mb-0">Total Sales:</p>
-                        <h6 class="text-sm mb-0">{{entry[1]}}</h6>
+                        <p class="text-xs font-weight-bold mb-0">This Month Sales:</p>
+                        <h6 class="text-sm mb-0">{{saleData.totalsales}}</h6>
                       </div>
                     </td>
                     <td class="align-middle text-sm">
                       <div class="col text-center">
-                        <p class="text-xs font-weight-bold mb-0">Earnings:</p>
-                        <h6 class="text-sm mb-0">$5,000</h6>
+                        <p class="text-xs font-weight-bold mb-0">Last Month Sales:</p>
+                        <h6 class="text-sm mb-0">{{saleData.totalsalesLastMonth}}</h6>
+                      </div>
+                    </td>
+                    <td class="align-middle text-sm">
+                      <div class="col text-center">
+                        <p class="text-xs font-weight-bold mb-0">Growth:</p>
+                        <h6 class="text-sm mb-0" *ngIf="saleData.growth">
+                          <span *ngIf="saleData.growth > 0" class="text-success">
+                            <i class="fas fa-arrow-up"></i>
+                          </span>
+                          <span *ngIf="saleData.growth < 0" class="text-danger">
+                            <i class="fas fa-arrow-down"></i>
+                          </span>
+                          Growth: {{ (saleData.growth).toFixed(2) }}%
+                        </h6>
                       </div>
                     </td>
                   </tr>

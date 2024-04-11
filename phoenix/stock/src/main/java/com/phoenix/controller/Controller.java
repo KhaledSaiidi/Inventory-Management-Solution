@@ -1,9 +1,6 @@
 package com.phoenix.controller;
 
-import com.phoenix.dto.AgentProdDto;
-import com.phoenix.dto.ProductDto;
-import com.phoenix.dto.SoldProductDto;
-import com.phoenix.dto.StockDto;
+import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.UserMysqldto;
 import com.phoenix.model.Product;
 import com.phoenix.model.UncheckHistory;
@@ -320,8 +317,8 @@ public class Controller {
     }
 
     @GetMapping("getlastMonthlySoldProds")
-    public ResponseEntity<Map<String, Integer>> getlastMonthlySoldProds() {
-        Map<String, Integer> salesByagentMap = isoldProductService.getlastMonthlySoldProds();
+    public ResponseEntity<List<TopSalesDto>> getlastMonthlySoldProds() {
+        List<TopSalesDto> salesByagentMap = isoldProductService.getlastMonthlySoldProds();
         if (salesByagentMap != null) {
             return ResponseEntity.ok(salesByagentMap);
         } else {
