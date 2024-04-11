@@ -21,5 +21,5 @@ public interface IsoldProductService {
     Map<String, Integer> getSoldProductsInfosBystockReference(String stockreference);
     void returnProduct(String prodRef, AgentProdDto returnagentProd);
     List<SoldProductDto> getThelast2SoldProdsByusername(String username);
-    Map<UserMysqldto, Integer> getlastMonthlySoldProds();
+    Map<String, Integer> getlastMonthlySoldProds();
     }

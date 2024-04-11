@@ -320,8 +320,8 @@ public class Controller {
     }
 
     @GetMapping("getlastMonthlySoldProds")
-    public ResponseEntity<Map<UserMysqldto, Integer>> getlastMonthlySoldProds() {
-        Map<UserMysqldto, Integer> salesByagentMap = isoldProductService.getlastMonthlySoldProds();
+    public ResponseEntity<Map<String, Integer>> getlastMonthlySoldProds() {
+        Map<String, Integer> salesByagentMap = isoldProductService.getlastMonthlySoldProds();
         if (salesByagentMap != null) {
             return ResponseEntity.ok(salesByagentMap);
         } else {

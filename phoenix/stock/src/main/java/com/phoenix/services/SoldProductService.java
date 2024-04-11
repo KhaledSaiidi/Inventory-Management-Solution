@@ -368,24 +368,33 @@ public class SoldProductService  implements IsoldProductService{
     }
 
     @Override
-    public Map<UserMysqldto, Integer> getlastMonthlySoldProds() {
+    public Map<String, Integer> getlastMonthlySoldProds() {
         YearMonth currentYearMonth = YearMonth.now();
         List<SoldProduct> monthlySoldProducts = iSoldProductRepository.findMonthlySoldProducts(
                 currentYearMonth.getYear(), currentYearMonth.getMonthValue());
         monthlySoldProducts.sort(Comparator.comparing(SoldProduct::getSoldDate).reversed());
-        Map<String, Integer> salesByAgent =new LinkedHashMap<>();
+        Map<String, Integer> salesByAgent =new HashMap<>();
         for (SoldProduct soldProduct : monthlySoldProducts) {
             String username = soldProduct.getAgentWhoSold().getUsername();
             salesByAgent.put(username, salesByAgent.getOrDefault(username, 0) + 1);
         }
-        Map<UserMysqldto, Integer> salesByagentMap= new LinkedHashMap<>();
+        Map<String, Integer> salesByagentMap= new HashMap<>();
         for (String username : salesByAgent.keySet()) {
             UserMysqldto userMysqldto = fetchUserDetails(username);
             if (userMysqldto != null) {
-                salesByagentMap.put(userMysqldto, salesByAgent.get(username));
+                String fullName = (userMysqldto.getFirstName() +" " + userMysqldto.getLastName()).toUpperCase();
+                salesByagentMap.put(fullName, salesByAgent.get(username));
             }
         }
-        return salesByagentMap;
+        LinkedHashMap<String, Integer> sortedSalesByAgentMap = salesByagentMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(
+                        LinkedHashMap::new,
+                        (map, entry) -> map.put(entry.getKey(), entry.getValue()),
+                        LinkedHashMap::putAll
+                );
+        return sortedSalesByAgentMap;
     }
     private UserMysqldto fetchUserDetails(String username) {
         try {

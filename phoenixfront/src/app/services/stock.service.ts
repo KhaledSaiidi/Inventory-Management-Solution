@@ -13,8 +13,6 @@ import { SoldProductPage } from '../models/inventory/SoldProductPage';
 import { ReclamationDto } from '../models/notifications/ReclamationDto';
 import { SoldProductDto } from '../models/inventory/SoldProductDto';
 import { Userdto } from '../models/agents/Userdto';
-import { UserMysqldto } from '../models/agents/UserMysqldto';
-import { LastMonthlySoldProdsResponse } from '../models/agents/LastMonthlySoldProdsResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -402,8 +400,8 @@ getUserStat(username: string): Observable<number[]> {
   );
 }
 
-getlastMonthlySoldProds(): Observable<LastMonthlySoldProdsResponse[]> {
-  return this.http.get<LastMonthlySoldProdsResponse[]>(this.apiUrl + '/getlastMonthlySoldProds')
+getlastMonthlySoldProds(): Observable<Map<string, number>> {
+  return this.http.get<Map<string, number>>(this.apiUrl + '/getlastMonthlySoldProds')
   .pipe(
     catchError((error) => {
       console.error('An error occurred:', error);

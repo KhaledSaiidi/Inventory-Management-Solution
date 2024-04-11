@@ -150,8 +150,8 @@
         
     </div>
       <div class="row mt-4">
-        <div class="col-lg-7 mb-lg-0 mb-4">
-          <div class="card">
+        <div class="col-lg-7 mb-lg-0 mb-4" >
+          <div class="card" style="max-height: 300px; min-height: 300px; overflow-y: auto;">
             <div class="card-header pb-0 p-3">
               <div class="d-flex justify-content-between">
                 <h6 class="mb-2">Top Sales Agents - Monthly Performance</h6>
@@ -162,36 +162,45 @@
               <table class="table align-items-center">
                 <thead>
                   <tr>
+                    <th>Ranking</th>
                     <th>Agent</th>
                     <th>Total Sales</th>
-                    <th>Total Revenue</th>
                     <th>Earnings</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Agent 1 -->
-                  <tr>
+                  
+                    <tr *ngFor="let entry of mapEntries; let i = index">
+
+                    <td>
+                      <div class="ms-4">
+                        <p class="text-xs font-weight-bold mb-0">Agent Rank :</p>          
+                        <h6 class="text-sm mb-0">
+                          <ng-container *ngIf="i === 0">
+                            <i class="champion-icon fas fa-trophy" style="color: gold;"></i>
+                          </ng-container>
+                          <ng-container *ngIf="i !== 0">
+                            &nbsp; &nbsp; &nbsp; 
+
+                          </ng-container>
+                          {{i + 1}}
+                        </h6>
+                      </div>
+                    </td>
                     <td>
                       <div class="d-flex align-items-center">
-                        <div class="ms-4">
+                        <div class="text-center">
                           <p class="text-xs font-weight-bold mb-0">Full Name:</p>
-                          <h6 class="text-sm mb-0">John Doe</h6>
+                          <h6 class="text-sm mb-0">{{entry[0]}}</h6>
                         </div>
                       </div>
                     </td>
                     <td>
                       <div class="text-center">
                         <p class="text-xs font-weight-bold mb-0">Total Sales:</p>
-                        <h6 class="text-sm mb-0">25</h6>
+                        <h6 class="text-sm mb-0">{{entry[1]}}</h6>
                       </div>
                     </td>
-                    <td>
-                      <div class="text-center">
-                        <p class="text-xs font-weight-bold mb-0">Total Revenue:</p>
-                        <h6 class="text-sm mb-0">$50,000</h6>
-                      </div>
-                    </td>
-                    
                     <td class="align-middle text-sm">
                       <div class="col text-center">
                         <p class="text-xs font-weight-bold mb-0">Earnings:</p>
@@ -199,69 +208,6 @@
                       </div>
                     </td>
                   </tr>
-          
-                  <!-- Agent 2 -->
-                  <tr>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <div class="ms-4">
-                          <p class="text-xs font-weight-bold mb-0">Full Name:</p>
-                          <h6 class="text-sm mb-0">Jane Smith</h6>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="text-center">
-                        <p class="text-xs font-weight-bold mb-0">Total Sales:</p>
-                        <h6 class="text-sm mb-0">20</h6>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="text-center">
-                        <p class="text-xs font-weight-bold mb-0">Total Revenue:</p>
-                        <h6 class="text-sm mb-0">$40,000</h6>
-                      </div>
-                    </td>
-                    
-                    <td class="align-middle text-sm">
-                      <div class="col text-center">
-                        <p class="text-xs font-weight-bold mb-0">Earnings:</p>
-                        <h6 class="text-sm mb-0">$4,800</h6>
-                      </div>
-                    </td>
-                  </tr>
-          
-                  <!-- Agent 3 -->
-                  <tr>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <div class="ms-4">
-                          <p class="text-xs font-weight-bold mb-0">Full Name:</p>
-                          <h6 class="text-sm mb-0">Mike Johnson</h6>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="text-center">
-                        <p class="text-xs font-weight-bold mb-0">Total Sales:</p>
-                        <h6 class="text-sm mb-0">15</h6>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="text-center">
-                        <p class="text-xs font-weight-bold mb-0">Total Revenue:</p>
-                        <h6 class="text-sm mb-0">$30,000</h6>
-                      </div>
-                    </td>
-                    
-                    <td class="align-middle text-sm">
-                      <div class="col text-center">
-                        <p class="text-xs font-weight-bold mb-0">Earnings:</p>
-                        <h6 class="text-sm mb-0">$2,400</h6>
-                      </div>
-                    </td>
-                  </tr>
-                  <!-- Add more agents as needed -->
           
                 </tbody>
               </table>
