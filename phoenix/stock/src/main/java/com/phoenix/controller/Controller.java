@@ -326,5 +326,11 @@ public class Controller {
         }
     }
 
+    @GetMapping("/statistics")
+    public Map<String, Float> getSoldProductsStatistics() {
+        return isoldProductService.getSoldProductsStatistics();
+    }
+
+
 
 }

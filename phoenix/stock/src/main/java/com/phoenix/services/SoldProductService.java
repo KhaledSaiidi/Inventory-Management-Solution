@@ -451,5 +451,30 @@ public class SoldProductService  implements IsoldProductService{
         }
     }
 
+    @Override
+    public Map<String, Float> getSoldProductsStatistics() {
+        Map<String, Float> statistics = new HashMap<>();
+        try {
+            long countSoldProductsCurrentYear = iSoldProductRepository.countSoldProductsCurrentYear();
+            long countSoldProductsPreviousYear = iSoldProductRepository.countSoldProductsPreviousYear();
 
-}
+            float growthRate = ((float) countSoldProductsCurrentYear - countSoldProductsPreviousYear) / countSoldProductsPreviousYear * 100;
+            if (countSoldProductsCurrentYear == 0) {
+                statistics.put("countSoldProductsCurrentYear", (float) 0);
+                statistics.put("growthRate", -100f);
+            } else if (countSoldProductsPreviousYear == 0) {
+                statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentYear);
+                statistics.put("growthRate", 100f);
+            } else {
+                statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentYear);
+                statistics.put("growthRate", growthRate);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            statistics.put("countSoldProductsCurrentYear", (float) 0);
+            statistics.put("growthRate", (float) 0);
+        }
+        return statistics;
+    }
+
+    }

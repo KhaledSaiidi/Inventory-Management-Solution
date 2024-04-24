@@ -411,5 +411,10 @@ getlastMonthlySoldProds(): Observable<TopSalesDto[]> {
   );
 }
 
+getSoldProductsStatistics(): Observable<any> {
+  return this.http.get<any>(this.apiUrl + '/statistics');
+}
+
+
 
 }

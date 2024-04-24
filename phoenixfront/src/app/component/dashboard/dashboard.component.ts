@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit{
   }, 4000);
   this.getThelast2ReturnedProdsByusername();
   this.getlastMonthlySoldProds();  
+  this.getSoldProductsStatistics();
 }
 
   initializeChart(): void {
@@ -155,6 +156,17 @@ export class DashboardComponent implements OnInit{
       );
   }
   
-  
+  soldProductsCurrentYear!: number;
+  growthRate!: number;
+
+
+  getSoldProductsStatistics(): void {
+    this.stockservice.getSoldProductsStatistics()
+      .subscribe(data => {
+        this.soldProductsCurrentYear = data.countSoldProductsCurrentYear;
+        this.growthRate = data.growthRate;
+      });
+  }
+
 
 }

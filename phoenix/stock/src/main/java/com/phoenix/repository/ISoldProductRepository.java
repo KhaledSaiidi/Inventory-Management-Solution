@@ -22,5 +22,12 @@ public interface ISoldProductRepository extends JpaRepository<SoldProduct, Strin
             "AND FUNCTION('MONTH', sp.soldDate) = :month")
     List<SoldProduct> findMonthlySoldProducts(int year, int month);
 
+    @Query("SELECT COUNT(sp) FROM SoldProduct sp WHERE YEAR(sp.soldDate) = YEAR(CURRENT_DATE)")
+    long countSoldProductsCurrentYear();
+
+    @Query("SELECT COUNT(sp) FROM SoldProduct sp WHERE YEAR(sp.soldDate) = YEAR(CURRENT_DATE) - 1")
+    long countSoldProductsPreviousYear();
+
+
 }
 
