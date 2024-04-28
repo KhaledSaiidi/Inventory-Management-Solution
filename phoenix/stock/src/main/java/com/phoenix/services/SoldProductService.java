@@ -455,18 +455,17 @@ public class SoldProductService  implements IsoldProductService{
     public Map<String, Float> getSoldProductsStatistics() {
         Map<String, Float> statistics = new HashMap<>();
         try {
-            long countSoldProductsCurrentYear = iSoldProductRepository.countSoldProductsCurrentYear();
-            long countSoldProductsPreviousYear = iSoldProductRepository.countSoldProductsPreviousYear();
-
-            float growthRate = ((float) countSoldProductsCurrentYear - countSoldProductsPreviousYear) / countSoldProductsPreviousYear * 100;
-            if (countSoldProductsCurrentYear == 0) {
-                statistics.put("countSoldProductsCurrentYear", (float) 0);
+            long countSoldProductsCurrentMonth = iSoldProductRepository.countSoldProductsCurrentMonth();
+            long countSoldProductsPreviousMonth = iSoldProductRepository.countSoldProductsPreviousMonth();
+            float growthRate = ((float) countSoldProductsCurrentMonth - countSoldProductsPreviousMonth) / countSoldProductsPreviousMonth * 100;
+            if (countSoldProductsCurrentMonth == 0) {
+                statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentMonth);
                 statistics.put("growthRate", -100f);
-            } else if (countSoldProductsPreviousYear == 0) {
-                statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentYear);
+            } else if (countSoldProductsPreviousMonth == 0) {
+                statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentMonth);
                 statistics.put("growthRate", 100f);
             } else {
-                statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentYear);
+                statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentMonth);
                 statistics.put("growthRate", growthRate);
             }
         } catch (Exception e) {
@@ -477,4 +476,4 @@ public class SoldProductService  implements IsoldProductService{
         return statistics;
     }
 
-    }
+}

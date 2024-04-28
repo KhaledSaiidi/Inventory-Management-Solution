@@ -9,6 +9,7 @@ import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
 import com.phoenix.services.IsoldProductService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
+@RequiredArgsConstructor
 public class Controller {
     @Autowired
     IStockService iStockService;

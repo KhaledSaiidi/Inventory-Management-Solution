@@ -22,12 +22,12 @@ public interface ISoldProductRepository extends JpaRepository<SoldProduct, Strin
             "AND FUNCTION('MONTH', sp.soldDate) = :month")
     List<SoldProduct> findMonthlySoldProducts(int year, int month);
 
-    @Query("SELECT COUNT(sp) FROM SoldProduct sp WHERE YEAR(sp.soldDate) = YEAR(CURRENT_DATE)")
-    long countSoldProductsCurrentYear();
+    @Query("SELECT COUNT(sp) FROM SoldProduct sp WHERE MONTH(sp.soldDate) = MONTH(CURRENT_DATE)")
+    long countSoldProductsCurrentMonth();
 
-    @Query("SELECT COUNT(sp) FROM SoldProduct sp WHERE YEAR(sp.soldDate) = YEAR(CURRENT_DATE) - 1")
-    long countSoldProductsPreviousYear();
-
+    @Query("SELECT COUNT(sp) FROM SoldProduct sp WHERE MONTH(sp.soldDate) = " +
+            "CASE WHEN MONTH(CURRENT_DATE) = 1 THEN 12 ELSE MONTH(CURRENT_DATE) - 1 END")
+    long countSoldProductsPreviousMonth();
 
 }
 

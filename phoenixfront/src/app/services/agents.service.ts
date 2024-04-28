@@ -203,4 +203,9 @@ deleteArchiveCampaign(campaignref: string): Observable<any> {
   );
 
 }
+
+getCampaignStatistics(): Observable<any> {
+  return this.http.get<any>(this.apiUrl + '/statistics');
+}
+
 }

@@ -3,6 +3,7 @@ import Chart from 'chart.js/auto';
 import { TopSalesDto } from 'src/app/models/agents/TopSalesDto';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
+import { AgentsService } from 'src/app/services/agents.service';
 import { StockService } from 'src/app/services/stock.service';
 
 
@@ -13,7 +14,10 @@ import { StockService } from 'src/app/services/stock.service';
 })
 export class DashboardComponent implements OnInit{
 
-  constructor(private stockservice: StockService) {}
+  constructor(
+    private stockservice: StockService,
+    private agentservice: AgentsService
+  ) {}
 
   slides = [
     {
@@ -48,6 +52,7 @@ export class DashboardComponent implements OnInit{
   this.getThelast2ReturnedProdsByusername();
   this.getlastMonthlySoldProds();  
   this.getSoldProductsStatistics();
+  this.getCampaignStatistics();
 }
 
   initializeChart(): void {
@@ -168,5 +173,17 @@ export class DashboardComponent implements OnInit{
       });
   }
 
+
+  campaignsCurrentYear!: number;
+  campaignsgrowthRate!: number;
+
+
+  getCampaignStatistics(): void {
+    this.agentservice.getCampaignStatistics()
+      .subscribe(data => {
+        this.campaignsCurrentYear = data.countCampaignsCurrentYear;
+        this.campaignsgrowthRate = data.growthRate;
+      });
+  }
 
 }

@@ -14,8 +14,9 @@
                     <h5 class="font-weight-bolder">
                       {{soldProductsCurrentYear}}                   </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">{{growthRate}}%</span>
-                      since last year
+                      <span class="text-sm font-weight-bolder" 
+                      [ngClass]="{'text-success': growthRate > 0, 'text-danger': growthRate <= 0}">{{growthRate}}%</span>
+                      since last month
                     </p>
                   </div>
                 </div>
@@ -36,10 +37,11 @@
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Number of Active campaigns</p>
                     <h5 class="font-weight-bolder">
-                      12 
+                      {{campaignsCurrentYear}} 
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+5%</span>
+                      <span class="text-sm font-weight-bolder"
+                      [ngClass]="{'text-success': campaignsgrowthRate > 0, 'text-danger': campaignsgrowthRate <= 0}">{{campaignsgrowthRate}}%</span>
                       since last year
                     </p>
                   </div>

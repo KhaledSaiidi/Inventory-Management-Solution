@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -237,6 +238,12 @@ public class Controller {
     public Response deleteArchiveCampaign(@PathVariable("campaignReference") String campaignReference) {
         icampaignService.deletearchiveCampaign(campaignReference);
         return Response.ok().build();
+    }
+
+
+    @GetMapping("/statistics")
+    public Map<String, Float> getCampaignStatistics() {
+        return icampaignService.getCampaignStatistics();
     }
 
 }

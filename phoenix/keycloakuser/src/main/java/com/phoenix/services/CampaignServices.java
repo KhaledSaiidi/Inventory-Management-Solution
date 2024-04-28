@@ -19,9 +19,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -159,6 +157,33 @@ public class CampaignServices implements ICampaignServices{
             }
         }
         return campaignsdto;
+    }
+
+
+    @Override
+    public Map<String, Float> getCampaignStatistics() {
+        Map<String, Float> statistics = new HashMap<>();
+        try {
+            long countCampaignsCurrentYear = iCampaignRepository.countCampaignsCurrentYear();
+            long countCampaignsPrevioustYear = iCampaignRepository.countCampaignsPreviousMonth();
+
+            float growthRate = ((float) countCampaignsCurrentYear - countCampaignsPrevioustYear) / countCampaignsPrevioustYear * 100;
+            if (countCampaignsCurrentYear == 0) {
+                statistics.put("countCampaignsCurrentYear", (float) 0);
+                statistics.put("growthRate", -100f);
+            } else if (countCampaignsPrevioustYear == 0) {
+                statistics.put("countCampaignsCurrentYear", (float) countCampaignsCurrentYear);
+                statistics.put("growthRate", 100f);
+            } else {
+                statistics.put("countCampaignsCurrentYear", (float) countCampaignsCurrentYear);
+                statistics.put("growthRate", growthRate);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            statistics.put("countCampaignsCurrentYear", (float) 0);
+            statistics.put("growthRate", (float) 0);
+        }
+        return statistics;
     }
 
 
