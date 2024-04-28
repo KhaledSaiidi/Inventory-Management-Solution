@@ -32,4 +32,6 @@ public interface IProductService {
     List<ProductDto> getThelast2ReturnedProdsByusername(String username);
     List<ProductDto> getThelastMonthlyReturnedProds();
     List<Integer> getUserStat(String username);
+    int getProductNumberNow();
+    Map<String, Float> getReturnedProductsStatistics();
 }

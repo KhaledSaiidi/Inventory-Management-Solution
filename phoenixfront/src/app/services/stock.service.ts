@@ -415,6 +415,14 @@ getSoldProductsStatistics(): Observable<any> {
   return this.http.get<any>(this.apiUrl + '/statistics');
 }
 
+getProductNumberNow(): Observable<any> {
+  return this.http.get<any>(this.apiUrl + '/getProductNumberNow');
+}
+
+getReturnedProductsStatistics(): Observable<any> {
+  return this.http.get<any>(this.apiUrl + '/returnedProductStatistics');
+}
+
 
 
 }

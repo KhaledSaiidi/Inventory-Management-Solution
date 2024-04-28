@@ -4,6 +4,7 @@ import com.phoenix.model.AgentProd;
 import com.phoenix.model.Product;
 import com.phoenix.model.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,5 +23,16 @@ public interface IProductRepository extends JpaRepository<Product, String> {
 
     Optional<Product> findByManagerProd (AgentProd agentProd);
     List<Product> findByStockIn(List<Stock> stocksForAlert);
+
+
+
+
+    @Query("SELECT COUNT(rp) FROM Product rp WHERE MONTH(rp.checkin) = MONTH(CURRENT_DATE) AND rp.returned = true")
+    long countReturnedProductsCurrentMonth();
+
+    @Query("SELECT COUNT(rp) FROM Product rp WHERE MONTH(rp.checkin) = " +
+            "CASE WHEN MONTH(CURRENT_DATE) = 1 THEN 12 ELSE MONTH(CURRENT_DATE) - 1 END AND rp.returned = true")
+    long countReturnedProductsPreviousMonth();
+
 
 }

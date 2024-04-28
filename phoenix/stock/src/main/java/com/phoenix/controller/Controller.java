@@ -333,6 +333,14 @@ public class Controller {
         return isoldProductService.getSoldProductsStatistics();
     }
 
+    @GetMapping("/getProductNumberNow")
+    public int getProductNumberNow() {
+        return iProductService.getProductNumberNow();
+    }
 
+    @GetMapping("/returnedProductStatistics")
+    public Map<String, Float> getReturnedProductsStatistics() {
+        return iProductService.getReturnedProductsStatistics();
+    }
 
 }

@@ -653,4 +653,37 @@ public class ProductService implements IProductService{
 
         return statList;
     }
+
+    @Override
+    public int getProductNumberNow() {
+        List<Product> products = iProductRepository.findAll();
+        return products.size();
+    }
+
+
+    @Override
+    public Map<String, Float> getReturnedProductsStatistics() {
+        Map<String, Float> statistics = new HashMap<>();
+        try {
+            long countReturnedProductsCurrentMonth = iProductRepository.countReturnedProductsCurrentMonth();
+            long countReturnedProductsPreviousMonth = iProductRepository.countReturnedProductsPreviousMonth();
+            float growthRate = ((float) countReturnedProductsCurrentMonth - countReturnedProductsPreviousMonth) / countReturnedProductsPreviousMonth * 100;
+            if (countReturnedProductsCurrentMonth == 0) {
+                statistics.put("countReturnedProductsCurrentMonth", (float) countReturnedProductsCurrentMonth);
+                statistics.put("growthRate", -100f);
+            } else if (countReturnedProductsPreviousMonth == 0) {
+                statistics.put("countReturnedProductsCurrentMonth", (float) countReturnedProductsCurrentMonth);
+                statistics.put("growthRate", 100f);
+            } else {
+                statistics.put("countReturnedProductsCurrentMonth", (float) countReturnedProductsCurrentMonth);
+                statistics.put("growthRate", growthRate);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            statistics.put("countReturnedProductsCurrentMonth", (float) 0);
+            statistics.put("growthRate", (float) 0);
+        }
+        return statistics;
+    }
+
 }

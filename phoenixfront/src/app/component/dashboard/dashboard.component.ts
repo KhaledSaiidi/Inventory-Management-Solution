@@ -53,6 +53,8 @@ export class DashboardComponent implements OnInit{
   this.getlastMonthlySoldProds();  
   this.getSoldProductsStatistics();
   this.getCampaignStatistics();
+  this.getProductNumberNow();
+  this.getReturnedProductsStatistics();
 }
 
   initializeChart(): void {
@@ -186,4 +188,25 @@ export class DashboardComponent implements OnInit{
       });
   }
 
+  productNumberNow!: number;
+
+  getProductNumberNow(): void {
+    this.stockservice.getProductNumberNow()
+      .subscribe(data => {
+        this.productNumberNow = data;
+      });
+  }
+
+
+  countReturnedProductsCurrentMonth!: number;
+  returngrowthRate!: number;
+
+
+  getReturnedProductsStatistics(): void {
+    this.stockservice.getReturnedProductsStatistics()
+      .subscribe(data => {
+        this.countReturnedProductsCurrentMonth = data.countReturnedProductsCurrentMonth;
+        this.returngrowthRate = data.growthRate;
+      });
+  }
 }
