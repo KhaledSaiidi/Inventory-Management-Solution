@@ -14,6 +14,8 @@ import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.*;
 import com.phoenix.repository.*;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -695,4 +697,32 @@ public class ProductService implements IProductService{
         }
       return productsReturnedCount;
     }
+
+    @Override
+    public void deleteProduct(String ref) {
+        Optional<Product> optionalProduct = iProductRepository.findById(ref);
+        if(optionalProduct.isPresent()){
+            Product product = optionalProduct.get();
+
+            AgentProd managerProd = product.getManagerProd();
+            AgentProd agentProd = product.getAgentProd();
+            AgentProd agentwhoSoldProd = product.getAgentwhoSoldProd();
+            AgentProd agentReturnedProd = product.getAgentReturnedProd();
+            iProductRepository.delete(product);
+            if (managerProd != null){
+                iAgentProdRepository.delete(managerProd);
+            }
+            if (agentProd != null){
+                iAgentProdRepository.delete(agentProd);
+            }
+            if (agentwhoSoldProd != null){
+                iAgentProdRepository.delete(agentwhoSoldProd);
+            }
+            if (agentReturnedProd != null){
+                iAgentProdRepository.delete(agentReturnedProd);
+            }
+        }
+    }
+
+
 }

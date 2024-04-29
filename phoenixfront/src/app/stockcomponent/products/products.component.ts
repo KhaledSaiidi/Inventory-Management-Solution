@@ -571,6 +571,59 @@ onPageChange(newPage: number): void {
     onReturnProdPageChange(newPage: number): void {
       this.getReturnedProductsByStockReference(this.stockreference, newPage - 1, this.searchTerm);
   } 
+ 
   
+  confirmProductDeletion(product: Productdto): void {
+    const message = 'Are you sure you want to delete product : ' + product?.serialNumber;
+    const confirmation = confirm(message);
+    if (confirmation) {
+      this.deleteProduct(product);
+    }
+  }
+
+  confirmReturnProductDeletion(product: Productdto): void {
+    const message = 'Are you sure you want to delete returned product : ' + product?.serialNumber;
+    const confirmation = confirm(message);
+    if (confirmation) {
+      this.deleteProduct(product);
+    }
+  }
+ 
+
+  deleteProduct(prod : Productdto): void {
+    if(prod.serialNumber){
+    this.stockservice.deleteProduct(prod.serialNumber).subscribe(
+      () => {
+        console.log('product deleted successfully.');
+        this.getProductsByStockReference(this.stockreference, 0, "");
+        this.getReturnedProductsByStockReference(this.stockreference, 0, "");
+      },
+      (error) => {
+        console.error('Error deleting product:', error);
+      }
+    );}
+  }
+
+  confirmSoldProductDeletion(soldProduct: SoldProductDto): void {
+    const message = 'Are you sure you want to delete the sold product : ' + soldProduct?.serialNumber ;
+    const confirmation = confirm(message);
+    if (confirmation) {
+      this.deleteSoldProduct(soldProduct);
+    }
+  }
+
+  deleteSoldProduct(soldProd: SoldProductDto): void {
+    if(soldProd.serialNumber){
+    this.stockservice.deleteSoldProduct(soldProd.serialNumber).subscribe(
+      () => {
+        console.log('soldProd deleted successfully.');
+        this.getSoldProductsByStockReference(this.stockreference, 0, ""); 
+      },
+      (error) => {
+        console.error('Error deleting soldProd:', error);
+      }
+    );
+  }
+  }
 }
     

@@ -35,4 +35,5 @@ public interface IProductService {
     int getProductNumberNow();
     Map<String, Float> getReturnedProductsStatistics();
     List<Integer> getProductsReturnedCount();
+    void deleteProduct(String ref);
 }

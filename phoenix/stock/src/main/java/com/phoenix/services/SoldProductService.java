@@ -17,6 +17,8 @@ import com.phoenix.repository.IProductRepository;
 import com.phoenix.repository.ISoldProductRepository;
 import com.phoenix.repository.IStockRepository;
 import com.phoenix.soldproductmapper.ISoldTProductMapper;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -485,6 +487,29 @@ public class SoldProductService  implements IsoldProductService{
         }
         return productsSoldCount;
 
+    }
+
+
+    @Override
+    public void deleteSoldProduct(String ref) {
+        Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findById(ref);
+        if(optionalSoldProduct.isPresent()){
+            SoldProduct soldProduct = optionalSoldProduct.get();
+            AgentProd managerProd = soldProduct.getManagerSoldProd();
+            AgentProd agentProd = soldProduct.getAgentWhoSold();
+            AgentProd agentwhoSoldProd = soldProduct.getAgentAssociatedProd();
+            iSoldProductRepository.delete(soldProduct);
+
+            if (managerProd != null){
+                iAgentProdRepository.delete(managerProd);
+            }
+            if (agentProd != null){
+                iAgentProdRepository.delete(agentProd);
+            }
+            if (agentwhoSoldProd != null){
+                iAgentProdRepository.delete(agentwhoSoldProd);
+            }
+        }
     }
 
 }

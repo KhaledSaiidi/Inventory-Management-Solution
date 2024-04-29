@@ -443,5 +443,35 @@ getProductsReturnedCount(): Observable<number[]> {
 }
 
 
+deleteStock(ref: string) {
+  return this.http.delete(this.apiUrl + '/deleteStock/' + ref)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+deleteProduct(serialNumber: string) {
+  return this.http.delete(this.apiUrl + '/deleteProduct/' + serialNumber)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
+deleteSoldProduct(serialNumber: string) {
+  return this.http.delete(this.apiUrl + '/deleteSoldProduct/' + serialNumber)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
 
 }

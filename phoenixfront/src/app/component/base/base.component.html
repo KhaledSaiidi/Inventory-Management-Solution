@@ -89,8 +89,9 @@
             </nav>
       </div>  
       </div>
-        <aside class="container-with-scrollbar sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
-          <div class="sidenav-header">
+        <aside class="container-with-scrollbar sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4"
+         id="sidenav-main" style="height: 90% !important;">
+          <div class="sidenav-header" style="height: 10% !important;">
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href="#">
               <img src="../../assets/img/phoenix.png" class="navbar-brand-img h-100" alt="main_logo">
@@ -98,7 +99,7 @@
             </a>
           </div>
           <hr class="horizontal dark mt-0">
-          <div class="   w-auto " id="sidenav-collapse-main">
+          <div class="w-auto " id="sidenav-collapse-main" style="height: 50% !important; margin-bottom: 65%;">
             <ul class="navbar-nav">
               <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Inventory Tracking Optimization</h6>
@@ -135,14 +136,6 @@
                   <span class="nav-link-text ms-1">Stock Management</span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link " routerLink="/meteodesapps" routerLinkActive="active">
-                  <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center" style="background-image: url('../../assets/img/icons/tracing.png');">
-                    <i class="ni text-info text-sm opacity-10"></i>
-                  </div>
-                  <span class="nav-link-text ms-1">Stock Tracing</span>
-                </a>
-              </li>
               
               <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">logs</h6>
@@ -164,8 +157,7 @@
               </li>
             </ul>
           </div>
-          <br>
-          <div class="sidenav-footer mx-3 ">
+          <div class="sidenav-footer mx-3">
             <div class="card card-plain shadow-none" id="sidenavCard">
               <img class="w-20 mx-auto" src="../../assets/img/scanbarcode.png" alt="sidebar_illustration">
               <div class="card-body text-center p-3 w-100 pt-0">

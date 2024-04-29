@@ -353,4 +353,22 @@ public class Controller {
         return iProductService.getProductsReturnedCount();
     }
 
+    @DeleteMapping
+    @RequestMapping("/deleteStock/{ref}")
+    public void deleteStock(@PathVariable String ref) {
+        iStockService.deleteStock(ref);
+    }
+
+    @DeleteMapping
+    @RequestMapping("/deleteProduct/{serialNumber}")
+    public void deleteProduct(@PathVariable String serialNumber) {
+        iProductService.deleteProduct(serialNumber);
+    }
+
+    @DeleteMapping
+    @RequestMapping("/deleteSoldProduct/{serialNumber}")
+    public void deleteSoldProduct(@PathVariable String serialNumber) {
+        isoldProductService.deleteSoldProduct(serialNumber);
+    }
+
 }

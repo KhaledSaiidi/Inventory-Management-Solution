@@ -25,4 +25,5 @@ public interface IsoldProductService {
     List<TopSalesDto> getlastMonthlySoldProds();
     Map<String, Float> getSoldProductsStatistics();
     List<Integer> getProductsSoldCount();
+    void deleteSoldProduct(String ref);
     }

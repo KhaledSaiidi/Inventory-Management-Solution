@@ -2,6 +2,7 @@ package com.phoenix.services;
 
 import com.phoenix.config.AuthorizationUtils;
 import com.phoenix.dto.AgentProdDto;
+import com.phoenix.dto.SoldProductDto;
 import com.phoenix.dto.StockDto;
 import com.phoenix.dto.StockEvent;
 import com.phoenix.dtokeycloakuser.Campaigndto;
@@ -9,14 +10,11 @@ import com.phoenix.kafka.StockProducer;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
-import com.phoenix.model.AgentProd;
-import com.phoenix.model.Product;
+import com.phoenix.model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.phoenix.model.Stock;
-import com.phoenix.model.UncheckHistory;
 import com.phoenix.repository.IStockRepository;
 import com.phoenix.repository.IUncheckHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +51,13 @@ public class StockService implements IStockService{
 
     @Autowired
     private StockProducer stockProducer;
+
+    @Autowired
+    private IProductService iProductService;
+
+    @Autowired
+    private IsoldProductService isoldProductService;
+
 
 
     @Override
@@ -257,5 +262,27 @@ public class StockService implements IStockService{
         stockEvent.setMessage("STOCK STATUS IS PENDING STATE");
         stockProducer.sendMessage(stockEvent);
         return "Stock placed successfully";
+    }
+    @Override
+    public void deleteStock(String ref) {
+        Optional<Stock> optionalstock = iStockRepository.findById(ref);
+        if(optionalstock.isPresent()){
+            Stock stock = optionalstock.get();
+            List<Product> products = stock.getProducts();
+            List<SoldProduct> soldproducts = stock.getSoldproducts();
+
+            if(products != null){
+                for(Product product: products){
+                    iProductService.deleteProduct(product.getSerialNumber());
+                }
+            }
+            if(soldproducts != null) {
+                for(SoldProduct soldProduct: soldproducts){
+                    isoldProductService.deleteSoldProduct(soldProduct.getSerialNumber());
+                }
+            }
+            iStockRepository.delete(stock);
+        }
+
     }
 }
