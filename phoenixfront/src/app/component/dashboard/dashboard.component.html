@@ -10,10 +10,13 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Product Numbers Now</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Current Inventory Count</p>
                     <h5 class="font-weight-bolder">
                       {{productNumberNow}}
                     </h5>
+                    <p class="mb-0">
+                      products in <span class="text-success text-sm font-weight-bolder" >{{ currentDate | date }}</span>
+                    </p>
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -32,7 +35,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Number of sold Products</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Products Sold</p>
                     <h5 class="font-weight-bolder">
                       {{soldProductsCurrentYear}}</h5>
                     <p class="mb-0">
@@ -57,7 +60,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">   
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Number of Returned Product</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Product Returns Count</p>
                     <h5 class="font-weight-bolder">{{countReturnedProductsCurrentMonth}}</h5>
                     <p class="mb-0">
                       <span class=" text-sm font-weight-bolder"
@@ -83,7 +86,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Number of Active campaigns</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Active Campaigns Count</p>
                     <h5 class="font-weight-bolder">
                       {{campaignsCurrentYear}} 
                     </h5>
@@ -112,7 +115,9 @@
               <h6 class="text-capitalize">Monthly Sales Overview</h6>
               <p class="text-sm mb-0">
                 
-                <span class="font-weight-bold"> 30%</span>&nbsp;more than the previous month
+                <span class="text-sm font-weight-bolder" 
+                      [ngClass]="{'text-success': growthRate > 0, 'text-danger': growthRate <= 0}">{{growthRate}}%</span>
+                      &nbsp;more than the previous month
               </p>
             </div>
             <div class="card-body p-3">

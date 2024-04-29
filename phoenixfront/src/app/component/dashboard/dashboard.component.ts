@@ -43,6 +43,10 @@ export class DashboardComponent implements OnInit{
   prevSlide() {
     this.activeIndex = (this.activeIndex - 1 + this.slides.length) % this.slides.length;
   }
+  currentDate!: Date;
+
+  productsSold!: number[];
+  productsReturned!: number[];
 
   ngOnInit() {
    this.initializeChart();
@@ -55,9 +59,13 @@ export class DashboardComponent implements OnInit{
   this.getCampaignStatistics();
   this.getProductNumberNow();
   this.getReturnedProductsStatistics();
+  this.currentDate = new Date();
 }
 
   initializeChart(): void {
+  
+    this.getProductsSoldCount();
+    this.getProductsReturnedCount();
     var ctx: any = document.getElementById("chart-line");
     var ctx1 = ctx.getContext("2d");
     var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
@@ -65,6 +73,12 @@ export class DashboardComponent implements OnInit{
     gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
     gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
     gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+
+    var gradientStroke2 = ctx1.createLinearGradient(0, 230, 0, 50);
+    gradientStroke2.addColorStop(1, 'rgba(0, 184, 216, 0.2)');
+    gradientStroke2.addColorStop(0.2, 'rgba(0, 184, 216, 0.0)');
+    gradientStroke2.addColorStop(0, 'rgba(0, 184, 216, 0)');
+  
     new Chart(ctx1, {
     type: "line",
       data: {
@@ -77,8 +91,19 @@ export class DashboardComponent implements OnInit{
         backgroundColor: gradientStroke1,
         borderWidth: 3,
         fill: true,
-        data: [20, 30, 10, 20, 20, 15, 16, 20, 15, 14, 12, 10]
-    }],
+        data: this.productsSold
+    },
+    {
+      label: "Number of returned products",
+      tension: 0.4,
+      pointRadius: 0,
+      borderColor: "#00b8d8",
+      backgroundColor: gradientStroke2,
+      borderWidth: 3,
+      fill: true,
+      data: this.productsReturned
+    }
+  ]
       },
     options: {
       responsive: true,
@@ -132,6 +157,8 @@ export class DashboardComponent implements OnInit{
        },
       },
     });
+
+  
   }
 
 
@@ -208,5 +235,32 @@ export class DashboardComponent implements OnInit{
         this.countReturnedProductsCurrentMonth = data.countReturnedProductsCurrentMonth;
         this.returngrowthRate = data.growthRate;
       });
+  }
+
+
+  getProductsSoldCount() {
+    this.stockservice.getProductsSoldCount()
+      .subscribe(
+        (data: number[]) => {
+          this.productsSold = data;
+        },
+        (error) => {
+          console.error('Error fetching products sold count:', error);
+          this.productsSold = Array(12).fill(0);
+        }
+      );
+  }
+
+  getProductsReturnedCount() {
+    this.stockservice.getProductsReturnedCount()
+      .subscribe(
+        (data: number[]) => {
+          this.productsReturned = data;
+        },
+        (error) => {
+          console.error('Error fetching products sold count:', error);
+          this.productsReturned = Array(12).fill(0);
+        }
+      );
   }
 }

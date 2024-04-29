@@ -424,5 +424,24 @@ getReturnedProductsStatistics(): Observable<any> {
 }
 
 
+getProductsSoldCount(): Observable<number[]> {
+  return this.http.get<number[]>(this.apiUrl + '/getProductsSoldCount').pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );;
+}
+
+getProductsReturnedCount(): Observable<number[]> {
+  return this.http.get<number[]>(this.apiUrl + '/getProductsReturnedCount').pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );;
+}
+
+
 
 }
