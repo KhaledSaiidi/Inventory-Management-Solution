@@ -36,25 +36,15 @@ private initializeWebSocket(): void {
     this.securityService.kcService.logout(window.location.origin);
   }
 
-  navigateToscan() {
-    window.location.href = '/toscan';
-  }
   
-  navigateTosell(userName?: string) {
+  navigateToscanners(userName?: string) {
     if (userName === undefined) {
       console.log('Invalid Username');
       return;
     }
-    this.router.navigate(['/scantosell'], { queryParams: { id: userName } });      
+    this.router.navigate(['/scanners'], { queryParams: { id: userName } });      
   }
 
-  navigateToreturn(userName?: string) {
-    if (userName === undefined) {
-      console.log('Invalid Username');
-      return;
-    }
-    this.router.navigate(['/scantoreturn'], { queryParams: { id: userName } });      
-  }
   
   navigateToUserdetails(userName?: string) {
     if (userName === undefined) {

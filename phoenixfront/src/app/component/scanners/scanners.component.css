@@ -1,0 +1,82 @@
+
+.popup-overlay {
+    position: relative;
+    top: 200px;
+    left: 28%;
+    width: 750px; 
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+    }
+    
+    .popup-content {
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 100%;
+      z-index: 2;
+    }
+    
+    .popup-header {
+      text-align: center;
+      color: #007bff;
+    }
+    
+          
+      .btn {
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      .scan-btn.add-btn {
+        background-color: #5bc0de;
+        color: #fff;
+      }
+      
+      .scan-btn.sell-btn {
+        background-color: #5bc0de;
+        color: #fff;
+      }
+      
+      .scan-btn.return-btn {
+        background-color: #5bc0de;
+        color: #fff;
+      }
+      
+      .btn:hover {
+        opacity: 0.5;
+      }
+      
+      app-userdetails {
+        opacity: 0.3 !important;
+      }
+
+      .webcam-placeholder-off {
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #ffcccc;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .cancel-icon {
+        position: absolute;
+        top: 10px;
+        right: 55px;
+        cursor: pointer;
+      }
+      
+      .cancel-icon:hover {
+        background-color: red;
+        border-radius: 30%;
+        padding: 5px; 
+        color: white;
+      }
