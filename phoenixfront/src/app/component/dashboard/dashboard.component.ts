@@ -5,6 +5,8 @@ import { Userdto } from 'src/app/models/agents/Userdto';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { AgentsService } from 'src/app/services/agents.service';
 import { StockService } from 'src/app/services/stock.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 
 @Component({
@@ -62,14 +64,25 @@ export class DashboardComponent implements OnInit{
   this.currentDate = new Date();
 }
 
-  initializeChart(): void {
-  
-    this.getProductsSoldCount();
-    this.getProductsReturnedCount();
+initializeChart(): void {
+  forkJoin([
+    this.getProductsSoldCount().pipe(
+      catchError(error => {
+        console.error('Error fetching products sold count:', error);
+        return of(Array(12).fill(0));
+      })
+    ),
+    this.getProductsReturnedCount().pipe(
+      catchError(error => {
+        console.error('Error fetching products returned count:', error);
+        return of(Array(12).fill(0));
+      })
+    )    
+  ]).subscribe(([productsSold, productsReturned]) => {
     var ctx: any = document.getElementById("chart-line");
     var ctx1 = ctx.getContext("2d");
     var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
-    
+
     gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
     gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
     gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
@@ -78,88 +91,86 @@ export class DashboardComponent implements OnInit{
     gradientStroke2.addColorStop(1, 'rgba(0, 184, 216, 0.2)');
     gradientStroke2.addColorStop(0.2, 'rgba(0, 184, 216, 0.0)');
     gradientStroke2.addColorStop(0, 'rgba(0, 184, 216, 0)');
-  
+
     new Chart(ctx1, {
-    type: "line",
+      type: "line",
       data: {
-      labels: ["Jan", "Fev", "Mar", "Avr", "May", "Juin", "Jul", "Aout", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [{
-        label: "Number of products sold",
-        tension: 0.4,
-        pointRadius: 0,
-        borderColor: "#5e72e4",
-        backgroundColor: gradientStroke1,
-        borderWidth: 3,
-        fill: true,
-        data: this.productsSold
-    },
-    {
-      label: "Number of returned products",
-      tension: 0.4,
-      pointRadius: 0,
-      borderColor: "#00b8d8",
-      backgroundColor: gradientStroke2,
-      borderWidth: 3,
-      fill: true,
-      data: this.productsReturned
-    }
-  ]
+        labels: ["Jan", "Fev", "Mar", "Avr", "May", "Juin", "Jul", "Aout", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [{
+          label: "Number of products sold",
+          tension: 0.4,
+          pointRadius: 0,
+          borderColor: "#5e72e4",
+          backgroundColor: gradientStroke1,
+          borderWidth: 3,
+          fill: true,
+          data: productsSold
+        },
+        {
+          label: "Number of returned products",
+          tension: 0.4,
+          pointRadius: 0,
+          borderColor: "#00b8d8",
+          backgroundColor: gradientStroke2,
+          borderWidth: 3,
+          fill: true,
+          data: productsReturned
+        }]
       },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-        display: false,
-        }
-      },
-      interaction: {
-        intersect: false,
-        mode: 'index',
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          }
         },
-    scales: {
-    y: {
-      grid: {
-        display: true,
-        drawOnChartArea: true,
-        drawTicks: false,
+        interaction: {
+          intersect: false,
+          mode: 'index',
         },
-      ticks: {
-        display: true,
-        padding: 10,
-        color: '#fbfbfb',
-      font: {
-        size: 11,
-        family: "Open Sans",
-        style: 'normal',
-        lineHeight: 2
-        },
-      }
-    },
-      x: {
-        grid: {
-          display: false,
-          drawOnChartArea: false,
-          drawTicks: false,
-          },
-        ticks: {
-          display: true,
-          color: '#ccc',
-          padding: 20,
-        font: {
-          size: 11,
-          family: "Open Sans",
-          style: 'normal',
-          lineHeight: 2
+        scales: {
+          y: {
+            grid: {
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+            },
+            ticks: {
+              display: true,
+              padding: 10,
+              color: '#fbfbfb',
+              font: {
+                size: 11,
+                family: "Open Sans",
+                style: 'normal',
+                lineHeight: 2
               },
             }
           },
-       },
+          x: {
+            grid: {
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+            },
+            ticks: {
+              display: true,
+              color: '#ccc',
+              padding: 20,
+              font: {
+                size: 11,
+                family: "Open Sans",
+                style: 'normal',
+                lineHeight: 2
+              },
+            }
+          },
+        },
       },
     });
-
-  
-  }
+  });
+}
 
 
   returnedMonthly: Productdto[] = [];
@@ -239,28 +250,11 @@ export class DashboardComponent implements OnInit{
 
 
   getProductsSoldCount() {
-    this.stockservice.getProductsSoldCount()
-      .subscribe(
-        (data: number[]) => {
-          this.productsSold = data;
-        },
-        (error) => {
-          console.error('Error fetching products sold count:', error);
-          this.productsSold = Array(12).fill(0);
-        }
-      );
+    return this.stockservice.getProductsSoldCount();
   }
+  
 
   getProductsReturnedCount() {
-    this.stockservice.getProductsReturnedCount()
-      .subscribe(
-        (data: number[]) => {
-          this.productsReturned = data;
-        },
-        (error) => {
-          console.error('Error fetching products sold count:', error);
-          this.productsReturned = Array(12).fill(0);
-        }
-      );
+    return this.stockservice.getProductsReturnedCount();
   }
-}
+  }

@@ -476,4 +476,15 @@ public class SoldProductService  implements IsoldProductService{
         return statistics;
     }
 
+    @Override
+    public List<Integer> getProductsSoldCount(){
+        List<Integer> productsSoldCount = new ArrayList<>();
+        for(int i = 1 ; i <= 12 ; i++){
+            int productsMonthSold = iSoldProductRepository.countSoldProductsByMonth(i);
+            productsSoldCount.add(productsMonthSold);
+        }
+        return productsSoldCount;
+
+    }
+
 }

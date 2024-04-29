@@ -24,4 +24,5 @@ public interface IsoldProductService {
     List<SoldProductDto> getThelast2SoldProdsByusername(String username);
     List<TopSalesDto> getlastMonthlySoldProds();
     Map<String, Float> getSoldProductsStatistics();
+    List<Integer> getProductsSoldCount();
     }

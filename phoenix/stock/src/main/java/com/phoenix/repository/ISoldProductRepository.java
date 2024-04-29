@@ -6,6 +6,7 @@ import com.phoenix.model.SoldProduct;
 import com.phoenix.model.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,6 +29,12 @@ public interface ISoldProductRepository extends JpaRepository<SoldProduct, Strin
     @Query("SELECT COUNT(sp) FROM SoldProduct sp WHERE MONTH(sp.soldDate) = " +
             "CASE WHEN MONTH(CURRENT_DATE) = 1 THEN 12 ELSE MONTH(CURRENT_DATE) - 1 END")
     long countSoldProductsPreviousMonth();
+
+
+    @Query("SELECT COUNT(sp) FROM SoldProduct sp " +
+            "WHERE YEAR(sp.soldDate) = YEAR(CURRENT_DATE()) " +
+            "AND MONTH(sp.soldDate) = :month")
+    int countSoldProductsByMonth(@Param("month") int month);
 
 }
 

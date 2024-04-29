@@ -686,4 +686,13 @@ public class ProductService implements IProductService{
         return statistics;
     }
 
+    @Override
+    public List<Integer> getProductsReturnedCount(){
+      List<Integer> productsReturnedCount = new ArrayList<>();
+        for(int i = 1 ; i <= 12 ; i++){
+            int productsMonthReturned = iProductRepository.countReturnedProductsByMonth(i);
+            productsReturnedCount.add(productsMonthReturned);
+        }
+      return productsReturnedCount;
+    }
 }

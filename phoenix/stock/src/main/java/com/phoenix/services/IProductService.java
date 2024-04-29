@@ -34,4 +34,5 @@ public interface IProductService {
     List<Integer> getUserStat(String username);
     int getProductNumberNow();
     Map<String, Float> getReturnedProductsStatistics();
+    List<Integer> getProductsReturnedCount();
 }

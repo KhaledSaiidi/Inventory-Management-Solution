@@ -343,4 +343,14 @@ public class Controller {
         return iProductService.getReturnedProductsStatistics();
     }
 
+    @GetMapping("/getProductsSoldCount")
+    public List<Integer> getProductsSoldCount() {
+        return isoldProductService.getProductsSoldCount();
+    }
+
+    @GetMapping("/getProductsReturnedCount")
+    public List<Integer> getProductsReturnedCount() {
+        return iProductService.getProductsReturnedCount();
+    }
+
 }

@@ -5,6 +5,7 @@ import com.phoenix.model.Product;
 import com.phoenix.model.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,5 +35,10 @@ public interface IProductRepository extends JpaRepository<Product, String> {
             "CASE WHEN MONTH(CURRENT_DATE) = 1 THEN 12 ELSE MONTH(CURRENT_DATE) - 1 END AND rp.returned = true")
     long countReturnedProductsPreviousMonth();
 
+    @Query("SELECT COUNT(p) FROM Product p " +
+            "WHERE p.returned = true " +
+            "AND YEAR(p.checkin) = YEAR(CURRENT_DATE()) " +
+            "AND MONTH(p.checkin) = :month")
+    int countReturnedProductsByMonth(@Param("month") int month);
 
 }
