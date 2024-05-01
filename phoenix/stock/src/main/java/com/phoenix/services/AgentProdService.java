@@ -185,5 +185,22 @@ public class AgentProdService implements IAgentProdService{
         return productsInPossession;
     }
 
+    @Override
+    @Transactional
+    public void deleteAgentProdsWithoutProducts() {
+        List<AgentProd> agentProds = iAgentProdRepository.findAll();
+        for (AgentProd agentProd : agentProds) {
+            if (agentProd.getProductsManaged().isEmpty() &&
+                    agentProd.getSoldproductsManaged().isEmpty() &&
+                    agentProd.getProductsSoldBy().isEmpty() &&
+                    agentProd.getProductsAssociated().isEmpty() &&
+                    agentProd.getAgentproductsAssociated().isEmpty() &&
+                    agentProd.getProductssoldAndreturnedAssociated().isEmpty() &&
+                    agentProd.getProductsreturnedAssociated().isEmpty()) {
+                iAgentProdRepository.delete(agentProd);
+            }
+        }
+    }
+
 
 }

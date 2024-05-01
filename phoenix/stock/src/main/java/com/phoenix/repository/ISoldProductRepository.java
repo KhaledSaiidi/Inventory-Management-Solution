@@ -36,5 +36,8 @@ public interface ISoldProductRepository extends JpaRepository<SoldProduct, Strin
             "AND MONTH(sp.soldDate) = :month")
     int countSoldProductsByMonth(@Param("month") int month);
 
+    Optional<SoldProduct> findByAgentAssociatedProd(AgentProd agentProd);
+
+
 }
 

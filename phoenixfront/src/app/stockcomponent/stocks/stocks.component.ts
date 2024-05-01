@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockPage } from 'src/app/models/inventory/StockPage';
 import { StockService } from 'src/app/services/stock.service';
+import { ConfiramtionDialogComponent } from 'src/app/design-component/confiramtion-dialog/confiramtion-dialog.component'
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-stocks',
@@ -13,7 +15,8 @@ import { StockService } from 'src/app/services/stock.service';
 export class StocksComponent implements OnInit { 
   
   constructor(private router: Router, private stockService: StockService, 
-              private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef) {}
+              private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef,
+              private dialog: MatDialog) {}
 
   
   filterfinishforStocks!: Stockdto[];
@@ -165,5 +168,35 @@ export class StocksComponent implements OnInit {
     }
     this.router.navigate(['/updatestock'], { queryParams: { id: ref } });
     console.log(ref);
-  }  
+  } 
+  
+  
+  confirmStockDeletion(stock: Stockdto): void {
+    const message = 'Are you sure you want to delete the entire stock: "' + stock?.stockReference 
+    + '"?\nAll products inside will be deleted.';
+    
+    const dialogRef = this.dialog.open(ConfiramtionDialogComponent, {
+      data: { message, onConfirm: () => this.deleteStock(stock, dialogRef) }
+    });
+
+    dialogRef.componentInstance.onCancel.subscribe(() => {
+      dialogRef.close();
+    });
+  }
+
+
+  deleteStock(stock: Stockdto, dialogRef: MatDialogRef<ConfiramtionDialogComponent>): void {
+    if(stock.stockReference){
+    this.stockService.deleteStock(stock.stockReference).subscribe(
+      () => {
+        console.log('stock deleted successfully.');
+        this.getStocks(0, "");
+        dialogRef.close();
+      },
+      (error) => {
+        console.error('Error deleting stock:', error);
+      }
+    );}
+  }
+
 }

@@ -28,9 +28,9 @@ public class Stock {
     private String notes;
     private BigDecimal stockValue;
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "stock", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Product> products;
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "stock", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<SoldProduct> soldproducts;
 
     @PrePersist

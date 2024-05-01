@@ -1,0 +1,16 @@
+<div class="confirmation-dialog">
+  <div class="dialog-content">
+    <h3>Confirm Deletion</h3>
+    <div class="webcam-placeholder-off">
+      <p> {{ message }}</p>
+      </div>
+    <div class="buttons" >
+      <button class="confirm-button" (click)="confirm()">Confirm</button>
+      <button class="cancel-button" (click)="cancel()">Cancel</button>
+      <div *ngIf="loading" class="loading-indicator">
+        <span class="loading-text">Please wait&nbsp;</span>
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+     </div>
+  </div>
+</div>

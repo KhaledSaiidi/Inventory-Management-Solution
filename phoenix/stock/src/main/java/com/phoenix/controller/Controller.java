@@ -360,15 +360,15 @@ public class Controller {
     }
 
     @DeleteMapping
-    @RequestMapping("/deleteProduct/{serialNumber}")
-    public void deleteProduct(@PathVariable String serialNumber) {
-        iProductService.deleteProduct(serialNumber);
+    @RequestMapping("/deleteProduct/{ref}")
+    public void deleteProduct(@PathVariable("ref") String ref) {
+        iProductService.deleteProduct(ref);
     }
 
     @DeleteMapping
-    @RequestMapping("/deleteSoldProduct/{serialNumber}")
-    public void deleteSoldProduct(@PathVariable String serialNumber) {
-        isoldProductService.deleteSoldProduct(serialNumber);
+    @RequestMapping("/deleteSoldProduct/{ref}")
+    public void deleteSoldProduct(@PathVariable("ref") String ref) {
+        isoldProductService.deleteSoldProduct(ref);
     }
 
 }

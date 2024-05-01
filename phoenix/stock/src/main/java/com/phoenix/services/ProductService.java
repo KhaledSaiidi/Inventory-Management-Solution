@@ -701,26 +701,11 @@ public class ProductService implements IProductService{
     @Override
     public void deleteProduct(String ref) {
         Optional<Product> optionalProduct = iProductRepository.findById(ref);
+        System.out.println("optionalProduct is : " + optionalProduct);
         if(optionalProduct.isPresent()){
             Product product = optionalProduct.get();
-
-            AgentProd managerProd = product.getManagerProd();
-            AgentProd agentProd = product.getAgentProd();
-            AgentProd agentwhoSoldProd = product.getAgentwhoSoldProd();
-            AgentProd agentReturnedProd = product.getAgentReturnedProd();
+            System.out.println("Product is : " + product);
             iProductRepository.delete(product);
-            if (managerProd != null){
-                iAgentProdRepository.delete(managerProd);
-            }
-            if (agentProd != null){
-                iAgentProdRepository.delete(agentProd);
-            }
-            if (agentwhoSoldProd != null){
-                iAgentProdRepository.delete(agentwhoSoldProd);
-            }
-            if (agentReturnedProd != null){
-                iAgentProdRepository.delete(agentReturnedProd);
-            }
         }
     }
 

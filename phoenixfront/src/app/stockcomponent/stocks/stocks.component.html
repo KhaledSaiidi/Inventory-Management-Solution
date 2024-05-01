@@ -32,7 +32,7 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Received Date</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Due Date</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Value</th>
-                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="3" style="text-align: center;">Actions</th>
                        </tr>
                      </thead>
         
@@ -84,8 +84,15 @@
                         <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.dueDate">
                           <span [innerHTML]="highlightMatch(formatDate(stock.dueDate))"></span></td>
                         <td style="word-wrap: break-word; white-space: normal;"> {{ stock.stockValue ?? 0 }}  $</td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">View</a></td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">update</a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">
+                          <i class="fas fa-eye"></i>
+                        </a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">
+                          <i class="fas fa-edit"></i>
+                        </a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="confirmStockDeletion(stock)">
+                          <i class="fas fa-trash-alt"></i>
+                        </a></td>
                       </tr>
                       <tr>
                       <td colspan="11" style="margin-right: 5px;">

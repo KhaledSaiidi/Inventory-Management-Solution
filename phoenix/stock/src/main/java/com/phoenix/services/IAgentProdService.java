@@ -15,4 +15,5 @@ public interface IAgentProdService {
     void UpdateAgentsbyUserssignementByusername(List<AgentProdDto> agentProdDtos);
 
     List<String> productsInPossession(String username);
+    void deleteAgentProdsWithoutProducts();
     }

@@ -5,6 +5,7 @@ import com.phoenix.dto.StockEvent;
 import com.phoenix.kafka.StockProducer;
 import com.phoenix.model.Product;
 import com.phoenix.repository.IUncheckHistoryRepository;
+import com.phoenix.services.IAgentProdService;
 import com.phoenix.services.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduledTasks {
 
-    @Autowired
-    private IProductService iProductService;
+    private final IProductService iProductService;
     @Autowired
     private StockProducer stockProducer;
 
-    // @Scheduled(cron = "0 0 9 * * *")
-    // @Scheduled(cron = "0 * * * * *")
+    private final IAgentProdService iAgentProdService;
     @Scheduled(cron = "0 0 0 * * MON")
     public void checkProductsDueDate() {
         List<ReclamationDto> reclamationDtos = iProductService.getProductsForAlert();
@@ -38,4 +37,10 @@ public class ScheduledTasks {
         }
     }
 
+
+    // @Scheduled(fixedRate = 60000) // to test
+    @Scheduled(cron = "0 0 23 * * SAT")
+    public void deleteAgentProdsWithoutProducts() {
+        iAgentProdService.deleteAgentProdsWithoutProducts();
+    }
 }

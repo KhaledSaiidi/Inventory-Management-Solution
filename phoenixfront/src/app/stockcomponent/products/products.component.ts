@@ -1,6 +1,5 @@
 import {  ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  forkJoin, toArray } from 'rxjs';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { StockService } from 'src/app/services/stock.service';
@@ -253,29 +252,13 @@ onPageChange(newPage: number): void {
 
   selectAllCheckbox(event: any) {
     this.selectAllChecked = event.target.checked;
-    if (this.selectAllChecked) {
-      const observables = [];
-  
-      for (let page = 0; page < this.totalPages; page++) {
-        observables.push(
-          this.stockservice.getProductsPaginatedByStockReference(this.stockreference, page, 20, this.searchTerm)
-        );
-      }
-  
-      forkJoin(observables).subscribe(
-        (responses) => {
-          responses.forEach((data) => {
-            const slectedProds: Productdto[] = data.content;
-            slectedProds.forEach((prod) => {
-              this.selectedSerialNumbers.add(prod.serialNumber as string);
-            });
-          });
-        },
-        (error) => {
-          console.error('Failed to get products:', error);
-        }
-      );
 
+    if (this.selectAllChecked) {
+  this.filterfinishforProds.forEach(prod => {
+    if (prod.serialNumber !== undefined) {
+      this.selectedSerialNumbers.add(prod.serialNumber as string);
+    }
+  });
     }
     if (!this.selectAllChecked) {
       this.selectedSerialNumbers.clear();

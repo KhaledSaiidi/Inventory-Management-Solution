@@ -495,20 +495,7 @@ public class SoldProductService  implements IsoldProductService{
         Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findById(ref);
         if(optionalSoldProduct.isPresent()){
             SoldProduct soldProduct = optionalSoldProduct.get();
-            AgentProd managerProd = soldProduct.getManagerSoldProd();
-            AgentProd agentProd = soldProduct.getAgentWhoSold();
-            AgentProd agentwhoSoldProd = soldProduct.getAgentAssociatedProd();
             iSoldProductRepository.delete(soldProduct);
-
-            if (managerProd != null){
-                iAgentProdRepository.delete(managerProd);
-            }
-            if (agentProd != null){
-                iAgentProdRepository.delete(agentProd);
-            }
-            if (agentwhoSoldProd != null){
-                iAgentProdRepository.delete(agentwhoSoldProd);
-            }
         }
     }
 
