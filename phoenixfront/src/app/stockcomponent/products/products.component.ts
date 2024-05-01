@@ -9,6 +9,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DataSharingService } from 'src/app/services/dataSharing.service';
 import { SoldProductDto } from 'src/app/models/inventory/SoldProductDto';
 import { SoldProductPage } from 'src/app/models/inventory/SoldProductPage';
+import { ConfiramtionDialogComponent } from 'src/app/design-component/confiramtion-dialog/confiramtion-dialog.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-products',
@@ -22,7 +24,8 @@ export class ProductsComponent implements OnInit{
     private stockservice: StockService,
     private cdRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private dataSharingService: DataSharingService) {}
+    private dataSharingService: DataSharingService,
+    private dialog: MatDialog) {}
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
@@ -556,30 +559,40 @@ onPageChange(newPage: number): void {
   } 
  
   
+ 
+
   confirmProductDeletion(product: Productdto): void {
-    const message = 'Are you sure you want to delete product : ' + product?.serialNumber;
-    const confirmation = confirm(message);
-    if (confirmation) {
-      this.deleteProduct(product);
-    }
+    const message = 'Are you sure you want to delete the product: "' + product?.serialNumber+ '"';
+    
+    const dialogRef = this.dialog.open(ConfiramtionDialogComponent, {
+      data: { message, onConfirm: () => this.deleteProduct(product, dialogRef) }
+    });
+    dialogRef.componentInstance.onCancel.subscribe(() => {
+      dialogRef.close();
+    });
   }
 
+
   confirmReturnProductDeletion(product: Productdto): void {
-    const message = 'Are you sure you want to delete returned product : ' + product?.serialNumber;
-    const confirmation = confirm(message);
-    if (confirmation) {
-      this.deleteProduct(product);
-    }
+    const message = 'Are you sure you want to delete the returned product: "' + product?.serialNumber+ '"';
+    
+    const dialogRef = this.dialog.open(ConfiramtionDialogComponent, {
+      data: { message, onConfirm: () => this.deleteProduct(product, dialogRef) }
+    });
+    dialogRef.componentInstance.onCancel.subscribe(() => {
+      dialogRef.close();
+    });
   }
  
 
-  deleteProduct(prod : Productdto): void {
+  deleteProduct(prod : Productdto , dialogRef: MatDialogRef<ConfiramtionDialogComponent>): void {
     if(prod.serialNumber){
     this.stockservice.deleteProduct(prod.serialNumber).subscribe(
       () => {
         console.log('product deleted successfully.');
         this.getProductsByStockReference(this.stockreference, 0, "");
         this.getReturnedProductsByStockReference(this.stockreference, 0, "");
+        dialogRef.close();
       },
       (error) => {
         console.error('Error deleting product:', error);
@@ -587,20 +600,27 @@ onPageChange(newPage: number): void {
     );}
   }
 
+
   confirmSoldProductDeletion(soldProduct: SoldProductDto): void {
-    const message = 'Are you sure you want to delete the sold product : ' + soldProduct?.serialNumber ;
-    const confirmation = confirm(message);
-    if (confirmation) {
-      this.deleteSoldProduct(soldProduct);
-    }
+    const message = 'Are you sure you want to delete the sold product: "' + soldProduct?.serialNumber + '"';
+    
+    const dialogRef = this.dialog.open(ConfiramtionDialogComponent, {
+      data: { message, onConfirm: () => this.deleteSoldProduct(soldProduct, dialogRef) }
+    });
+    dialogRef.componentInstance.onCancel.subscribe(() => {
+      dialogRef.close();
+    });
   }
 
-  deleteSoldProduct(soldProd: SoldProductDto): void {
+
+  deleteSoldProduct(soldProd: SoldProductDto, dialogRef: MatDialogRef<ConfiramtionDialogComponent>): void {
     if(soldProd.serialNumber){
     this.stockservice.deleteSoldProduct(soldProd.serialNumber).subscribe(
       () => {
         console.log('soldProd deleted successfully.');
         this.getSoldProductsByStockReference(this.stockreference, 0, ""); 
+        dialogRef.close();
+
       },
       (error) => {
         console.error('Error deleting soldProd:', error);

@@ -11,6 +11,8 @@ import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.*;
+import com.phoenix.repository.IProductRepository;
+import com.phoenix.repository.ISoldProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class StockService implements IStockService{
+public class StockService implements IStockService {
     @Autowired
     private IStockMapper iStockMapper;
     @Autowired
@@ -53,24 +55,22 @@ public class StockService implements IStockService{
     private StockProducer stockProducer;
 
     @Autowired
-    private IProductService iProductService;
-
+    private IProductRepository iProductRepository;
     @Autowired
-    private IsoldProductService isoldProductService;
-
+    private ISoldProductRepository iSoldProductRepository;
 
 
     @Override
     public void addStock(StockDto stockDto, String campaignReference) {
-       Campaigndto campaigndto =  webClientBuilder.build().get()
-                                    .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", campaignReference)
-                                    .retrieve()
-                                    .bodyToMono(Campaigndto.class)
-                                    .block();
+        Campaigndto campaigndto = webClientBuilder.build().get()
+                .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", campaignReference)
+                .retrieve()
+                .bodyToMono(Campaigndto.class)
+                .block();
         if (campaigndto != null) {
-        stockDto.setCampaignRef(campaigndto.getReference());
-        stockDto.setProductTypes(campaigndto.getProducts());
-        stockDto.setDueDate(stockDto.getReceivedDate().plusDays(45));
+            stockDto.setCampaignRef(campaigndto.getReference());
+            stockDto.setProductTypes(campaigndto.getProducts());
+            stockDto.setDueDate(stockDto.getReceivedDate().plusDays(45));
         }
         Stock stock = iStockMapper.toEntity(stockDto);
         iStockRepository.save(stock);
@@ -92,13 +92,13 @@ public class StockService implements IStockService{
     } */
 
     @Override
-    public Page<StockDto> getStocks(String searchTerm,Pageable pageable) {
+    public Page<StockDto> getStocks(String searchTerm, Pageable pageable) {
         List<Stock> stocks = iStockRepository.findAllWithoutProducts();
         List<StockDto> stockDtos = iStockMapper.toDtoList(stocks);
         List<Mono<Campaigndto>> campaignMonos = stockDtos.stream()
                 .map(stockDto -> webClientBuilder.build().get()
                         .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockDto.getCampaignRef())
-                     //   .header(HttpHeaders.AUTHORIZATION, "Bearer " + authorizationUtils.addAuthorizationHeader())
+                        //   .header(HttpHeaders.AUTHORIZATION, "Bearer " + authorizationUtils.addAuthorizationHeader())
                         .retrieve()
                         .bodyToMono(Campaigndto.class))
                 .collect(Collectors.toList());
@@ -125,8 +125,9 @@ public class StockService implements IStockService{
             int toIndex = Math.min(startItem + pageSize, stockDtos.size());
             pageContent = stockDtos.subList(startItem, toIndex);
         }
-            return new PageImpl<>(pageContent, pageable, stockDtos.size());
+        return new PageImpl<>(pageContent, pageable, stockDtos.size());
     }
+
     private boolean filterBySearchTerm(StockDto stockDto, String searchTerm) {
         String searchString = searchTerm.toLowerCase();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -161,9 +162,9 @@ public class StockService implements IStockService{
     }
 
     @Override
-    public List<UncheckHistory> getUncheckedHistorybyStockreference (String reference) {
-        Optional<List<UncheckHistory>> optionaluncheckHistories= iUncheckHistoryRepository.findByStockreference(reference);
-        if(optionaluncheckHistories.isEmpty()) {
+    public List<UncheckHistory> getUncheckedHistorybyStockreference(String reference) {
+        Optional<List<UncheckHistory>> optionaluncheckHistories = iUncheckHistoryRepository.findByStockreference(reference);
+        if (optionaluncheckHistories.isEmpty()) {
             return null;
         }
         List<UncheckHistory> uncheckHistories = optionaluncheckHistories.get();
@@ -179,27 +180,30 @@ public class StockService implements IStockService{
             return null;
         }
         if (stockDto.getCampaignRef() != null) {
-            stock.setCampaignRef(stockDto.getCampaignRef());}
+            stock.setCampaignRef(stockDto.getCampaignRef());
+        }
         if (stockDto.getProducts() != null) {
-            stock.setProductTypes(stockDto.getProductTypes());}
+            stock.setProductTypes(stockDto.getProductTypes());
+        }
 
         if (stockDto.getShippingDate() != null) {
-            stock.setShippingDate(stockDto.getShippingDate());}
+            stock.setShippingDate(stockDto.getShippingDate());
+        }
 
         if (stockDto.getReceivedDate() != null) {
             stock.setReceivedDate(stockDto.getReceivedDate());
             stock.setDueDate(stockDto.getReceivedDate().plusDays(45));
             if (stock.getProducts() != null) {
                 List<Product> products = stock.getProducts();
-                for(Product prod: products) {
-                    if(prod.getAgentProd() != null) {
+                for (Product prod : products) {
+                    if (prod.getAgentProd() != null) {
                         AgentProd agentProd = prod.getAgentProd();
                         agentProd.setReceivedDate(stockDto.getReceivedDate());
                         agentProd.setDuesoldDate(stockDto.getReceivedDate().plusDays(45));
                         AgentProdDto agentProddto = iAgentProdMapper.toDto(agentProd);
                         iAgentProdService.UpdateAgentonProd(agentProd.getAgentRef(), agentProddto);
                     }
-                    if(prod.getManagerProd() != null) {
+                    if (prod.getManagerProd() != null) {
                         AgentProd managerProd = prod.getManagerProd();
                         managerProd.setReceivedDate(stockDto.getReceivedDate());
                         managerProd.setDuesoldDate(stockDto.getReceivedDate().plusDays(45));
@@ -212,9 +216,11 @@ public class StockService implements IStockService{
 
         }
         if (stockDto.isChecked()) {
-            stock.setChecked(stockDto.isChecked());}
+            stock.setChecked(stockDto.isChecked());
+        }
         if (stockDto.getNotes() != null) {
-            stock.setNotes(stockDto.getNotes());}
+            stock.setNotes(stockDto.getNotes());
+        }
         iStockRepository.save(stock);
         return stockDto;
     }
@@ -222,9 +228,9 @@ public class StockService implements IStockService{
     @Override
     public List<StockDto> getStocksByCampaignRef(String campaignreference) {
         Optional<List<Stock>> optionalstocks = iStockRepository.findByCampaignRef(campaignreference);
-        if(optionalstocks.isPresent()) {
+        if (optionalstocks.isPresent()) {
             List<Stock> stocks = optionalstocks.get();
-            List<StockDto> stocksdto =  iStockMapper.toDtoList(stocks);
+            List<StockDto> stocksdto = iStockMapper.toDtoList(stocks);
             return stocksdto;
         } else {
             return null;
@@ -238,17 +244,16 @@ public class StockService implements IStockService{
             return null;
         }
         List<String> liststockreferences = new ArrayList<>();
-        for(Stock stock: liststock) {
+        for (Stock stock : liststock) {
             Campaigndto campaigndto = webClientBuilder.build().get()
                     .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stock.getCampaignRef())
                     .retrieve()
                     .bodyToMono(Campaigndto.class)
                     .block();
-            if(!stock.getStockReference().isEmpty() && !campaigndto.getCampaignName().isEmpty()){
-                String stockPlusCampaign = stock.getStockReference() +" - "+"Stock : " +campaigndto.getCampaignName();
+            if (!stock.getStockReference().isEmpty() && !campaigndto.getCampaignName().isEmpty()) {
+                String stockPlusCampaign = stock.getStockReference() + " - " + "Stock : " + campaigndto.getCampaignName();
                 liststockreferences.add(stockPlusCampaign);
-            }
-            else if(!stock.getStockReference().isEmpty()){
+            } else if (!stock.getStockReference().isEmpty()) {
                 liststockreferences.add(stock.getStockReference());
             }
         }
@@ -256,33 +261,34 @@ public class StockService implements IStockService{
     }
 
     @Override
-    public String placeStock(String body){
+    public String placeStock(String body) {
         StockEvent stockEvent = new StockEvent();
         stockEvent.setStatus("PENDING");
         stockEvent.setMessage("STOCK STATUS IS PENDING STATE");
         stockProducer.sendMessage(stockEvent);
         return "Stock placed successfully";
     }
+
     @Override
     public void deleteStock(String ref) {
         Optional<Stock> optionalstock = iStockRepository.findById(ref);
-        if(optionalstock.isPresent()){
+        if (optionalstock.isPresent()) {
             Stock stock = optionalstock.get();
             List<Product> products = stock.getProducts();
-            List<SoldProduct> soldproducts = stock.getSoldproducts();
-
-            if(products != null){
-                for(Product product: products){
-                    iProductService.deleteProduct(product.getSerialNumber());
+            List<SoldProduct> soldProducts = stock.getSoldproducts();
+            if (products != null && !products.isEmpty()) {
+                for (Product product : products) {
+                    iProductRepository.delete(product);
                 }
+                stock.setProducts(null);
             }
-            if(soldproducts != null) {
-                for(SoldProduct soldProduct: soldproducts){
-                    isoldProductService.deleteSoldProduct(soldProduct.getSerialNumber());
+            if (soldProducts != null && !soldProducts.isEmpty()) {
+                for (SoldProduct soldProduct : soldProducts) {
+                    iSoldProductRepository.delete(soldProduct);
                 }
+                stock.setSoldproducts(null);
             }
             iStockRepository.delete(stock);
         }
-
     }
 }
