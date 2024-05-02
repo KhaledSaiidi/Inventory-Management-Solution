@@ -184,7 +184,8 @@ onPageChange(newPage: number): void {
   }
   
   selectedFile: File | null = null;
-  selectedSheetIndex: number = 1;
+  selectedSheetIndex!: number;
+  nonselectedSheetIndexToenter: boolean = false;
   onInputChange(event: Event) {
     const inputValue = (event.target as HTMLInputElement).value;
     let newValue = parseInt(inputValue, 10);
@@ -193,7 +194,7 @@ onPageChange(newPage: number): void {
     }
     this.selectedSheetIndex = newValue;
   }
-  selectedSheetIndexToenter: number = 0;
+  selectedSheetIndexToenter!: number;
   updateSheetIndex(): void {
     this.selectedSheetIndexToenter = Math.max(0, this.selectedSheetIndex - 1);
     console.log(this.selectedSheetIndexToenter);
@@ -201,9 +202,12 @@ onPageChange(newPage: number): void {
   }
 
   onFileSelected(event: any): void {
+    const fileInput = event.target as HTMLInputElement;
     const file: File = event.target.files[0] as File;
     const allowedExtensions = ['csv', 'xlsx'];
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if(this.selectedSheetIndexToenter != null) {
+
     if (fileExtension && allowedExtensions.includes(fileExtension)) {
       if (fileExtension === 'xlsx') {
         this.convertExcelToCsv(file, this.selectedSheetIndexToenter);
@@ -213,7 +217,12 @@ onPageChange(newPage: number): void {
     } else {
       console.error('Invalid file type. Please select a CSV or Excel file.');
     }
-    }
+  } else {
+    this.nonselectedSheetIndexToenter = true;
+    fileInput.value = '';
+  }
+}
+
     convertExcelToCsv(excelFile: File, selectedSheetIndex: number){
       this.stockservice.excelToCsv(excelFile, selectedSheetIndex).subscribe(
         (csvFile: File) => {
@@ -491,9 +500,11 @@ onPageChange(newPage: number): void {
  
     
     onFileSelectForSell(event: any): void {
+      const fileInput = event.target as HTMLInputElement;
       const file: File = event.target.files[0] as File;
       const allowedExtensions = ['csv', 'xlsx'];
       const fileExtension = file.name.split('.').pop()?.toLowerCase();
+      if(this.selectedSheetIndexToenter != null) {
       if (fileExtension && allowedExtensions.includes(fileExtension)) {
         if (fileExtension === 'xlsx') {
           this.convertExcelToCsv(file, this.selectedSheetIndexToenter);
@@ -503,6 +514,10 @@ onPageChange(newPage: number): void {
       } else {
         console.error('Invalid file type. Please select a CSV or Excel file.');
       }
+    } else {
+      this.nonselectedSheetIndexToenter = true;
+      fileInput.value = '';  
+    }
       }
   
       uploadFileTocheckSell(): void {

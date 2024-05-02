@@ -9,7 +9,7 @@
   <div class="d-flex" style="justify-content: space-between;">
   <div class="firstclass d-flex">
     <!-- Content for firstclass div -->
-    <input type="number" class="form-control" style="width: 55px; max-height: 40px; margin-right: 5px;" [(ngModel)]="selectedSheetIndex"  (ngModelChange)="updateSheetIndex()"
+    <input type="number" placeholder="Select sheet" class="form-control" style="width: 150px; max-height: 40px; margin-right: 5px;" [(ngModel)]="selectedSheetIndex"  (ngModelChange)="updateSheetIndex()"
     (input)="onInputChange($event)"        min="1" />
     <input type="file" style="width: 230px; max-height: 40px;" class="form-control" id="image" (change)="onFileSelected($event)">
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFile()">Add Products</a>
@@ -18,15 +18,21 @@
 
   <div class="secondclass d-flex">
     <!-- Content for secondclass div -->
-    <input type="number" class="form-control" style="width: 55px; max-height: 40px; margin-right: 5px;" [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" 
+    <input type="number" placeholder="Select sheet" class="form-control" style="width: 150px; max-height: 40px; margin-right: 5px;" [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" 
     (input)="onInputChange($event)" min="1"/>
 
     <input type="file" style="width: 230px; max-height: 40px; " class="form-control" id="image" (change)="onFileSelectForSell($event)">
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFileTocheckSell()">Check Sell</a>
   </div>
 </div>
-      
-    <div class="equipe-container">
+<ng-container *ngIf="nonselectedSheetIndexToenter">
+<div class="webcam-placeholder-off">
+  <div style="margin-left: 3px; margin-top: 5px;">
+  <p><b>Kindly choose the excel sheet number before adding or checking products.</b></p>
+</div>
+</div>
+</ng-container>
+  <div class="equipe-container">
         <div class="listetalents-containershown">
           <div class="col-12">
              <div class="card mb-4">
