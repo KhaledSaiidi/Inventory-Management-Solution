@@ -1,4 +1,4 @@
-import {  ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import {  ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { Stockdto } from 'src/app/models/inventory/Stock';
@@ -18,6 +18,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./products.component.css']
 })
 export class ProductsComponent implements OnInit{
+  @Input() selectedTab: number = 0;
+
   constructor( 
     private route: ActivatedRoute,
     private router: Router,
@@ -42,8 +44,10 @@ export class ProductsComponent implements OnInit{
   async ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
+      const selectedTab = params.get('selectedTab') || '0';
       if(id != null){
       this.stockreference = id;
+      this.selectedTab = parseInt(selectedTab, 10);
       }
     }); 
     this.getStockbyRef(this.stockreference);
@@ -176,14 +180,23 @@ onPageChange(newPage: number): void {
       console.log('Invalid refs');
       return;
     }
-    this.router.navigate(['/updateproduct'], { queryParams: { id: ref1, prodId: ref2 } });
+    this.router.navigate(['/updateproduct'], { queryParams: { id: ref1, prodId: ref2,selectedTab: this.selectedTab  } });
   }
   
   selectedFile: File | null = null;
-  selectedSheetIndex: number = 0;
+  selectedSheetIndex: number = 1;
+  onInputChange(event: Event) {
+    const inputValue = (event.target as HTMLInputElement).value;
+    let newValue = parseInt(inputValue, 10);
+    if (newValue < 1 || isNaN(newValue)) {
+      newValue = 1;
+    }
+    this.selectedSheetIndex = newValue;
+  }
   selectedSheetIndexToenter: number = 0;
   updateSheetIndex(): void {
     this.selectedSheetIndexToenter = Math.max(0, this.selectedSheetIndex - 1);
+    console.log(this.selectedSheetIndexToenter);
 
   }
 
@@ -205,7 +218,7 @@ onPageChange(newPage: number): void {
       this.stockservice.excelToCsv(excelFile, selectedSheetIndex).subscribe(
         (csvFile: File) => {
           this.selectedFile = csvFile;
-          console.log('Excel file converted to CSV.');
+          console.log('Generated CSV file:', selectedSheetIndex);
         },
         error => {
           console.error('Error converting Excel to CSV:', error);
@@ -415,7 +428,6 @@ onPageChange(newPage: number): void {
       }
     }
 
-    selectedTab = 0;
     selectedTabProf(){
       this.selectedTab = 0;
       this.searchTerm = '';

@@ -1,5 +1,5 @@
 <div class="shadowed" (click)="navigateToProducts(stockreference)">
-    <app-products></app-products>
+    <app-products [selectedTab]="selectedTab"></app-products>
 </div>
 
 <div class="appform-container">
@@ -15,6 +15,10 @@
               <div class="card-body">
                 <form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
                 <div class="row">
+                  <div class="col-md-12">
+                    <label for="simNumber">SIM Number :</label>
+                    <input type="text" class="form-control mt-2" id="simNumber" formControlName="simNumber" >                    
+                </div>
                   <div class="col-md-6">
                     <label for="brand">Product Brand</label>
                     <input type="text" class="form-control mt-2" id="brand" formControlName="brand" >                    

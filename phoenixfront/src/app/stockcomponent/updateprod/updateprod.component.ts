@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
@@ -11,20 +11,26 @@ import { StockService } from 'src/app/services/stock.service';
   styleUrls: ['./updateprod.component.css']
 })
 export class UpdateprodComponent implements OnInit{
+
   constructor( 
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
     private stockservice: StockService) {}
+
+    @Input() selectedTab!: number;
+
     stockreference: string = '';
     serialNumber: string = '';
     ngOnInit(): void {
       this.route.queryParamMap.subscribe(params => {
         const id = params.get('id');
         const prodId = params.get('prodId');
-        if(id !== null && prodId !== null){
+        const selectedTab = params.get('selectedTab');
+        if(id !== null && prodId !== null && selectedTab !== null){
           this.stockreference = id;
           this.serialNumber = prodId;
+          this.selectedTab = parseInt(selectedTab, 10);
           console.log(this.stockreference, this.serialNumber);
         }
       }); 
@@ -38,7 +44,7 @@ export class UpdateprodComponent implements OnInit{
         console.log('Invalid ref');
         return;
       }
-      this.router.navigate(['/products'], { queryParams: { id: ref } });     
+      this.router.navigate(['/products'], { queryParams: { id: ref, selectedTab: this.selectedTab } });     
       console.log(ref);
     }
     
@@ -51,6 +57,7 @@ export class UpdateprodComponent implements OnInit{
         if(this.product.productType)
         this.productType = this.product.productType;
         this.prodForm.patchValue({
+          simNumber: this.product.simNumber,
           productType: this.product.productType,
           productName: this.product.prodName,
           price: this.product.price,
@@ -85,6 +92,7 @@ export class UpdateprodComponent implements OnInit{
     prodForm!: FormGroup;
     initializeForm() {
       this.prodForm = this.fb.group({
+        simNumber: [''],
         productType: [''],
         productName: [''],
         price: [''],
@@ -95,6 +103,7 @@ export class UpdateprodComponent implements OnInit{
 
     onSubmit() {
       const productdto: Productdto = {
+        simNumber:  this.prodForm.get('simNumber')?.value,
         productType: this.prodForm.get('productType')?.value,
         prodName: this.prodForm.get('productName')?.value,
         comments: this.prodForm.get('comments')?.value,

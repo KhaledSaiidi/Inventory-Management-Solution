@@ -9,16 +9,19 @@
   <div class="d-flex" style="justify-content: space-between;">
   <div class="firstclass d-flex">
     <!-- Content for firstclass div -->
-    <input type="file" style="width: 230px; max-height: 40px; margin-right: 5px;" class="form-control" id="image" (change)="onFileSelected($event)">
-    <input type="number" class="form-control" style="width: 55px; max-height: 40px;" [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" />
+    <input type="number" class="form-control" style="width: 55px; max-height: 40px; margin-right: 5px;" [(ngModel)]="selectedSheetIndex"  (ngModelChange)="updateSheetIndex()"
+    (input)="onInputChange($event)"        min="1" />
+    <input type="file" style="width: 230px; max-height: 40px;" class="form-control" id="image" (change)="onFileSelected($event)">
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFile()">Add Products</a>
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="navigateToAddProduct(stockreference)">Add Product</a>
   </div>
 
   <div class="secondclass d-flex">
     <!-- Content for secondclass div -->
-    <input type="file" style="width: 230px; max-height: 40px; margin-right: 5px;" class="form-control" id="image" (change)="onFileSelectForSell($event)">
-    <input type="number" class="form-control" style="width: 55px; max-height: 40px;" [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" />
+    <input type="number" class="form-control" style="width: 55px; max-height: 40px; margin-right: 5px;" [(ngModel)]="selectedSheetIndex" min="0" (ngModelChange)="updateSheetIndex()" 
+    (input)="onInputChange($event)" min="1"/>
+
+    <input type="file" style="width: 230px; max-height: 40px; " class="form-control" id="image" (change)="onFileSelectForSell($event)">
     <a class="btn btn-primary" style="margin-left: 5px;" (click)="uploadFileTocheckSell()">Check Sell</a>
   </div>
 </div>
@@ -192,13 +195,13 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Associated</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Sold</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
-                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="text-align: center;">Actions</th>
                        </tr>
                      </thead>
                      <tbody>
                       <ng-container  *ngIf="loadingSold;">
                         <tr>
-                          <td colspan="13" style="text-align: center;">
+                          <td colspan="12" style="text-align: center;">
                             <div class="loading-container">
                               <div class="loading-spinner"></div>
                             </div>
@@ -207,7 +210,7 @@
                       </ng-container>
                       <ng-container  *ngIf="!loadingSold && emptySoldProducts;">
                         <tr>
-                          <td colspan="10" style="text-align: center;">
+                          <td colspan="12" style="text-align: center;">
                             <p>No sold products found. Please check back later.</p>
                           </td>
                         </tr>
@@ -231,11 +234,10 @@
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentAssociatedProd && prod.agentAssociatedProd.firstname && prod.agentAssociatedProd.lastname"><span [innerHTML]="highlightMatch(prod.agentAssociatedProd.firstname.toUpperCase() +' ' +prod.agentAssociatedProd.lastname.toUpperCase())"></span></td>  
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentWhoSold && prod.agentWhoSold.firstname && prod.agentWhoSold.lastname"><span [innerHTML]="highlightMatch(prod.agentWhoSold.firstname.toUpperCase() + ' '+ prod.agentWhoSold.lastname.toUpperCase())"></span></td>  
                         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>
-                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i class="fa fas fa-edit"></i></a></td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i (click)="confirmSoldProductDeletion(prod)" class="fa fas fa-trash"></i></a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: center;"><a><i (click)="confirmSoldProductDeletion(prod)" class="fa fas fa-trash"></i></a></td>
                        </tr>
                        <tr>
-                        <td colspan="13" style="margin-right: 5px;">
+                        <td colspan="12" style="margin-right: 5px;">
                           <app-custom-pagination [currentPage]="currentPageSoldProd" [totalPages]="totalPagesSoldProd" (pageChange)="onSoldProdPageChange($event)"></app-custom-pagination>                    
                          </td>
                         </tr>
