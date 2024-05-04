@@ -655,5 +655,14 @@ onPageChange(newPage: number): void {
     );
   }
   }
+
+  navigateToCheckHistory(ref?: string) {
+    if (ref === undefined) {
+      console.log('Invalid ref');
+      return;
+    }
+   this.router.navigate(['/checkhistory'], { queryParams: { id: ref } });     
+  }
+
 }
     

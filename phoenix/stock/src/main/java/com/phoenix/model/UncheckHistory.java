@@ -25,4 +25,10 @@ public class UncheckHistory {
     private LocalDate checkDate;
     private String stockreference;
 
+    public UncheckHistory(List<String> notFoundserialNumbers, LocalDate checkDate, String stockreference) {
+        this.notFoundserialNumbers = notFoundserialNumbers;
+        this.checkDate = checkDate;
+        this.stockreference = stockreference;
+    }
+
 }

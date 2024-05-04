@@ -371,4 +371,17 @@ public class Controller {
         isoldProductService.deleteSoldProduct(ref);
     }
 
+
+    @DeleteMapping
+    @RequestMapping("/deleteUncheckedHistory/{id}")
+    public void deleteUncheckedHistory(@PathVariable Long id) {
+        iStockService.deleteUncheckedHistory(id);
+    }
+
+    @DeleteMapping
+    @RequestMapping("/deleteaLLUncheckedHistoryinStock/{stockreference}")
+    public void deleteaLLUncheckedHistoryinStock(@PathVariable String stockreference) {
+        iStockService.deleteaLLUncheckedHistoryinStock(stockreference);
+    }
+
 }

@@ -23,7 +23,7 @@ export class ReturnbyscanComponent implements OnInit {
   containerHeight!: number | 'auto';
   containerWidth!: number | 'auto';
   barcodeData: string | null = null;
-  firstBarcode!: string;
+  firstBarcode: string = "";
   stocks: Stockdto[] = [];
   firstBarcodeChangeSubject = new Subject<string>();
 

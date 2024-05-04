@@ -18,7 +18,7 @@ export class ScanComponent implements OnInit {
   containerHeight!: number | 'auto';
   containerWidth!: number | 'auto';
   barcodeData: string | null = null;
-  barcodes: Set<string> = new Set(); 
+  barcodes: Set<string> = new Set(['']);
   private barcodeChangeSubject: Subject<{ newValue: string, barcode: string }> = new Subject<{ newValue: string, barcode: string }>();
 
   stocks: Stockdto[] = [];
@@ -42,7 +42,8 @@ export class ScanComponent implements OnInit {
   updateSomethingBasedOnBarcodeChange(newValue: string, barcode: string) {
     console.log(`Barcode changed: ${barcode} -> ${newValue}`);
     console.log('Barcodes : ' + JSON.stringify([...this.barcodes]));
-  }
+      this.barcodes.add('');
+    }
   
   
   public listener() {
@@ -117,7 +118,9 @@ export class ScanComponent implements OnInit {
   
 
   proceedCheck(){
-    this.stocksService.checkProducts(this.stockreference, this.barcodes)
+    const filteredBarcodes = new Set(Array.from(this.barcodes).filter(barcode => barcode.trim() !== ''));
+
+    this.stocksService.checkProducts(this.stockreference, filteredBarcodes)
     .subscribe(response => {
       console.log(response);
       this.navigateTostocks();

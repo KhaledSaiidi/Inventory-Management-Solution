@@ -338,6 +338,25 @@ public class ProductService implements IProductService{
             stock.setChecked(stockchecked);
             iProductRepository.saveAll(productsTosave);
             iStockRepository.save(stock);
+            List<String> prodsrefNotInProducts = new ArrayList<>();
+            for (String prodRef : prodsref) {
+                boolean found = false;
+                for (Product product : products) {
+                    if (prodRef.equals(product.getSerialNumber()) || prodRef.equals(product.getSimNumber())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    prodsrefNotInProducts.add(prodRef);
+                }
+            }
+            if(!prodsrefNotInProducts.isEmpty()) {
+                LocalDate now = LocalDate.now();
+                UncheckHistory uncheckHistory = new UncheckHistory(prodsrefNotInProducts, now, stock.getStockReference());
+                iUncheckHistoryRepository.save(uncheckHistory);
+            }
+
         }
     }
 

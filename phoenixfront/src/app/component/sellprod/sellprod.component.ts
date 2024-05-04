@@ -25,7 +25,7 @@ export class SellprodComponent implements OnInit {
   containerHeight!: number | 'auto';
   containerWidth!: number | 'auto';
   barcodeData: string | null = null;
-  firstBarcode!: string;
+  firstBarcode: string = "";
   stocks: Stockdto[] = [];
   firstBarcodeChangeSubject = new Subject<string>();
 
@@ -134,12 +134,15 @@ onBarcodeChange(newValue: string) {
           firstname: this.securityService.profile?.firstName,
           lastname: this.securityService.profile?.lastName
       }
+      console.log(this.agentProd, this.firstBarcode);
+
       this.stocksService.sellProduct(this.agentProd, this.firstBarcode)
       .subscribe(response => {
       this.navigateToUserdetails(this.securityService.profile?.username);
         }, error => {
             console.error(error);
         });
+        
 }
 }
 

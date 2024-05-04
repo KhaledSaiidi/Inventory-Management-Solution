@@ -4,7 +4,7 @@
 <div class="popup-overlay">
     <div class="popup-content" (click)="$event.stopPropagation()">
       <div class="popup-header">
-        <h2>Barcode Scanning Options</h2>
+        <h2>Barcode Scanning To Verify</h2>
       </div>
       <div class="popup-body">
         <div class="scanner-container">
@@ -33,7 +33,7 @@
         <ng-template #scan>
            <div class="text-center mt-3">
             <div class="col-md-12" style="max-height: 300px; overflow-y: scroll;" class="input-wrapper" *ngFor="let barcode of barcodes">
-              <input [value]="barcode" [ngModel]="barcode" (ngModelChange)="onBarcodeChange($event, barcode)" class="form-control mt-2" type="text" style="margin-bottom: 3px;">                
+              <input  [ngModel]="barcode" placeholder="Enter a Barcode" (ngModelChange)="onBarcodeChange($event, barcode)" class="form-control mt-2" type="text" style="margin-bottom: 3px;">                
             </div>
             <i class="fas fa-times cancel-icon" (click)="handleCancel()"></i>
 

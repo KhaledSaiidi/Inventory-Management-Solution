@@ -291,4 +291,22 @@ public class StockService implements IStockService {
             iStockRepository.delete(stock);
         }
     }
+    @Override
+    public void deleteUncheckedHistory(Long id){
+        Optional<UncheckHistory> optionalUncheckHistory = iUncheckHistoryRepository.findById(id);
+        if(optionalUncheckHistory.isPresent()){
+            UncheckHistory uncheckHistory = optionalUncheckHistory.get();
+            iUncheckHistoryRepository.delete(uncheckHistory);
+        }
+    }
+    @Override
+    public void deleteaLLUncheckedHistoryinStock(String stockref) {
+    List<UncheckHistory> uncheckHistories = this.getUncheckedHistorybyStockreference(stockref);
+    if(uncheckHistories.isEmpty()){
+        return;
+    } else {
+        iUncheckHistoryRepository.deleteAll(uncheckHistories);
+        }
+    }
+
 }

@@ -26,12 +26,19 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .search-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+    
     .search-container {
       position: relative;
       width: 400px;
       margin-top: 10px;
       margin-bottom: 10px;
     }
+
     
     .rounded-input {
       border-radius: 20px;

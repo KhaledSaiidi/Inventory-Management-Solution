@@ -1,11 +1,14 @@
 <app-base></app-base>
 <div class="listeequipes-container"> 
+  <div class="search-wrapper">
   <div class="search-container">
     <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
     <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" (keyup)="searchStocks()" style="margin-left: 10px;" placeholder="Search by Serial Number or Sim Number">
   </div>
-  
-
+  <div class="history">
+  <a class="btn btn-primary" (click)="navigateToCheckHistory(stockreference)">Check History</a>
+  </div>
+</div>
   <div class="d-flex" style="justify-content: space-between;">
   <div class="firstclass d-flex">
     <!-- Content for firstclass div -->

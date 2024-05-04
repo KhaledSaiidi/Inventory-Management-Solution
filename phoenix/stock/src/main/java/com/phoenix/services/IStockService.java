@@ -22,4 +22,8 @@ public interface IStockService {
     List<String> getAllstockReferences();
     String placeStock(String body);
     void deleteStock(String ref);
+
+    void deleteUncheckedHistory(Long id);
+    void deleteaLLUncheckedHistoryinStock(String stockref);
+
     }
