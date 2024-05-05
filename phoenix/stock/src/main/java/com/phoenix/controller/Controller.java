@@ -379,7 +379,7 @@ public class Controller {
     }
 
     @DeleteMapping
-    @RequestMapping("/deleteaLLUncheckedHistoryinStock/{stockreference}")
+    @RequestMapping("//{stockreference}")
     public void deleteaLLUncheckedHistoryinStock(@PathVariable String stockreference) {
         iStockService.deleteaLLUncheckedHistoryinStock(stockreference);
     }

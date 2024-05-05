@@ -474,4 +474,26 @@ deleteSoldProduct(serialNumber: string) {
   );
 }
 
+
+deleteCheck(id: number) {
+  return this.http.delete(this.apiUrl + '/deleteUncheckedHistory/' + id)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+deleteAllCheck(stockref: string) {
+  return this.http.delete(this.apiUrl + '/deleteaLLUncheckedHistoryinStock/' + stockref)
+  .pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+
+}
+
 }

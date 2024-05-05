@@ -44,4 +44,29 @@ export class CheckhistoryComponent implements OnInit{
         }
       );
     }
+
+    deleteCheck(id: number | undefined){
+      if(id){
+        this.stockservice.deleteCheck(id).subscribe(
+          () => {
+            this.getUncheckedHistorybyStockreference(this.stockreference);
+          },
+          (error) => {
+            console.error('Failed to delete UncheckHistory:', error);
+          }
+        );
+        }
+    }
+
+    deleteAllCheck(){
+        this.stockservice.deleteAllCheck(this.stockreference).subscribe(
+          () => {
+            this.getUncheckedHistorybyStockreference(this.stockreference);
+          },
+          (error) => {
+            console.error('Failed to delete UncheckHistory:', error);
+          }
+        );
+    }
+
 }

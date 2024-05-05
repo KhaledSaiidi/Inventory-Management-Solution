@@ -10,7 +10,7 @@
             <div class="col-12">
              <div class="card mb-4 ">
                      <div class="card-header pb-0" >
-                       <h6 class="text-center">Inspection history</h6>
+                       <h6 class="text-center">Inspection history  &nbsp; &nbsp;<i class="fas fa-trash" (click)="deleteAllCheck()" style="cursor: pointer;" ></i></h6>
                      </div>
                      <div class="notice" style="margin-left: 40px; margin-right: 40px;">
                         <p>Please note that examinations are from the most recent to the oldest, not exceeding 60 days from today. Products shown are those that the customer has indicated we had but that we do not have.</p>
@@ -18,7 +18,7 @@
                      <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0" *ngFor="let unchecked of uncheckedHistories ; let x = index">
                             <br>
-                            <div style="margin-left: 15px; margin-bottom: 15px;"><b>{{ unchecked.checkDate | date: 'medium' | slice: 0:12 }} Examination ({{x+1}})</b></div>
+                            <div style="margin-left: 15px; margin-bottom: 15px;"><b>{{ unchecked.checkDate | date: 'medium' | slice: 0:12 }} Examination ({{x+1}})</b> &nbsp; &nbsp; <i class="fas fa-trash" (click)="deleteCheck(unchecked.id)" style="cursor: pointer;" ></i></div>
                             <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
                                 <thead>
                                     <tr>
