@@ -54,5 +54,12 @@ export class ArchivedComponent implements OnInit {
     }
   }
 
-
+  navigateToStockInfo(ref?: string) {
+    if (ref === undefined) {
+      console.log('Invalid ref');
+      return;
+    }
+    this.router.navigate(['/stockarchive'], { queryParams: { id: ref } });
+    console.log(ref);
+  }
 }

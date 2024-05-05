@@ -44,6 +44,8 @@ import { UserDetailsGuard } from './guards/UserDetailsGuard';
 import { ScannersComponent } from './component/scanners/scanners.component';
 import { ConfiramtionDialogComponent } from './design-component/confiramtion-dialog/confiramtion-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { StockarchivedComponent } from './stockcomponent/stockarchived/stockarchived.component';
+import { ProdarchivedComponent } from './stockcomponent/prodarchived/prodarchived.component';
 
 const appRoute: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -73,9 +75,9 @@ const appRoute: Routes = [
   {path:'scantosell', component: SellprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'scantoreturn', component: ReturnbyscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'restocking', component: RestockingComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'complaint', component: ComplaintComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
-
-
+  {path:'complaint', component: ComplaintComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'stockarchive', component: StockarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'archivedproducts', component: ProdarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
 
 ]
 
@@ -136,7 +138,9 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     ComplaintComponent,
     RestockingComponent,
     ScannersComponent,
-    ConfiramtionDialogComponent
+    ConfiramtionDialogComponent,
+    StockarchivedComponent,
+    ProdarchivedComponent
   ],
   imports: [
     BrowserModule,

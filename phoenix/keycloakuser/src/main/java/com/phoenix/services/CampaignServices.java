@@ -19,6 +19,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -163,6 +164,20 @@ public class CampaignServices implements ICampaignServices{
             }
         }
         return campaignsdto;
+    }
+    @Override
+    public Campaigndto getArchivedCampaign(String ref){
+        Optional<CampaignArchive> optionalcampaignArchive  = iCampaignArchiveRepository.findById(ref);
+        Campaigndto campaigndto = new Campaigndto();
+        if(optionalcampaignArchive.isPresent()) {
+            CampaignArchive campaignArchive = optionalcampaignArchive.get();
+            Clientdto clientdto = iClientMapper.mapClientToClientdto(campaignArchive.getClient());
+            campaigndto = iCampaignArchiveMapper.mapCampaignArchiveToCampaigndto(campaignArchive);
+            campaigndto.setClient(clientdto);
+            return campaigndto;
+        } else {
+            return null;
+        }
     }
 
 

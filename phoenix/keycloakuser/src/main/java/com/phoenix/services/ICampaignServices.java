@@ -15,4 +15,5 @@ public interface ICampaignServices {
     List<Campaigndto> getArchivedCampaigns();
     void deletearchiveCampaign(String campaignReference);
     Map<String, Float> getCampaignStatistics();
+    Campaigndto getArchivedCampaign(String ref);
 }

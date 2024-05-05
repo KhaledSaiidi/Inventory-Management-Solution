@@ -208,4 +208,14 @@ getCampaignStatistics(): Observable<any> {
   return this.http.get<any>(this.apiUrl + '/statistics');
 }
 
+getArchivedCampaign(ref: string): Observable<Campaigndto> {
+  return this.http.get<Campaigndto>(`${this.apiUrl}/getArchivedCampaign/${ref}`).pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
 }

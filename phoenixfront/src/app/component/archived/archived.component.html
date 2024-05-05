@@ -26,7 +26,7 @@
                         (mouseenter)="selectedRowIndex = i"
                         (mouseleave)="selectedRowIndex = null"
                        >
-                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(onecamp)" 
+                         <td (click)="navigateToStockInfo(onecamp.reference)" style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(onecamp)" 
                          (mouseout)="hideTooltip()"> {{onecamp.reference}} </td>
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"  (mouseover)="showTooltip(onecamp)" 
                          (mouseout)="hideTooltip()">{{onecamp.campaignName}}</td>

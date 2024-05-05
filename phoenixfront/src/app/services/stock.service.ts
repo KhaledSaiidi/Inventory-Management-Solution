@@ -14,6 +14,9 @@ import { ReclamationDto } from '../models/notifications/ReclamationDto';
 import { SoldProductDto } from '../models/inventory/SoldProductDto';
 import { Userdto } from '../models/agents/Userdto';
 import { TopSalesDto } from '../models/agents/TopSalesDto';
+import { ArchivedProductPage } from '../models/archive/ArchivedProductPage';
+import { ArchivedStockDTO } from '../models/archive/ArchivedStockDTO';
+import { ArchivedSoldProductPage } from '../models/archive/ArchivedSoldProductPage';
 
 @Injectable({
   providedIn: 'root'
@@ -495,5 +498,52 @@ deleteAllCheck(stockref: string) {
   );
 
 }
+
+
+getArchivedStocksByCampaign(ref: string): Observable<ArchivedStockDTO[]> {
+  return this.http.get<ArchivedStockDTO[]>(`${this.apiUrl}/getArchivedStocksByCampaign/${ref}`).pipe(
+    catchError((error) => {
+      console.error('An error occurred:', error);
+      return throwError(error);
+    })
+  );
+}
+
+
+
+
+getArchivedProductsPaginatedBystockReference(stockReference: string, page: number, size: number, searchTerm: String): Observable<ArchivedProductPage> {
+  const apiUrl = this.apiUrl + '/getArchivedProductsPaginatedBystockReference/' + stockReference + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<ArchivedProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
+getReturnedArchivedProductsPaginatedBystockReference(stockReference: string, page: number, size: number, searchTerm: String): Observable<ArchivedProductPage> {
+  const apiUrl = this.apiUrl + '/getReturnedArchivedProductsPaginatedBystockReference/' + stockReference + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<ArchivedProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
+getArchivedSoldProductsPaginatedBystockReference(stockReference: string, page: number, size: number, searchTerm: String): Observable<ArchivedSoldProductPage> {
+  const apiUrl = this.apiUrl + '/getArchivedSoldProductsPaginatedBystockReference/' + stockReference + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<ArchivedSoldProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
 
 }

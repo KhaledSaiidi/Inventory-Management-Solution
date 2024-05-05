@@ -1,15 +1,15 @@
 package com.phoenix.controller;
 
-import com.phoenix.archiveServices.IArchivedStockService;
+import com.phoenix.archiveServices.IArchivedService;
+import com.phoenix.archivedmodeldto.ArchivedProductsDTO;
+import com.phoenix.archivedmodeldto.ArchivedSoldProductsDTO;
+import com.phoenix.archivedmodeldto.ArchivedStockDTO;
 import com.phoenix.dto.*;
-import com.phoenix.dtokeycloakuser.UserMysqldto;
-import com.phoenix.model.Product;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IAgentProdService;
 import com.phoenix.services.IProductService;
 import com.phoenix.services.IStockService;
 import com.phoenix.services.IsoldProductService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +39,7 @@ public class Controller {
     @Autowired
     IsoldProductService isoldProductService;
     @Autowired
-    IArchivedStockService archiveStock;
+    IArchivedService archiveStock;
 
 
     @PostMapping("/addStock/{campaignReference}")
@@ -392,6 +392,51 @@ public class Controller {
     public ResponseEntity<Void> archiveStock(@PathVariable String campaignref) {
         archiveStock.archiveStock(campaignref);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("getArchivedStocksByCampaign/{reference}")
+    public ResponseEntity<List<ArchivedStockDTO>> getArchivedStocksByCampaign(@PathVariable String reference) {
+        List<ArchivedStockDTO> archivedStockDTOS = archiveStock.archivedStocks(reference);
+        if (archivedStockDTOS != null) {
+            return ResponseEntity.ok(archivedStockDTOS);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @GetMapping("getArchivedProductsPaginatedBystockReference/{stockreference}")
+    public ResponseEntity<Page<ArchivedProductsDTO>> getArchivedProductsPaginatedBystockReference(
+            @PathVariable String stockreference,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ArchivedProductsDTO> productPage = archiveStock.getArchivedProductsPaginatedBystockReference(pageable, stockreference, searchTerm);
+        return ResponseEntity.ok(productPage);
+    }
+
+
+    @GetMapping("getReturnedArchivedProductsPaginatedBystockReference/{stockreference}")
+    public ResponseEntity<Page<ArchivedProductsDTO>> getReturnedArchivedProductsPaginatedBystockReference(
+            @PathVariable String stockreference,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ArchivedProductsDTO> productPage = archiveStock.getReturnedArchivedProductsPaginatedBystockReference(pageable, stockreference, searchTerm);
+        return ResponseEntity.ok(productPage);
+    }
+
+    @GetMapping("getArchivedSoldProductsPaginatedBystockReference/{stockreference}")
+    public ResponseEntity<Page<ArchivedSoldProductsDTO>> getArchivedSoldProductsPaginatedBystockReference(
+            @PathVariable String stockreference,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ArchivedSoldProductsDTO> productPage = archiveStock.getArchivedSoldProductsPaginatedBystockReference(pageable, stockreference, searchTerm);
+        return ResponseEntity.ok(productPage);
     }
 
 }

@@ -246,4 +246,14 @@ public class Controller {
         return icampaignService.getCampaignStatistics();
     }
 
+    @GetMapping("getArchivedCampaign/{ref}")
+    public ResponseEntity<Campaigndto> getArchivedCampaign(@PathVariable String ref) {
+        Campaigndto campaigndto = icampaignService.getArchivedCampaign(ref);
+
+        if (campaigndto != null) {
+            return new ResponseEntity<>(campaigndto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

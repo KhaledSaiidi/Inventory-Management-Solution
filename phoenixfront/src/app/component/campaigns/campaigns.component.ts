@@ -83,19 +83,21 @@ export class CampaignsComponent implements OnInit {
     dialogRef.componentInstance.onCancel.subscribe(() => {
       dialogRef.close();
     });
+
     }
   }
+
+
+
   archiveCampaign(campreference: string, dialogRef: MatDialogRef<ConfiramtionDialogComponent>): void {
     this.agentsService.archiveCampaign(campreference).subscribe(
       () => {
-        console.log('Campaign Archived successfully.');
         this.getcampaigns();
         dialogRef.close();
       },
       (error) => {
         console.error('Error deleting campaign:', error);
       }
-    );
-    
+    ); 
   }
 }
