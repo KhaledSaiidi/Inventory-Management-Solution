@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ConfiramtionDialogComponent } from 'src/app/design-component/confiramtion-dialog/confiramtion-dialog.component';
 import { Campaigndto } from 'src/app/models/agents/Campaigndto';
 import { AgentsService } from 'src/app/services/agents.service';
 
@@ -9,7 +11,9 @@ import { AgentsService } from 'src/app/services/agents.service';
   styleUrls: ['./campaigns.component.css']
 })
 export class CampaignsComponent implements OnInit {
-  constructor(private agentsService: AgentsService,private router: Router) {}
+  constructor(private agentsService: AgentsService,private router: Router,
+    private dialog: MatDialog
+  ) {}
   selectedRowIndex: number | null = null;
 
   campaigns: Campaigndto[] = [];
@@ -68,17 +72,25 @@ export class CampaignsComponent implements OnInit {
     }
   }
   confirmDeletion(campreference: string | undefined): void {
-    const message = 'Are you sure you want to to archive: ' + campreference;
-    const confirmation = confirm(message);
-    if (confirmation && campreference) {
-      this.archiveCampaign(campreference);
+    if(campreference) {
+    const message = 'Are you sure you want to Archive the entire Campaign: "' + campreference 
+    + '"?\n All Stocks and products inside will be archived in a read-only mode.';
+    
+    const dialogRef = this.dialog.open(ConfiramtionDialogComponent, {
+      data: { message, onConfirm: () => this.archiveCampaign(campreference, dialogRef) }
+    });
+
+    dialogRef.componentInstance.onCancel.subscribe(() => {
+      dialogRef.close();
+    });
     }
   }
-  archiveCampaign(campreference: string): void {
+  archiveCampaign(campreference: string, dialogRef: MatDialogRef<ConfiramtionDialogComponent>): void {
     this.agentsService.archiveCampaign(campreference).subscribe(
       () => {
         console.log('Campaign Archived successfully.');
         this.getcampaigns();
+        dialogRef.close();
       },
       (error) => {
         console.error('Error deleting campaign:', error);

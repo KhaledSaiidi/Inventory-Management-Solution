@@ -131,6 +131,12 @@ public class CampaignServices implements ICampaignServices{
 
             CampaignArchive campaignArchive = iCampaignArchiveMapper.mapCampaignToCampaignArchive(campaign);
             iCampaignArchiveRepository.save(campaignArchive);
+            webClientBuilder.build()
+                    .post()
+                    .uri("http://stock-service/stock/archive/" + campaignReference)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
             iCampaignRepository.delete(campaign);
         }
     }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StockToArchivedStock implements IStockToArchivedStock{
+
     @Override
     public ArchivedStock toArchive (Stock stock){
         ArchivedStock archivedStock = new ArchivedStock();

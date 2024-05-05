@@ -1,5 +1,6 @@
 package com.phoenix.controller;
 
+import com.phoenix.archiveServices.IArchivedStockService;
 import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.UserMysqldto;
 import com.phoenix.model.Product;
@@ -37,6 +38,9 @@ public class Controller {
     IAgentProdService iAgentProdService;
     @Autowired
     IsoldProductService isoldProductService;
+    @Autowired
+    IArchivedStockService archiveStock;
+
 
     @PostMapping("/addStock/{campaignReference}")
     public ResponseEntity<StockDto> addStock(@PathVariable("campaignReference") String campaignReference, @RequestBody StockDto stockdto) {
@@ -379,9 +383,15 @@ public class Controller {
     }
 
     @DeleteMapping
-    @RequestMapping("//{stockreference}")
+    @RequestMapping("/{stockreference}")
     public void deleteaLLUncheckedHistoryinStock(@PathVariable String stockreference) {
         iStockService.deleteaLLUncheckedHistoryinStock(stockreference);
+    }
+
+    @PostMapping("/archive/{campaignref}")
+    public ResponseEntity<Void> archiveStock(@PathVariable String campaignref) {
+        archiveStock.archiveStock(campaignref);
+        return ResponseEntity.ok().build();
     }
 
 }

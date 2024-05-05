@@ -20,6 +20,8 @@ public class SoldProdToArchivedSoldProd implements ISoldProdToArchivedSoldProd {
         archivedSoldProducts.setProdName(soldProduct.getProdName());
         archivedSoldProducts.setComments(soldProduct.getComments());
         archivedSoldProducts.setPrice(soldProduct.getPrice());
+        archivedSoldProducts.setCheckedSell(soldProduct.isCheckedSell());
+        archivedSoldProducts.setSoldDate(soldProduct.getSoldDate());
         archivedSoldProducts.setStock(iStockToArchivedStock.toArchive(soldProduct.getStock()));
         return archivedSoldProducts;
     }

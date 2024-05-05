@@ -21,8 +21,13 @@ public class ProdToArchivedProd implements IProdToArchivedProd{
         archivedProduct.setProdName(product.getProdName());
         archivedProduct.setComments(product.getComments());
         archivedProduct.setPrice(product.getPrice());
+        archivedProduct.setCheckedExistence(product.isCheckedExistence());
+        archivedProduct.setCheckin(product.getCheckin());
+        archivedProduct.setCheckout(product.getCheckout());
+        archivedProduct.setBoxNumber(product.getBoxNumber());
+        archivedProduct.setReturned(product.isReturned());
+        archivedProduct.setReturnedstatus(product.isReturnedstatus());
         archivedProduct.setStock(iStockToArchivedStock.toArchive(product.getStock()));
-
         return archivedProduct;
     }
 
