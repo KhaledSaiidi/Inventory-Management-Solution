@@ -77,7 +77,6 @@ export class AddteamComponent implements OnInit{
       } else {
         this.submitAgent(userdto);
       }
-       this.navigateToAppagents();
     
   }
 
@@ -86,6 +85,7 @@ export class AddteamComponent implements OnInit{
       (response) => {
         console.log('Team added successfully:', response);
         this.teamForm.reset();
+        this.navigateToAppagents();
       },
       (error) => {
         console.error('Failed to add team:', error);

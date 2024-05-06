@@ -16,4 +16,5 @@ public interface IAgentProdService {
 
     List<String> productsInPossession(String username);
     void deleteAgentProdsWithoutProducts();
+    void deleteAgentwithUsername(String username);
     }

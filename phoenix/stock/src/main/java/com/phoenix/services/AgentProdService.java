@@ -8,8 +8,10 @@ import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.AgentProd;
 import com.phoenix.model.Product;
+import com.phoenix.model.SoldProduct;
 import com.phoenix.repository.IAgentProdRepository;
 import com.phoenix.repository.IProductRepository;
+import com.phoenix.repository.ISoldProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,8 @@ public class AgentProdService implements IAgentProdService{
     private IAgentProdRepository iAgentProdRepository;
     @Autowired
     private IProductRepository iProductRepository;
+    @Autowired
+    private ISoldProductRepository iSoldProductRepository;
 
     @Override
     @Transactional
@@ -198,6 +202,62 @@ public class AgentProdService implements IAgentProdService{
                     agentProd.getProductssoldAndreturnedAssociated().isEmpty() &&
                     agentProd.getProductsreturnedAssociated().isEmpty()) {
                 iAgentProdRepository.delete(agentProd);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteAgentwithUsername(String username) {
+        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
+        if (agentProds.isEmpty()) {
+            return;
+        }
+
+            for (AgentProd agentProd: agentProds){
+                clearProductAssociations(agentProd.getProductsManaged());
+                agentProd.setProductsManaged(null);
+                clearProductAssociations(agentProd.getProductsAssociated());
+                agentProd.setProductsAssociated(null);
+                clearProductAssociations(agentProd.getProductssoldAndreturnedAssociated());
+                agentProd.setProductssoldAndreturnedAssociated(null);
+                clearProductAssociations(agentProd.getProductsreturnedAssociated());
+                agentProd.setProductsreturnedAssociated(null);
+
+                clearSoldProductAssociations(agentProd.getSoldproductsManaged());
+                agentProd.setSoldproductsManaged(null);
+
+                clearSoldProductAssociations(agentProd.getProductsSoldBy());
+                agentProd.setProductsSoldBy(null);
+
+                clearSoldProductAssociations(agentProd.getAgentproductsAssociated());
+                agentProd.setAgentproductsAssociated(null);
+
+
+                iAgentProdRepository.delete(agentProd);
+            }
+
+    }
+
+    private void clearProductAssociations(List<Product> products) {
+        if (products != null) {
+            for (Product product : products) {
+                product.setManagerProd(null);
+                product.setAgentProd(null);
+                product.setAgentwhoSoldProd(null);
+                product.setAgentReturnedProd(null);
+                iProductRepository.save(product);
+            }
+        }
+    }
+
+    private void clearSoldProductAssociations(List<SoldProduct> soldProducts) {
+        if (soldProducts != null) {
+            for (SoldProduct soldProduct : soldProducts) {
+                soldProduct.setManagerSoldProd(null);
+                soldProduct.setAgentWhoSold(null);
+                soldProduct.setAgentAssociatedProd(null);
+                iSoldProductRepository.save(soldProduct);
             }
         }
     }

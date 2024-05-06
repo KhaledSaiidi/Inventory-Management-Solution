@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
+import { ConfiramtionDialogComponent } from 'src/app/design-component/confiramtion-dialog/confiramtion-dialog.component';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { ProductPage } from 'src/app/models/inventory/ProductPage';
@@ -31,7 +33,8 @@ selectedImage: File | null = null;
     private formBuilder: FormBuilder, 
     private router: Router,
     private stockservice: StockService,
-    private cdRef: ChangeDetectorRef) {}
+    private cdRef: ChangeDetectorRef,
+    private dialog: MatDialog) {}
   username!: string;
   get isCodeDisabled(): boolean {
     return !this.isEditable;
@@ -84,6 +87,8 @@ selectedImage: File | null = null;
     
       this.getProductsReturnedPaginatedByusername(this.username, 0);
       this.getUserStat(this.username);
+      this.getThelast2SoldProdsByusername(this.username);
+      this.getThelast2ReturnedProdsByusername(this.username);
   }
 
 
@@ -113,7 +118,6 @@ getuserinfos(code : string){
     if(this.user.usertypemanager == true) {
       this.isManager = true;
     }
-    console.log(this.isManager);
     this.userForm.patchValue({
         firstName:  this.user.firstName,
         lastName:  this.user.lastName,
@@ -195,17 +199,26 @@ getuserinfos(code : string){
             
       
       }
+
+    
+    
+   
+    
       confirmDeletion(): void {
-        const message = 'Are you sure you want to delete : ' + this.user.firstName + ' ' + this.user.lastName;
-        const confirmation = confirm(message);
-        if (confirmation) {
-          this.deleteUser();
-        }
+        const message = 'Are you sure you want to delete : ' + this.user.firstName + ' ' + this.user.lastName + ' ?';
+        const dialogRef = this.dialog.open(ConfiramtionDialogComponent, {
+          data: { message, onConfirm: () => this.deleteUser(dialogRef) }
+        });
+    
+        dialogRef.componentInstance.onCancel.subscribe(() => {
+          dialogRef.close();
+        });
       }
-      deleteUser(): void {
+      deleteUser(dialogRef: MatDialogRef<ConfiramtionDialogComponent>): void {
         this.agentsService.deleteUser(this.username).subscribe(
           () => {
             console.log('User deleted successfully.');
+            dialogRef.close();
             this.navigatetoAgents();
           },
           (error) => {
@@ -247,6 +260,7 @@ getuserinfos(code : string){
     
       getProductsByusername(username: string, page: number) {
         this.loading = true;
+        this.emptyProducts = true;
         try {
           this.stockservice.getProductsPaginatedByusername(username, page, this.pageSize)
             .subscribe(
@@ -254,6 +268,10 @@ getuserinfos(code : string){
                 this.currentPage = productPage.number + 1;
                 this.agentProds = productPage.content;
                 this.totalPages = productPage.totalPages;
+                this.loading = false;
+                if(this.agentProds && this.agentProds.length > 0){
+                  this.emptyProducts = false;
+                }
               },
               (error) => {
                 console.error('Error fetching stocks:', error);
@@ -314,16 +332,16 @@ getuserinfos(code : string){
   
     getSoldProductsByusername(username: string, page: number) {
       this.loadingsold = true;
+      this.emptysoldProducts = true;
       try {
         this.stockservice.getSoldProductsByusername(username, page, this.pageSize)
           .subscribe(
             (soldproductPage: SoldProductPage) => {
-              this.loadingsold = false;
-              console.log(this.loadingsold  + "xx" + this.emptysoldProducts);
               this.currentsoldPage = soldproductPage.number + 1;
               this.agentsoldProds = soldproductPage.content;
               this.totalsoldPages = soldproductPage.totalPages;
-              if(this.agentsoldProds){
+              this.loadingsold = false;
+              if(this.agentsoldProds && this.agentsoldProds.length > 0){
                 this.emptysoldProducts = false;
               }
             },
@@ -350,14 +368,18 @@ getuserinfos(code : string){
     
     getProductsReturnedPaginatedByusername(username: string, page: number) {
       this.loadingReturn = true;
+      this.emptyReturnProducts = true;
       try {
         this.stockservice.getProductsReturnedPaginatedByusername(username, page, this.pageSize)
           .subscribe(
             (productPage: ProductPage) => {
               this.currentReturnPage = productPage.number + 1;
               this.agentReturnProds = productPage.content;
-              console.log("this.agentReturnProds :" + this.agentReturnProds)
               this.totalReturnElements = productPage.totalPages;
+              this.loadingReturn = false;
+              if(this.agentReturnProds && this.agentReturnProds.length > 0){
+                this.emptyReturnProducts = false;
+              }
             },
             (error) => {
               console.error('Error fetching stocks:', error);
@@ -390,5 +412,59 @@ getuserinfos(code : string){
           }
         );
     }  
-  
+ 
+    
+    navigateToSold(){
+      this.selectedTab = 1;
+      this.selectedProdTab = 1;
+    }
+    lastsoldProds: SoldProductDto[] = [];
+    lastreturnedProds: Productdto[] = [];
+    loadinglastReturns: boolean = true;
+    emptylastReturnss: boolean = true;
+
+    getThelast2ReturnedProdsByusername(username: string) {
+      this.loadinglastReturns = true;
+      this.emptylastReturnss = true;
+        this.stockservice.getThelast2ReturnedProdsByusername(username)
+          .subscribe(
+            (products: Productdto[]) => {
+              this.loadinglastReturns = false;
+              this.lastreturnedProds = products;
+              if(this.lastreturnedProds && this.lastreturnedProds.length > 0) {
+                this.emptylastReturnss = false;
+              }
+            },
+            (error) => {
+              this.loadinglastReturns = false;
+              console.error('Error fetching last products returned:', error);
+            }
+          );
+      }  
+      loadinglastsells: boolean = true;
+      emptylastsells: boolean = true;
+      getThelast2SoldProdsByusername(username: string) {
+        this.loadinglastsells = true;
+        this.emptylastsells = true;
+        this.stockservice.getThelast2SoldProdsByusername(username)
+          .subscribe(
+            (products: SoldProductDto[]) => {
+              this.loadinglastsells = false;
+              this.lastsoldProds = products;
+              if(this.lastsoldProds && this.lastsoldProds.length > 0){
+                this.emptylastsells = false;
+              }
+              console.log("this.loadinglastsells :" + this.loadinglastsells)
+            },
+            (error) => {
+              this.loadinglastsells = false;
+              console.error('Error fetching last products returned:', error);
+            }
+          );
+      }  
+      navigateToReturn(){
+        this.selectedTab = 1;
+        this.selectedProdTab = 2;
+      }
+    
 }

@@ -73,4 +73,28 @@
     white-space: nowrap; /* Prevent text from wrapping */
   }
  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+
+  .trash-icon {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .trash-icon:hover {
+    transform: scale(1.1);
+    color: red;
+  }
   

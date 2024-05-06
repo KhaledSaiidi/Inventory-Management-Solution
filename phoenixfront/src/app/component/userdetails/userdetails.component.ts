@@ -276,9 +276,13 @@ getuserinfos(code : string){
           this.stockservice.getProductsPaginatedByusername(username, page, this.pageSize)
             .subscribe(
               (productPage: ProductPage) => {
+                this.loading = false;
                 this.currentPage = productPage.number + 1;
                 this.agentProds = productPage.content;
                 this.totalPages = productPage.totalPages;
+                if(this.agentProds && this.agentProds.length >0) {
+                  this.emptyProducts = false;
+                }
               },
               (error) => {
                 console.error('Error fetching stocks:', error);
@@ -355,7 +359,7 @@ getuserinfos(code : string){
               this.currentsoldPage = soldproductPage.number + 1;
               this.agentsoldProds = soldproductPage.content;
               this.totalsoldPages = soldproductPage.totalPages;
-              if(this.agentsoldProds){
+              if(this.agentsoldProds && this.agentsoldProds.length > 0){
                 this.emptysoldProducts = false;
               }
             },
@@ -385,26 +389,43 @@ getuserinfos(code : string){
     }
 
     sentreclamations: ReclamationDto[] = [];
-
+    loadingsent: boolean = true;
+    emptysent: boolean = true;
+  
     getAllReclamationsForsender(){
+      this.loadingsent = true;
+      this.emptysent = true;  
       this.notificationService.getAllReclamationsForsender(this.username).subscribe(
         (data) => {
+          this.loadingsent = false;
       this.sentreclamations = data as ReclamationDto[];
+      if(this.sentreclamations && this.sentreclamations.length > 0) {
+        this.emptysent = false;
+      }  
         },
         (error) => {
+          this.loadingsent = false;
           console.error('Failed to get reclamations:', error);
         }
       );
   }
 
   receivedreclamations: ReclamationDto[] = [];
-
+  loadingreceive: boolean = true;
+  emptyreceive: boolean = true;
   getAllReclamationsForReceiver(){
+    this.loadingreceive = true;
+    this.emptyreceive = true;
     this.notificationService.getAllReclamationsForReceiver(this.username).subscribe(
       (data) => {
+        this.loadingreceive = false;
     this.receivedreclamations = data as ReclamationDto[];
+    if(this.receivedreclamations && this.receivedreclamations.length > 0) {
+      this.emptyreceive = false;
+    }
       },
       (error) => {
+        this.loadingreceive = false;
         console.error('Failed to get reclamations:', error);
       }
     ); 
@@ -454,10 +475,14 @@ getProductsReturnedPaginatedByusername(username: string, page: number) {
     this.stockservice.getProductsReturnedPaginatedByusername(username, page, this.pageSize)
       .subscribe(
         (productPage: ProductPage) => {
+          this.loadingReturn = false;
           this.currentReturnPage = productPage.number + 1;
           this.agentReturnProds = productPage.content;
           console.log("this.agentReturnProds :" + this.agentReturnProds)
           this.totalReturnElements = productPage.totalPages;
+          if(this.agentReturnProds && this.agentReturnProds.length > 0) {
+            this.emptyReturnProducts = false;
+          }
         },
         (error) => {
           console.error('Error fetching stocks:', error);
@@ -496,25 +521,44 @@ checkReturn(serialNumber: string | undefined){
 
   lastsoldProds: SoldProductDto[] = [];
   lastreturnedProds: Productdto[] = [];
+  loadinglastReturns: boolean = true;
+  emptylastReturnss: boolean = true;
+
   getThelast2ReturnedProdsByusername(username: string) {
+    this.loadinglastReturns = true;
+    this.emptylastReturnss = true;
       this.stockservice.getThelast2ReturnedProdsByusername(username)
         .subscribe(
           (products: Productdto[]) => {
+            this.loadinglastReturns = false;
             this.lastreturnedProds = products;
+            if(this.lastreturnedProds && this.lastreturnedProds.length > 0) {
+              this.emptylastReturnss = false;
+            }
           },
           (error) => {
+            this.loadinglastReturns = false;
             console.error('Error fetching last products returned:', error);
           }
         );
     }  
-
+  loadinglastsells: boolean = true;
+    emptylastsells: boolean = true;
     getThelast2SoldProdsByusername(username: string) {
+      this.loadinglastsells = true;
+      this.emptylastsells = true;
       this.stockservice.getThelast2SoldProdsByusername(username)
         .subscribe(
           (products: SoldProductDto[]) => {
+            this.loadinglastsells = false;
             this.lastsoldProds = products;
+            if(this.lastsoldProds && this.lastsoldProds.length > 0){
+              this.emptylastsells = false;
+            }
+            console.log("this.loadinglastsells :" + this.loadinglastsells)
           },
           (error) => {
+            this.loadinglastsells = false;
             console.error('Error fetching last products returned:', error);
           }
         );

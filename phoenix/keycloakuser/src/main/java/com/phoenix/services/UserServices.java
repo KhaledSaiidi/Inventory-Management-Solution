@@ -176,7 +176,16 @@ public class UserServices implements IUserServices {
     @Override
     public void DeleteUser(String userId) {
         Optional<UserMysql> userOptional = userRepository.findByUsername(userId);
-        userOptional.ifPresent(userRepository::delete);
+        if(userOptional.isPresent()){
+            UserMysql userMysql = userOptional.get();
+            webClientBuilder.build()
+                    .delete()
+                    .uri("http://stock-service/stock/deleteAgentwithUsername/" + userId)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
+            userRepository.delete(userMysql);
+        }
         }
 
 }

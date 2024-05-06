@@ -446,4 +446,10 @@ public class Controller {
         archiveStock.deletearchive(campaignReference);
     }
 
+    @DeleteMapping
+    @RequestMapping("/deleteAgentwithUsername/{username}")
+    public void deleteAgentwithUsername(@PathVariable("username") String username) {
+        iAgentProdService.deleteAgentwithUsername(username);
+    }
+
 }
