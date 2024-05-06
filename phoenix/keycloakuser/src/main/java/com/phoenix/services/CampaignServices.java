@@ -147,6 +147,13 @@ public class CampaignServices implements ICampaignServices{
         Optional<CampaignArchive> optionalArchiveCampaign = iCampaignArchiveRepository.findByReference(campaignReference);
         if (optionalArchiveCampaign.isPresent()) {
             CampaignArchive campaignarchive = optionalArchiveCampaign.get();
+            webClientBuilder.build()
+                    .delete()
+                    .uri("http://stock-service/stock/deletearchive/" + campaignReference)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
+
             iCampaignArchiveRepository.delete(campaignarchive);
         }
     }
@@ -188,14 +195,14 @@ public class CampaignServices implements ICampaignServices{
             long countCampaignsCurrentYear = iCampaignRepository.countCampaignsCurrentYear();
             long countCampaignsPrevioustYear = iCampaignRepository.countCampaignsPreviousMonth();
 
-            float growthRate = ((float) countCampaignsCurrentYear - countCampaignsPrevioustYear) / countCampaignsPrevioustYear * 100;
             if (countCampaignsCurrentYear == 0) {
                 statistics.put("countCampaignsCurrentYear", (float) 0);
-                statistics.put("growthRate", -100f);
+                statistics.put("growthRate", (float) 0);
             } else if (countCampaignsPrevioustYear == 0) {
                 statistics.put("countCampaignsCurrentYear", (float) countCampaignsCurrentYear);
                 statistics.put("growthRate", 100f);
             } else {
+                float growthRate = ((float) countCampaignsCurrentYear - countCampaignsPrevioustYear) / countCampaignsPrevioustYear * 100;
                 statistics.put("countCampaignsCurrentYear", (float) countCampaignsCurrentYear);
                 statistics.put("growthRate", growthRate);
             }

@@ -688,14 +688,14 @@ public class ProductService implements IProductService{
         try {
             long countReturnedProductsCurrentMonth = iProductRepository.countReturnedProductsCurrentMonth();
             long countReturnedProductsPreviousMonth = iProductRepository.countReturnedProductsPreviousMonth();
-            float growthRate = ((float) countReturnedProductsCurrentMonth - countReturnedProductsPreviousMonth) / countReturnedProductsPreviousMonth * 100;
             if (countReturnedProductsCurrentMonth == 0) {
                 statistics.put("countReturnedProductsCurrentMonth", (float) countReturnedProductsCurrentMonth);
-                statistics.put("growthRate", -100f);
+                statistics.put("growthRate", (float) 0);
             } else if (countReturnedProductsPreviousMonth == 0) {
                 statistics.put("countReturnedProductsCurrentMonth", (float) countReturnedProductsCurrentMonth);
                 statistics.put("growthRate", 100f);
             } else {
+                float growthRate = ((float) countReturnedProductsCurrentMonth - countReturnedProductsPreviousMonth) / countReturnedProductsPreviousMonth * 100;
                 statistics.put("countReturnedProductsCurrentMonth", (float) countReturnedProductsCurrentMonth);
                 statistics.put("growthRate", growthRate);
             }

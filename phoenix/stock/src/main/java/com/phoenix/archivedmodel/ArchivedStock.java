@@ -31,6 +31,6 @@ public class ArchivedStock {
     @OneToMany(mappedBy = "stock", fetch = FetchType.EAGER)
     private List<ArchivedProducts> products;
     @OneToMany(mappedBy = "stock", fetch = FetchType.EAGER)
-    private List<ArchivedProducts> soldproducts;
+    private List<ArchivedSoldProducts> soldproducts;
 
 }

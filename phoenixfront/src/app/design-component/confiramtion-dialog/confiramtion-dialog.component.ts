@@ -10,7 +10,7 @@ export class ConfiramtionDialogComponent {
   @Input() message!: string;
   @Output() onCancel = new EventEmitter<void>();
   @Input() onConfirm!: () => void;
-  loading: boolean = false;
+  loadingPop: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef,@Inject(MAT_DIALOG_DATA) public data: any) {
     this.message = data.message;
@@ -18,13 +18,13 @@ export class ConfiramtionDialogComponent {
   }
 
   confirm(): void {
-    this.loading = true; 
+    this.loadingPop = true; 
     this.cdr.detectChanges();
-    if(this.loading == true) {
-      console.log(this.loading);
+    console.log("loadingPop :" + this.loadingPop);
+  setTimeout(() => {
     this.onConfirm();
-    }
-  }
+  }, 2000);
+}
 
   cancel(): void {
     this.onCancel.emit();

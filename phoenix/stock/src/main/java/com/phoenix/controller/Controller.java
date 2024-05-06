@@ -439,4 +439,11 @@ public class Controller {
         return ResponseEntity.ok(productPage);
     }
 
+
+    @DeleteMapping
+    @RequestMapping("/deletearchive/{campaignReference}")
+    public void deletearchive(@PathVariable String campaignReference) {
+        archiveStock.deletearchive(campaignReference);
+    }
+
 }

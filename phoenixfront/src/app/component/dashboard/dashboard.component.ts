@@ -49,6 +49,11 @@ export class DashboardComponent implements OnInit{
 
   productsSold!: number[];
   productsReturned!: number[];
+  loadingSales: boolean = true;
+  emptyTopSales: boolean = true;
+
+  loadingReturns: boolean = true;
+  emptyReturns: boolean = true;
 
   ngOnInit() {
    this.initializeChart();
@@ -175,13 +180,20 @@ initializeChart(): void {
 
   returnedMonthly: Productdto[] = [];
   getThelast2ReturnedProdsByusername() {
+    this.loadingReturns = true;
+    this.emptyReturns = true;
     this.stockservice.getThelastMonthlyReturnedProds()
       .subscribe(
         (products: Productdto[]) => {
           this.returnedMonthly = products;
+          this.loadingReturns = false;
+          if(this.returnedMonthly && this.returnedMonthly.length > 0) {
+            this.emptyReturns = false;
+          }
         },
         (error) => {
           console.error('Error fetching last products returned:', error);
+          this.loadingReturns = false;
         }
       );
   }  
@@ -189,14 +201,21 @@ initializeChart(): void {
   salesData: TopSalesDto[] = [];
   
   getlastMonthlySoldProds() {
+    this.loadingSales = true;
+    this.emptyTopSales = true;
     this.stockservice.getlastMonthlySoldProds()
       .subscribe(
         (data: TopSalesDto[]) => {
           this.salesData = data;
           console.log(this.salesData);
+          this.loadingSales = false;
+          if(this.salesData && this.salesData.length > 0){
+            this.emptyTopSales = false;
+          }
         },
         (error) => {
           console.error('Error fetching lastSells:', error);
+          this.loadingSales = false;
         }
       );
   }

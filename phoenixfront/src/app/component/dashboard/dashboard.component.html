@@ -117,7 +117,7 @@
                 
                 <span class="text-sm font-weight-bolder" 
                       [ngClass]="{'text-success': growthRate > 0, 'text-danger': growthRate <= 0}">{{growthRate}}%</span>
-                      &nbsp;more than the previous month
+                      &nbsp;than the previous month
               </p>
             </div>
             <div class="card-body p-3">
@@ -177,7 +177,25 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
+                  <ng-container  *ngIf="loadingSales;">
+                    <tr>
+                      <td colspan="4" style="text-align: center;">
+                        <div class="loading-container">
+                          <div class="loading-spinner"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loadingSales && emptyTopSales;">
+                    <tr>
+                      <td colspan="4" style="text-align: center;">
+
+                        <p>No Top Sales Agents found. Please check back later.</p>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loadingSales && !emptyTopSales; ">
+
                     <tr *ngFor="let saleData of salesData; let i = index">
                     <td>
                       <div class="d-flex align-items-center">
@@ -222,7 +240,7 @@
                       </div>
                     </td>
                   </tr>
-          
+          </ng-container>
                 </tbody>
               </table>
             </div>
@@ -246,12 +264,31 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <ng-container  *ngIf="loadingReturns;">
+                    <tr>
+                      <td colspan="4" style="text-align: center;">
+                        <div class="loading-container">
+                          <div class="loading-spinner"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loadingReturns && emptyReturns;">
+                    <tr>
+                      <td colspan="4" style="text-align: center;">
+
+                        <p>No Returns found this Month. Please check back later.</p>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loadingReturns && !emptyReturns; ">
                 <tr *ngFor="let returned of returnedMonthly">
                   <td>{{ returned.stock?.stockReference }}</td>
                   <td>{{ returned.serialNumber }}</td>
                   <td>{{ returned.agentReturnedProd?.firstname?.toUpperCase() }}  {{ returned.agentReturnedProd?.lastname?.toUpperCase() }}</td>
                   <td>{{ returned.managerProd?.firstname?.toUpperCase() }}  {{ returned.managerProd?.lastname?.toUpperCase() }}</td>
                 </tr>
+                </ng-container>
                 </tbody>
               </table>
             </div>

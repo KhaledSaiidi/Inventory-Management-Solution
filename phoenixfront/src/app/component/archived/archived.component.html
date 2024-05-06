@@ -22,6 +22,23 @@
                        </tr>
                      </thead>
                      <tbody>
+                      <ng-container  *ngIf="loading;">
+                        <tr>
+                          <td colspan="7" style="text-align: center;">
+                            <div class="loading-container">
+                              <div class="loading-spinner"></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && emptyCamp;">
+                        <tr>
+                          <td colspan="7" style="text-align: center;">
+                            <p>No Archived Campaigns found. Please check back later.</p>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && !emptyCamp; ">
                        <tr *ngFor="let onecamp of campaigns let i = index"
                         (mouseenter)="selectedRowIndex = i"
                         (mouseleave)="selectedRowIndex = null"
@@ -40,9 +57,9 @@
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;">{{onecamp.client?.companyName}}</td> 
                          <td style="word-wrap: break-word; white-space: normal;"> {{ onecamp.startDate | date: 'medium' | slice: 0:12 }}</td>
                          <td style="word-wrap: break-word; white-space: normal;">10,000$</td>
-                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" ><a (click)="deleteArchivedcampaigns(onecamp.reference)">delete</a></td>
+                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" ><a (click)="confirmArchiveDeletion(onecamp.reference)">delete</a></td>
                        </tr>
-                     
+                     </ng-container>
                      </tbody>
                    </table>
                  </div>

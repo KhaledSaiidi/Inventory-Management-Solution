@@ -459,14 +459,14 @@ public class SoldProductService  implements IsoldProductService{
         try {
             long countSoldProductsCurrentMonth = iSoldProductRepository.countSoldProductsCurrentMonth();
             long countSoldProductsPreviousMonth = iSoldProductRepository.countSoldProductsPreviousMonth();
-            float growthRate = ((float) countSoldProductsCurrentMonth - countSoldProductsPreviousMonth) / countSoldProductsPreviousMonth * 100;
             if (countSoldProductsCurrentMonth == 0) {
                 statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentMonth);
-                statistics.put("growthRate", -100f);
+                statistics.put("growthRate", (float) 0);
             } else if (countSoldProductsPreviousMonth == 0) {
                 statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentMonth);
                 statistics.put("growthRate", 100f);
             } else {
+                float growthRate = ((float) countSoldProductsCurrentMonth - countSoldProductsPreviousMonth) / countSoldProductsPreviousMonth * 100;
                 statistics.put("countSoldProductsCurrentYear", (float) countSoldProductsCurrentMonth);
                 statistics.put("growthRate", growthRate);
             }

@@ -7,10 +7,12 @@
     <div class="buttons" >
       <button class="confirm-button" (click)="confirm()">Confirm</button>
       <button class="cancel-button" (click)="cancel()">Cancel</button>
-      <div *ngIf="loading" class="loading-indicator">
+      <ng-container *ngIf="loadingPop">
+        <div class="loading-indicator">
         <span class="loading-text">Please wait&nbsp;</span>
         <span class="dot"></span><span class="dot"></span><span class="dot"></span>
       </div>
+      </ng-container>
      </div>
   </div>
 </div>

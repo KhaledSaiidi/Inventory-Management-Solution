@@ -188,4 +188,28 @@ public class ArchivedService implements IArchivedService {
         return searchFields.toString().contains(searchString);
     }
 
+    @Override
+    public void deletearchive(String campaignReference){
+        Optional<List<ArchivedStock>> optionnalarchivedStocks = iArchivedStockRepo.findByCampaignRef(campaignReference);
+        if(optionnalarchivedStocks.isEmpty()){
+            return;
+        } else {
+            List<ArchivedStock> archivedStocks = optionnalarchivedStocks.get();
+            for (ArchivedStock archivedStock: archivedStocks){
+                List<ArchivedProducts> products = archivedStock.getProducts();
+                List<ArchivedSoldProducts> archivedSoldProducts = archivedStock.getSoldproducts();
+                if(products != null){
+                    iArchivedProductsRepo.deleteAll(products);
+                    archivedStock.setProducts(null);
+                }
+                if(archivedSoldProducts != null){
+                    iArchivedSoldProductsRepo.deleteAll(archivedSoldProducts);
+                    archivedStock.setSoldproducts(null);
+                }
+                iArchivedStockRepo.delete(archivedStock);
+            }
+        }
+
+    }
+
 }

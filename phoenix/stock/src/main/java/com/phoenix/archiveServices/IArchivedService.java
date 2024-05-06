@@ -14,4 +14,6 @@ public interface IArchivedService {
     Page<ArchivedProductsDTO> getReturnedArchivedProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
     Page<ArchivedProductsDTO> getArchivedProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
     Page<ArchivedSoldProductsDTO> getArchivedSoldProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
+    void deletearchive(String campaignReference);
+
 }
