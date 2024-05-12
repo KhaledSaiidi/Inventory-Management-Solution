@@ -24,7 +24,8 @@ public class ScheduledTasks {
     private StockProducer stockProducer;
 
     private final IAgentProdService iAgentProdService;
-    @Scheduled(cron = "0 0 0 * * MON")
+    //@Scheduled(cron = "0 0 0 * * MON")
+    @Scheduled(cron = "0 */5 * * * *")
     public void checkProductsDueDate() {
         List<ReclamationDto> reclamationDtos = iProductService.getProductsForAlert();
         System.out.println("triggered");

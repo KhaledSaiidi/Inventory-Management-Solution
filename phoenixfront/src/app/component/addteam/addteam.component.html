@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                          <label for="username">username</label>
+                          <label for="username">Username<span style="color: red;">*</span></label>
                           <input class="form-control mt-2" formControlName="username" type="text" id="username" placeholder="Please enter a valid username" required>                   
                         </div>
                       </div>
@@ -26,7 +26,7 @@
                       
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="password">Password</label>
+                      <label for="password">Password<span style="color: red;">*</span></label>
                       <input type="password" formControlName="password" class="form-control mt-2" id="nom" placeholder="Please enter a temporary password" required>
                       
                     </div>
@@ -35,19 +35,19 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="firstName">FirstName</label>
+                        <label for="firstName">FirstName<span style="color: red;">*</span></label>
                         <input class="form-control mt-2" type="text" formControlName="firstName" id="firstName" placeholder="Please enter a valid Firstname" required>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="lastName">LastName</label>
+                        <label for="lastName">LastName<span style="color: red;">*</span></label>
                         <input type="text"  class="form-control mt-2" id="lastName" formControlName="lastName" placeholder="Please enter a valid Lastname">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">Email<span style="color: red;">*</span></label>
                         <input class="form-control mt-2" type="email" formControlName="email" id="email" placeholder="member-email@phoenixmas.com" required>
                       </div>
                     </div>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="realmRoles">Role</label>
+                        <label for="realmRoles">Role<span style="color: red;">*</span></label>
                         <select class="form-control mt-2" formControlName="realmRoles" id="realmRoles" required
                         (ngModelChange)="updateRoles($event)">
                           <option value="" disabled selected>Please select a proper role</option>

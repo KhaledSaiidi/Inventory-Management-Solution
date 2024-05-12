@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentsService } from 'src/app/services/agents.service';
+import { StockService } from 'src/app/services/stock.service';
 
 @Component({
   selector: 'app-agents',
@@ -9,7 +10,7 @@ import { AgentsService } from 'src/app/services/agents.service';
   styleUrls: ['./agents.component.css']
 })
 export class AgentsComponent implements OnInit {
-  constructor(private agentsService: AgentsService,private router: Router) {}
+  constructor(private agentsService: AgentsService,private router: Router, private stockservice: StockService) {}
   allmembers: Userdto[] = [];
   agentList: Userdto[] = [];
   managerList: Userdto[] = [];
@@ -43,10 +44,17 @@ export class AgentsComponent implements OnInit {
         }
         if(this.managerList.length > 0){
           this.empptymanagers = false;
+          for (let agent of this.managerList) {
+            this.getUserStat(agent);
+          }
+
           console.log("emptyStock: " + this.emptyagents);
         }
         if(this.agentList.length > 0){
           this.emptyagents = false;
+          for (let agent of this.agentList) {
+            this.getUserStat(agent);
+          }
           console.log("emptyStock: " + this.emptyagents);
         }
         }
@@ -58,6 +66,23 @@ export class AgentsComponent implements OnInit {
       }
     );
   }
+
+  getUserStat(user: Userdto) {
+    if(user.username){
+    this.stockservice.getUserStat(user.username)
+      .subscribe(
+        (stats: number[]) => {
+          user.associatedProds = stats[0];
+          user.returnedProds = stats[1];
+          user.soldProds = stats[2];
+                },
+        (error) => {
+          console.error('Error fetching last stats :', error);
+        }
+      );
+    }
+  }  
+
 
   countAgentsForManagers(userList: Userdto[], managerUsername: string): number {
     let count = 0;

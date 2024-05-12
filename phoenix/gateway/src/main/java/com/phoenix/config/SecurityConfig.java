@@ -41,7 +41,14 @@ public class SecurityConfig {
             HttpHeaders headers = response.getHeaders();
             String path = exchange.getRequest().getURI().getPath();
             if (!path.startsWith("/notification/notif-websocket/")) {
-                headers.setAccessControlAllowOrigin("http://localhost:4200");
+                String origin = exchange.getRequest().getHeaders().getOrigin();
+                if (origin.equals("http://localhost:4200")) {
+                    headers.setAccessControlAllowOrigin("http://localhost:4200");
+                } else if (origin.equals("http://localhost:8100")) {
+                    headers.setAccessControlAllowOrigin("http://localhost:8100");
+                } else {
+                    return null;
+                }
                 headers.setAccessControlAllowCredentials(true);
                 headers.setAccessControlAllowHeaders(Arrays.asList("Authorization", "Content-Type"));
 

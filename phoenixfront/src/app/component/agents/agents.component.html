@@ -26,8 +26,9 @@
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Phone</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Manager</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" >Campaigns</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Products</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" >Products</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sells</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Returned</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">More details</th>
   
             </tr>
@@ -55,15 +56,12 @@
               <td style="word-wrap: break-word; white-space: normal;"> {{agent.email}} </td>
               <td style="word-wrap: break-word; white-space: normal;"> {{agent.phone}} </td>
               <td style="word-wrap: break-word; white-space: normal;">{{agent.manager?.firstName}} {{agent.manager?.lastName}}</td>
-              <td style="word-wrap: break-word; white-space: normal;">
-                <div style="max-height: 50px; overflow-y: auto;">
-                  <ul style="list-style-type: none;">
-                    <li>campaing1</li>
-                    <li>{{agent.username}}</li>
-                  </ul>
-                </div>
-              </td>                     
-              <td style="word-wrap: break-word; white-space: normal;">5</td>
+              <td style="word-wrap: break-word; white-space: normal;">{{agent.associatedProds}} 
+                <span style="font-size: 12px;"><b> Products</b></span></td>                     
+              <td style="word-wrap: break-word; white-space: normal;">{{agent.soldProds}} 
+                <span style="font-size: 12px;"><b> Products</b></span></td>                     
+              <td style="word-wrap: break-word; white-space: normal;">{{agent.returnedProds}} 
+                <span style="font-size: 12px;"><b> Products</b></span></td>                     
               <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.username)" >Profil</td>
   
             </tr>
@@ -152,7 +150,7 @@
           <ng-container *ngIf="manager.username">
           <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
           <td >{{ countAgentsForManagers(this.agentList, manager.username) }}</td>
-          <td>7</td>
+          <td>{{manager.associatedProds}}</td>
         </ng-container>
           </tr>   
        </ng-container>

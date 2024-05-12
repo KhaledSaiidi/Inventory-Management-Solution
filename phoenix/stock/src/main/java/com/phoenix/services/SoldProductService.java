@@ -386,6 +386,7 @@ public class SoldProductService  implements IsoldProductService{
 
         for (SoldProduct soldProduct : monthlySoldProducts) {
             String username = soldProduct.getAgentWhoSold().getUsername();
+            System.out.println("username :" + username);
             String fullName = (fetchUserDetails(username).getFirstName() + " " +
                     fetchUserDetails(username).getLastName()).toUpperCase();
             Optional<TopSalesDto> optionalDto = salesByAgent.stream()
@@ -440,17 +441,13 @@ public class SoldProductService  implements IsoldProductService{
 
 
     private UserMysqldto fetchUserDetails(String username) {
-        try {
             UserMysqldto userMysqldto = webClientBuilder.build().get()
-                    .uri("http://keycloakuser-service/people/userdetails/{username}", username)
+                    .uri("http://keycloakuser-service/people/userdetailsforTopSale/{username}", username)
                     .retrieve()
                     .bodyToMono(UserMysqldto.class)
                     .block();
-            userMysqldto.setImage(null);
+            System.out.println("userMysqldto :" + userMysqldto);
             return userMysqldto;
-        }catch (Exception e) {
-            return null;
-        }
     }
 
     @Override

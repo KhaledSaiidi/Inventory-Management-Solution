@@ -12,4 +12,8 @@ export interface Userdto {
     dateFinContrat?: Date;
     usertypemanager?: boolean;
     manager?: Userdto;
+    associatedProds?: number;
+    returnedProds?: number;
+    soldProds?: number;
+  
 }

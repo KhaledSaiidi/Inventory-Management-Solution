@@ -78,13 +78,27 @@ public class Controller {
     @GetMapping("userdetails/{username}")
     public ResponseEntity<UserMysqldto> getUserByUsername(@PathVariable String username) {
         UserMysqldto userDto = iUserServices.getUserByUsername(username);
-
+        System.out.println("userDto: " + userDto);
         if (userDto != null) {
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("userdetailsforTopSale/{username}")
+    public ResponseEntity<UserMysqldto> userdetailsforTopSale(@PathVariable String username) {
+        UserMysqldto userDto = iUserServices.getUserByUsername(username);
+        userDto.setImage(null);
+        userDto.setManager(null);
+        System.out.println("userDto: " + userDto);
+        if (userDto != null) {
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping
     @RequestMapping("/allusers")

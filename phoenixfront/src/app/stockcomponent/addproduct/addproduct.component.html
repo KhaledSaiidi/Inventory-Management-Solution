@@ -17,11 +17,11 @@
                 <form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
                   <div class="row"> 
                   <div class="col-md-6">
-                    <label for="serialNumber">Serial Number</label>
+                    <label for="serialNumber">Serial Number<span style="color: red;">*</span></label>
                     <input type="text" class="form-control mt-2" id="serialNumber" formControlName="serialNumber" >
                 </div>
                 <div class="col-md-6">
-                  <label for="serialNumber">SIM Number</label>
+                  <label for="serialNumber">SIM Number<span style="color: red;">*</span></label>
                   <input type="text" class="form-control mt-2" id="sim" formControlName="sim" >
               </div>
               </div>

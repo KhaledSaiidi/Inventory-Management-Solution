@@ -336,8 +336,8 @@
                           <span [innerHTML]="highlightMatch(prod.simNumber)"></span>
                         </td>  
                         <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
-                          <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
-                            {{prod.checkedExistence ? '&#10003;' : '&#10008;'}}
+                          <span style="font-size: 20px;" [style.color]="prod.returnedstatus ? 'green' : 'red'">
+                            {{prod.returnedstatus ? '&#10003;' : '&#10008;'}}
                             </span></td> 
                            <ng-container *ngIf="prod.managerProd">
                             <td style="max-width: 50px; margin-right: -5px;">

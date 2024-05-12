@@ -1,3 +1,57 @@
+.bg {
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+}
+
+.logo-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+}
+
+.contents {
+  padding: 20px;
+}
+
+.contents h3 {
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  width: 100%;
+}
+
+/* Media queries for responsiveness */
+@media (min-width: 576px) {
+  .form-group {
+      margin-bottom: 30px;
+  }
+}
+
+@media (min-width: 768px) {
+  .half {
+      display: flex;
+  }
+
+  .contents {
+      flex: 1;
+  }
+
+  .bg {
+      flex: 1;
+  }
+}
+
 body {
   font-family: "Roboto", sans-serif;
   background-color: #fff; }
