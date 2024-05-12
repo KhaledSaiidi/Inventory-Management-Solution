@@ -1,0 +1,34 @@
+<app-header></app-header>
+<ion-content color="light" fullscreen scroll-y="true">
+  <ion-list [inset]="true">
+
+<ng-container *ngIf="!emptyreclamaations; else noNotifications">
+    <ng-container *ngFor="let notif of reclamations">
+    <ion-item (click)="itemClicked(notif)" [ngStyle]="{'--background': !ifUserSeentrue(notif) ? '#eaf1f9' : 'white'}" >
+      <ion-label>
+        <div class="item-content">
+          <h2>{{ notif.senderReference?.toUpperCase() }} :</h2> 
+          <p class="date">{{ notif.reclamDate|  date:'HH:mm, dd MMM' }}</p>
+        </div>
+        <p class="description">{{ notif.reclamationText }}</p>
+      </ion-label>
+    </ion-item>
+  </ng-container>
+</ng-container>
+<ng-template #noNotifications>
+  <ion-item>
+    <ion-label>
+      <div class="item-content">
+        <h2>No Notifications yet..</h2> 
+      </div>
+    </ion-label>
+  </ion-item>
+</ng-template>
+
+
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <app-footer [isSelectedNotifications]="true"></app-footer>
+</ion-footer>

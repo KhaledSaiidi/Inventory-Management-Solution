@@ -1,0 +1,18 @@
+<app-header></app-header>
+<ion-content fullscreen>
+  <div class="container">
+    <h1 class="scan-text">Scan your product</h1> 
+    <img src="./assets/scan.png" alt="Barcode Scanner">
+    <div class="button-container">
+      <ng-container *ngIf="isThisManager">
+      <ion-button fill="outline" style="width: 80px; margin-right: 10px;" (click)="navigateTocheck()">Check</ion-button>
+    </ng-container>
+      <ion-button fill="outline" style="width: 80px; margin-right: 10px;" (click)="sellItem()">Sell</ion-button>
+      <ion-button fill="outline" style="width: 80px;" (click)="returnItem()">Return</ion-button>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <app-footer [isSelectedBarcode]="true"></app-footer>
+</ion-footer>

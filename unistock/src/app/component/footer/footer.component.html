@@ -1,0 +1,16 @@
+<footer class="footer">
+  <ion-grid class="footer-grid">
+    <ion-row align-items-center>
+      <ion-col size="1" class="icon-col">
+        <ion-icon name="time" class="left-icon" (click)="navigateToHistory()" [ngClass]="{'selected-icon': isSelectedHistory}"></ion-icon>
+      </ion-col>
+      <ion-col size="10" class="icon-col">
+        <ion-icon name="barcode-outline" class="center-icon" (click)="navigateTohome()" [ngClass]="{'selected-icon': isSelectedBarcode}"></ion-icon>
+      </ion-col>
+      <ion-col size="1" class="icon-col">
+        <ion-icon name="notifications" class="right-icon" (click)="navigateToNotifications()" [ngClass]="{'selected-icon': isSelectedNotifications}"></ion-icon>
+        <span *ngIf="notificationnumber > 0" class="notification-badge" >{{ notificationnumber }}</span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</footer>
