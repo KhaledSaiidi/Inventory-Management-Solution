@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6514cbfb-0743-4b59-9e80-627591a3daf0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/phoenix/gateway/target/classes/com/phoenix/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/phoenix/gateway/target/classes/com/phoenix/config/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phoenixfront/src/app/component/restocking/restocking.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/phoenixfront/src/app/component/restocking/restocking.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unistock/src/app/component/header/header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unistock/src/app/component/header/header.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unistock/src/app/component/send-notification/send-notification.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/unistock/src/app/component/send-notification/send-notification.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unistock/src/app/component/send-notification/send-notification.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unistock/src/app/component/send-notification/send-notification.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unistock/src/app/services/agent.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unistock/src/app/services/agent.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unistock/src/app/services/stock.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unistock/src/app/services/stock.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

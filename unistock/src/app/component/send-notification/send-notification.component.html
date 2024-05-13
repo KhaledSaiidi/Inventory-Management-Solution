@@ -27,6 +27,7 @@
   </ion-card>
 
   <ng-container *ngIf="isRestock">
+    <form *ngIf="notifForm" [formGroup]="notifForm" (ngSubmit)="onSubmit()">
     <ion-card>
       <ion-card-header>
         <ion-card-title class="smaller-title">Restocking Request</ion-card-title>
@@ -34,38 +35,38 @@
       <ion-card-content class="custom-card-content">
         <ion-list>
           <ion-item>
-            <ion-select placeholder="Select Stock">
-              <ion-select-option value="stock1">Stock 1</ion-select-option>
-              <ion-select-option value="stock2">Stock 2</ion-select-option>
-              <ion-select-option value="stock3">Stock 3</ion-select-option>
+            <ion-select placeholder="Select Stock" formControlName="stock" id="stock">
+              <ion-select-option *ngFor="let stockref of stocksReferences">{{stockref}}</ion-select-option>
             </ion-select>
           </ion-item>
         
           <ion-item>
-            <ion-select placeholder="Select Senior Advisor">
-              <ion-select-option value="advisor1">Advisor 1</ion-select-option>
-              <ion-select-option value="advisor2">Advisor 2</ion-select-option>
-              <ion-select-option value="advisor3">Advisor 3</ion-select-option>
+            <ion-select placeholder="Select Senior Advisor" formControlName="manager" id="manager">
+              <ion-select-option *ngFor="let manager of managerList" [value]="manager.username">
+                {{manager.firstName?.toUpperCase()}} - {{manager.lastName?.toUpperCase()}}
+                </ion-select-option>
             </ion-select>
           </ion-item>
         
           <ion-item>
-            <ion-input label="Quantity" type="number"></ion-input>
+            <ion-input label="Quantity" formControlName="quantity" type="number"></ion-input>
           </ion-item>
         
           <ion-item>
-            <ion-label position="stacked" style="font-size: 16px;">Comment</ion-label>
-            <ion-textarea rows="3" placeholder="Write a comment"></ion-textarea>
+            <ion-label position="stacked" style="font-size: 16px;" for="text">Comment</ion-label>
+            <ion-textarea rows="3" placeholder="Write a comment" formControlName="text" id="text"></ion-textarea>
           </ion-item>
         </ion-list>
         <div class="ion-text-center">
-          <ion-button fill="outline" style="color: #37517e;">Send</ion-button>
+          <ion-button type="submit" fill="outline" style="color: #37517e;">Request</ion-button>
           </div>    
               </ion-card-content>
     </ion-card>
+  </form>
   </ng-container>
 
   <ng-container *ngIf="isComplaint">
+    <form [formGroup]="notifFormC" (ngSubmit)="onSubmitC()">
     <ion-card>
       <ion-card-header>
         <ion-card-title class="smaller-title">Complaint</ion-card-title>
@@ -73,23 +74,23 @@
       <ion-card-content class="custom-card-content">
         <ion-list>        
           <ion-item>
-            <ion-select placeholder="Select Senior Advisor">
-              <ion-select-option value="advisor1">Advisor 1</ion-select-option>
-              <ion-select-option value="advisor2">Advisor 2</ion-select-option>
-              <ion-select-option value="advisor3">Advisor 3</ion-select-option>
+            <ion-select placeholder="Select Manager" formControlName="managers" id="managers" multiple>
+              <ion-select-option *ngFor="let manager of managerList" [value]="manager.username">
+                {{manager.firstName?.toUpperCase()}} - {{manager.lastName?.toUpperCase()}}
+              </ion-select-option>
             </ion-select>
           </ion-item>        
           <ion-item>
-            <ion-label position="stacked" style="font-size: 16px;">Comment</ion-label>
-            <ion-textarea rows="6" placeholder="Write a comment"></ion-textarea>
+            <ion-label position="stacked" style="font-size: 16px;" for="complaintText">Comment</ion-label>
+            <ion-textarea rows="6" formControlName="complaintText" id="complaintText" placeholder="Write a comment"></ion-textarea>
           </ion-item>
         </ion-list>
         <div class="ion-text-center">
-          <ion-button fill="outline" style="color: #37517e;">Send</ion-button>
+          <ion-button fill="outline" type="submit" style="color: #37517e;">Send</ion-button>
           </div>    
               </ion-card-content>
     </ion-card>
-
+</form>
   </ng-container>
 
   </ion-content>

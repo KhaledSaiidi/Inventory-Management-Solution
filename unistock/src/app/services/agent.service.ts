@@ -25,4 +25,17 @@ export class AgentService {
   
   }
   
+
+  getagents() {
+    return this.http.get(this.apiUrl + '/allusers')
+    .pipe(
+      catchError((error) => {
+        if (error.status === 200 && error.error instanceof ErrorEvent) {
+          return of([]);
+        } else {
+        console.error('An error occurred:', error);
+        return throwError(error); }
+      })
+    );
+  }
 }

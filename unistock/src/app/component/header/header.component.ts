@@ -20,7 +20,8 @@ export class HeaderComponent  implements OnInit {
 username: string = "";
 user!: Userdto;
 
-  ngOnInit() {    if (this.securityService.profile && this.securityService.profile.username) {
+  ngOnInit() {    
+    if (this.securityService.profile && this.securityService.profile.username) {
     console.log(this.securityService.profile);
     this.username = this.securityService.profile.username;
   }

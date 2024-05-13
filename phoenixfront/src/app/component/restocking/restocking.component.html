@@ -29,6 +29,7 @@
                         <select class="form-control mt-2" formControlName="manager" id="manager">
                           <option *ngFor="let manager of managerList" [value]="manager.username">
                             {{manager.firstName?.toUpperCase()}} - {{manager.lastName?.toUpperCase()}}
+                            </option>
                           </select>
                     </div>
                     </div>                  
@@ -42,7 +43,7 @@
                     </div>
                  <div class="col-md-12">
                   <div class="form-group">
-                    <label for="text">Demand</label>
+                    <label for="text">Comment</label>
                     <textarea class="form-control mt-2" formControlName="text" id="text" rows="4"></textarea>
                   </div>
                 </div>

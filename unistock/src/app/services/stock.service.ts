@@ -43,4 +43,26 @@ export class StockService {
     );
   }
   
+
+  getStocksByStocksReferences(): Observable<String[]> {
+    const apiUrl = this.apiUrl + '/getStocksByStocksReferences';
+    return this.http.get<String[]>(apiUrl)
+      .pipe(
+        catchError((error) => {
+          console.error('An error occurred:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  productsInPossession(username: string): Observable<String[]> {
+    return this.http.get<String[]>(this.apiUrl + '/productsInPossession/' + username)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
 }
