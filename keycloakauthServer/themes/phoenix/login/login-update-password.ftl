@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="robots" content="noindex, nofollow">
     <title>Update Account password</title>
-    <link rel="icon" type="image/png" href="${url.resourcesPath}/phoenix.png">
+    <link rel="icon" type="image/png" href="${url.resourcesPath}/logo.png">
     <!-- Add your stylesheet links here if needed -->
     <style>
         body {
@@ -53,7 +53,7 @@
         }
 
         input[type="submit"] {
-            background-color: orange;
+            background-color: #37517e;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -61,7 +61,7 @@
         }
 
         input[type="submit"]:hover {
-            background-color: darkorange;
+            background-color: #2f4665;
         }
 
 
@@ -102,6 +102,41 @@
             border: 1px solid #f5c6cb; /* Border color for emphasis */
             color: #721c24; /* Dark red text color */
             border-radius: 5px;
+        }
+
+        @media (max-width: 991.98px) {
+            .container {
+                max-width: 70% !important;
+                height: 40%;
+                padding: 10%;
+             }
+
+            p {
+                font-size: 36PX;
+            }
+            input[type="submit"] {
+                padding: 40px 20px;
+                font-size: 35px
+            }
+            
+            #kc-form-options span {
+                font-size: 35px;
+                margin-bottom: 15px;
+            }
+            label {
+                margin-top: 25px;
+                margin-bottom: 10px;
+                font-size: 35px;
+            }
+            #kc-form-buttons {
+                margin-top:30px
+            }
+        input[type="password"] {
+            padding: 25px;
+            margin-bottom: 20px;
+            font-size: 30px;
+            }
+
         }
 
     </style>

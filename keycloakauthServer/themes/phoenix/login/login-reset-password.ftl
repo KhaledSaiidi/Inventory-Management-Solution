@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="robots" content="noindex, nofollow">
     <title>Reset Password</title>
-    <link rel="icon" type="image/png" href="${url.resourcesPath}/phoenix.png">
+    <link rel="icon" type="image/png" href="${url.resourcesPath}/logo.png">
     <!-- Add your stylesheet links here if needed -->
     <style>
         body {
@@ -54,7 +54,7 @@
         }
 
         input[type="submit"] {
-            background-color: orange;
+            background-color: #37517e;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -62,7 +62,7 @@
         }
 
         input[type="submit"]:hover {
-            background-color: darkorange;
+            background-color: #37517e;
         }
 
         .button {
@@ -74,7 +74,7 @@
         }
 
         .primary-button {
-            background-color: #4CAF50;
+            background-color: #37517e;
             color: #fff;
         }
 
@@ -87,7 +87,7 @@
         }
 
         #kc-form-options a {
-            color: #007bff; /* Adjust the color as needed */
+            color: #007bff; 
             text-decoration: none;
         }
 
@@ -97,10 +97,42 @@
         p {
             margin-bottom: 20px;
             font-size: 16px;
-            color: #333; /* Adjust the color as needed */
+            color: #333;
         }
 
+        @media (max-width: 991.98px) {
+            .container {
+                max-width: 70% !important;
+                height: 25%;
+                padding: 10%;
+             }
 
+            p {
+                font-size: 36PX;
+            }
+            input[type="submit"] {
+                padding: 40px 20px;
+                font-size: 35px
+            }
+            
+            #kc-form-options span {
+                font-size: 35px;
+                margin-bottom: 15px;
+            }
+            input[type="text"] {
+            padding: 25px;
+            margin-bottom: 20px;
+            font-size: 30px;
+            }
+            label {
+                margin-top: 25px;
+                margin-bottom: 10px;
+                font-size: 26px;
+            }
+            #kc-form-buttons {
+                margin-top:30px
+            }
+        }
     </style>
 </head>
 <body>

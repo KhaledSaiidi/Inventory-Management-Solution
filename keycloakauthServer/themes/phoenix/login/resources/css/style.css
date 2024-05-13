@@ -41,6 +41,7 @@
 @media (min-width: 768px) {
   .half {
       display: flex;
+      height: 100vh;
   }
 
   .contents {
@@ -49,6 +50,7 @@
 
   .bg {
       flex: 1;
+      background-size: cover;
   }
 }
 
@@ -83,7 +85,15 @@ h2 {
 
 @media (max-width: 991.98px) {
   .half .bg {
-    height: 200px; } }
+    height: 200px; 
+  } 
+  .container-logo{
+    height: 100px; 
+  }
+  .container{
+    margin-top: -150px;
+  }
+}
 
 .half .contents {
   background: #f6f7fc; }
@@ -157,11 +167,11 @@ h2 {
   background: #ccc; }
 
 .control input:checked ~ .control__indicator {
-  background: #fb771a; }
+  background: #37517e; }
 
 .control:hover input:not([disabled]):checked ~ .control__indicator,
 .control input:checked:focus ~ .control__indicator {
-  background: #fb8633; }
+  background: #2f4665; }
 
 .control input:disabled ~ .control__indicator {
   background: #e6e6e6;
