@@ -51,7 +51,7 @@ export class FooterComponent  implements OnInit , OnDestroy{
   }
 
   navigateToHistory(){
-    this.router.navigate(['/home']);      
+    this.router.navigate(['/history']);      
   }
 
 

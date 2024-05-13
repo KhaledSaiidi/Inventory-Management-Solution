@@ -26,4 +26,7 @@ public interface IsoldProductService {
     Map<String, Float> getSoldProductsStatistics();
     List<Integer> getProductsSoldCount();
     void deleteSoldProduct(String ref);
-    }
+
+    List<SoldProductDto> getThelast4SoldProdsByusername(String username);
+
+}

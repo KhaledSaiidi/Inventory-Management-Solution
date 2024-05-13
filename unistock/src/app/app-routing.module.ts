@@ -5,6 +5,8 @@ import { AuthGuard } from './services/authGuard';
 import { CheckComponent } from './component/check/check.component';
 import { NotificationComponent } from './component/notification/notification.component';
 import { HeaderComponent } from './component/header/header.component';
+import { HistoryComponent } from './component/history/history.component';
+import { SendNotificationComponent } from './component/send-notification/send-notification.component';
 
 const routes: Routes = [
   {
@@ -19,6 +21,16 @@ const routes: Routes = [
   },
   {
     path:'notification', component: NotificationComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ["IMANAGER", "MANAGER", "AGENT"] }
+  },
+  {
+    path:'history', component: HistoryComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ["IMANAGER", "MANAGER", "AGENT"] }
+  },
+  {
+    path:'send', component: SendNotificationComponent,
     canActivate: [AuthGuard],
     data: { roles: ["IMANAGER", "MANAGER", "AGENT"] }
   },

@@ -17,7 +17,9 @@ import { SellComponent } from './component/sell/sell.component';
 import { ReturnComponent } from './component/return/return.component';
 import { NotificationComponent } from './component/notification/notification.component';
 import { StompService } from './services/stomp.service';
-
+import { HistoryComponent } from './component/history/history.component';
+import { SendNotificationComponent } from './component/send-notification/send-notification.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export function kcFactory(kcService: KeycloakService, securityService: SecurityService) {
   return () => {
@@ -54,7 +56,9 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
    CheckComponent,
    SellComponent,
    ReturnComponent,
-   NotificationComponent
+   NotificationComponent,
+   HistoryComponent,
+   SendNotificationComponent
 ],
   imports: [    
     BrowserModule, 
@@ -62,6 +66,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     AppRoutingModule, 
     KeycloakAngularModule, 
     HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule
 ],
   providers: [
     { 

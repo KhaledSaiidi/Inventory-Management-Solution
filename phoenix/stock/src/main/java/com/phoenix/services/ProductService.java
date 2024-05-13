@@ -728,5 +728,30 @@ public class ProductService implements IProductService{
         }
     }
 
+    @Override
+    public List<ProductDto> getThelast4ReturnedProdsByusername(String username) {
+        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
+        List<ProductDto> productDtos = new ArrayList<>();
+        int[] count = {0};
+
+        for (AgentProd agentProd : agentProds) {
+            Optional<Product> optionalProduct = iProductRepository.findByAgentReturnedProd(agentProd);
+            if (!optionalProduct.isPresent()) {
+                optionalProduct = iProductRepository.findByManagerProd(agentProd);
+            }
+            optionalProduct.ifPresent(product -> {
+                if (product.isReturned() && count[0] < 4) {
+                    ProductDto productDto = iProductMapper.toDto(product);
+                    productDto.setAgentReturnedProd(iAgentProdMapper.toDto(product.getAgentReturnedProd()));
+                    productDtos.add(productDto);
+                    count[0]++;
+                }
+            });
+        }
+        productDtos.sort(Comparator.comparing(ProductDto::getCheckin).reversed());
+
+        return productDtos;
+    }
+
 
 }

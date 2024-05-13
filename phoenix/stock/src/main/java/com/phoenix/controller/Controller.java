@@ -452,4 +452,25 @@ public class Controller {
         iAgentProdService.deleteAgentwithUsername(username);
     }
 
+
+    @GetMapping("getThelast4ReturnedProdsByusername/{username}")
+    public ResponseEntity<List<ProductDto>> getThelast4ReturnedProdsByusername(@PathVariable String username) {
+        List<ProductDto> productDtos = iProductService.getThelast4ReturnedProdsByusername(username);
+        if (productDtos != null) {
+            return ResponseEntity.ok(productDtos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("getThelast4SoldProdsByusername/{username}")
+    public ResponseEntity<List<SoldProductDto>> getThelast4SoldProdsByusername(@PathVariable String username) {
+        List<SoldProductDto> soldProductDtos = isoldProductService.getThelast4SoldProdsByusername(username);
+        if (soldProductDtos != null) {
+            return ResponseEntity.ok(soldProductDtos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

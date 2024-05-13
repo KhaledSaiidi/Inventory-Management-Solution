@@ -36,4 +36,7 @@ public interface IProductService {
     Map<String, Float> getReturnedProductsStatistics();
     List<Integer> getProductsReturnedCount();
     void deleteProduct(String ref);
+
+    List<ProductDto> getThelast4ReturnedProdsByusername(String username);
+
 }

@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar class="header-toolbar">
+    <ion-buttons slot="start" (click) = "navigateTohome()">
+      <ion-icon name="arrow-back" style="font-size: 30px;"></ion-icon>
+    </ion-buttons>
+    <ion-title class="header-title">UniStock Tracker</ion-title>
+  </ion-toolbar>
+  <div class="ion-page" id="main-content">
+  </div>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="smaller-title">Notification Type</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <ion-item lines="none">
+        <ion-label>Restock</ion-label>
+        <ion-toggle slot="end" [(ngModel)]="isRestock" (ionChange)="handleRestockChange()"></ion-toggle>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Complaint</ion-label>
+        <ion-toggle slot="end" [(ngModel)]="isComplaint" (ionChange)="handleComplaintChange()"></ion-toggle>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ng-container *ngIf="isRestock">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="smaller-title">Restocking Request</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="custom-card-content">
+        <ion-list>
+          <ion-item>
+            <ion-select placeholder="Select Stock">
+              <ion-select-option value="stock1">Stock 1</ion-select-option>
+              <ion-select-option value="stock2">Stock 2</ion-select-option>
+              <ion-select-option value="stock3">Stock 3</ion-select-option>
+            </ion-select>
+          </ion-item>
+        
+          <ion-item>
+            <ion-select placeholder="Select Senior Advisor">
+              <ion-select-option value="advisor1">Advisor 1</ion-select-option>
+              <ion-select-option value="advisor2">Advisor 2</ion-select-option>
+              <ion-select-option value="advisor3">Advisor 3</ion-select-option>
+            </ion-select>
+          </ion-item>
+        
+          <ion-item>
+            <ion-input label="Quantity" type="number"></ion-input>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label position="stacked" style="font-size: 16px;">Comment</ion-label>
+            <ion-textarea rows="3" placeholder="Write a comment"></ion-textarea>
+          </ion-item>
+        </ion-list>
+        <div class="ion-text-center">
+          <ion-button fill="outline" style="color: #37517e;">Send</ion-button>
+          </div>    
+              </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+  <ng-container *ngIf="isComplaint">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="smaller-title">Complaint</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="custom-card-content">
+        <ion-list>        
+          <ion-item>
+            <ion-select placeholder="Select Senior Advisor">
+              <ion-select-option value="advisor1">Advisor 1</ion-select-option>
+              <ion-select-option value="advisor2">Advisor 2</ion-select-option>
+              <ion-select-option value="advisor3">Advisor 3</ion-select-option>
+            </ion-select>
+          </ion-item>        
+          <ion-item>
+            <ion-label position="stacked" style="font-size: 16px;">Comment</ion-label>
+            <ion-textarea rows="6" placeholder="Write a comment"></ion-textarea>
+          </ion-item>
+        </ion-list>
+        <div class="ion-text-center">
+          <ion-button fill="outline" style="color: #37517e;">Send</ion-button>
+          </div>    
+              </ion-card-content>
+    </ion-card>
+
+  </ng-container>
+
+  </ion-content>

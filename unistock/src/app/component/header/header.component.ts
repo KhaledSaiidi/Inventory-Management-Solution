@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentService } from 'src/app/services/agent.service';
 import { SecurityService } from 'src/app/services/security.service';
@@ -13,7 +14,8 @@ import { StockService } from 'src/app/services/stock.service';
 export class HeaderComponent  implements OnInit {
 
   constructor (public securityService: SecurityService, private router: Router,
-    private agentsService: AgentService, private stockservice: StockService
+    private agentsService: AgentService, private stockservice: StockService,
+    private alertController: AlertController
   ) {}
 username: string = "";
 user!: Userdto;
@@ -82,4 +84,7 @@ getuserinfos(code : string){
         );
     }  
 
+    navigateToSend(){
+      this.router.navigate(['/send']);      
+    }
 }
