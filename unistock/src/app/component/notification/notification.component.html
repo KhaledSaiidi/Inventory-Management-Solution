@@ -1,5 +1,5 @@
 <app-header></app-header>
-<ion-content color="light" fullscreen scroll-y="true">
+<ion-content  scroll-y="true">
   <ion-list [inset]="true">
 
 <ng-container *ngIf="!emptyreclamaations; else noNotifications">
@@ -16,13 +16,15 @@
   </ng-container>
 </ng-container>
 <ng-template #noNotifications>
+  <ion-card>
   <ion-item>
     <ion-label>
       <div class="item-content">
-        <h2>No Notifications yet..</h2> 
+        <h1>No Notifications yet..</h1> 
       </div>
     </ion-label>
   </ion-item>
+</ion-card>
 </ng-template>
 
 

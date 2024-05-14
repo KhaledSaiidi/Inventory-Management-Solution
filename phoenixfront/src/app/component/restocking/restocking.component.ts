@@ -35,6 +35,7 @@ export class RestockingComponent implements OnInit{
       this.initForm();
       this.getStocks();
       this.getUserscategorized();
+      this.fetchProductsInPossession(this.username);
     }
 
     navigateToUserdetails() {
@@ -95,20 +96,20 @@ getStocks() {
     );
   }
 
-  leftProducts: String[] = [];
-  productsInPossession(username: string): string {
-    this.stockservice.productsInPossession(username)
-    .subscribe(
-      (data) => {
-        this.leftProducts = data;
-      },
-      (error) => {
-        console.error('Error fetching stocks:', error);
-      }
-    );  
-    const leftProductsSize = this.leftProducts.length;
-    return leftProductsSize.toString();
+  leftProducts: string[] = [];
+  fetchProductsInPossession(username: string): void {
+    this.stockservice.getProductsInPossession(username)
+      .subscribe(
+        (data) => {
+          this.leftProducts = data;
+          console.log('Products in possession:', this.leftProducts);
+        },
+        (error) => {
+          console.error('Error fetching products in possession:', error);
+        }
+      );
   }
+
     onSubmit(): void {
       const receivers: string[] = []; 
       receivers.push(this.notifForm.get('manager')?.value);
@@ -119,7 +120,7 @@ getStocks() {
       const notification : ReclamationDto = {
         reclamationType: ReclamType.restockingType,
         reclamationText: this.username.toUpperCase() + " asks for " + quantity + " product(s) from the " + stock
-        + " he already has " + this.productsInPossession(this.username) + " product(s) left! " + " " + "you will find here his request : "
+        + " he already has " + this.leftProducts.length + " product(s) left! " + " " + "you will find here his request : "
         + "'" + notifText+ "'",
         senderReference: this.username,
         receiverReference: receivers
@@ -133,6 +134,6 @@ getStocks() {
         (error) => {
           console.error('Failed to add notif:', error);
         }
-      );
+      ); 
     }
 }

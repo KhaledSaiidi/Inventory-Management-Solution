@@ -1,6 +1,8 @@
 <app-header></app-header>
 
-<ion-content fullscreen>
+<ion-content>
+<div class="container">
+
   <ion-card>
     <ion-card-header (click) ="showsells()" class="card-header">
       <ion-card-title>
@@ -54,12 +56,8 @@
      </ion-card-content>
   </ng-container>
 </ng-container>
-    </ion-card>
-
-
-
-
-    <ion-card style="margin-top: 40px;">
+  </ion-card>
+  <ion-card style="margin-top: 40px;">
       <ion-card-header (click) ="showreturns()">
         <ion-card-title>
           <ion-icon name="return-down-back-outline" class="icon-returned"></ion-icon>
@@ -114,7 +112,10 @@
               </ion-card-content>
         </ng-container>
   </ng-container>
-      </ion-card>
+  </ion-card>
+
+</div>
+
 </ion-content>
 
 <ion-footer>

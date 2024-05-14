@@ -39,8 +39,8 @@ public class ScheduledTasks {
     }
 
 
-    //@Scheduled(fixedRate = 60000) // to test
-    @Scheduled(cron = "0 0 23 * * SAT")
+    @Scheduled(fixedRate = 30000)// to test per 30 sec
+    // @Scheduled(cron = "0 0 23 * * SAT")
     public void deleteAgentProdsWithoutProducts() {
         iAgentProdService.deleteAgentProdsWithoutProducts();
     }

@@ -331,15 +331,8 @@ getReturnedProductsPaginatedByStockReference(stockReference: string, page: numbe
 }
 
 
-
-productsInPossession(username: string): Observable<String[]> {
-  return this.http.get<String[]>(this.apiUrl + '/productsInPossession/' + username)
-  .pipe(
-    catchError((error) => {
-      console.error('An error occurred:', error);
-      return throwError(error);
-    })
-  );
+getProductsInPossession(username: string): Observable<string[]> {
+  return this.http.get<string[]>(`${this.apiUrl}/productsInPossession/${username}`);
 }
 
 
