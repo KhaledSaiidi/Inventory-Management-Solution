@@ -18,6 +18,8 @@ export class HistoryComponent  implements OnInit {
       console.log(this.securityService.profile);
       this.username = this.securityService.profile.username;
     }
+    this.getThelast4ReturnedProdsByusername(this.username);
+    this.getThelast4SoldProdsByusername(this.username);
   }
   showsell: boolean = true;
   showreturn: boolean = false;
@@ -36,7 +38,7 @@ export class HistoryComponent  implements OnInit {
   emptylastsells: boolean = true;
 
 
-  getThelast2ReturnedProdsByusername(username: string) {
+  getThelast4ReturnedProdsByusername(username: string) {
     this.emptylastReturnss = true;
       this.stockservice.getThelast4ReturnedProdsByusername(username)
         .subscribe(
@@ -51,7 +53,7 @@ export class HistoryComponent  implements OnInit {
           }
         );
     }  
-    getThelast2SoldProdsByusername(username: string) {
+    getThelast4SoldProdsByusername(username: string) {
       this.emptylastsells = true;
       this.stockservice.getThelast4SoldProdsByusername(username)
         .subscribe(
