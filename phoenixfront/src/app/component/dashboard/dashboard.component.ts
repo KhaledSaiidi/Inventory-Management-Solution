@@ -23,19 +23,19 @@ export class DashboardComponent implements OnInit{
 
   slides = [
     {
-      image: '../../../assets/img/phoenixres.png',
-      title: 'Optimize with PhoenixStock Keeper',
+      image: '../../../assets/img/logores.png',
+      title: 'Optimize with UniStock Keeper',
       description: 'A powerful platform for efficient and strategic inventory management.'
     },
     {
       image: '../../../assets/img/trackback.jpg',
       title: 'Track Your Inventory with Precision',
-      description: 'Efficiently monitor and manage your inventory with PhoenixStock Keeper\'s advanced tracking capabilities.'
+      description: 'Efficiently monitor and manage your inventory with UniStock Keeper\'s advanced tracking capabilities.'
     },
     {
       image: '../../../assets/img/kpis.jpg',
       title: 'Empower Your Decisions with Insightful Dashboards',
-      description: 'PhoenixStock Keeper takes inventory management to the next level with dynamic and insightful dashboards.'
+      description: 'UniStock Keeper takes inventory management to the next level with dynamic and insightful dashboards.'
     }
   ];
   activeIndex = 0;
