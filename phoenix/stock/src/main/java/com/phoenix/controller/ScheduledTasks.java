@@ -24,8 +24,8 @@ public class ScheduledTasks {
     private StockProducer stockProducer;
 
     private final IAgentProdService iAgentProdService;
-    // @Scheduled(cron = "0 */5 * * * *") // test Runs each 5 minutes
-    @Scheduled(cron = "0 0 7 * * *") // Runs at 7:00 AM every day
+    @Scheduled(cron = "0 */5 * * * *") // test Runs each 5 minutes
+    // @Scheduled(cron = "0 0 7 * * *") // Runs at 7:00 AM every day
     public void checkProductsDueDate() {
         List<ReclamationDto> reclamationDtos = iProductService.getProductsForAlert();
         System.out.println("triggered");
@@ -39,8 +39,8 @@ public class ScheduledTasks {
     }
 
 
-    // @Scheduled(fixedRate = 30000)// test Runs each 30 sec
-    @Scheduled(cron = "0 30 23 * * *") // Runs at 11:30 PM every day
+    @Scheduled(fixedRate = 30000)// test Runs each 30 sec
+    // @Scheduled(cron = "0 30 23 * * *") // Runs at 11:30 PM every day
     public void deleteAgentProdsWithoutProducts() {
         iAgentProdService.deleteAgentProdsWithoutProducts();
     }

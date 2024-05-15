@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BaseComponent } from './component/base/base.component';
-import { RouterModule, Routes } from '@angular/router';
+import { Router, RouterModule, Routes } from '@angular/router';
 import { KeycloakAngularModule } from 'keycloak-angular';
 import { KeycloakService } from 'keycloak-angular';
 import { AuthGuard } from './guards/security.guard';
@@ -40,7 +40,6 @@ import { ReturnbyscanComponent } from './component/returnbyscan/returnbyscan.com
 import { StompService } from './services/stomp.service';
 import { ComplaintComponent } from './component/complaint/complaint.component';
 import { RestockingComponent } from './component/restocking/restocking.component'
-import { UserDetailsGuard } from './guards/UserDetailsGuard';
 import { ScannersComponent } from './component/scanners/scanners.component';
 import { ConfiramtionDialogComponent } from './design-component/confiramtion-dialog/confiramtion-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -48,40 +47,40 @@ import { StockarchivedComponent } from './stockcomponent/stockarchived/stockarch
 import { ProdarchivedComponent } from './stockcomponent/prodarchived/prodarchived.component';
 
 const appRoute: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
-  {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ,"AGENT"] }},
-  {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ,"AGENT"] }},
+  { path: '', pathMatch: 'full', redirectTo: '/userdetails' },
+  {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
-  {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER","AGENT"] }},
-  {path:'userdetails', component: UserdetailsComponent, canActivate: [AuthGuard, UserDetailsGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
+  {path:'userdetails', component: UserdetailsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'camapigns', component: CampaignsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'addclient', component: AddClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'addcampaign', component: AddcampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'client', component: ClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'updatecamapign', component: UpdateCampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'archive', component: ArchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'addclient', component: AddClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  {path:'addcampaign', component: AddcampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  {path:'client', component: ClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  {path:'updatecamapign', component: UpdateCampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  {path:'archive', component: ArchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'stocks', component: StocksComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'addstock', component: AddstockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'addstock', component: AddstockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'products', component: ProductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addproduct', component: AddproductComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'updateproduct', component: UpdateprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'updateproduct', component: UpdateprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'stockinfo', component: StockinfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'checkprods', component: CheckprodsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'checkprods', component: CheckprodsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'checkhistory', component: CheckhistoryComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'updatestock', component: UpdatestockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'assignproducts', component: AssignproductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'updatestock', component: UpdatestockComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  {path:'assignproducts', component: AssignproductsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'scanners', component: ScannersComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'toscan', component: ScanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  {path:'toscan', component: ScanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'scantosell', component: SellprodComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'scantoreturn', component: ReturnbyscanComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'restocking', component: RestockingComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'complaint', component: ComplaintComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'stockarchive', component: StockarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
-  {path:'archivedproducts', component: ProdarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }}
+  {path:'stockarchive', component: StockarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  {path:'archivedproducts', component: ProdarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }}
 
 ]
 
-export function kcFactory(kcService: KeycloakService, securityService: SecurityService) {
+export function kcFactory(kcService: KeycloakService, securityService: SecurityService, router: Router) {
   return () => {
     return new Promise<void>((resolve, reject) => {
       kcService.init({
@@ -96,6 +95,15 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
       }).then(() => {
         kcService.loadUserProfile().then(profile => {
           securityService.profile = profile;
+          const userRoles = kcService.getUserRoles();
+          if (userRoles.includes('IMANAGER') || userRoles.includes('MANAGER')) {
+            router.navigate(['/dashboard']);
+          } else if (userRoles.includes('AGENT')) {
+            router.navigate([`/userdetails`]);
+          } else {
+            router.navigate(['/unauthorized']);
+          }
+
           resolve();
         });
       }).catch((error) => {
@@ -161,7 +169,7 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
       provide: APP_INITIALIZER,
       useFactory: kcFactory,
       multi: true,
-      deps: [KeycloakService, SecurityService],
+      deps: [KeycloakService, SecurityService, Router],
     },
     ],  
   bootstrap: [AppComponent]
