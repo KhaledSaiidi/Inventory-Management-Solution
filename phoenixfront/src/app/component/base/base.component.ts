@@ -16,6 +16,8 @@ export class BaseComponent implements OnInit{
 constructor (public securityService: SecurityService, private router: Router,
              public stompService: StompService, public notificationService: NotificationService) {}
 username: string = "";
+isManager: boolean = this.securityService.hasRoleIn(['MANAGER', 'IMANAGER']);
+
 public ngOnInit() {
   if (this.securityService.profile && this.securityService.profile.username) {
     console.log(this.securityService.profile);
@@ -51,7 +53,7 @@ private initializeWebSocket(): void {
       console.log('Invalid Username');
       return;
     }
-    this.router.navigate(['/userdetails'], { queryParams: { id: userName } });      
+    this.router.navigate(['/userdetails' , userName]);      
   }
   navigateToStocks(){
     window.location.href = '/stocks';
@@ -119,13 +121,10 @@ ifUserSeentrue(notification: ReclamationDto): boolean {
       console.log('Invalid Username');
       return;
     }
-    this.router.navigate(['/userdetails'], { 
-      queryParams: { 
-        id: userName,
-        selectedTab: 2
-      } 
-    });      
-  }
+    this.router.navigate([`/userdetails/${userName}`], {
+      queryParams: { selectedTab: 2 }
+    });
+    }
    
   
 }

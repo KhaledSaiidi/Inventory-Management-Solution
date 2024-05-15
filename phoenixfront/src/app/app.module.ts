@@ -52,7 +52,7 @@ const appRoute: Routes = [
   {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
-  {path:'userdetails', component: UserdetailsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
+  { path:'userdetails/:id', component: UserdetailsComponent, canActivate: [AuthGuard] },
   {path:'camapigns', component: CampaignsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addclient', component: AddClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'addcampaign', component: AddcampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
@@ -99,7 +99,7 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
           if (userRoles.includes('IMANAGER') || userRoles.includes('MANAGER')) {
             router.navigate(['/dashboard']);
           } else if (userRoles.includes('AGENT')) {
-            router.navigate([`/userdetails`]);
+            router.navigate([`/userdetails/${profile.username}`]);
           } else {
             router.navigate(['/unauthorized']);
           }

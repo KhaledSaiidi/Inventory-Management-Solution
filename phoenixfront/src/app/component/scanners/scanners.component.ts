@@ -9,8 +9,10 @@ import { StockService } from 'src/app/services/stock.service';
   styleUrls: ['./scanners.component.css']
 })
 export class ScannersComponent implements OnInit{
-  constructor(private router: Router,
+  constructor(
+    private router: Router, public securityService: SecurityService,
     private route: ActivatedRoute) {}
+    isManager: boolean = this.securityService.hasRoleIn(['MANAGER', 'IMANAGER']);
 
     username!: string | null;
     ngOnInit() {

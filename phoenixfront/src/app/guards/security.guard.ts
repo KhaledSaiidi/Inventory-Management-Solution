@@ -43,20 +43,5 @@ export class AuthGuard extends KeycloakAuthGuard {
     }
     return true;
   }
-
-
-
-  public async redirectToAppropriateRoute(): Promise<void> {
-    const userRoles = this.keycloak.getUserRoles();
-
-    if (userRoles.includes('IMANAGER') || userRoles.includes('MANAGER')) {
-      await this.router.navigate(['/dashboard']);
-    } else if (userRoles.includes('AGENT')) {
-      const username = this.keycloak.getUsername();
-      await this.router.navigate([`/userdetails`]);
-    } else {
-      await this.router.navigate(['/unauthorized']);
-    }
-  }
-
+  
 }
