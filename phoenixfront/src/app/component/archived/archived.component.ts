@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ConfiramtionDialogComponent } from 'src/app/design-component/confiramtion-dialog/confiramtion-dialog.component';
 import { Campaigndto } from 'src/app/models/agents/Campaigndto';
 import { AgentsService } from 'src/app/services/agents.service';
+import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
   selector: 'app-archived',
@@ -12,9 +13,10 @@ import { AgentsService } from 'src/app/services/agents.service';
 })
 export class ArchivedComponent implements OnInit {
   constructor(private agentsService: AgentsService,private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog, private securityService: SecurityService
   ) {}
   selectedRowIndex: number | null = null;
+  isManager: boolean = this.securityService.hasRoleIn(['MANAGER', 'IMANAGER']);
 
   campaigns: Campaigndto[] = [];
 

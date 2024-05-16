@@ -1,12 +1,13 @@
 <app-base></app-base>
 <div class="listeequipes-container"> 
-    <a  (click) = "navigateToaddClient()" class="btn-primary btn" style="color: white;">
+   <ng-container *ngIf="isManager">
+  <a  (click) = "navigateToaddClient()" class="btn-primary btn" style="color: white;">
         <span class="">&nbsp; Add Client</span>
     </a> &nbsp;
     <a (click) = "navigateToaddCampaign()" class="btn-primary btn" style="color: white;">
         <span class="">&nbsp; Run Campaign</span>
     </a>
-    
+    </ng-container>
     <div class="equipe-container">
         <div class="listetalents-containershown">
             <div class="col-12">
@@ -24,7 +25,12 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PRODUCT</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">CLIENT</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">START DATE</th>
+                         <ng-container *ngIf="isManager">
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+                         </ng-container>
+                         <ng-container *ngIf="!isManager">
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="text-align: center;">Actions</th>
+                          </ng-container>
                        </tr>
                      </thead>
                      <tbody>
@@ -63,7 +69,9 @@
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToClient(onecamp.client?.companyName)" >{{onecamp.client?.companyName}}</a></td> 
                          <td style="word-wrap: break-word; white-space: normal;"> {{ onecamp.startDate | date: 'medium' | slice: 0:12 }}</td>
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToCampaign(onecamp.reference)">update</a></td>
-                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" ><a (click)="confirmDeletion(onecamp.reference)">end</a></td>         
+                         <ng-container *ngIf="isManager">
+                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" ><a (click)="confirmDeletion(onecamp.reference)">end</a></td>         
+                        </ng-container>
                        </tr>
                      </ng-container>
                      </tbody>

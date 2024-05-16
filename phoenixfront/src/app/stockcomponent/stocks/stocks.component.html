@@ -32,8 +32,13 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Received Date</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Due Date</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Value</th>
+                         <ng-container *ngIf="isManager">
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="3" style="text-align: center;">Actions</th>
-                       </tr>
+                        </ng-container>
+                        <ng-container *ngIf="!isManager">
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+                         </ng-container>
+                        </tr>
                      </thead>
         
                      <tbody>
@@ -90,9 +95,11 @@
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">
                           <i class="fas fa-edit"></i>
                         </a></td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="confirmStockDeletion(stock)">
+                        <ng-container *ngIf="isManager">
+                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="confirmStockDeletion(stock)">
                           <i class="fas fa-trash-alt"></i>
                         </a></td>
+                        </ng-container>
                       </tr>
                       <tr>
                       <td colspan="11" style="margin-right: 5px;">

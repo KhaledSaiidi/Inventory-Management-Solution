@@ -6,6 +6,7 @@ import { StockPage } from 'src/app/models/inventory/StockPage';
 import { StockService } from 'src/app/services/stock.service';
 import { ConfiramtionDialogComponent } from 'src/app/design-component/confiramtion-dialog/confiramtion-dialog.component'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
   selector: 'app-stocks',
@@ -16,9 +17,9 @@ export class StocksComponent implements OnInit {
   
   constructor(private router: Router, private stockService: StockService, 
               private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef,
-              private dialog: MatDialog) {}
+              private dialog: MatDialog, private securityService: SecurityService) {}
 
-  
+  isManager: boolean = this.securityService.hasRoleIn(['MANAGER', 'IMANAGER']);
   filterfinishforStocks!: Stockdto[];
   currentPage: number = 0;
   pageSize: number = 5;

@@ -10,9 +10,9 @@ import { AgentsService } from 'src/app/services/agents.service';
   styleUrls: ['./add-client.component.css']
 })
 export class AddClientComponent implements OnInit{
-  constructor(private router: Router, private formBuilder: FormBuilder, private agentsService: AgentsService) {}
+  constructor(private router: Router, private formBuilder: FormBuilder,
+     private agentsService: AgentsService) {}
   clientForm!: FormGroup;
-
  ngOnInit(): void {
   this.initForm();
  }

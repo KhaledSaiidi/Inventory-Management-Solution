@@ -11,6 +11,7 @@ import { SoldProductDto } from 'src/app/models/inventory/SoldProductDto';
 import { SoldProductPage } from 'src/app/models/inventory/SoldProductPage';
 import { ConfiramtionDialogComponent } from 'src/app/design-component/confiramtion-dialog/confiramtion-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
   selector: 'app-products',
@@ -21,16 +22,15 @@ export class ProductsComponent implements OnInit{
   @Input() selectedTab: number = 0;
 
   constructor( 
-    private route: ActivatedRoute,
-    private router: Router,
-    private stockservice: StockService,
-    private cdRef: ChangeDetectorRef,
-    private sanitizer: DomSanitizer,
-    private dataSharingService: DataSharingService,
-    private dialog: MatDialog) {}
+    private route: ActivatedRoute, private router: Router,
+    private stockservice: StockService, private cdRef: ChangeDetectorRef,
+    private sanitizer: DomSanitizer, private dataSharingService: DataSharingService,
+    private dialog: MatDialog, private securityService: SecurityService) {}
+    
     enable: boolean = false;
     productdto?: Productdto;  
     selectedRowIndex: number | null = null;
+    isManager: boolean = this.securityService.hasRoleIn(['MANAGER', 'IMANAGER']);
     showTooltip(productdto: Productdto) {
       this.enable=true;
         this.productdto = productdto;
