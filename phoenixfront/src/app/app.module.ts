@@ -47,12 +47,11 @@ import { StockarchivedComponent } from './stockcomponent/stockarchived/stockarch
 import { ProdarchivedComponent } from './stockcomponent/prodarchived/prodarchived.component';
 
 const appRoute: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/userdetails' },
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'agents', component: AgentsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
   {path:'userinfos', component: UserInfoComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER"] }},
-  { path:'userdetails/:id', component: UserdetailsComponent, canActivate: [AuthGuard] },
+  { path:'userdetails', component: UserdetailsComponent, canActivate: [AuthGuard] },
   {path:'camapigns', component: CampaignsComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'addclient', component: AddClientComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'addcampaign', component: AddcampaignComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
@@ -76,8 +75,8 @@ const appRoute: Routes = [
   {path:'restocking', component: RestockingComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'complaint', component: ComplaintComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" , "AGENT"] }},
   {path:'stockarchive', component: StockarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
-  {path:'archivedproducts', component: ProdarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }}
-
+  {path:'archivedproducts', component: ProdarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
 ]
 
 export function kcFactory(kcService: KeycloakService, securityService: SecurityService, router: Router) {
@@ -96,14 +95,9 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
         kcService.loadUserProfile().then(profile => {
           securityService.profile = profile;
           const userRoles = kcService.getUserRoles();
-          if (userRoles.includes('IMANAGER') || userRoles.includes('MANAGER')) {
-            router.navigate(['/dashboard']);
-          } else if (userRoles.includes('AGENT')) {
-            router.navigate([`/userdetails/${profile.username}`]);
-          } else {
-            router.navigate(['/unauthorized']);
+           if (userRoles.includes('AGENT')) {
+              router.navigate(['/stocks']);  
           }
-
           resolve();
         });
       }).catch((error) => {

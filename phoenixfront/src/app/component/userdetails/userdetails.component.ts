@@ -56,19 +56,17 @@ selectedImage: File | null = null;
   
 
   async ngOnInit() {
-    this.route.params.subscribe(params => {
-      const id = params['id'];
+    this.route.queryParamMap.subscribe(params => {
+      const id = params.get('id');
       if(id != null){
       this.username = id;
       }
-    });
-
-
-    this.route.queryParamMap.subscribe(queryParams => {
-      const selectedTabParam = queryParams.get('selectedTab');
+      const selectedTabParam = params.get('selectedTab');
       this.selectedTab = selectedTabParam !== null ? +selectedTabParam : 0;
-      console.log('Selected Tab:', this.selectedTab);
     });
+
+
+
 
     this.getuserinfos(this.username);
 

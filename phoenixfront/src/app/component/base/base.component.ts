@@ -53,7 +53,7 @@ private initializeWebSocket(): void {
       console.log('Invalid Username');
       return;
     }
-    this.router.navigate(['/userdetails' , userName]);      
+    this.router.navigate(['/userdetails'], { queryParams: { id: userName } });      
   }
   navigateToStocks(){
     window.location.href = '/stocks';
@@ -121,10 +121,13 @@ ifUserSeentrue(notification: ReclamationDto): boolean {
       console.log('Invalid Username');
       return;
     }
-    this.router.navigate([`/userdetails/${userName}`], {
-      queryParams: { selectedTab: 2 }
-    });
-    }
+    this.router.navigate(['/userdetails'], { 
+      queryParams: { 
+        id: userName,
+        selectedTab: 2
+      } 
+    });      
+  }
    
   
 }
