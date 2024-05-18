@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Campaigndto } from 'src/app/models/agents/Campaigndto';
 import { Stockdto } from 'src/app/models/inventory/Stock';
 import { AgentsService } from 'src/app/services/agents.service';
+import { SecurityService } from 'src/app/services/security.service';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
@@ -12,12 +13,11 @@ import { StockService } from 'src/app/services/stock.service';
   styleUrls: ['./updatestock.component.css']
 })
 export class UpdatestockComponent implements OnInit {
-  constructor(private router: Router,
-     private agentsService: AgentsService,
-     private route: ActivatedRoute,
-     private stockservice: StockService,
-     private fb: FormBuilder,
-     private agentservice: AgentsService) {}
+  constructor(private router: Router, private agentsService: AgentsService,
+     private route: ActivatedRoute, private stockservice: StockService,
+     private fb: FormBuilder, private agentservice: AgentsService,
+     private securityService: SecurityService) {}
+     isManager: boolean = this.securityService.hasRoleIn(['MANAGER', 'IMANAGER']);
 
        campaigns: Campaigndto[] = [];
        navigateToStock(){

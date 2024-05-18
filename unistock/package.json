@@ -32,6 +32,7 @@
     "@ionic/angular": "^8.0.0",
     "@stomp/stompjs": "^7.0.0",
     "@types/sockjs-client": "^1.5.4",
+    "angular-oauth2-oidc": "^17.0.2",
     "ionicons": "^7.0.0",
     "keycloak-angular": "^15.2.1",
     "keycloak-js": "^24.0.4",

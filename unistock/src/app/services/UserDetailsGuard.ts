@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/* import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { SecurityService } from './security.service';
 import { Observable } from 'rxjs';
@@ -27,3 +27,4 @@ export class UserDetailsGuard implements CanActivate {
       }
   }
 }
+*/

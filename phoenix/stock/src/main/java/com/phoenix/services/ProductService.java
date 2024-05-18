@@ -443,19 +443,28 @@ public class ProductService implements IProductService{
 
         Set<Product> products = new HashSet<>();
         alertsByAgent.forEach(agent -> products.addAll(agent.getProductsAssociated()));
-        products.addAll(productsByStock);
+        List<Product> filteredProductsByStock = productsByStock.stream()
+                .filter(stockProduct -> products.stream().noneMatch(product -> Objects.equals(product.getSerialNumber(), stockProduct.getSerialNumber())))
+                .toList();
+        products.addAll(filteredProductsByStock);
+
+
+
         return products.parallelStream()
                 .map(product -> {
                     String serialNumbersExpired = product.getSerialNumber();
                     Date dueDate;
                     String agentAsignedToo = "";
+                    String agentUsername = "";
                     if (product.getAgentProd() != null) {
                         dueDate = Date.from(product.getAgentProd().getDuesoldDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
                         agentAsignedToo = product.getAgentProd().getFirstname() + " " + product.getAgentProd().getLastname();
+                        agentUsername = product.getAgentProd().getUsername();
                     } else {
                         dueDate = Date.from(product.getStock().getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
                     }
-                    return createReclamationDto(serialNumbersExpired, dueDate, managers, agentAsignedToo);
+                    System.out.println("agentUsername in getProductsForAlert" + agentUsername);
+                    return createReclamationDto(serialNumbersExpired, dueDate, managers, agentAsignedToo, agentUsername);
                 })
                 .collect(Collectors.toList());
     }
@@ -476,9 +485,16 @@ public class ProductService implements IProductService{
                     .collect(Collectors.toList());
         return managers;
     }
-    private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers, String agentAsignedToo) {
-        List<String> usernames = managers.stream()
-                    .map(Userdto::getUsername).toList();
+    private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers, String agentAsignedToo, String agentUsername) {
+        List<String> usernames = new ArrayList<>(managers.stream()
+                .map(Userdto::getUsername)
+                .toList());
+        if (!agentUsername.isEmpty()) {
+            usernames.add(agentUsername.toLowerCase());
+            System.out.println("agentUsername in createReclamationDto" + agentUsername);
+        }
+        System.out.println("usernames in createReclamationDto" + usernames);
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
         String formattedDueDate = sdf.format(dueDate);
         Date now = new Date();
@@ -486,15 +502,26 @@ public class ProductService implements IProductService{
         long differenceDays = (differenceMillis / (1000 * 60 * 60 * 24)) + 1;
         ReclamationDto reclamationDto = new ReclamationDto();
         reclamationDto.setSenderReference("UniStock Keeper");
-        reclamationDto.setReclamationText("The expiration date for this product " +
-                                           "'"+serialNumbersExpired+"'" +
-                                            " assigned to " +
-                                            agentAsignedToo +
-                                            " in " +
-                                           + differenceDays +
-                                          " day(s). " +
-                                          " Please check the situation, the product will expire on " +
-                                          formattedDueDate);
+        if(!agentAsignedToo.isEmpty()) {
+            reclamationDto.setReclamationText("The expiration date for this product " +
+                    "'" + serialNumbersExpired + "'" +
+                    " assigned to " +
+                    agentAsignedToo +
+                    " in " +
+                    +differenceDays +
+                    " day(s). " +
+                    " Please check the situation, the product will expire on " +
+                    formattedDueDate);
+        } else {
+            reclamationDto.setReclamationText("The expiration date for this product " +
+                    "'" + serialNumbersExpired +
+                    " in " +
+                    +differenceDays +
+                    " day(s). " +
+                    " Please check the situation, especially as the product is not assigned to any agent. The product will expire on " +
+                    formattedDueDate);
+
+        }
         reclamationDto.setReceiverReference(usernames);
         reclamationDto.setReclamationType(ReclamType.stockExpirationReminder);
         return reclamationDto;

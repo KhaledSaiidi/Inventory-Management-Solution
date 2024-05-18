@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  auth: {
+    issuer: "http://localhost:8181/realms/phoenixstock",
+    redirectUri: "http://localhost:8100",
+    clientId: 'front-client',
+    responseType: 'code',
+    scope: 'openid profile email offline_access',
+    showDebugInformation: true,
+    requireHttps: false
+  }
+
 };
 
 /*

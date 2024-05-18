@@ -1,0 +1,41 @@
+.footer {
+    background-color: #f0f0f0;
+    height: 6vh;
+    width: 100%;
+  }
+  
+  .footer-grid {
+    width: 100%;
+  }
+  
+  ion-icon {
+    font-size: 24px;
+  }
+  
+  .icon-col {
+    text-align: center;
+  }
+  
+  .selected-icon {
+    background-color: #37517e; 
+    border-radius: 5px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: white;
+    padding: 4px;
+  }
+  
+
+  .notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+  }
+  

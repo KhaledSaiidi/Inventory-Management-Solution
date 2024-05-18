@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentService } from 'src/app/services/agent.service';
-import { SecurityService } from 'src/app/services/security.service';
+// import { SecurityService } from 'src/app/services/security.service';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { StockService } from 'src/app/services/stock.service';
 })
 export class HeaderComponent  implements OnInit {
 
-  constructor (public securityService: SecurityService, private router: Router,
+  constructor (/* public securityService: SecurityService, */ private router: Router,
     private agentsService: AgentService, private stockservice: StockService,
     private alertController: AlertController
   ) {}
@@ -21,10 +21,10 @@ username: string = "";
 user!: Userdto;
 
   ngOnInit() {    
-    if (this.securityService.profile && this.securityService.profile.username) {
+   /* if (this.securityService.profile && this.securityService.profile.username) {
     console.log(this.securityService.profile);
     this.username = this.securityService.profile.username;
-  }
+  } */
   this.getuserinfos(this.username);
   this.getUserStat(this.username);
 }
@@ -36,10 +36,11 @@ getBase64Image(): string {
     return '';
   }
 }
-
+/*
 onLogout() {
   this.securityService.kcService.logout(window.location.origin);
 }
+*/
 userRole: string = "";
 userJobTitle!: string;
 firstName!: string;

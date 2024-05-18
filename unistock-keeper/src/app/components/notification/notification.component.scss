@@ -1,0 +1,24 @@
+.item-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  
+  .date {
+    font-size: smaller;
+  }
+
+  .unread-notification {
+    background-color: #f2f2f2;
+  }
+  
+  .description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+  }
+  
+  

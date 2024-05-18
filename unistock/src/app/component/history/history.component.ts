@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Productdto } from 'src/app/models/inventory/ProductDto';
 import { SoldProductDto } from 'src/app/models/inventory/SoldProductDto';
-import { SecurityService } from 'src/app/services/security.service';
+// import { SecurityService } from 'src/app/services/security.service';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
@@ -11,13 +11,13 @@ import { StockService } from 'src/app/services/stock.service';
 })
 export class HistoryComponent  implements OnInit {
 
-  constructor (public securityService: SecurityService, private stockservice: StockService) {}
+  constructor (/* public securityService: SecurityService,*/ private stockservice: StockService) {}
   username: string = "";
   public ngOnInit() {
-    if (this.securityService.profile && this.securityService.profile.username) {
+  /*  if (this.securityService.profile && this.securityService.profile.username) {
       console.log(this.securityService.profile);
       this.username = this.securityService.profile.username;
-    }
+    } */
     this.getThelast4ReturnedProdsByusername(this.username);
     this.getThelast4SoldProdsByusername(this.username);
   }

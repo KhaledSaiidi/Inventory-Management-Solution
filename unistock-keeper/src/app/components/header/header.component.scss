@@ -1,0 +1,59 @@
+ion-header{
+    background-color: #37517e !important;
+  }
+  .header-toolbar {
+    --background: transparent;
+    --border-color: transparent;
+    --box-shadow: none;
+  }
+  .header-buttons {
+    padding-right: 8px;
+  }
+  .logout-button {
+    --border-radius: 50%;
+    --background: rgba(255, 255, 255, 0.2);
+  }
+  .logout-button:hover {
+    --background: rgba(255, 255, 255, 0.3);
+  }
+  ion-button {
+    --color: #fff;
+  }
+  ion-icon {
+    font-size: 24px;
+    color: white;
+  }
+  .header-title {
+    font-family: 'Arial', sans-serif; 
+    font-size: 24px; 
+    font-weight: bold;
+    color: white; 
+    padding: 10px 15px; 
+    border-radius: 5px; 
+  }  
+
+  .indicator {
+    text-align: center;
+  }
+  
+  .value {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .label {
+    font-size: 12px;
+  }
+    
+  .icon-associated {
+    color: grey;
+  }
+  
+  .icon-sold {
+    color: green;
+  }
+  
+  .icon-returned {
+    color: red;
+  }
+  

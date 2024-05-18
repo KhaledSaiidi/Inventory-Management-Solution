@@ -1,0 +1,24 @@
+<!-- <script src="https://cdn.jsdelivr.net/npm/keycloak-js@12"></script> -->
+<ion-content class="content-background">
+  <div class="background" style="position: relative;">
+    <img src="assets/track.jpg" style="width: 100%;">
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="UniStock Keeper Logo">
+    </div>
+  </div>
+  <form (submit)="login()">
+    <div style="margin-bottom: 50px; text-align: center;">
+    <h1>Login to <strong>Unistock Keeper</strong></h1>
+    <p>Empower Your Business, Master Your Inventory.</p>
+  </div>
+    <ion-item>
+      <ion-label position="floating">Username</ion-label>
+      <ion-input type="text" [(ngModel)]="username" name="username" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+    </ion-item>
+    <ion-button expand="full" type="submit">Login</ion-button>
+  </form>
+</ion-content>

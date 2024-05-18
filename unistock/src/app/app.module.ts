@@ -20,31 +20,7 @@ import { StompService } from './services/stomp.service';
 import { HistoryComponent } from './component/history/history.component';
 import { SendNotificationComponent } from './component/send-notification/send-notification.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-export function kcFactory(kcService: KeycloakService, securityService: SecurityService) {
-  return () => {
-    return new Promise<void>((resolve, reject) => {
-      kcService.init({
-        config: {
-          realm: "phoenixstock",
-          clientId: "front-client",
-          url: "http://localhost:8181"
-        },
-        initOptions: {
-          onLoad: "login-required"
-        }
-      }).then(() => {
-        kcService.loadUserProfile().then(profile => {
-          securityService.profile = profile;
-          resolve();
-        });
-      }).catch((error) => {
-        reject(error);
-      });
-    });
-  };
-}
-
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 
 @NgModule({
@@ -64,25 +40,14 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     BrowserModule, 
     IonicModule.forRoot(), 
     AppRoutingModule, 
-    KeycloakAngularModule, 
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    OAuthModule.forRoot(),
 ],
   providers: [
-    { 
-      provide: RouteReuseStrategy,
-      useClass: IonicRouteStrategy 
-    }, 
-    KeycloakService,
-    SecurityService,
-    StompService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: kcFactory,
-      multi: true,
-      deps: [KeycloakService, SecurityService],
-    }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    SecurityService
   ],
   bootstrap: [AppComponent],
 })

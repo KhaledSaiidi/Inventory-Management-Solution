@@ -47,5 +47,16 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
     <string>The app enables the scanning of various barcodes.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+  		<dict>
+    		<key>CFBundleURLName</key>
+    		<string>io.edgeflare.starter</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+      			<string>edgeflareapp</string>
+    		</array>
+  		</dict>
+	</array>
 </dict>
 </plist>

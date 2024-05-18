@@ -14,7 +14,7 @@
               </div>
               <div class="card-body">
                 <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
-                  <ng-container *ngIf="!stockIschecked">
+                  <ng-container *ngIf="!stockIschecked && isManager">
                   <div class="d-flex align-items-center" style="margin-bottom: 20px;">
                     <input type="checkbox"  formControlName="checked" id="checked" class="custom-checkbox">
                     <label for="checked" class="mb-0" style="margin-left: 10px;">Would you like to force the stock check ?</label>
@@ -36,7 +36,7 @@
                   <div class="col-md-6">
                     <label for="receivedDate">Stock Received Date</label>
                     <input type="date" class="form-control mt-2" id="receivedDate" formControlName="receivedDate" >
-                </div>
+                  </div>
                   <div class="col-md-12">
                       <label for="notes">Notes</label>
                       <textarea class="form-control mt-2" id="notes" formControlName="notes" rows="3"></textarea>

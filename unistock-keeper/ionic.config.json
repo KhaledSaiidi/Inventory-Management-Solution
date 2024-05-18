@@ -1,0 +1,7 @@
+{
+  "name": "unistock-keeper",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

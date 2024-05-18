@@ -6,7 +6,7 @@ import { ReclamType } from 'src/app/models/notifications/ReclamType';
 import { ReclamationDto } from 'src/app/models/notifications/ReclamationDto';
 import { AgentService } from 'src/app/services/agent.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { SecurityService } from 'src/app/services/security.service';
+// import { SecurityService } from 'src/app/services/security.service';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { StockService } from 'src/app/services/stock.service';
 })
 export class SendNotificationComponent  implements OnInit {
 
-  constructor (public securityService: SecurityService, private router: Router,
+  constructor (/* public securityService: SecurityService, */ private router: Router,
     private formBuilder: FormBuilder, private notificationService: NotificationService,
     private agentService: AgentService, private stockservice:  StockService
   ) { }
@@ -27,10 +27,10 @@ export class SendNotificationComponent  implements OnInit {
   notifFormC!: FormGroup;
 
   ngOnInit() {
-    if (this.securityService.profile && this.securityService.profile.username) {
+  /*  if (this.securityService.profile && this.securityService.profile.username) {
       console.log(this.securityService.profile);
       this.username = this.securityService.profile.username;
-    }  
+    }   */
     this.getStocks();
     this.getUserscategorized();
     this.fetchProductsInPossession(this.username);

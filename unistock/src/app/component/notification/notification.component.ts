@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { ReclamationDto } from 'src/app/models/notifications/ReclamationDto';
 import { NotificationService } from 'src/app/services/notification.service';
-import { SecurityService } from 'src/app/services/security.service';
+// import { SecurityService } from 'src/app/services/security.service';
 import { StompService } from 'src/app/services/stomp.service';
 import { delay, switchMap, timer } from 'rxjs';
 import { formatDate } from '@angular/common';
@@ -17,16 +17,16 @@ import { NotifsharedService } from 'src/app/services/notifshared.service';
 export class NotificationComponent  implements OnInit {
 
   constructor(
-    private alertController: AlertController, public securityService: SecurityService, 
+    private alertController: AlertController,/* public securityService: SecurityService, */
     private router: Router, public stompService: StompService, private notifSharedService: NotifsharedService,
     public notificationService: NotificationService) { }
     
   username: string = "";
   ngOnInit() {
-    if (this.securityService.profile && this.securityService.profile.username) {
+  /*  if (this.securityService.profile && this.securityService.profile.username) {
       console.log(this.securityService.profile);
       this.username = this.securityService.profile.username;
-    }
+    } */
     this.refreshnotifications();
     this.initializeWebSocket();
     }

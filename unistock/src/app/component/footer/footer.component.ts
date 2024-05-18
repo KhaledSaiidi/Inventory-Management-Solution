@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReclamationDto } from 'src/app/models/notifications/ReclamationDto';
 import { NotificationService } from 'src/app/services/notification.service';
-import { SecurityService } from 'src/app/services/security.service';
+// import { SecurityService } from 'src/app/services/security.service';
 import { StompService } from 'src/app/services/stomp.service';
 import { Subscription, delay, switchMap, timer } from 'rxjs';
 import { NotifsharedService } from 'src/app/services/notifshared.service';
@@ -21,17 +21,17 @@ export class FooterComponent  implements OnInit , OnDestroy{
   @Input() isSelectedNotifications: boolean = false;
 
   constructor (
-    public securityService: SecurityService, private router: Router,
+    /* public securityService: SecurityService, */ private router: Router,
     public stompService: StompService, public notificationService: NotificationService,
     private notifSharedService: NotifsharedService
   ) {}
 
   username: string = "";
   ngOnInit() {
-    if (this.securityService.profile && this.securityService.profile.username) {
+  /*  if (this.securityService.profile && this.securityService.profile.username) {
       console.log(this.securityService.profile);
       this.username = this.securityService.profile.username;
-    }
+    } */
     this.refreshnotifications();
     this.initializeWebSocket();
 

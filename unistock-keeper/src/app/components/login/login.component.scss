@@ -1,0 +1,19 @@
+ion-content,
+ion-item {
+  background-color: #888 !important; /* Grey background color */
+}
+
+.logo-container {
+  position: absolute;
+  top: 30px;
+  left: 10px;
+}
+
+.logo-container img {
+  max-height: 150px;
+}
+
+.background{
+  max-height: 200px;
+  margin-bottom: 100px;
+}
