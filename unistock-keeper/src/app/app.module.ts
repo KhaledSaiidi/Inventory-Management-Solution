@@ -13,35 +13,21 @@ import { AuthService } from './services/auth.service';
 import { AuthGuard } from './services/auth.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import { KeycloakInitOptions } from 'keycloak-js';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HistoryComponent } from './components/history/history.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { environment } from 'src/environments/environment';
+import { SendNotificationComponent } from './components/send-notification/send-notification.component';
 
 const routes: Routes = [
-  {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'home',
-    component: HomeComponent,
-    canActivate: [AuthGuard]
-
-  },
-  {
-    path:'notification', component: NotificationComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path:'history', component: HistoryComponent,
-    canActivate: [AuthGuard]
-  },
+  {path: 'login', component: LoginComponent},
+  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  { path:'notification', component: NotificationComponent, canActivate: [AuthGuard]},
+  { path:'history', component: HistoryComponent, canActivate: [AuthGuard]},
+  { path:'send', component: SendNotificationComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
-
 ];
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -69,7 +55,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     FooterComponent,
     LoginComponent,
     HistoryComponent,
-    NotificationComponent
+    NotificationComponent,
+    SendNotificationComponent
   ],
   imports: [
     BrowserModule,

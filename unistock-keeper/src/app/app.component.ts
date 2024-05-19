@@ -6,10 +6,8 @@ import { AuthService } from './services/auth.service';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent /* implements OnInit */ {
+export class AppComponent  {
   constructor(private authService: AuthService) {}
 
- /* async ngOnInit(): Promise<void> {
-    await this.authService.authService.loadDiscoveryDocumentAndTryLogin();
-  } */
-}
+
+  }

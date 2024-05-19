@@ -1,24 +1,35 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/keycloak-js@12"></script> -->
-<ion-content class="content-background">
-  <div class="background" style="position: relative;">
+<div style="background-color:#f6f7fc; height: 100%;">
+  <div class="background" style="position: relative; margin-bottom: 20%;">
     <img src="assets/track.jpg" style="width: 100%;">
     <div class="logo-container">
       <img src="assets/logo.png" alt="UniStock Keeper Logo">
     </div>
   </div>
   <form (submit)="login()">
-    <div style="margin-bottom: 50px; text-align: center;">
-    <h1>Login to <strong>Unistock Keeper</strong></h1>
-    <p>Empower Your Business, Master Your Inventory.</p>
-  </div>
-    <ion-item>
-      <ion-label position="floating">Username</ion-label>
-      <ion-input type="text" [(ngModel)]="username" name="username" required></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
-    </ion-item>
-    <ion-button expand="full" type="submit">Login</ion-button>
+    <div style="margin-bottom: 40px; text-align: center;">
+      <h2>Login to <strong>Unistock Keeper</strong></h2>
+      <p class="mb-4">Empower Your Business, Master Your Inventory.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="companyName">Username</label>
+      <input class="form-control mt-2 login-input" type="text" placeholder="Username" [(ngModel)]="username" name="username" required>
+    </div>
+    <div class="form-group2">
+      <label for="companyName">Password</label>
+      <input class="form-control mt-2 login-input" type="password" placeholder="Password" [(ngModel)]="password" name="password" required>
+    </div>
+
+    <div class="otheractions">
+      <label style="display: flex; align-items: center;">
+        <input type="checkbox" id="rememberMe" style="margin-right: 5px; margin-bottom: 14%;">
+        <p style="font-size: 15px;">Remember Me</p>
+      </label>
+      <a routerLink="/forgetpw" style="text-decoration: none;"><p style="font-size: 15px;"><u>Forget Password?</u></p></a>
+    </div>
+        <div style="display: flex; justify-content: center;">
+      <button type="submit" class="btn btn-block btn-primary login-button"><b>Login</b></button>
+    </div>
   </form>
-</ion-content>
+</div>

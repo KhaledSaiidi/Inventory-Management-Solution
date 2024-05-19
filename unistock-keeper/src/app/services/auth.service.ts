@@ -48,43 +48,56 @@ export class AuthService {
   }
 
 
-  async logout() {
-    const keycloakInstance = this.kcService.getKeycloakInstance();
-    
-//    const redirectUri = window.location.origin + '/login';
-    const logoutUrl = `${keycloakInstance.authServerUrl}/realms/${keycloakInstance.realm}/protocol/openid-connect/logout`;
-if(keycloakInstance.refreshToken) {
-    try {
-        const params = new URLSearchParams();
-        params.set('client_id', environment.keycloak.clientId);
-        params.set('refresh_token', keycloakInstance.refreshToken);
-        console.log(params.toString());
-        await this.http.post(logoutUrl, params.toString(), {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded'
-          })
-        }).toPromise();
-      } catch (error) {
-        console.error('Failed to logout from Keycloak', error);
-      }
-    }
-    
-/* try {
-  await this.kcService.logout(redirectUri);
-} catch (error) {
-  console.error('Logout failed', error);
-} */
 
-    keycloakInstance.clearToken();
-    keycloakInstance.authenticated = false;
-    this.profile = undefined;
-    this.router.navigate(['/login']); 
+  private getUserRoles(): string[] {
+    const keycloakInstance = this.kcService.getKeycloakInstance();
+    if (!keycloakInstance || !keycloakInstance.tokenParsed) {
+      console.log("!keycloakInstance || !keycloakInstance.tokenParsed");
+      return [];
+    }
+
+    const realmAccess = keycloakInstance.tokenParsed['realm_access'];
+    let roles: string[] = [];
+
+    if (realmAccess && realmAccess.roles) {
+      roles = realmAccess.roles;
+      console.log(roles);
+    } else {
+      console.log("empty");
+    }
+
+    return roles;
   }
 
   public hasRoleIn(roles:string[]): boolean{
-      let userRoles = this.kcService.getUserRoles();
+      let userRoles = this.getUserRoles();
       for(let role of roles){
           if(userRoles.includes(role)) return true;
       } return false;
       }
+
+      async logout() {
+        const keycloakInstance = this.kcService.getKeycloakInstance();
+        const logoutUrl = `${keycloakInstance.authServerUrl}/realms/${keycloakInstance.realm}/protocol/openid-connect/logout`;
+    if(keycloakInstance.refreshToken) {
+        try {
+            const params = new URLSearchParams();
+            params.set('client_id', environment.keycloak.clientId);
+            params.set('refresh_token', keycloakInstance.refreshToken);
+            console.log(params.toString());
+            await this.http.post(logoutUrl, params.toString(), {
+              headers: new HttpHeaders({
+                'Content-Type': 'application/x-www-form-urlencoded'
+              })
+            }).toPromise();
+          } catch (error) {
+            console.error('Failed to logout from Keycloak', error);
+          }
+        }
+        keycloakInstance.clearToken();
+        keycloakInstance.authenticated = false;
+        this.profile = undefined;
+        this.router.navigate(['/login']); 
+      }
+    
   }
