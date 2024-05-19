@@ -14,13 +14,25 @@ export class HistoryComponent  implements OnInit {
 
   constructor ( public securityService: AuthService, private stockservice: StockService) {}
   username: string = "";
-  public ngOnInit() {
-  if (this.securityService.profile && this.securityService.profile.username) {
+  async ngOnInit() {
+    await this.loadUserProfile();
+    this.getThelast4ReturnedProdsByusername(this.username);
+    this.getThelast4SoldProdsByusername(this.username);
+  }
+  private async loadUserProfile() {
+    if (!this.securityService.profile) {
+      try {
+        await this.securityService.kcService.loadUserProfile();
+        this.securityService.profile = await this.securityService.kcService.loadUserProfile();
+      } catch (error) {
+        console.error('Failed to load user profile', error);
+        return;
+      }
+    }
+    if (this.securityService.profile && this.securityService.profile.username) {
       console.log(this.securityService.profile);
       this.username = this.securityService.profile.username;
     }
-    this.getThelast4ReturnedProdsByusername(this.username);
-    this.getThelast4SoldProdsByusername(this.username);
   }
   showsell: boolean = true;
   showreturn: boolean = false;

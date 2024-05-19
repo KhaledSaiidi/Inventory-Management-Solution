@@ -21,14 +21,28 @@ export class HeaderComponent  implements OnInit {
 username: string = "";
 user!: Userdto;
 
-  ngOnInit() {    
-    if (this.securityService.profile && this.securityService.profile.username) {
-    console.log(this.securityService.profile);
-    this.username = this.securityService.profile.username;
-  } 
+async ngOnInit() {    
+  await this.loadUserProfile();
   this.getuserinfos(this.username);
   this.getUserStat(this.username);
 }
+
+private async loadUserProfile() {
+  if (!this.securityService.profile) {
+    try {
+      await this.securityService.kcService.loadUserProfile();
+      this.securityService.profile = await this.securityService.kcService.loadUserProfile();
+    } catch (error) {
+      console.error('Failed to load user profile', error);
+      return;
+    }
+  }
+  if (this.securityService.profile && this.securityService.profile.username) {
+    console.log(this.securityService.profile);
+    this.username = this.securityService.profile.username;
+  }
+}
+
 
 getBase64Image(): string {
   if (this.user.image) {

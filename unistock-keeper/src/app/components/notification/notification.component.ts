@@ -23,15 +23,27 @@ export class NotificationComponent  implements OnInit {
     public notificationService: NotificationService) { }
     
   username: string = "";
-  ngOnInit() {
-   if (this.securityService.profile && this.securityService.profile.username) {
-      console.log(this.securityService.profile);
-      this.username = this.securityService.profile.username;
-    }
+  async ngOnInit() {
+    await this.loadUserProfile();
     this.refreshnotifications();
     this.initializeWebSocket();
     }
 
+    private async loadUserProfile() {
+      if (!this.securityService.profile) {
+        try {
+          await this.securityService.kcService.loadUserProfile();
+          this.securityService.profile = await this.securityService.kcService.loadUserProfile();
+        } catch (error) {
+          console.error('Failed to load user profile', error);
+          return;
+        }
+      }
+      if (this.securityService.profile && this.securityService.profile.username) {
+        console.log(this.securityService.profile);
+        this.username = this.securityService.profile.username;
+      }
+    }
   private initializeWebSocket(): void {
     this.stompService.subscribe('/topic/notification', (): any => {
       this.refreshnotifications();
