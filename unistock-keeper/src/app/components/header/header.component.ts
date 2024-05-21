@@ -94,13 +94,17 @@ getuserinfos(code : string){
             this.associatedProds = stats[0];
             this.returnedProds = stats[1];
             this.soldProds = stats[2];
-                  },
+          },
           (error) => {
-            console.error('Error fetching last stats :', error);
+            console.error('Error fetching last stats:', error.message);
+            console.error('Error status:', error.status);
+            if (error.error) {
+              console.error('Error details:', error.error);
+            }
           }
         );
-    }  
-
+    }
+  
     navigateToSend(){
       this.router.navigate(['/send']);      
     }

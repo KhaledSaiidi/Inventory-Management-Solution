@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { StockService } from 'src/app/services/stock.service';
 
 @Component({
   selector: 'app-home',
@@ -9,13 +10,14 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomeComponent  implements OnInit {
 
-  constructor ( public securityService: AuthService ,  private router: Router) {}
+  constructor ( public securityService: AuthService ,  private router: Router, private stockservice: StockService) {}
 username: string = "";
  isThisManager!: boolean;
  async  ngOnInit() {
   await this.loadUserProfile();
   console.log("isManager :" + this.isThisManager);
   console.log(this.username);
+  this.getStocksByStocksReferences();
   }
 
 
@@ -38,15 +40,27 @@ username: string = "";
   }
 
   navigateTocheck(){
-    this.router.navigate(['/check']);      
+    if(this.stockreference) {
+    this.router.navigate(['/check']);
+    } else {
+      this.nostock = true;
+    }      
   }
 
   sellItem() {
+    if(this.stockreference) {
     console.log("Scan button clicked");
+    } else {
+      this.nostock = true;
+    }
   }
   
   returnItem() {
+    if(this.stockreference) {
     console.log("Scan button clicked");
+    } else {
+      this.nostock = true;
+    }
   }
   openHistory() {
     console.log("History button clicked");
@@ -58,6 +72,25 @@ username: string = "";
 
   openOptions() {
     console.log("Options button clicked");
+  }
+  nostock: boolean = false;
+  stockreference!: string;
+  selectedStock: string ="Select a stock to proceed !";
+  extractStockReference(selectedValue: string) {
+    const stockReference = selectedValue.split(' ')[0];
+    this.stockreference = stockReference
+    console.log(stockReference);
+  }
+  stockReferences: string[] = [];
+  getStocksByStocksReferences() {
+    this.stockservice.getStocksByStocksReferences().subscribe(
+      (data) => {
+        this.stockReferences = data as string[];        
+      },
+      (error: any) => {
+        console.error('Error fetching agents:', error);
+      }
+    );
   }
 
 }

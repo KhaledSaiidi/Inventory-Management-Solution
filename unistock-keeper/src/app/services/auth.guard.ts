@@ -20,29 +20,22 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean> {
-    const token = localStorage.getItem('kc_token');
-    const refreshToken = localStorage.getItem('kc_refreshToken');
+
+   
   
     console.log('isAccessAllowed called');
-
-    if (!this.authenticated && token && refreshToken) {
-      const keycloakInstance = this.keycloak.getKeycloakInstance();
-      keycloakInstance.token = token;
-      keycloakInstance.refreshToken = refreshToken;
-      keycloakInstance.tokenParsed = jwtDecode(token);
-      keycloakInstance.authenticated = true;
-      await this.keycloak.loadUserProfile();
-      this.authenticated = true;
-    }
   
     if (!this.authenticated) {
-      this.router.navigate(['/login']);
+      window.location.href = '/login';
+      console.log('no authentification');
       return false;
     }
 
     const requiredRoles = route.data['roles'];
 
     if (!requiredRoles || requiredRoles.length === 0) {
+      console.log('no required role');
+      this.authenticated = true;
       return true;
     }
     const userRoles = this.keycloak.getUserRoles();
@@ -50,8 +43,11 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivate {
 
     if (!hasRequiredRole) {
       this.router.navigate(['/']);
+      console.log('required role');
       return false;
     }
+    console.log('nothing');
+    this.authenticated = true;
     return true;
   }
 }

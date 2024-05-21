@@ -3,6 +3,15 @@
   <div class="container">
     <h1 class="scan-text">Scan your product</h1> 
     <img src="./assets/scan.png" alt="Barcode Scanner">
+    <ion-select [(ngModel)]="selectedStock" (ngModelChange)="extractStockReference($event)">
+      <ion-select-option disabled selected>Select a stock to proceed !</ion-select-option>
+      <ion-select-option *ngFor="let stockReference of stockReferences" [value]="stockReference">Stock: {{ stockReference }}</ion-select-option>
+    </ion-select>
+    
+    <ng-container *ngIf="nostock">
+      <p style="color: red;">You didn't choose a stock</p>
+    </ng-container>
+    
     <div class="button-container">
      <ng-container *ngIf="isThisManager">
       <ion-button fill="outline" style="width: 80px; margin-right: 10px;" (click)="navigateTocheck()">Check</ion-button>

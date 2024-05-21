@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, of, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgentService {
 
-  readonly apiUrl = "http://localhost:9000/people";
+  readonly apiUrl = environment.url + "/people";
   constructor(private http: HttpClient) { }
 
 

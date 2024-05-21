@@ -1,10 +1,11 @@
 import {  Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { KeycloakProfile } from 'keycloak-js';
+import { KeycloakProfile, KeycloakTokenParsed } from 'keycloak-js';
 import {  KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { environment } from '../../environments/environment';
 import { jwtDecode } from 'jwt-decode';
+import { KeycloakResponse } from '../models/KeycloakResponse';
 
 
 @Injectable({
@@ -17,22 +18,11 @@ export class AuthService {
   ){
     this.kcService.keycloakEvents$.subscribe({
       next: (event) => {
-        if (event.type === KeycloakEventType.OnAuthLogout || event.type === KeycloakEventType.OnTokenExpired) {
+        if (event.type === KeycloakEventType.OnAuthLogout ) {
           this.onSessionEnd();
-        } else if(event.type === KeycloakEventType.OnAuthRefreshSuccess) {
-          this.updateLocalStorage();
-        }
+        } 
       }
     });
-  }
-  private updateLocalStorage() {
-    const keycloakInstance = this.kcService.getKeycloakInstance();
-    if (keycloakInstance) {
-      const updatedToken = keycloakInstance.token ?? '';
-      const updatedRefreshToken = keycloakInstance.refreshToken ?? '';
-      localStorage.setItem('kc_token', updatedToken);
-      localStorage.setItem('kc_refreshToken', updatedRefreshToken);
-    }
   }
 
   private onSessionEnd() {
@@ -42,52 +32,65 @@ export class AuthService {
       keycloakInstance.authenticated = false;  
     }
     this.profile = undefined;
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    window.location.href = '/login';
   }
 
+
+  async refreshAccessToken(): Promise<void> {
+    const keycloakInstance = this.kcService.getKeycloakInstance();
+    keycloakInstance.onTokenExpired = async () => {
+      try {
+        await this.kcService.updateToken();
+        console.log("Token updated successfully : " + keycloakInstance.token);
+      } catch (error) {
+        console.error("Failed to update token", error);
+        this.onSessionEnd();
+      }
+    };      
+  }
+  
   async login(username: string, password: string): Promise<void> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
     const body = `client_id=${environment.keycloak.clientId}&grant_type=password&username=${username}&password=${password}`;
-
     const url = `${environment.keycloak.url}/realms/${environment.keycloak.realm}/protocol/openid-connect/token`;
+
     try {
-    const response = await this.http.post(url, body, { headers }).toPromise();
-    const token = (response as any).access_token;
-    const refreshToken = (response as any).refresh_token;
+      const response  = await this.http.post(url, body, { headers }).toPromise() as KeycloakResponse;
+      const token = response.access_token;
+      const refreshToken = response.refresh_token;
+      const expiresin = response.expires_in;
 
-    if (token && refreshToken) {
-      localStorage.setItem('kc_token', token);
-      localStorage.setItem('kc_refreshToken', refreshToken);
+      const keycloakInstance = this.kcService.getKeycloakInstance();
+      if (keycloakInstance) {
+        keycloakInstance.token = token;
+        keycloakInstance.refreshToken = refreshToken;
+        keycloakInstance.tokenParsed = jwtDecode(token) as KeycloakTokenParsed;
+        keycloakInstance.authenticated = true;
+        console.log("keycloakInstancetoken : " + keycloakInstance.token);
+        console.log("keycloakInstancerefreshToken : " + keycloakInstance.refreshToken);
+        console.log("expire in  : " + expiresin);
+        const userProfile: KeycloakProfile = await this.kcService.loadUserProfile();
+        this.profile = userProfile;
+        this.router.navigate(['/home']);
+        keycloakInstance.onTokenExpired = async () => {
+          try {
+            await this.kcService.updateToken();
+            console.log("Token updated successfully");
+          } catch (error) {
+            console.error("Failed to update token", error);
+            this.onSessionEnd();
+          }
+        };      
+      } else {
+        console.error('Failed to get Keycloak instance during login');
+      }
+    } catch (error) {
+      console.error('Login failed', error);
     }
-    console.log("token : " + token);
-    console.log("refreshToken :" + refreshToken);
-    const keycloakInstance = this.kcService.getKeycloakInstance();
-    keycloakInstance.token = token;
-    keycloakInstance.refreshToken = refreshToken;
-    keycloakInstance.tokenParsed = jwtDecode(token);
-    keycloakInstance.authenticated = true;
-    const userProfile: KeycloakProfile = await this.kcService.loadUserProfile();
-    this.profile = userProfile;
-    this.router.navigate(['/home']);
-
-    this.kcService.updateToken(30).then(() => {
-      localStorage.clear();
-      const updatedToken = keycloakInstance.token ?? '';
-      const updatedRefreshToken = keycloakInstance.refreshToken ?? '';
-      localStorage.setItem('kc_token', updatedToken);
-      localStorage.setItem('kc_refreshToken', updatedRefreshToken);
-    });
-  
-      } catch (error) {
-    console.error('Login failed', error);
   }
-
-  }
-
 
 
   private getUserRoles(): string[] {
@@ -136,10 +139,9 @@ export class AuthService {
           }
         }
         keycloakInstance.clearToken();
-        localStorage.clear();
         keycloakInstance.authenticated = false;
         this.profile = undefined;
-        this.router.navigate(['/login']); 
+        window.location.href = '/login';
       }
     
   }

@@ -4,13 +4,13 @@
 
 export const environment = {
   production: false,
-  keycloak: {
-    url: 'http://localhost:8181',
+  keycloak: {    
+    url: 'http://192.168.0.4:8181',
     realm: 'phoenixstock',
     clientId: 'front-client'
-  }
+  },
+  url: 'http://192.168.0.4:9000'
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

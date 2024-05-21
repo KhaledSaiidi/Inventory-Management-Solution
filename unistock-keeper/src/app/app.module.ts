@@ -37,11 +37,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
         clientId: environment.keycloak.clientId,
       },
       initOptions: {
-        onLoad: 'check-sso',
-        checkLoginIframe: false
+        checkLoginIframe: true,
       },
       enableBearerInterceptor: true,
-      bearerExcludedUrls: ['/assets']
     });
 
 }
