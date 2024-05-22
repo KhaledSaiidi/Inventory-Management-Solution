@@ -1,0 +1,23 @@
+<div [ngStyle]="{'background': scanActive ? '#00000000' : '#fff'}">
+  <ion-button expand="full" (click)="startScanner()" [hidden]="scanActive">
+  <ion-icon name="show" slot="start"></ion-icon>
+  Start scan
+  </ion-button>
+  <ion-row class="scanner-buttons">
+    <ion-col class="ion-no-padding">
+      <div style="text-align: center;">
+      <button class="btn scan-btn add-btn" type="button" (click)="proceedCheck()">Check</button>
+      <button class="btn scan-btn add-btn" type="button" (click)="nextScan()">Next Item</button>
+      <button class="btn btn-danger" type="button" (click)="navigateTohome()">Cancel</button>
+    </div>
+    </ion-col>
+  </ion-row>
+  <div class="scan-box" [hidden]="!scanActive">
+  </div>
+  <div class="input-container text-center mt-3" [ngClass]="{ 'limited-height': !scanActive }">
+    <div class="col-md-8 input-wrapper" class="input-wrapper" *ngFor="let barcode of barcodes">
+      <input  [ngModel]="barcode" placeholder="Enter a Barcode" (ngModelChange)="onBarcodeChange($event, barcode)" class="form-control mt-2" type="text" style="margin-bottom: 3px;">                
+    </div>
+  </div>
+
+</div>

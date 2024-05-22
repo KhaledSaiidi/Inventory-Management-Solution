@@ -17,6 +17,7 @@ import { HistoryComponent } from './components/history/history.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { environment } from 'src/environments/environment';
 import { SendNotificationComponent } from './components/send-notification/send-notification.component';
+import { CheckComponent } from './components/check/check.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path:'notification', component: NotificationComponent, canActivate: [AuthGuard]},
   { path:'history', component: HistoryComponent, canActivate: [AuthGuard]},
   { path:'send', component: SendNotificationComponent, canActivate: [AuthGuard]},
+  { path:'check', component: CheckComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];
@@ -53,7 +55,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     LoginComponent,
     HistoryComponent,
     NotificationComponent,
-    SendNotificationComponent
+    SendNotificationComponent,
+    CheckComponent
   ],
   imports: [
     BrowserModule,

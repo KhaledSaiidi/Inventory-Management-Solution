@@ -40,11 +40,11 @@ username: string = "";
   }
 
   navigateTocheck(){
-    if(this.stockreference) {
+//    if(this.stockreference) {
     this.router.navigate(['/check']);
-    } else {
+/*    } else {
       this.nostock = true;
-    }      
+    } */      
   }
 
   sellItem() {
