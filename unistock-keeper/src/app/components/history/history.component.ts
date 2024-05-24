@@ -56,6 +56,7 @@ export class HistoryComponent  implements OnInit {
       this.stockservice.getThelast4ReturnedProdsByusername(username)
         .subscribe(
           (products: Productdto[]) => {
+            this.lastreturnedProds = [];
             this.lastreturnedProds = products;
             if(this.lastreturnedProds && this.lastreturnedProds.length > 0) {
               this.emptylastReturnss = false;
@@ -71,6 +72,7 @@ export class HistoryComponent  implements OnInit {
       this.stockservice.getThelast4SoldProdsByusername(username)
         .subscribe(
           (products: SoldProductDto[]) => {
+            this.lastsoldProds = [];
             this.lastsoldProds = products;
             if(this.lastsoldProds && this.lastsoldProds.length > 0){
               this.emptylastsells = false;

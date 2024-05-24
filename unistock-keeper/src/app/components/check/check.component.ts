@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { BarcodeScanner, ScanOptions } from '@capacitor-community/barcode-scanner';
-import {  Router } from '@angular/router';
+import {  ActivatedRoute, Router } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
+import { StockService } from 'src/app/services/stock.service';
 
 @Component({
   selector: 'app-check',
@@ -15,10 +16,21 @@ result!: string;
 scanActive = false;
 barcodes: Set<string> = new Set(['']);
 private barcodeChangeSubject: Subject<{ newValue: string, barcode: string }> = new Subject<{ newValue: string, barcode: string }>();
+stockreference!: string;
 
-  constructor(private alertController: AlertController, private router: Router) { }
+  constructor(private alertController: AlertController, private router: Router, private stockservice: StockService,
+    private route: ActivatedRoute
+  ) { }
 
 ngAfterViewInit(): void {
+  this.route.queryParamMap.subscribe(params => {
+    const id = params.get('id');
+    if(id != null){
+    this.stockreference = id;
+    console.log("this.stockreference :" + this.stockreference);
+    }
+  });
+
   BarcodeScanner.prepare();
   this.startScanner();
   this.barcodeChangeSubject
@@ -48,7 +60,11 @@ ngAfterViewInit(): void {
         this.result = result.content;
         this.scanActive = false;
           if (this.result.length >= 5 && !this.barcodes.has(this.result)) {
+            const audio = new Audio();
+            audio.src = 'assets/barcode.wav';
+            audio.load();    
             this.barcodes.add(this.result);
+            audio.play();    
             console.log(JSON.stringify([...this.barcodes]));
             } else if (this.result.length < 5) {
             console.warn("Ignoring barcode less than 5 characters:", this.result);
@@ -57,7 +73,6 @@ ngAfterViewInit(): void {
             }
       }
     }
-
   }
 
   async checkPermission(): Promise<boolean>  {
@@ -115,15 +130,16 @@ ngAfterViewInit(): void {
     proceedCheck(){
       const filteredBarcodes = new Set(Array.from(this.barcodes).filter(barcode => barcode.trim() !== ''));
       console.log("filteredBarcodes : "+ JSON.stringify([...filteredBarcodes]));
-      this.scanActive = false;
-  /*    this.stocksService.checkProducts(this.stockreference, filteredBarcodes)
+      console.log("filteredBarcodes : "+ filteredBarcodes);
+      console.log("this.stockreference : "+ this.stockreference);
+       this.stockservice.checkProducts(this.stockreference, filteredBarcodes)
       .subscribe(response => {
         console.log(response);
-        this.navigateTostocks();
+        this.scanActive = false;
+        this.navigateTohome();
       }, error => {
         console.error(error);
-      }); */
-  
+      });
     }
   
 }

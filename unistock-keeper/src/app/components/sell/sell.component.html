@@ -1,3 +1,16 @@
-<p>
-  sell works!
-</p>
+<div [ngStyle]="{'background': scanActive ? '#00000000' : '#fff'}">
+  <div class="input-container text-center mt-3">
+    <h3 [hidden]="scanActive">Product To sell </h3>
+    <div class="col-md-12" style="max-height: 300px; overflow-y: scroll;" class="input-wrapper">
+      <input [ngModel]="result" placeholder="Enter Barcode" (ngModelChange)="onBarcodeChange($event)" class="form-control mt-2" type="text" style="margin-bottom: 3px;">                
+    </div>
+</div>
+  <div class="scan-box" [hidden]="!scanActive">
+  </div>
+  <div class="button-container">
+    <div style="text-align: center;">
+      <button class="btn scan-btn add-btn" type="button" (click)="proceedsell()">Sell</button>
+      <button class="btn btn-danger" type="button" (click)="navigateTohome()">Cancel</button>
+    </div>
+  </div>
+</div>

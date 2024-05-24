@@ -10,7 +10,8 @@ import { StockService } from 'src/app/services/stock.service';
 })
 export class HomeComponent  implements OnInit {
 
-  constructor ( public securityService: AuthService ,  private router: Router, private stockservice: StockService) {}
+  constructor (public securityService: AuthService ,  private router: Router, 
+    private stockservice: StockService) {}
 username: string = "";
  isThisManager!: boolean;
  async  ngOnInit() {
@@ -40,29 +41,42 @@ username: string = "";
   }
 
   navigateTocheck(){
-//    if(this.stockreference) {
-    this.router.navigate(['/check']);
-/*    } else {
+    if(this.stockreference) {
+    this.router.navigate(['/check'], { 
+      queryParams: { 
+        id: this.stockreference
+      } 
+    });  
+   } else {
       this.nostock = true;
-    } */      
+    }               
   }
 
   sellItem() {
     if(this.stockreference) {
-    console.log("Scan button clicked");
-    } else {
-      this.nostock = true;
+      this.router.navigate(['/sell'], { 
+        queryParams: { 
+          id: this.stockreference
+        } 
+      });  
+     } else {
+        this.nostock = true;
+      }               
     }
-  }
-  
+    
   returnItem() {
     if(this.stockreference) {
-    console.log("Scan button clicked");
-    } else {
-      this.nostock = true;
+      this.router.navigate(['/return'], { 
+        queryParams: { 
+          id: this.stockreference
+        } 
+      });  
+     } else {
+        this.nostock = true;
+      }               
     }
-  }
-  openHistory() {
+
+    openHistory() {
     console.log("History button clicked");
   }
 

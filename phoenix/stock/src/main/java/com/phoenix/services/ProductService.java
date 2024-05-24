@@ -622,8 +622,8 @@ public class ProductService implements IProductService{
             });
         }
         productDtos.sort(Comparator.comparing(ProductDto::getCheckin).reversed());
-
-        return productDtos;
+        List<ProductDto> uniqueProducts = removeDuplicates(productDtos);
+        return uniqueProducts;
     }
 
 
@@ -665,39 +665,44 @@ public class ProductService implements IProductService{
         int associatedProducts = 0;
         int returneddProducts = 0;
         int soldProducts = 0;
+        Set<String> encounteredAssociatedSerialNumbers = new HashSet<>();
+        Set<String> encounteredReturnedSerialNumbers = new HashSet<>();
+        Set<String> encounteredSoldSerialNumbers = new HashSet<>();
+
         for (AgentProd agentProd : agentProds) {
             Optional<Product> optionalReturnedProduct = iProductRepository.findByAgentReturnedProd(agentProd);
-            if (!optionalReturnedProduct.isPresent()) {
+            if (optionalReturnedProduct.isEmpty()) {
                 optionalReturnedProduct = iProductRepository.findByManagerProd(agentProd);
             }
             if (optionalReturnedProduct.isPresent()) {
                 Product returnedproduct = optionalReturnedProduct.get();
                 if(returnedproduct.isReturned()){
-                    returneddProducts++;
+                    encounteredReturnedSerialNumbers.add(returnedproduct.getSerialNumber());
                 }
             }
             Optional<Product> optionalAssociatedProduct = iProductRepository.findByAgentProd(agentProd);
-            if (!optionalAssociatedProduct.isPresent()) {
+            if (optionalAssociatedProduct.isEmpty()) {
                 optionalAssociatedProduct = iProductRepository.findByManagerProd(agentProd);
             }
             if (optionalAssociatedProduct.isPresent()) {
                 Product associatedProduct = optionalAssociatedProduct.get();
                 if(!associatedProduct.isReturned()) {
-                    associatedProducts++;
+                    encounteredAssociatedSerialNumbers.add(associatedProduct.getSerialNumber());
                 }
             }
             Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findByAgentWhoSold(agentProd);
-            if (!optionalSoldProduct.isPresent()) {
+            if (optionalSoldProduct.isEmpty()) {
                 optionalSoldProduct = iSoldProductRepository.findByManagerSoldProd(agentProd);
             }
             if (optionalSoldProduct.isPresent()) {
-                soldProducts++;
+                SoldProduct soldProduct = optionalSoldProduct.get();
+                encounteredSoldSerialNumbers.add(soldProduct.getSerialNumber());
             }
         }
         List<Integer> statList = new ArrayList<>();
-        statList.add(associatedProducts);
-        statList.add(returneddProducts);
-        statList.add(soldProducts);
+        statList.add(encounteredAssociatedSerialNumbers.size());
+        statList.add(encounteredReturnedSerialNumbers.size());
+        statList.add(encounteredSoldSerialNumbers.size());
 
         return statList;
     }
@@ -776,9 +781,23 @@ public class ProductService implements IProductService{
             });
         }
         productDtos.sort(Comparator.comparing(ProductDto::getCheckin).reversed());
+        List<ProductDto> uniqueProducts = removeDuplicates(productDtos);
 
-        return productDtos;
+        return uniqueProducts;
     }
 
+    public static List<ProductDto> removeDuplicates(List<ProductDto> productDtos) {
+        Set<String> encounteredSerialNumbers = new HashSet<>();
+        List<ProductDto> uniqueProducts = new ArrayList<>();
+
+        for (ProductDto productDto : productDtos) {
+            String serialNumber = productDto.getSerialNumber();
+            if (!encounteredSerialNumbers.contains(serialNumber)) {
+                uniqueProducts.add(productDto);
+                encounteredSerialNumbers.add(serialNumber);
+            }
+        }
+        return uniqueProducts;
+    }
 
 }

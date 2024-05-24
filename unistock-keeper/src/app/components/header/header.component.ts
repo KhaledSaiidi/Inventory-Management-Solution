@@ -4,7 +4,6 @@ import { AlertController } from '@ionic/angular';
 import { Userdto } from 'src/app/models/agents/Userdto';
 import { AgentService } from 'src/app/services/agent.service';
 import { AuthService } from 'src/app/services/auth.service';
-// import { SecurityService } from 'src/app/services/security.service';
 import { StockService } from 'src/app/services/stock.service';
 
 @Component({
@@ -22,6 +21,17 @@ username: string = "";
 user!: Userdto;
 
 async ngOnInit() {    
+  await this.loadUserProfile();
+  this.getuserinfos(this.username);
+  this.getUserStat(this.username);
+}
+
+  async refresh(){
+    await this.loadUserProfile();
+    this.getuserinfos(this.username);
+    this.getUserStat(this.username);
+  }
+async triggerOnInit() {
   await this.loadUserProfile();
   this.getuserinfos(this.username);
   this.getUserStat(this.username);
@@ -94,6 +104,7 @@ getuserinfos(code : string){
             this.associatedProds = stats[0];
             this.returnedProds = stats[1];
             this.soldProds = stats[2];
+            console.log("stats are : " + stats);
           },
           (error) => {
             console.error('Error fetching last stats:', error.message);

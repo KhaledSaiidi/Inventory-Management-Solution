@@ -47,7 +47,26 @@ ion-header{
     top: 50%;
     transform:  translate(-50%, -50%);
     width: 100%;
+    margin-top: 3px !important;
 }
+
+.input-container {
+  flex-grow: 1;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 50px);
+  padding: 0 3px;
+  margin-top: 4px;
+  margin-bottom: 3px;
+  overflow-y: auto; 
+  }
+
+  .limited-height {
+    max-height: 20% !important;
+    overflow-y: auto;
+  }
 
 .back {
     background: transparent !important;
@@ -77,12 +96,12 @@ ion-header{
   }
   
   .scan-btn.sell-btn {
-    background-color: #5bc0de;
+    background-color: #37517e;
     color: #fff;
   }
   
   .scan-btn.return-btn {
-    background-color: #5bc0de;
+    background-color: #37517e;
     color: #fff;
   }
   
@@ -103,14 +122,17 @@ ion-header{
     color: white;
   }
 
-  .input-container {
-    max-height: 200px;
-    overflow-y: auto;
-    position: relative;
-  }
+
   
-  .limited-height {
-    max-height: calc(70vh - 40px) !important;
-    overflow-y: auto;
+  .button-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
   }
   

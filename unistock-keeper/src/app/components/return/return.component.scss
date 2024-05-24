@@ -1,0 +1,122 @@
+ion-header{
+    background-color: #37517e !important;
+  }
+  .header-toolbar {
+    --background: transparent;
+    --border-color: transparent;
+    --box-shadow: none;
+  }
+  .header-buttons {
+    padding-right: 8px;
+  }
+  ion-button {
+    --color: #fff;
+  }
+  ion-icon {
+    font-size: 24px;
+    color: white;
+  }
+  .header-title {
+    font-family: 'Arial', sans-serif; 
+    font-size: 24px; 
+    font-weight: bold;
+    color: white; 
+    padding: 10px 15px; 
+    border-radius: 5px; 
+  }  
+
+
+
+.scanner-buttons{
+    margin: 0px;
+    position: absolute;
+    bottom: 100px;
+    width: 100vw;
+    height: 50px;
+    z-index: 11;
+}
+
+.scan-box {
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+    content: '';
+    display: block;
+    left: 50%;
+    height: 200px;
+    position: absolute;
+    top: 50%;
+    transform:  translate(-50%, -50%);
+    width: 100%;
+}
+
+.back {
+    background: transparent !important;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+    
+  .btn {
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .scan-btn.add-btn {
+    background-color: #5bc0de;
+    color: #fff;
+  }
+  
+  .scan-btn.sell-btn {
+    background-color: #5bc0de;
+    color: #fff;
+  }
+  
+  .scan-btn.return-btn {
+    background-color: #5bc0de;
+    color: #fff;
+  }
+  
+  .btn:hover {
+    opacity: 0.5;
+  }
+  .cancel-icon {
+    position: absolute;
+    top: 10px;
+    right: 55px;
+    cursor: pointer;
+  }
+  
+  .cancel-icon:hover {
+    background-color: red;
+    border-radius: 30%;
+    padding: 5px; 
+    color: white;
+  }
+
+  .input-container {
+    max-height: 200px;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .button-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+  }

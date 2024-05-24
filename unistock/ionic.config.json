@@ -1,7 +1,0 @@
-{
-  "name": "unistock",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}

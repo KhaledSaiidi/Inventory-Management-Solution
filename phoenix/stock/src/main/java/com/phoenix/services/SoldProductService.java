@@ -65,14 +65,20 @@ public class SoldProductService  implements IsoldProductService{
         SoldProduct soldProduct = iSoldTProductMapper.tosoldProduct(product);
 
         AgentProd agentsoldProd = iAgentProdMapper.toEntity(agentsoldProdDto);
-        if(product.getAgentProd().getAffectaiondate() != null) {
-            agentsoldProd.setAffectaiondate(product.getAgentProd().getAffectaiondate());
-        }
-        if(product.getAgentProd().getDuesoldDate() != null) {
-            agentsoldProd.setDuesoldDate(product.getAgentProd().getDuesoldDate());
-        }
-        if(product.getAgentProd().getReceivedDate() != null) {
-            agentsoldProd.setReceivedDate(product.getAgentProd().getReceivedDate());
+        if(product.getAgentProd() != null) {
+            LocalDate affectaiondate = product.getAgentProd().getAffectaiondate();
+            if (affectaiondate != null) {
+                agentsoldProd.setAffectaiondate(product.getAgentProd().getAffectaiondate());
+            }
+            LocalDate duesoldDate = product.getAgentProd().getDuesoldDate();
+            if (duesoldDate != null) {
+                agentsoldProd.setDuesoldDate(product.getAgentProd().getDuesoldDate());
+            }
+            LocalDate receivedDate = product.getAgentProd().getReceivedDate();
+            if (receivedDate != null) {
+                agentsoldProd.setReceivedDate(product.getAgentProd().getReceivedDate());
+            }
+
         }
         iAgentProdRepository.save(agentsoldProd);
 
@@ -344,6 +350,7 @@ public class SoldProductService  implements IsoldProductService{
         stockProducer.sendMessage(stockEvent);
     }
 
+
     @Override
     public List<SoldProductDto> getThelast2SoldProdsByusername(String username) {
         List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
@@ -365,8 +372,9 @@ public class SoldProductService  implements IsoldProductService{
             });
         }
         soldProductDtos.sort(Comparator.comparing(SoldProductDto::getSoldDate).reversed());
+        List<SoldProductDto> uniqueSoldProducts = removeDuplicates(soldProductDtos);
 
-        return soldProductDtos;
+        return uniqueSoldProducts;
     }
 
     @Override
@@ -518,8 +526,24 @@ public class SoldProductService  implements IsoldProductService{
             });
         }
         soldProductDtos.sort(Comparator.comparing(SoldProductDto::getSoldDate).reversed());
+        List<SoldProductDto> uniqueSoldProducts = removeDuplicates(soldProductDtos);
 
-        return soldProductDtos;
+        return uniqueSoldProducts;
+    }
+
+    public static List<SoldProductDto> removeDuplicates(List<SoldProductDto> soldProductDtos) {
+        Set<String> encounteredSerialNumbers = new HashSet<>();
+        List<SoldProductDto> uniqueSoldProducts = new ArrayList<>();
+
+        for (SoldProductDto soldProductDto : soldProductDtos) {
+            String serialNumber = soldProductDto.getSerialNumber();
+            if (!encounteredSerialNumbers.contains(serialNumber)) {
+                uniqueSoldProducts.add(soldProductDto);
+                encounteredSerialNumbers.add(serialNumber);
+            }
+        }
+
+        return uniqueSoldProducts;
     }
 
 }
