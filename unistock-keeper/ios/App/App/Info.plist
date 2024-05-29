@@ -4,6 +4,15 @@
 <dict>
     <key>NSCameraUsageDescription</key>
     <string>To be able to scan barcodes</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To save photos</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To save photos</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+    	<key>NSAllowsArbitraryLoads</key>
+    	<true/>
+	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -47,5 +56,21 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+    	<string>UIInterfaceOrientationPortrait</string>
+    	<string>UIInterfaceOrientationLandscapeLeft</string>
+    	<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+    	<string>UIInterfaceOrientationPortrait</string>
+    	<string>UIInterfaceOrientationPortraitUpsideDown</string>
+    	<string>UIInterfaceOrientationLandscapeLeft</string>
+    	<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+
 </dict>
 </plist>
