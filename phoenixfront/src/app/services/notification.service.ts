@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { ReclamationDto } from '../models/notifications/ReclamationDto';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  readonly apiUrl = "http://localhost:9000/notification";
+  readonly apiUrl = environment.url + "/notification";
 
   constructor(private http: HttpClient) { }
 

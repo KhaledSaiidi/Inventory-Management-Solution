@@ -4,13 +4,14 @@ import { Userdto } from '../models/agents/Userdto';
 import { Observable, catchError, of, throwError } from 'rxjs';
 import { Clientdto } from '../models/agents/Clientdto';
 import { Campaigndto } from '../models/agents/Campaigndto';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgentsService {
 
-  readonly apiUrl = "http://localhost:9000/people";
+  readonly apiUrl = environment.url + "/people";
   constructor(private http: HttpClient) { }
 
   addAgent(userdto: Userdto): Observable<number> {

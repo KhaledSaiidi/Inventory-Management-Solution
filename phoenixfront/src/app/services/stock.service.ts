@@ -17,13 +17,14 @@ import { TopSalesDto } from '../models/agents/TopSalesDto';
 import { ArchivedProductPage } from '../models/archive/ArchivedProductPage';
 import { ArchivedStockDTO } from '../models/archive/ArchivedStockDTO';
 import { ArchivedSoldProductPage } from '../models/archive/ArchivedSoldProductPage';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockService {
 
-  readonly apiUrl = "http://localhost:9000/stock";
+  readonly apiUrl = environment.url + "/stock";
   constructor(private http: HttpClient) { }
 
   addStock(stockDto: Stockdto, campaignReference: string): Observable<number> {

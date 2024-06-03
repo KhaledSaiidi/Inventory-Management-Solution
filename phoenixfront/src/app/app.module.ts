@@ -45,6 +45,7 @@ import { ConfiramtionDialogComponent } from './design-component/confiramtion-dia
 import { MatDialogModule } from '@angular/material/dialog';
 import { StockarchivedComponent } from './stockcomponent/stockarchived/stockarchived.component';
 import { ProdarchivedComponent } from './stockcomponent/prodarchived/prodarchived.component';
+import { environment } from 'src/environments/environment';
 
 const appRoute: Routes = [
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
@@ -84,9 +85,9 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     return new Promise<void>((resolve, reject) => {
       kcService.init({
         config: {
-          realm: "phoenixstock",
-          clientId: "front-client",
-          url: "http://localhost:8181"
+          realm: environment.keycloak.realm,
+          clientId:environment.keycloak.clientId,
+          url: environment.keycloak.url
         },
         initOptions: {
           onLoad: "login-required"

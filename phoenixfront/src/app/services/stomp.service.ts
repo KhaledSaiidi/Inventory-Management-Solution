@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StompService {
   
-  socket = new SockJS('http://localhost:9000/notification/notif-websocket');
+  socket = new SockJS(`${environment.url}/notification/notif-websocket`);
   stompClient = Stomp.over(this.socket);
 
   subscribe(topic: string, callback: any): void {

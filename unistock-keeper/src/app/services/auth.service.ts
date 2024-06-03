@@ -32,6 +32,8 @@ export class AuthService {
       keycloakInstance.authenticated = false;  
     }
     this.profile = undefined;
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     window.location.href = '/login';
   }
 
@@ -42,6 +44,7 @@ export class AuthService {
       try {
         await this.kcService.updateToken();
         console.log("Token updated successfully : " + keycloakInstance.token);
+        this.saveTokens();
       } catch (error) {
         console.error("Failed to update token", error);
         this.onSessionEnd();
@@ -83,7 +86,8 @@ export class AuthService {
             console.error("Failed to update token", error);
             this.onSessionEnd();
           }
-        };      
+        };   
+        this.saveTokens();   
       } else {
         console.error('Failed to get Keycloak instance during login');
       }
@@ -92,6 +96,11 @@ export class AuthService {
     }
   }
 
+  private saveTokens(): void {
+    const keycloakInstance = this.kcService.getKeycloakInstance();
+    localStorage.setItem('token', keycloakInstance.token || '');
+    localStorage.setItem('refreshToken', keycloakInstance.refreshToken || '');
+  }
 
   private getUserRoles(): string[] {
     const keycloakInstance = this.kcService.getKeycloakInstance();
@@ -141,6 +150,8 @@ export class AuthService {
         keycloakInstance.clearToken();
         keycloakInstance.authenticated = false;
         this.profile = undefined;
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');     
         window.location.href = '/login';
       }
     
