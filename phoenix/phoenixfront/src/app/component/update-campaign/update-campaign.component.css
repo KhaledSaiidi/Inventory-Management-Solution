@@ -1,0 +1,25 @@
+.appform-container {
+    position: relative;
+    top: 10px;
+    left: 30%; /* adjust this value to match the width of your side nav bar */
+    width: 50%; /* adjust this value to account for the side nav bar */
+    height: 50%;
+  }
+
+  
+  
+  app-campaigns {
+    opacity: 0.3 !important;
+  }
+
+.table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table tr {
+  background-color: #f5f5f5;
+}
+
+
+

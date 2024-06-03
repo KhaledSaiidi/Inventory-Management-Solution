@@ -1,0 +1,28 @@
+<div class="shadowed">
+    <app-userdetails></app-userdetails>
+  </div>
+  <div class="popup-overlay">
+      <div class="popup-content">
+        <div class="popup-header">
+          <h2>Barcode Scanning Options</h2>
+        </div>
+        <div class="webcam-placeholder-off">
+            <p>Please select an option to proceed.</p>
+          </div>
+          <div style="margin-left: 4%;">
+            <ng-container *ngIf="isManager">
+            <a class="btn btn-primary btn-sm mb-0 w-100" type="button" style="cursor: pointer; max-width: 200px;" (click)="navigateToscan()">Scan to verify</a>
+            <a class="btn btn-primary btn-sm mb-0 w-100" type="button" style="cursor: pointer; max-width: 200px;"  (click)="navigateTosell()">Scan to Sell</a>
+            <a class="btn btn-primary btn-sm mb-0 w-100" type="button" style="cursor: pointer; max-width: 200px; "  (click)="navigateToreturn()">Return Prod</a>    
+          </ng-container>
+          </div>
+          <div style="display: flex; justify-content: center;">
+            <ng-container *ngIf="!isManager">
+              <a class="btn btn-primary btn-sm mb-0" type="button" style="cursor: pointer; max-width: 200px;" (click)="navigateTosell()">Scan to Sell</a>
+              <a class="btn btn-primary btn-sm mb-0 w-100" type="button" style="cursor: pointer; max-width: 200px; "  (click)="navigateToreturn()">Return Prod</a>    
+            </ng-container>
+          </div>          
+        <i class="fas fa-times cancel-icon" (click)="navigateToUserdetails()"></i>
+        </div>
+    </div>
+    

@@ -1,0 +1,109 @@
+<div class="shadowed" (click)="navigateToAppagents()">
+    <app-agents></app-agents>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Add a new Member to the team</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="text-uppercase text-sm">Member Information</p>
+                <form [formGroup]="teamForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="username">Username<span style="color: red;">*</span></label>
+                          <input class="form-control mt-2" formControlName="username" type="text" id="username" placeholder="Please enter a valid username" required>                   
+                        </div>
+                      </div>
+                      
+                      
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="password">Password<span style="color: red;">*</span></label>
+                      <input type="password" formControlName="password" class="form-control mt-2" id="nom" placeholder="Please enter a temporary password" required>
+                      
+                    </div>
+                  </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="firstName">FirstName<span style="color: red;">*</span></label>
+                        <input class="form-control mt-2" type="text" formControlName="firstName" id="firstName" placeholder="Please enter a valid Firstname" required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="lastName">LastName<span style="color: red;">*</span></label>
+                        <input type="text"  class="form-control mt-2" id="lastName" formControlName="lastName" placeholder="Please enter a valid Lastname">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="email">Email<span style="color: red;">*</span></label>
+                        <input class="form-control mt-2" type="email" formControlName="email" id="email" placeholder="member-email@phoenixmas.com" required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" class="form-control mt-2" id="phone" formControlName="phone" placeholder = "Please enter the member phone number">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="realmRoles">Role<span style="color: red;">*</span></label>
+                        <select class="form-control mt-2" formControlName="realmRoles" id="realmRoles" required
+                        (ngModelChange)="updateRoles($event)">
+                          <option value="" disabled selected>Please select a proper role</option>
+                          <option value="IMANAGER">Inventory Manager</option>
+                          <option value="MANAGER">Manager</option>
+                          <option value="AGENT">Agent</option>
+                        </select>
+                      </div>
+                    </div>
+                                        
+                      <div class="col-md-6">
+                        
+                        <div class="form-group">
+                          
+                        <label for="image">Image:</label>
+                        <input type="file" class="form-control mt-2" style="width: 300px;" id="image" formControlName="image" (change)="onImageChange($event)">
+                      </div>
+                      </div>
+                      
+                      
+                    
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="dateDebutContrat" class="form-control-label">Contract start date</label>
+                        <input class="form-control mt-2" formControlName="dateDebutContrat" type="date"  id="dateDebutContrat">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="dateFinContrat" class="form-control-label">Contract end date</label>
+                        <input class="form-control mt-2" formControlName="dateFinContrat" type="date"  id="dateFinContrat">
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Add Member</button>
+                </div>
+                  
+               </form>
+              </div>
+
+            </div>
+  
+          </div>
+        </div>
+        </div>
+        </div>

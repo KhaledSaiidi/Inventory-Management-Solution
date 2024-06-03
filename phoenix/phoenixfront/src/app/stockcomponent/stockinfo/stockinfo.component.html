@@ -1,0 +1,81 @@
+<div class="shadowed" (click)="navigateToStock()">
+    <app-stocks></app-stocks>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+                <a  class="btn-primary btn" (click)="downloadPdf()" style="color: white;" >
+                    <span class="">Download As PDF</span>
+                </a>
+              <div class="card-body">
+                <div id="pdf-content" class="container">
+                        <h3 class="mb-0">Stock {{campaignName}} info:</h3>
+
+                    <br>
+                    <div class="container">
+                      <div class="row">
+                          <div class="col mb-0"><b>Campaign: </b> {{campaignName}}</div>
+                          <div class="col mb-0"><b>Client: </b> {{companyName}}</div>
+                      </div>
+                      <div class="row">
+                          <div class="col mb-0">
+                            <b>Stock Value</b> {{ stockValue !== null && stockValue !== undefined ? stockValue + ' $' : '0 $' }}
+                          </div>
+                          <div class="col mb-0"><b>Shipping Date: </b> {{shippingDate| date: 'medium' | slice: 0:12 }}</div>
+                      </div>
+                      <div class="row">
+                          <div class="col mb-0"><b>Received Date: </b> {{receivedDate| date: 'medium' | slice: 0:12 }}</div>
+                          <div class="col mb-0"><b>Due Date: </b> {{dueDate| date: 'medium' | slice: 0:12 }}</div>
+                      </div>
+                  </div>                  
+                        <div class="row" style="margin-top: 20px;">
+                          <div class="col-sm-3">
+                            <p class="mb-0"><b>Product Types: </b></p>
+                          </div>
+                          <div class="col-sm-9">
+                            <div class="product-list">
+                                <p class="text-muted mb-0" *ngFor="let prod of products; let last = last">
+                                  {{ prod }}{{ !last ? ' - ' : '' }}
+                                </p>
+                            </div>
+                        </div>
+                        </div>
+                        <br>
+                        <div class="table-responsive container">
+                            <table class="table custom-table" style="text-align: center;">
+                                <thead>
+                                <tr>
+                                    <th >Product Number</th>
+                                    <th >Product checked</th>
+                                    <th >Product Sold</th>
+                                    <th >Returned</th>
+                                </tr>
+                                <tr>
+                                  <td >{{prods}}</td>
+                                  <td >{{checked}}</td>
+                                  <td >{{sold}}</td>
+                                  <td >{{returned}}</td>
+                              </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="avoid-page-break">
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                    <div class="card-body p-4 text-black avoid-page-break">
+                          <p class="lead fw-normal mb-1">Stock Notes :</p>
+                          <div class="p-4" style="background-color: #f8f9fa;">
+                            <p class="font-italic mb-1">{{notes}}</p>
+                          </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>

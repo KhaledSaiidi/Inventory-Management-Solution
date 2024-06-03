@@ -1,0 +1,49 @@
+/* For Webkit based browsers (Chrome, Safari) */
+*::-webkit-scrollbar {
+    opacity: 0;
+    transition: background-color .2s linear, opacity .2s linear;
+    -webkit-transition: background-color .2s linear, opacity .2s linear;
+    width: 4px;
+    border-radius: 10px;
+    
+    
+  }
+  
+  
+  *::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+  
+  /* For Firefox */
+  html {
+    scrollbar-width: thin;
+  }
+  
+  html::-moz-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+  }
+  
+  /* For Internet Explorer and Microsoft Edge Legacy */
+  html {
+    -ms-overflow-style: none;
+  }
+  
+  /* Scrollbar hover effects */
+  *::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+  
+  html::-moz-scrollbar-thumb:hover {
+    background-color: #aaa;
+  }
+  
+  
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

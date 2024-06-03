@@ -1,0 +1,91 @@
+<div class="shadowed" (click)="navigateToCampigns()">
+  <app-campaigns></app-campaigns>
+</div>
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Client Information</p>
+                </div>
+              </div>
+                
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <input type="checkbox"  [checked]="isEditable" (change)="toggleEditable()" id="editableCheckbox" class="custom-checkbox">
+                  <label for="editableCheckbox" class="mb-0">Would you like to update your client informations?</label>
+                </div>     
+                <br>           
+                <form  [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+                  
+                <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                      
+                        <label  class="form-control-label" >Reference</label>
+                        <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4); margin-top: 10px;"> {{client.reference}} </span>
+                      </div>
+                    </div>
+                        
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="companyName">Company Name</label>
+                      <input type="text" formControlName="companyName" class="form-control mt-2" id="companyName" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                      
+                    </div>
+                  </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="companyemail">Company Email</label>
+                        <input class="form-control mt-2" type="email" formControlName="companyemail" id="companyemail" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="companyphone">Company Phone</label>
+                        <input type="phone"  class="form-control mt-2" id="companyphone" formControlName="companyphone" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="referentfirstName">Referent FirstName</label>
+                        <input class="form-control mt-2" type="text" formControlName="referentfirstName" id="referentfirstName" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="referentlastName">Referent LastName</label>
+                        <input type="text" class="form-control mt-2" id="referentlastName" formControlName="referentlastName" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="referentemail" class="form-control-label">Referent Email</label>
+                        <input class="form-control mt-2" formControlName="referentemail" type="email"  id="referentemail" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="referentphone" class="form-control-label">Referent Phone</label>
+                        <input class="form-control mt-2" formControlName="referentphone" type="phone"  id="referentphone" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Update Client</button>
+                </div>
+                  
+               </form>
+              </div>
+
+            </div>
+  
+          </div>
+        </div>
+        </div>
+        </div>

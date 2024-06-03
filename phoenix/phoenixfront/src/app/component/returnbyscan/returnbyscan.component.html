@@ -1,0 +1,47 @@
+<div class="shadowed">
+    <app-userdetails></app-userdetails>
+  </div>
+  <div class="popup-overlay">
+      <div class="popup-content" (click)="$event.stopPropagation()">
+        <div class="popup-header">
+          <h2>Barcode Scanning Return</h2>
+        </div>
+        <div class="popup-body">
+          <div class="scanner-container">
+            <div id="scanner-container"></div>
+          </div>
+                
+          
+          <ng-container *ngIf="!showCamera else scan">
+          <div>
+            <p>What is the stock you want to Return from ?</p>
+            <select class="form-control mt-2" type="text" style="margin-bottom: 15px;" [(ngModel)]="selectedStock" (ngModelChange)="extractStockReference($event)">   
+              <option selected disabled>Select a stock to proceed !</option>
+              <option *ngFor="let stockReference of stockReferences" [ngValue]="stockReference">Stock : {{stockReference}}</option>
+            </select>             
+            <div class="webcam-placeholder-off">
+              <p>Camera is off. Please enable it and choose a stock to proceed products check.</p>
+              
+            </div>
+            <br>
+  
+            <ng-container *ngIf="nostock"><p style="color: red;">You didn't choose a stock</p></ng-container>     
+            <button class="btn scan-btn add-btn" (click)="triggerSnapshot()">Enable Camera</button>  
+            <i class="fas fa-times cancel-icon" (click)="navigateToUserdetails(securityService.profile?.username)"></i>
+          </div>
+        </ng-container>
+          <ng-template #scan>
+             <div class="text-center mt-3">
+              <div class="col-md-12" style="max-height: 300px; overflow-y: scroll;" class="input-wrapper">
+                <input  [ngModel]="firstBarcode" placeholder="Enter Barcode" (ngModelChange)="onBarcodeChange($event)" class="form-control mt-2" type="text" style="margin-bottom: 3px;">                
+              </div>
+              <i class="fas fa-times cancel-icon" (click)="handleCancel()"></i>
+  
+              <button class="btn scan-btn add-btn" type="button" (click)="proceedreturn()">Return Prod</button>
+            </div>
+          </ng-template>
+    
+        </div>
+      </div>
+    </div>
+    

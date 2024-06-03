@@ -1,0 +1,55 @@
+<div class="shadowed" (click)="navigateToStock()">
+    <app-stocks></app-stocks>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Stock Registration</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="text-uppercase text-sm">Stock Information</p>
+
+                <div class="alert alert-custom" role="alert">
+                  This stock is not checked by default after adding products into the campaign. Please make the check.
+                </div>
+                        
+
+                <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class="col-md-6">
+                          <label for="reference">Campaign Affiliation<span style="color: red;">*</span></label>
+                          <select class="form-control mt-2" formControlName="reference" id="reference">
+                            <option *ngFor="let campaign of campaigns" [value]="campaign.reference"> {{ campaign.campaignName }} - {{ campaign.client?.companyName }} </option>  
+                        </select>
+                            
+                      </div>
+                  <div class="col-md-6">
+                            <label for="shippingDate">Stock shipping Date<span style="color: red;">*</span></label>
+                            <input type="date" class="form-control mt-2" id="shippingDate" formControlName="shippingDate" >
+                  </div>
+                  <div class="col-md-6">
+                    <label for="receivedDate">Stock received Date<span style="color: red;">*</span></label>
+                    <input type="date" class="form-control mt-2" id="receivedDate" formControlName="receivedDate" >
+          </div>
+                  <div class="col-md-12">
+                      <label for="notes">Notes</label>
+                      <textarea class="form-control mt-2" id="notes" formControlName="notes" rows="3"></textarea>
+                  </div>
+                  </div>
+                  <br>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">New Stock</button>
+                </div>
+               </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>

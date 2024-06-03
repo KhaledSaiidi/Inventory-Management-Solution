@@ -1,0 +1,73 @@
+<div class="shadowed" (click)="navigateToCampaigns()">
+    <app-campaigns></app-campaigns>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Run a new Campaign</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="text-uppercase text-sm">Campaign Information</p>
+                <form  [formGroup]="campaignForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="campaignName">Name<span style="color: red;">*</span></label>
+                          <input class="form-control mt-2" formControlName="campaignName" type="text" id="campaignName" placeholder="Company Name">                   
+                        </div>
+                      </div>
+                      
+                      
+                  <div class="col-md-6">
+                    <div class="form-group">
+                        <div formGroupName="client">
+                      <label for="client-reference">Client<span style="color: red;">*</span></label>
+                      <select class="form-control mt-2" formControlName="reference" id="reference">
+                        <option *ngFor="let client of clients" [value]="client.reference">  {{client.companyName?.toUpperCase()}}  </option>                      
+                    </select>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="container">
+                    <div *ngFor="let product of products let i = index" class="row">
+                      <div class="col-md-6">
+                        <div>
+                          <label>Product {{ product.id }}</label>
+                          <input class="form-control mt-2" type="text" (input)="updateProductValue(i, $event)">
+                        </div>
+                      </div>
+                      <div class="col-md-6" style="margin-top: 7%;">
+                        <div class="checkInput form-check">
+                          <input class="form-check-input" type="checkbox" #checkbox (change)="onCheckboxChange(checkbox, i)"> <label>Add another Product?</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                                    
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="campaignDescription">Description</label>
+                        <textarea class="form-control mt-2" id="campaignDescription" formControlName="campaignDescription" placeholder="Please enter a company contact person" rows="3"></textarea>
+                    </div>
+                    </div>
+                   
+                  </div>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Run the Campaign</button>
+                </div>
+                  
+               </form>
+              </div>
+
+            </div>
+  
+          </div>
+        </div>
+        </div>
+        </div>

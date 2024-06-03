@@ -1,0 +1,85 @@
+<div class="shadowed" (click)="navigateToProducts(stockreference)">
+    <app-products></app-products>
+</div>
+        <div class="appform-container">
+          <div class="container-fluid py-4" style="width: 100%;">
+              <div class="row" style="width: 100%;">
+                <div class="col-md-8" style="width: 100%;">
+                  <div class="card">
+                      <div class="card-body">
+                        <div id="pdf-content" class="container">
+                                <h4 class="mb-0">Assign Products to agents:</h4>                            
+                            <ng-container *ngIf="invalidCheckedBox"> 
+                                <br>
+                              <div class="row">
+                                <p style="color: red;"><b>No Products checked</b> </p>
+                                </div>
+                            </ng-container>
+                                <hr>
+                            <ng-container *ngIf="!invalidCheckedBox">
+                                <div class="table-responsive">
+                                    <table class="table custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="col">Product N°</th>
+                                                <th class="col">Serial Number</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let prod of compcheckedBoxProds; let i = index;">
+                                                <td>&nbsp; &nbsp; Product <b>{{ i+1 }}</b></td>
+                                                <td>{{ prod }}</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                </div>
+                                <hr>
+                                <ng-container *ngIf="assignedToagent">
+                                  <div *ngFor="let prod of productsassignedToAgent">
+                                  <span style="margin-bottom: 5px;"><b style="color: orange;">*Warning: </b>The product with serial number: <u>{{prod.serialNumber}}</u> is already assigned 
+                                      to agent: <b>{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</b> are you sure you want to change this?  </span>
+                                </div>
+                                <hr>
+                                </ng-container>
+                                
+                                <ng-container *ngIf="assignedTomanager">
+                                  <div *ngFor="let prod of productsassignedToManager">
+                                    <span style="margin-bottom: 5px;"><b style="color: orange;">*Warning: </b>The product with serial number: <u>{{prod.serialNumber}}</u> is already assigned 
+                                        to senior Advisor: <b>{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</b> are you sure you want to change this?  </span>
+                                  </div>  
+                                  <hr>
+                                </ng-container>
+
+                                   <form [formGroup]="assignForm" (ngSubmit)="onSubmit()">
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                          <label for="manager">SENIOR ADVISOR</label>
+                                          <select class="form-control mt-2" formControlName="manager" id="manager" name="manager">
+                                            <option disabled selected> Assign a senior advisor </option>  
+                                            <option *ngFor="let manager of managerList" [ngValue]="manager"> {{manager.firstName?.toLowerCase()}} {{manager.lastName?.toLowerCase()}} </option>  
+                                        </select>   
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label for="agent">AGENT ASSIGNED</label>
+                                        <select class="form-control mt-2" formControlName="agent" id="agent" name="agent">
+                                          <option disabled selected> Assign an agent </option>  
+                                          <option *ngFor="let agent of agentList" [ngValue]="agent"> {{agent.firstName?.toLowerCase()}} {{agent.lastName?.toLowerCase()}} </option>  
+                                      </select>   
+                                    </div>
+
+                                  </div>
+                                  <hr>
+                                  <div style="display: flex; justify-content: center;">
+                                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Assign</button>
+                                </div>
+                                </form>
+                          </ng-container>
+
+                          
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>

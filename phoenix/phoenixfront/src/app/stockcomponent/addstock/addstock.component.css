@@ -1,0 +1,22 @@
+.appform-container {
+    position: relative;
+    top: 10px;
+    left: 30%; /* adjust this value to match the width of your side nav bar */
+    width: 50%; /* adjust this value to account for the side nav bar */
+    height: 50%;
+  }
+
+  
+  
+  app-stocks {
+    opacity: 0.3 !important;
+  }
+
+  .alert-custom {
+    padding: 15px;
+    background: linear-gradient(to right, rgba(169, 50, 38, 1), rgba(169, 50, 38, 0.5));
+    border: 1px solid #85483e;
+    color: #fff;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}

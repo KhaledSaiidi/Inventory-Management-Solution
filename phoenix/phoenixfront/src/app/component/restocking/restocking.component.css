@@ -1,0 +1,11 @@
+app-userdetails {
+    opacity: 0.3 !important;
+  }
+
+  .appform-container {
+    position: relative;
+    top: 80px;
+    left: 30%; /* adjust this value to match the width of your side nav bar */
+    width: 50%; /* adjust this value to account for the side nav bar */
+    height: 50%;
+  }

@@ -1,0 +1,62 @@
+<div class="shadowed" (click)="navigateToUserdetails()">
+    <app-userdetails></app-userdetails>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Request Restocking</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="notifForm" (ngSubmit)="onSubmit()">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="stock">Stock</label>
+                          <select class="form-control mt-2" formControlName="stock" id="stock">
+                            <option *ngFor="let stockref of stocksReferences">{{stockref}}</option>
+                          </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="manager">Senior Advisor</label>
+                        <select class="form-control mt-2" formControlName="manager" id="manager">
+                          <option *ngFor="let manager of managerList" [value]="manager.username">
+                            {{manager.firstName?.toUpperCase()}} - {{manager.lastName?.toUpperCase()}}
+                            </option>
+                          </select>
+                    </div>
+                    </div>                  
+                  
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input class="form-control mt-2" type="number" formControlName="quantity" id="quantity">
+                      </div>
+                    </div>  
+                    </div>
+                 <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="text">Comment</label>
+                    <textarea class="form-control mt-2" formControlName="text" id="text" rows="4"></textarea>
+                  </div>
+                </div>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Request</button>
+                </div>
+                  
+               </form>
+              </div>
+
+            </div>
+  
+          </div>
+        </div>
+        </div>
+        </div>

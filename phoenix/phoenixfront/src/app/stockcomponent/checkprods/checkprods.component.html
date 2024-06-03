@@ -1,0 +1,58 @@
+<div class="shadowed" (click)="navigateToProducts(stockreference)">
+    <app-products></app-products>
+</div>
+        <div class="appform-container">
+          <div class="container-fluid py-4" style="width: 100%;">
+              <div class="row" style="width: 100%;">
+                <div class="col-md-8" style="width: 100%;">
+                  <div class="card">
+                      <a  class="btn-primary btn" (click)="downloadPdf()" style="color: white;" >
+                          <span class="">Download As PDF</span>
+                      </a>
+                      <div class="card-body">
+                        <div id="pdf-content" class="container">
+                                <h3 class="mb-0">Inspection report for "{{campaignName}}" launched by {{companyName}} client:</h3>
+            
+                            <br>
+                            <h6>After comparing the serial numbers of the products of this stock in our database with products declared in the Excel file, here are the notes to consider</h6>
+                            <br>  
+                            <ng-container *ngIf="allMatches"> 
+                              <h6 style="color: green;">All declared products correspond to our warehouse</h6>
+                            </ng-container>
+                            <ng-container *ngIf="!allMatches"> 
+                              <ng-container *ngIf="!excelFileMatches"> 
+                              <div class="row">
+                                    <p style="color: red;"><b>List of products in Excel file that do not exist in our warehouse</b> </p>
+                                  <div class="col-sm-14">
+                                    <ul class="flex-container">
+                                      <li class="text-muted mb-0 avoid-page-break" *ngFor="let prod of compuncheckedProds">{{prod}}</li>
+                                    </ul>
+                                  </div>
+                            </div>
+                            </ng-container>
+                            <ng-container *ngIf="excelFileMatches"> 
+                              <h6 style="color: green;">All declared products in the excel file correspond to products in our warehouse</h6>
+                            </ng-container>
+                                <hr>
+                            <ng-container *ngIf="!dbmatches">
+                            <div class="row">
+                                    <p class="avoid-page-break" style="color: red;"><b>List of products in our warehouse that do not exist in the Excel file</b> </p>
+                                  <div class="col-sm-9">
+                                    <ul>
+                                      <li class="text-muted mb-0 avoid-page-break" *ngFor="let prod of productsDto">{{prod.serialNumber}} -- {{prod.brand}} -- {{prod.prodName}} </li>
+                                    </ul>
+                                  </div>
+                            </div>
+                          </ng-container>
+                          <ng-container *ngIf="dbmatches"> 
+                            <h6 style="color: green;">All our products are checked</h6>
+                          </ng-container>
+
+                          </ng-container> 
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>

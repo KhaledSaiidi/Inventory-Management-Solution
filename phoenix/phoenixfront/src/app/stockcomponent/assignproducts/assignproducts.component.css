@@ -1,0 +1,57 @@
+.appform-container {
+    position: relative;
+    top: 60px;
+    left: 30%;
+    width: 50%; 
+    height: 50%;
+  }
+
+  
+  app-products {
+    opacity: 0.3 !important;
+  }
+  
+
+
+.container {
+  margin: auto;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+h4 {
+  color: #333;
+}
+
+
+
+.table {
+  border: 2px solid #ddd;
+  max-height: 250px;
+  width: 100%;
+  overflow-y: auto;
+  display: block;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+
+.col {
+  width: 50%; /* Each th should take up 50% of the available space */
+  max-width: 10%; /* Set a maximum width of 10% */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide any overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflow text */
+}
+
+td:nth-child(1),
+td:nth-child(2) {
+  max-width: 10%; /* Set a maximum width of 10% for the first and second td */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide any overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflow text */
+}

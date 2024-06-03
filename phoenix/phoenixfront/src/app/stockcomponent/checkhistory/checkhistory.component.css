@@ -1,0 +1,24 @@
+.listeequipes-container{
+    position: absolute;
+    top: 130px;
+      left: 290px; 
+      width: calc(100% - 300px);
+      height: 100%;
+      
+    }
+  
+    .notice {
+      background-color: #f8d7da; /* Light red background */
+      color: #721c24; /* Dark red text color */
+      padding: 15px; /* Padding for better readability */
+      border: 1px solid #f5c6cb; /* Border color for additional emphasis */
+      border-radius: 5px; /* Rounded corners for a softer look */
+      margin-bottom: 20px; /* Margin to separate it from other content */
+  }
+  
+  .notice p {
+      margin: 0; /* Remove default margin for the paragraph */
+      font-size: 16px; /* Adjust font size */
+      font-weight: bold; /* Make the text bold for emphasis */
+  }
+  

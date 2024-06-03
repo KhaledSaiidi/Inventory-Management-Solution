@@ -1,0 +1,58 @@
+<div class="shadowed" (click)="navigateToProducts(stockreference)">
+    <app-products [selectedTab]="selectedTab"></app-products>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Product "{{serialNumber}}" </p>
+                </div>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="simNumber">SIM Number :</label>
+                    <input type="text" class="form-control mt-2" id="simNumber" formControlName="simNumber" >                    
+                </div>
+                  <div class="col-md-6">
+                    <label for="brand">Product Brand</label>
+                    <input type="text" class="form-control mt-2" id="brand" formControlName="brand" >                    
+                </div>
+                  <div class="col-md-6">
+                    <label for="productName">Product Model</label>
+                    <input type="text" class="form-control mt-2" id="productName" formControlName="productName" >                    
+                </div>
+                  <div class="col-md-6">
+                          <label for="productType">Product Type</label>
+                          <select class="form-control mt-2" formControlName="productType" id="productType">
+                            <option [selected]="productType">{{productType}}</option>
+                            <option *ngFor="let prod of products">{{ prod }} </option>
+                        </select>
+                  </div>
+                  
+                  <div class="col-md-6">
+                      <label for="price">Price</label>
+                      <input type="text" class="form-control mt-2" id="price" formControlName="price" appNumericOnly>
+                  </div> 
+                  <div class="col-md-12">
+                      <label for="comments">Product Comment</label>
+                      <textarea class="form-control mt-2" id="comments" formControlName="comments" rows="3"></textarea>
+                  </div>
+                   
+                  </div>
+                  <br>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Update Product</button>
+                </div>
+               </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>

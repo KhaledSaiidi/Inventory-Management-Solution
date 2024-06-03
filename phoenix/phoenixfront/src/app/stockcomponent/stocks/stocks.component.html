@@ -1,0 +1,121 @@
+<app-base></app-base>
+<div class="listeequipes-container"> 
+  <div class="d-flex align-items-center">
+    <a class="btn-primary btn" routerLink="/addstock" style="color: white;">
+      <span class="">&nbsp; Add Stock</span>
+    </a>
+    &nbsp;
+    <div class="search-container">
+      <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
+      <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm"  (keyup)="searchStocks()" style="margin-left: 10px; " placeholder="Search by reference, campaign, client, or dates: shipping, received, or due...">
+    </div>
+  </div>
+      
+    <div class="equipe-container">
+        <div class="listetalents-containershown">
+            <div class="col-12">
+             <div class="card mb-4 ">
+                     <div class="card-header pb-0" >
+                       <h6 class="text-center">Stock List</h6>
+                     </div>
+                     <div class="card-body px-0 pt-0 pb-2">
+                 <div class="table-responsive p-0">
+                   <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+                     <thead>
+                       <tr>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Reference</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product Types</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">campaign</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">CLIENT</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock shipping Date</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Received Date</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Due Date</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Value</th>
+                         <ng-container *ngIf="isManager">
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="3" style="text-align: center;">Actions</th>
+                        </ng-container>
+                        <ng-container *ngIf="!isManager">
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+                         </ng-container>
+                        </tr>
+                     </thead>
+        
+                     <tbody>
+                      <ng-container  *ngIf="loading;">
+                        <tr>
+                          <td colspan="11" style="text-align: center;">
+                            <div class="loading-container">
+                              <div class="loading-spinner"></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && emptyStock;">
+                        <tr>
+                          <td colspan="11" style="text-align: center;">
+                            <p>No stocks found. Please check back later.</p>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && !emptyStock; ">
+                      <tr *ngFor="let stock of filterfinishforStocks">
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" *ngIf="stock.stockReference">
+                          <a (click)="navigateToProducts(stock.stockReference)" >
+                            <span [innerHTML]="highlightMatch(stock.stockReference)"></span>
+                        </a></td>
+                          <td style="word-wrap: break-word; white-space: normal;">
+                            <span style="font-size: 20px;" [style.color]="stock.checked ? 'green' : 'red'">
+                              {{stock.checked ? '&#10003;' : '&#10008;'}}
+                            </span>
+                          </td>
+                        <td style="word-wrap: break-word; white-space: normal;">
+                          <div style="max-height: 70px; overflow-y: auto;">
+                            <ul *ngFor="let product of stock.campaigndto?.products">
+                              <li>{{product}}</li>
+                            </ul>
+                          </div>
+                        </td>                      
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.campaigndto && stock.campaigndto.campaignName">
+                          <span [innerHTML]="highlightMatch(stock.campaigndto.campaignName)"> </span>
+                        </td>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.campaigndto && stock.campaigndto.client && stock.campaigndto.client.companyName">
+                          <span [innerHTML]="highlightMatch(stock.campaigndto.client.companyName)"></span>
+                        </td>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.shippingDate">
+                          <span [innerHTML]="highlightMatch(formatDate(stock.shippingDate))"></span></td>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.receivedDate">
+                          <span [innerHTML]="highlightMatch(formatDate(stock.receivedDate))"></span></td>
+                        <td style="word-wrap: break-word; white-space: normal;" *ngIf="stock.dueDate">
+                          <span [innerHTML]="highlightMatch(formatDate(stock.dueDate))"></span></td>
+                        <td style="word-wrap: break-word; white-space: normal;"> {{ stock.stockValue ?? 0 }}  $</td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToStockInfo(stock.stockReference)">
+                          <i class="fas fa-eye"></i>
+                        </a></td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="navigateToUpdateStock(stock.stockReference)">
+                          <i class="fas fa-edit"></i>
+                        </a></td>
+                        <ng-container *ngIf="isManager">
+                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"><a (click)="confirmStockDeletion(stock)">
+                          <i class="fas fa-trash-alt"></i>
+                        </a></td>
+                        </ng-container>
+                      </tr>
+                      <tr>
+                      <td colspan="11" style="margin-right: 5px;">
+                        <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
+                       </td>
+                      </tr>
+                      </ng-container>
+                     </tbody>
+                    
+
+                   </table>
+                 </div>
+                </div>     
+             </div>
+            </div>
+           </div>
+    </div>
+    
+</div>

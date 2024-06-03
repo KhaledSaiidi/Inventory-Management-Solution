@@ -1,0 +1,122 @@
+.listeequipes-container{
+    position: absolute;
+    top: 130px;
+      left: 290px; 
+      width: calc(100% - 300px);
+      height: 100%;
+      
+    }
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    
+    .loading-spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .search-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .search-container {
+      position: relative;
+      width: 400px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    
+    .rounded-input {
+      border-radius: 20px;
+      padding-left: 30px;
+      transition: border-color 0.3s; /* Add transition for smooth effect */
+      border: 1px solid #ccc; /* Initial border color */
+    }
+    
+    .rounded-input:focus,
+    .rounded-input:hover {
+      border-color: blue; /* Border color on focus or hover */
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: #ccc; 
+      cursor: pointer;
+    }
+    
+    .custom-checkbox {
+      border-radius: 4px;
+      border: 2px solid #ccc;
+      position: relative;
+      transition: background-color 0.2s ease;
+    }
+  
+    .no-hover {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+  
+    .no-hover:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+  
+    .no-hover:hover i {
+      transform: translateX(3px);
+    }
+    .icon-link {
+      cursor: pointer; 
+      display: inline-block;
+    }
+    
+    .icon-link .icon:hover {
+      color: #ff0000; 
+      transform: scale(1.1); 
+    }  
+    
+    .selected {
+      font-weight: bold;
+      color: #333;
+      z-index: 1;
+      background-color: white;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out;
+      border-radius: 10px;
+      margin-top: -3px;
+    }
+
+      
+    .webcam-placeholder-off {
+      max-height: 40px;
+      color: black;
+      max-width: 40%;
+      border-radius: 8px;
+      background-color: #ffcccc;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: left;
+      align-items: left;
+    }

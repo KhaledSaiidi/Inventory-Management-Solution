@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  configserver:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    environment:
+      eureka.instance.hostname: configserver
+      KEYCLOAK_ISSUER: keycloak:8181
+      KAFKA_HOST: kafka:9092
+      MYSQL_HOST: mysql:3306
+    ports:
+      - "8888:8888"
+
+  eureka-server:
+    build:
+      context: ./discovery-server
+      dockerfile: Dockerfile
+    environment:
+      CONFIG_HOST: configserver
+    ports:
+      - "8761:8761"
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    environment:
+      CONFIG_HOST: configserver
+    ports:
+      - "9000:9000"
+
+  keycloak:
+    build:
+      context: ./keycloakauthServer
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_HOST: mysql
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - "8181:8080"
+
+  kafka:
+    image: wurstmeister/kafka
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    ports:
+      - "9092:9092"
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: univeralmm
+      MYSQL_DATABASE_1: keycloakDB
+      MYSQL_DATABASE_2: notificationDB
+      MYSQL_DATABASE_3: stockDB
+    volumes:
+      - ./keycloakdb.sql:/docker-entrypoint-initdb.d/keycloakDB.sql
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  keycloakuser:
+    build:
+      context: ./keycloakuser
+      dockerfile: Dockerfile
+    environment:
+      CONFIG_HOST: configserver
+
+  notification:
+    build:
+      context: ./notification
+      dockerfile: Dockerfile
+    environment:
+      CONFIG_HOST: configserver
+
+  stock:
+    build:
+      context: ./stock
+      dockerfile: Dockerfile
+    environment:
+      CONFIG_HOST: configserver
+
+  frontapp:
+    build:
+      context: ./phoenixfront
+      dockerfile: Dockerfile
+    environment:
+      KEYCLOAK_HOSTNAME: keycloak
+      API_HOSTNAME: gateway
+    ports:
+      - "80:80"
+    command: [ "/bin/sh", "-c", "sed -i 's|__KEYCLOAK_HOSTNAME__|'${KEYCLOAK_HOSTNAME}'|g' /usr/share/nginx/html/main.*.js && sed -i 's|__API_HOSTNAME__|'${API_HOSTNAME}'|g' /usr/share/nginx/html/main.*.js && nginx -g 'daemon off;'" ]

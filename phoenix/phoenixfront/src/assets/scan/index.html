@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Ler Barcode </title>
+    <style>
+        #camera {
+
+            max-height: 200px;
+            max-width: 650px;
+            position: relative;
+            border: 2px solid blue;
+            margin: 10px;
+            overflow: hidden;
+        }
+        #camera video {
+            width: 650px !important; /* Set width of video */
+        }
+
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        #barcodeLine {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: red;
+            pointer-events: none;
+            animation: scan 3s infinite;
+        }
+        @keyframes scan {
+            0% {
+                transform: translateY(-50%);
+            }
+            100% {
+                transform: translateY(50%);
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <audio id="barcodeSound" src="barcode.wav"></audio>
+
+    <div id="camera">
+        <div id="overlay">
+            <div id="barcodeLine"></div>
+        </div>
+    </div>
+    <script src="quagga.min.js"></script>
+
+    <script>
+        const delayBetweenReads = 5000;
+        function playBarcodeSound() {
+            const audio = document.getElementById("barcodeSound");
+            audio.play();
+        }
+
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: document.querySelector('#camera'),
+                constraints: {
+                    width: 650,
+                    height: 200,
+                    facingMode: "environment"
+                }
+
+            },
+            decoder: {
+                readers: ["code_128_reader"]
+            },
+            locate: true
+        }, function (err) {
+            if (err) {
+                console.log(err);
+                return
+            }
+            Quagga.start();
+        });
+
+        let lastDetectionTime = 0;
+
+        Quagga.onDetected((data) => {
+  const currentTime = Date.now();
+
+  if (currentTime - lastDetectionTime >= delayBetweenReads) {
+    playBarcodeSound();
+    window.parent.postMessage({ barcode: data.codeResult.code }, '*');
+    lastDetectionTime = currentTime;
+
+  }  
+});
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,529 @@
+<app-base></app-base>
+<div class="talenttinfo-container"> 
+      <div class="card shadow-lg mx-4 ">
+        <div class="card-body p-3">
+          <div class="row gx-4">
+            <div class="col-auto" [formGroup]="userForm">
+              <div class="avatar avatar-xl position-relative">
+                <ng-container *ngIf="user?.image; else staticImage">
+                  <img [src]="getBase64Image()" alt="Talent Image" class="w-100 border-radius-lg shadow-sm" #imageElement (click)="fileInput.click()">
+                </ng-container>
+                <input type="file" formControlName="image" style="display: none" #fileInput (change)="handleFileInput($event)" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+              </div>
+              <ng-template #staticImage>
+                <div class="avatar avatar-xl position-relative">
+                  <img src="../../assets/img/unknown.jpg" alt="Static Image" class="w-100 border-radius-lg shadow-sm" (click)="fileInput.click()">
+                  <input type="file" formControlName="image" style="display: none" #fileInput  (change)="handleFileInput($event)" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                </div>
+              </ng-template>
+              
+            </div>
+            <div class="col-auto my-auto" style="margin-right: 13%;">
+              <div class="h-100">
+                <h5 class="mb-1">
+                  {{ user.firstName?.toUpperCase() }}   
+                </h5>
+                <p class="mb-0 font-weight-bold text-sm">
+                    {{ user.lastName?.toUpperCase() }}   
+                </p>
+              </div>
+            </div>
+            <div class="col-auto my-auto" style="text-align: center; align-items: center;">
+              <div class="h-100">
+                <span class="font-weight-bolder">{{associatedProds}}</span>
+                <br> <span class="text-sm opacity-8">Associated Products</span>
+              </div>
+            </div>
+            <div class="col-auto my-auto" style="text-align: center; align-items: center;">
+              <div class="h-100">
+                <span class="font-weight-bolder">{{soldProds}}</span>
+                <br> <span class="text-sm opacity-8"> Sold Products</span>
+              </div>
+            </div>
+            <div class="col-auto my-auto" style="text-align: center; align-items: center;">
+              <div class="h-100">
+                <span class="font-weight-bolder">{{returnedProds}}</span>
+                <br> <span class="text-sm opacity-8"> Returned Products</span>
+              </div>
+            </div>
+            
+    <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
+      <div class="nav-wrapper position-relative end-0" style="height: 100%;">
+        <ul class="nav nav-pills nav-fill p-1" role="tablist">
+          <li class="nav-item" [class.selected]="selectedTab === 0" style="cursor: pointer;">
+            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedTabProf()" role="tab" [attr.aria-selected]="selectedTab === 0">
+              <i class="ni ni-circle-08"></i>
+              <span class="ms-2">Profil</span>
+            </a>
+          </li>
+          <li class="nav-item" [class.selected]="selectedTab === 1" style="cursor: pointer;">
+            <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedTabMyStock()" role="tab" [attr.aria-selected]="selectedTab === 1">
+              <i class="ni ni-box-2"></i>
+              <span class="ms-2">MyStock</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+            
+          </div>       
+        </div>
+      </div>
+      <ng-container *ngIf="selectedTab == 0">
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <input type="checkbox"  [checked]="isEditable" (change)="toggleEditable()" id="editableCheckbox" class="custom-checkbox">
+                  <label for="editableCheckbox" class="mb-0">Would you like to update your member information?</label>
+                </div>
+              </div>
+
+
+              <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                <div class="card-body">
+                <p class="text-uppercase text-sm">DETAILED INFORMATION</p>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      
+                      <label  class="form-control-label" >username:</label>
+                      <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4);"> {{username}} </span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label  class="form-control-label" for="firstName">FirstName</label>
+                      <input class="form-control"  formControlName="firstName" id="firstName" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="text" >
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label  class="form-control-label" for="lastName">LastName</label>
+                      <input class="form-control"  formControlName="lastName" id="lastName" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="text" >
+                    </div>
+                  </div>
+                  
+                  
+                  
+                 
+                  <div class="row">
+                   <ng-container *ngIf="!isManager">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <div formGroupName="manager">
+                        <label class="form-control-label" for="manager-username">Manager</label>
+                        <select class="form-control" formControlName="username" id="username" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                          <option *ngIf="!user.manager" disabled selected>Not assigned yet</option>
+                          <option *ngFor="let manager of managerList" [value]="manager.username">  {{manager.firstName?.toUpperCase()}} {{manager.lastName?.toUpperCase()}}  </option>
+                        </select>
+                        </div>
+                      </div>
+                    </div>
+
+                  <div class="col-md-6" style="margin-top: 7px;">
+                    <div class="form-group">
+                      <label  class="form-control-label" >Campaign </label>
+                      <input class="form-control" placeholder="Orange"  [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="text" >
+                    </div>
+                  </div>
+                </ng-container>
+
+                  </div>
+                </div>
+                <hr class="horizontal dark">
+                <p class="text-uppercase text-sm">FURTHER INFORMATION</p>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label  class="form-control-label" for="jobTitle">Job Title </label>
+                      <input class="form-control" formControlName="jobTitle" id="jobTitle" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="text" >
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label  class="form-control-label" for ="email">Email</label>
+                      <input class="form-control" formControlName="email" id="email" type="text" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" >
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label  class="form-control-label" for="phone">Téléphone</label>
+                      <input class="form-control" formControlName="phone" id="phone" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="text" >
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label  class="form-control-label" for="dateDebutContrat">Début du contrat</label>
+                      <input class="form-control" formControlName="dateDebutContrat" id="dateDebutContrat" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="date" >
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label  class="form-control-label" for="dateFinContrat">Fin du contrat</label>
+                      <input class="form-control" formControlName="dateFinContrat" id="dateFinContrat" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined" type="date">
+                    </div>
+                  </div>
+                </div>
+             
+                                    
+                  <div style="display: flex; justify-content: center;">
+                    <button class="btn btn-primary btn-sm" style="width: 150px;" type="submit">Update</button>
+                </div>
+                <div style="cursor: pointer; margin-left: 98%;">
+                <i class="fa fa-trash trash-icon" (click)="confirmDeletion()" ></i>
+              </div>
+                
+
+              </div>
+            </form>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card h-100">
+              <div class="card-header pb-0 p-3">
+                <div class="row">
+                  <div class="col-6 d-flex align-items-center">
+                    <h6 class="mb-0">Last sells</h6>
+                  </div>
+                  <div class="col-6 text-end">
+                    <button class="btn btn-outline-primary btn-sm mb-0"(click)="navigateToSold()">View All</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body p-3 pb-0">
+                <ng-container  *ngIf="loadinglastsells;">
+                      <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                      </div>
+                </ng-container>
+                <ng-container  *ngIf="!loadinglastsells && emptylastsells;">
+        
+                      <p>No Last sold Products for {{user.firstName?.toUpperCase()}} found. Please check back later.</p>
+                </ng-container>
+                <ng-container  *ngIf="!loadinglastsells && !emptylastsells; ">
+                <ul class="list-group" *ngFor="let soldProd of lastsoldProds">
+                  <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                    <div class="d-flex flex-column">
+                      <h6 class="mb-1 text-dark font-weight-bold text-sm">{{soldProd.soldDate | date: 'medium' | slice: 0:12}}</h6>
+                      <span class="text-xs"> {{soldProd.serialNumber }}</span>
+                    </div>
+                    <div class="d-flex align-items-center text-sm">{{soldProd.agentWhoSold?.firstname?.toUpperCase() }} {{soldProd.agentWhoSold?.lastname?.toUpperCase() }}</div>
+                  </li>
+                </ul>
+                </ng-container>
+              </div>
+              <div class="card-header pb-0 p-3">
+                <div class="row">
+                  <div class="col-6 d-flex align-items-center">
+                    <h6 class="mb-0">Last returns</h6>
+                  </div>
+                  <div class="col-6 text-end">
+                    <button class="btn btn-outline-primary btn-sm mb-0"(click)="navigateToReturn()">View All</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body p-3 pb-0">
+                <ng-container  *ngIf="loadinglastReturns;">
+                  <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                  </div>
+            </ng-container>
+            <ng-container  *ngIf="!loadinglastReturns && emptylastReturnss;">
+    
+                  <p>No Last Returned Products for {{user.firstName?.toUpperCase()}} found. Please check back later.</p>
+            </ng-container>
+            <ng-container  *ngIf="!loadinglastReturns && !emptylastReturnss; ">
+                <ul class="list-group"  *ngFor="let returnedProd of lastreturnedProds">
+                  <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                    <div class="d-flex flex-column">
+                      <h6 class="mb-1 text-dark font-weight-bold text-sm">{{returnedProd.checkin | date: 'medium' | slice: 0:12}}</h6>
+                      <span class="text-xs">{{returnedProd.serialNumber }}</span>
+                    </div>
+                    <div class="d-flex align-items-center text-sm">{{returnedProd.agentReturnedProd?.firstname?.toUpperCase() }} {{returnedProd.agentReturnedProd?.lastname?.toUpperCase() }}</div>
+                  </li>
+                </ul>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </ng-container>
+    <ng-container *ngIf="selectedTab == 1">
+<div class="equipe-container" style="margin-top: 30px;">
+  <div class="listetalents-containershown">
+    <div class="col-12">
+
+      <div class="card mb-4">
+              <!-- To add Div -->
+              <div class="col-lg-4 col-md-6 my-sm-auto mt-3" style="padding: 10px;">
+                <div class="nav-wrapper position-relative end-0" style="height: 100%;">
+                  <ul class="nav nav-pills nav-fill p-1" role="tablist">
+                    <li class="nav-item" [class.selected]="selectedProdTab === 0" style="cursor: pointer;">
+                      <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedProdTabProf()" role="tab" [attr.aria-selected]="selectedProdTab === 0">
+                        <i class="ni ni-box-2"></i>
+                        <span class="ms-2">Products</span>
+                      </a>
+                    </li>
+                    <li class="nav-item" [class.selected]="selectedProdTab === 1" style="cursor: pointer;">
+                      <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedProdTabMyStock()" role="tab" [attr.aria-selected]="selectedProdTab === 1">
+                        <i class="ni ni-money-coins"></i>
+                        <span class="ms-2">Sold Products</span>
+                      </a>
+                    </li>
+                    <li class="nav-item" [class.selected]="selectedProdTab === 2" style="cursor: pointer;">
+                      <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" (click)="selectedProdTabMessages()" role="tab" [attr.aria-selected]="selectedProdTab === 2">
+                        <i class="ni ni-archive-2"></i>
+                        <span class="ms-2">Returned Products</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- End "To add Div" -->
+
+              <ng-container *ngIf="selectedProdTab === 0">
+          <div class="card-header pb-0">
+              <h6 class="text-center" >{{user.firstName?.toUpperCase()}} PRODUCTS ALLOCATED</h6>
+            </div>
+          <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
+            <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+      <thead>
+        <tr>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+          <ng-container *ngIf="!isManager">
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+        </ng-container>
+        <ng-container *ngIf="isManager">
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent</th>
+        </ng-container>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 60px;">Box</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigned Date</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Remaining Dates</th>
+        </tr>
+      </thead>
+      <tbody>
+       <ng-container>
+         <tr>
+         </tr>
+         <ng-container  *ngIf="loading;">
+          <tr>
+            <td colspan="10" style="text-align: center;">
+              <div class="loading-container">
+                <div class="loading-spinner"></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container  *ngIf="!loading && emptyProducts;">
+          <tr>
+            <td colspan="10" style="text-align: center;">
+
+              <p>No Allocated Products for {{user.firstName?.toUpperCase()}} found. Please check back later.</p>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container  *ngIf="!loading && !emptyProducts; ">
+        <tr *ngFor="let prod of agentProds">
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
+         <ng-container *ngIf="!isManager">
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
+         </ng-container>
+         <ng-container *ngIf="isManager">
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</td>  
+          </ng-container>
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.boxNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.affectaiondate | date: 'medium' | slice: 0:12}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.duesoldDate | date: 'medium' | slice: 0:12}}</td>  
+         <td style="word-wrap: break-word; white-space: normal; text-align: center;" [ngStyle]="{ 'background-color': getRemainingDates(prod.agentProd?.duesoldDate) < 0 ? 'red' : '', 'color': getRemainingDates(prod.agentProd?.duesoldDate) < 0 ? 'white' : 'black' }">
+          {{ getRemainingDates(prod.agentProd?.duesoldDate) }} </td>  
+        
+        </tr>
+      </ng-container>
+        <tr>
+          <td colspan="12" style="margin-right: 5px;">
+            <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    
+           </td>
+          </tr>
+        </ng-container>
+
+      </tbody>
+                </table>
+            </div>
+          </div>  
+          </ng-container>   
+
+          <ng-container *ngIf="selectedProdTab === 1">
+          <div class="card-header pb-0">
+            <h6 class="text-center" >{{user.firstName?.toUpperCase()}} PRODUCTS SOLD</h6>
+          </div>
+
+          <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
+            <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+      <thead>
+        <tr>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" >check Sell</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Assigned</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Sold</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container  *ngIf="loadingsold;">
+          <tr>
+            <td colspan="11" style="text-align: center;">
+              <div class="loading-container">
+                <div class="loading-spinner"></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container  *ngIf="!loadingsold && emptysoldProducts;">
+          <tr>
+            <td colspan="11" style="text-align: center;">
+              <p>No sold products by {{user.firstName?.toUpperCase()}} found. Please check back later.</p>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container  *ngIf="!loadingsold && !emptysoldProducts; ">
+          <tr>
+          </tr>
+          <tr *ngFor="let prod of agentsoldProds">
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.simNumber}}</td>  
+         <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
+          <span style="font-size: 20px;" [style.color]="prod.checkedSell ? 'green' : 'red'">
+            {{prod.checkedSell ? '&#10003;' : '&#10008;'}}
+            </span></td> 
+
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.managerSoldProd?.firstname?.toUpperCase()}} {{prod.managerSoldProd?.lastname?.toUpperCase()}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentAssociatedProd?.firstname?.toUpperCase()}} {{prod.agentAssociatedProd?.lastname?.toUpperCase()}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.agentWhoSold?.firstname?.toUpperCase()}} {{prod.agentWhoSold?.lastname?.toUpperCase()}}</td>  
+          <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>  
+         <td style="word-wrap: break-word; white-space: normal;">{{prod.soldDate | date: 'medium' | slice: 0:12}}</td>  
+          </tr>
+        <tr>
+          <td colspan="11" style="margin-right: 5px;">
+            <app-custom-pagination [currentPage]="currentsoldPage" [totalPages]="totalsoldPages" (pageChange)="onsoldPageChange($event)"></app-custom-pagination>                    
+           </td>
+          </tr>
+        </ng-container>
+
+
+      </tbody>
+                </table>
+            </div>
+          </div>  
+
+          </ng-container>
+
+          <ng-container *ngIf="selectedProdTab === 2">
+            <div class="card-header pb-0">
+              <h6 class="text-center" >{{user.firstName?.toUpperCase()}} PRODUCTS RETURNED</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2" style="margin-top: 10px;">
+              <div class="table-responsive p-0">
+                  <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+        <thead>
+          <tr>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Campaign</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">CHECK RETURN</th>
+            <ng-container *ngIf="!isManager">
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+          </ng-container>
+          <ng-container *ngIf="isManager">
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Associated</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">AGENT RETURNED</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">AGENT SOLD	</th>
+          </ng-container>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigned Date</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sold Date</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Return Date</th>
+          </tr>
+        </thead>
+        <tbody>
+
+
+          <ng-container  *ngIf="loadingReturn;">
+            <tr>
+              <td colspan="10" style="text-align: center;">
+                <div class="loading-container">
+                  <div class="loading-spinner"></div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container  *ngIf="!loadingReturn && emptyReturnProducts;">
+            <tr>
+              <td colspan="10" style="text-align: center;">
+                <p>No Returned products by {{user.firstName?.toUpperCase()}} found. Please check back later.</p>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container  *ngIf="!loadingReturn && !emptyReturnProducts; ">
+  
+          <tr *ngFor="let prod of agentReturnProds">
+            <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.stockReference}}</td>  
+            <td style="word-wrap: break-word; white-space: normal;">{{prod.stock?.campaigndto?.campaignName}}</td>  
+           <td style="word-wrap: break-word; white-space: normal;">{{prod.serialNumber}}</td>  
+           <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
+            <span style="font-size: 20px;" [style.color]="prod.returnedstatus ? 'green' : 'red'">
+              {{prod.returnedstatus ? '&#10003;' : '&#10008;'}}
+              </span></td>                <ng-container *ngIf="!isManager">
+           <td style="word-wrap: break-word; white-space: normal;">{{prod.managerProd?.firstname?.toUpperCase()}} {{prod.managerProd?.lastname?.toUpperCase()}}</td>  
+           </ng-container>
+           <ng-container *ngIf="isManager">
+            <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.firstname?.toUpperCase()}} {{prod.agentProd?.lastname?.toUpperCase()}}</td>  
+            <td style="word-wrap: break-word; white-space: normal;">{{prod.agentReturnedProd?.firstname?.toUpperCase()}} {{prod.agentReturnedProd?.lastname?.toUpperCase()}}</td>  
+            <td style="word-wrap: break-word; white-space: normal;">{{prod.agentwhoSoldProd?.firstname?.toUpperCase()}} {{prod.agentwhoSoldProd?.lastname?.toUpperCase()}}</td>  
+
+          </ng-container>
+           <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.affectaiondate | date: 'medium' | slice: 0:12}}</td>  
+           <td style="word-wrap: break-word; white-space: normal;">{{prod.agentProd?.duesoldDate | date: 'medium' | slice: 0:12}}</td>  
+           <td style="word-wrap: break-word; white-space: normal;">{{prod.checkout | date: 'medium' | slice: 0:12}}</td>  
+           <td style="word-wrap: break-word; white-space: normal;">{{prod.checkin | date: 'medium' | slice: 0:12}}</td>  
+          </tr>
+          <tr>
+            <td colspan="11" style="margin-right: 5px;">
+              <app-custom-pagination [currentPage]="currentReturnPage" [totalPages]="totalReturnElements" (pageChange)="onPageReturnChange($event)"></app-custom-pagination>                    
+             </td>
+            </tr>
+</ng-container>
+        </tbody>
+                  </table>
+              </div>
+            </div>  
+            </ng-container>
+
+      </div>
+    </div>
+  </div>
+</div>
+    </ng-container>
+    </div>
+

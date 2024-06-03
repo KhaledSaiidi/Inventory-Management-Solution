@@ -1,0 +1,5 @@
+<div class="pagination">
+  <span *ngFor="let page of pages" (click)="pageClick(page)" [class.selected]="page === currentPage">
+    {{ page }}
+  </span>
+</div>

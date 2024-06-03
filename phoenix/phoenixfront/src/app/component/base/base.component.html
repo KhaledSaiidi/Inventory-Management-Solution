@@ -1,0 +1,169 @@
+<section id="base"> 
+  <div class="min-height-300 bg-primary position-absolute w-100" style="background-image: url('../../assets/img/bg.png');
+        background-size: cover;">
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(161, 183, 212, 0.459);">
+          <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+              <div class="container-fluid py-1 px-3">
+                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                  <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    
+                  </div> 
+                  <ul class="navbar-nav  justify-content-end">
+                
+                    
+                    <li class="nav-item d-flex align-items-center" style="cursor: pointer;">
+                      <a  (click) = "navigateToUserdetails(securityService.profile?.username)" class="nav-link text-white p-0 position-relative">
+                      <i class="fa fa-user me-sm-1" style="color: white; font-size: 24px;"></i>
+                    
+                      <ng-container *ngIf="securityService.profile">
+                        <span class="d-sm-inline d-none" style="color: white; font-size: 24px; margin-left: 5px;"> {{securityService.profile.firstName}} {{securityService.profile.lastName}} </span>
+                      </ng-container>
+                    </a>
+                      </li>
+                    
+                    <li class="nav-item px-3 d-flex align-items-center">
+                      <a (click)="onLogout()" class="nav-link text-white p-0">
+                        <i class="fa fa-sign-out fixed-plugin-button-nav cursor-pointer" style="font-size: 24px;"></i>
+                      </a>
+                    </li>
+                     <li class="nav-item dropdown pe-2 d-flex align-items-center" >
+                      <a (click)="terminatenotif()" href="javascript:;" class="nav-link text-white p-0 position-relative" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" >
+                        <i class="fa fa-bell cursor-pointer" style="font-size: 24px;" ></i>
+                        <span *ngIf="notificationnumber > 0" class="notification-badge" >{{ notificationnumber }}</span>
+                      </a>
+                      
+                      <div class="dropdown-menu dropdown-menu-end px-2 me-sm-n4 custom-dropdown-menu" >
+                    
+                        <div *ngIf="!emptyreclamaations; else noNotifications" style="cursor: default;">
+                          <div class="notification-header">
+                            <h6 class="m-0">Notifications</h6>
+                          </div>
+                          <ul class="notification-list">
+                            <li *ngFor="let notif of reclamations" class="notification-item new-notification" 
+                            [ngStyle]="{ 'background-color': !ifUserSeentrue(notif) ? '#f2f2f2' : 'white' }">
+                              <div class="media">
+                                <div class="media-body" >
+                                  <h6 class="notification-sender" style="margin-bottom: 0px;">
+                                    <i class="fa fa-info-circle" style="font-size: 16px; color: #336699;"></i>
+                                    Sent by {{ notif.senderReference?.toUpperCase() }} :
+                                    <small class="text-muted notification-date">{{ notif.reclamDate|  date:'HH:mm, dd MMM' }}</small>
+                                  </h6>
+                                
+                                  <div class="notification-content" style="margin-top: 0px;">
+                                    <p style="size: 6px; margin-bottom: 0px; margin-top: 0px;">
+                                      <b [ngStyle]="{
+                                        'color': 
+                                          notif.reclamationType?.toString() === 'prodReturnType' ? 'orange' :
+                                          notif.reclamationType?.toString() === 'prodSoldType' ? 'green' :
+                                          notif.reclamationType?.toString() === 'restockingType' ? 'blue' :
+                                          'red'
+                                      }">
+                                        {{ 
+                                          notif.reclamationType?.toString() === 'prodReturnType' ? 'Product Return' :
+                                          notif.reclamationType?.toString() === 'prodSoldType' ? 'Product Sold' :
+                                          notif.reclamationType?.toString() === 'restockingType' ? 'Restocking' :
+                                          notif.reclamationType?.toString() === 'stockExpirationReminder' ? 'Stock Expiration Reminder' :
+                                          notif.reclamationType?.toString() === 'otherReclamType' ? 'Complaint' : ''
+                                        }}
+                                      </b>
+                                     </p>
+                                    <span class="notification-message" style="margin-top: 0px;">{{ notif.reclamationText }}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                          <hr style="border: 0; border-top: 1px solid #999; margin-bottom: 4px;">
+                          <div style="display: flex; justify-content: center; align-items: center; height: 100%; margin-top: 4px;">
+                            <a style="cursor: pointer;" (click)="navigateToUserNotifications(securityService.profile?.username)"><u>Check All</u></a>
+                        </div>                        
+                        </div>
+                        <ng-template #noNotifications>
+                          <div class="empty-notification">No Notifications yet..</div>
+                        </ng-template>
+                      </div>
+                     </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+      </div>  
+      </div>
+        <aside class="container-with-scrollbar sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4"
+         id="sidenav-main" style="height: 90% !important;">
+          <div class="sidenav-header" style="height: 10% !important;">
+            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+            <a class="navbar-brand m-0" href="#">
+              <img src="../../assets/img/logo.png" class="navbar-brand-img h-100" alt="main_logo">
+              <span class="ms-1 font-weight-bold">UniStock Keeper</span>
+            </a>
+          </div>
+          <hr class="horizontal dark mt-0">
+          <div class="w-auto " id="sidenav-collapse-main" style="height: 50% !important; margin-bottom: 45%;">
+            <ul class="navbar-nav">
+              <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Inventory Tracking Optimization</h6>
+              </li>
+              <ng-container *ngIf="isManager">
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+                  <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center" style="background-image: url('../../assets/img/icons/dashboardicon.png');">
+                    <i class="ni  text-primary text-sm opacity-10"></i>
+                  </div>
+                  <span class="nav-link-text ms-1">Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link " routerLink="/agents" routerLinkActive="active">
+                  <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center" style="background-image: url('../../assets/img/icons/managementicon.png');">
+                    <i class="ni  text-warning text-sm opacity-10"></i>
+                  </div>
+                  <span class="nav-link-text ms-1">Agents Management</span>
+                </a>
+              </li>
+            </ng-container>
+              <li class="nav-item">
+                <a class="nav-link " routerLink="/camapigns" routerLinkActive="active">
+                  <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center" style="background-image: url('../../assets/img/icons/campaign.jpg');">
+                    <i class="ni text-danger text-sm opacity-10"></i>
+                  </div>
+                  <span class="nav-link-text ms-1">Campaigns Management</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link " style="cursor: pointer;" (click)="navigateToStocks()" routerLinkActive="active">
+                  <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center" style="background-image: url('../../assets/img/icons/inventory.jpg');">
+                    <i class="ni text-success text-sm opacity-10"></i>
+                  </div>
+                  <span class="nav-link-text ms-1">Stock Management</span>
+                </a>
+              </li>
+              
+              <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">logs</h6>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/archive" routerLinkActive="active">
+                  <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center" style="background-image: url('../../assets/img/icons/archive.png');">
+                    <i class="ni text-warning text-sm opacity-10"></i>
+                  </div>
+                  <span class="nav-link-text ms-1">Archived</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="sidenav-footer mx-3">
+            <div class="card card-plain shadow-none" id="sidenavCard">
+              <img class="w-30 mx-auto" src="../../assets/img/scanbarcode.jpg" alt="sidebar_illustration">
+              <div class="card-body text-center p-3 w-100 pt-0">
+                <div class="docs-info">
+                  <p class="text-xs font-weight-bold mb-0">Scan Barcode</p>
+                </div>
+              </div>
+            </div>
+            
+            <a class="btn btn-primary btn-sm mb-0 w-100" type="button" style="cursor: pointer;" (click)="navigateToscanners(securityService.profile?.username)">Scanners</a>
+
+          </div>
+        </aside>
+        </section>

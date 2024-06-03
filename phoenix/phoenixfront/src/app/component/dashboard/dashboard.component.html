@@ -1,0 +1,306 @@
+<app-base></app-base>
+<div class="dashboard-container"> 
+    
+  <div class="container-fluid py-4">
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card h-100">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Current Inventory Count</p>
+                    <h5 class="font-weight-bolder">
+                      {{productNumberNow}} Products
+                    </h5>
+                    <p class="mb-0">
+                      products in <span class="text-success text-sm font-weight-bolder" >{{ currentDate | date }}</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card h-100" >
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Products <br> Sold</p>
+                    <h5 class="font-weight-bolder">
+                      {{soldProductsCurrentYear}}</h5>
+                    <p class="mb-0">
+                      <span class="text-sm font-weight-bolder" 
+                      [ngClass]="{'text-success': growthRate > 0, 'text-danger': growthRate <= 0}">{{growthRate}}%</span>
+                      since last month
+                    </p>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+          <div class="card h-100">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">   
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Product Returns Count</p>
+                    <h5 class="font-weight-bolder">{{countReturnedProductsCurrentMonth}}</h5>
+                    <p class="mb-0">
+                      <span class=" text-sm font-weight-bolder"
+                      [ngClass]="{'text-danger': returngrowthRate > 0, 'text-success': returngrowthRate <= 0}">
+                      {{returngrowthRate}}%</span>
+                      since last month
+                    </p>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card h-100">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Active Campaigns Count</p>
+                    <h5 class="font-weight-bolder">
+                      {{campaignsCurrentYear}} 
+                    </h5>
+                    <p class="mb-0">
+                      <span class="text-sm font-weight-bolder"
+                      [ngClass]="{'text-success': campaignsgrowthRate > 0, 'text-danger': campaignsgrowthRate <= 0}">{{campaignsgrowthRate}}%</span>
+                      since last year
+                    </p>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                    <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="row mt-4">
+        <div class="col-lg-7 mb-lg-0 mb-4">
+          <div class="card z-index-2 h-100">
+            <div class="card-header pb-0 pt-3 bg-transparent">
+              <h6 class="text-capitalize">Monthly Sales Overview</h6>
+              <p class="text-sm mb-0">
+                
+                <span class="text-sm font-weight-bolder" 
+                      [ngClass]="{'text-success': growthRate > 0, 'text-danger': growthRate <= 0}">{{growthRate}}%</span>
+                      &nbsp;than the previous month
+              </p>
+            </div>
+            <div class="card-body p-3">
+              <div class="chart">
+                <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-5">
+          <div class="card card-carousel overflow-hidden h-100 p-0">
+            <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
+              <div class="carousel-inner border-radius-lg h-100">
+                <div *ngFor="let slide of slides; let i = index"
+                     class="carousel-item h-100"
+                     [class.active]="i === activeIndex"
+                     style="background-image: url('{{ slide.image }}'); background-size: cover;">
+                  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+                    <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
+                      <h5 class="text-white mb-1">{{ slide.title }}</h5>
+                      <p>{{ slide.description }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="carousel-control-prev w-5 me-3" (click)="prevSlide()">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next w-5 me-3" (click)="nextSlide()">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+    </div>
+      <div class="row mt-4">
+        <div class="col-lg-7 mb-lg-0 mb-4" >
+          <div class="card" style="max-height: 300px; min-height: 300px; overflow-y: auto;">
+            <div class="card-header pb-0 p-3">
+              <div class="d-flex justify-content-between">
+                <h6 class="mb-2">Top Sales Agents - Monthly Performance</h6>
+              </div>
+            </div>
+          
+            <div class="table-responsive">
+              <table class="table align-items-center">
+                <thead>
+                  <tr>
+                    <th>Agent</th>
+                    <th>This Month Sales</th>
+                    <th>Last Month Sales</th>
+                    <th>Growth</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container  *ngIf="loadingSales;">
+                    <tr>
+                      <td colspan="4" style="text-align: center;">
+                        <div class="loading-container">
+                          <div class="loading-spinner"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loadingSales && emptyTopSales;">
+                    <tr>
+                      <td colspan="4" style="text-align: center;">
+
+                        <p>No Top Sales Agents found. Please check back later.</p>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loadingSales && !emptyTopSales; ">
+
+                    <tr *ngFor="let saleData of salesData; let i = index">
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="text-center">
+                          <p class="text-xs font-weight-bold mb-0">Full Name:</p>
+                          <h6 class="text-sm mb-0">
+                            <ng-container *ngIf="i === 0">
+                              <i class="champion-icon fas fa-trophy" style="color: gold;"></i> &nbsp;
+                            </ng-container>  
+                            <ng-container *ngIf="i !== 0">
+                              &nbsp; &nbsp; &nbsp; &nbsp;
+                            </ng-container>  
+                            {{saleData.fullname}}
+                          </h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="text-center">
+                        <p class="text-xs font-weight-bold mb-0">This Month Sales:</p>
+                        <h6 class="text-sm mb-0">{{saleData.totalsales}}</h6>
+                      </div>
+                    </td>
+                    <td class="align-middle text-sm">
+                      <div class="col text-center">
+                        <p class="text-xs font-weight-bold mb-0">Last Month Sales:</p>
+                        <h6 class="text-sm mb-0">{{saleData.totalsalesLastMonth}}</h6>
+                      </div>
+                    </td>
+                    <td class="align-middle text-sm">
+                      <div class="col text-center">
+                        <p class="text-xs font-weight-bold mb-0">Growth:</p>
+                        <h6 class="text-sm mb-0" *ngIf="saleData.growth">
+                          <span *ngIf="saleData.growth > 0" class="text-success">
+                            <i class="fas fa-arrow-up"></i>
+                          </span>
+                          <span *ngIf="saleData.growth < 0" class="text-danger">
+                            <i class="fas fa-arrow-down"></i>
+                          </span>
+                          Growth: {{ (saleData.growth).toFixed(2) }}%
+                        </h6>
+                      </div>
+                    </td>
+                  </tr>
+          </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-lg-5">
+          <div class="card" style="max-height: 300px; min-height: 300px; overflow-y: auto;">
+            <div class="card-header pb-0 p-3">
+              <h6 class="mb-0">Monthly Returned Products</h6>
+            </div>
+          
+            <div class="table-responsive p-0" style="width: 100%;">
+              <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+                <thead>
+                  <tr style="width: 100%;">
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Manager</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container  *ngIf="loadingReturns;">
+                    <tr>
+                      <td colspan="4" style="text-align: center;">
+                        <div class="loading-container">
+                          <div class="loading-spinner"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loadingReturns && emptyReturns;">
+                    <tr>
+                      <td colspan="4" style="text-align: center;">
+
+                        <p>No Returns found this Month. Please check back later.</p>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loadingReturns && !emptyReturns; ">
+                <tr *ngFor="let returned of returnedMonthly">
+                  <td>{{ returned.stock?.stockReference }}</td>
+                  <td>{{ returned.serialNumber }}</td>
+                  <td>{{ returned.agentReturnedProd?.firstname?.toUpperCase() }}  {{ returned.agentReturnedProd?.lastname?.toUpperCase() }}</td>
+                  <td>{{ returned.managerProd?.firstname?.toUpperCase() }}  {{ returned.managerProd?.lastname?.toUpperCase() }}</td>
+                </tr>
+                </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+        </div>
+
+        
+      </div>
+      
+</div>
+
+
+
+ 

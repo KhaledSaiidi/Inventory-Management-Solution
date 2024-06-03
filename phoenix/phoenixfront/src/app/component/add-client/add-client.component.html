@@ -1,0 +1,77 @@
+<div class="shadowed" (click)="navigateToCampaigns()">
+    <app-campaigns></app-campaigns>
+</div>
+
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Add a new client to your list</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="text-uppercase text-sm">Client Information</p>
+                <form  [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="companyName">Company Name<span style="color: red;">*</span></label>
+                          <input class="form-control mt-2" formControlName="companyName" type="text" id="companyName" placeholder="Company Name">                   
+                        </div>
+                      </div>
+                      
+                      
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="companyemail">Company Email<span style="color: red;">*</span></label>
+                      <input type="email" formControlName="companyemail" class="form-control mt-2" id="companyemail" placeholder="Company Email" >
+                      
+                    </div>
+                  </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="companyphone">Company Phone</label>
+                        <input class="form-control mt-2" type="tel" formControlName="companyphone" id="companyphone" placeholder="Phone Number" >
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="referentfirstName">Contact Person FirstName</label>
+                        <input type="text"  class="form-control mt-2" id="referentfirstName" formControlName="referentfirstName" placeholder="Please enter a company contact person">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="referentlastName">Contact Person LastName</label>
+                        <input class="form-control mt-2" type="text" formControlName="referentlastName" id="referentlastName" placeholder="Please enter a LastName" >
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="referentemail">Contact Person Email</label>
+                        <input type="email" class="form-control mt-2" id="referentemail" formControlName="referentemail" placeholder = "Please enter the contact person email">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="referentphone" class="form-control-label">Contact Person Phone</label>
+                        <input class="form-control mt-2" formControlName="referentphone" type="tel"  id="referentphone" placeholder="Phone Number">
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Add Client</button>
+                </div>
+                  
+               </form>
+              </div>
+
+            </div>
+  
+          </div>
+        </div>
+        </div>
+        </div>

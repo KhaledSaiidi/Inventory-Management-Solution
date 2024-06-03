@@ -1,0 +1,122 @@
+<div class="shadowed" (click)="navigateToCampigns()">
+    <app-campaigns></app-campaigns>
+  </div>
+  <div class="appform-container">
+      <div class="container-fluid py-4" style="width: 100%;">
+          <div class="row" style="width: 100%;">
+            <div class="col-md-8" style="width: 100%;">
+              <div class="card">
+                <div class="card-header pb-0">
+                  <div class="d-flex align-items-center">
+                    <p class="mb-0">Campaign Information</p>
+                  </div>
+                </div>
+                  
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <input type="checkbox"  [checked]="isEditable" (change)="toggleEditable()" id="editableCheckbox" class="custom-checkbox">
+                    <label for="editableCheckbox" class="mb-0">Would you like to update your campaign informations?</label>
+                  </div>     
+                  <br>           
+                  <form  [formGroup]="campaignForm" (ngSubmit)="onSubmit()">
+                    
+                  <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                        
+                          <label  class="form-control-label" >Reference</label>
+                          <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4); margin-top: 10px;"> {{ reference}} </span>
+                        </div>
+                      </div>
+                          
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="campaignName">Campaign Name</label>
+                        <input type="text" formControlName="campaignName" class="form-control mt-2" id="campaignName" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                        
+                      </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                      
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="startDate">Started Date</label>
+                          <input type="date"  class="form-control mt-2" id="startDate" formControlName="startDate" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined">
+                        </div>
+                      </div>
+
+                      <ng-container *ngIf="isCodeDisabled && campaigndto?.client">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                            <div>
+                              <label>Client</label>
+                              <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4); margin-top: 10px;"> {{campaigndto.client?.companyName}} </span>
+                            </div>
+                        </div>
+                      </div>
+                      </ng-container>
+                      <ng-container *ngIf="!isCodeDisabled">
+                        <div class="col-md-6">
+                          <div formGroupName="client">
+                              <div>
+                            <label for="client-reference">Client</label>
+                            <select class="form-control mt-2" class="form-control mt-2" formControlName="reference" id="reference">
+                              <option *ngFor="let client of clients" [value]="client.reference">  {{client.companyName}}  </option>                      
+                          </select>
+                          </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                      
+                      <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="campaignDescription">Campaign Description</label>
+                            <textarea class="form-control mt-2" rows="5" formControlName="campaignDescription" id="campaignDescription" [attr.disabled]="isCodeDisabled ? 'disabled' : undefined"></textarea>
+                        </div>
+                    </div>               
+                    
+                    <ng-container *ngIf="isCodeDisabled">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                          <label>Products</label>
+                          <table class="table mt-2">
+                              <tbody>
+                                  <tr>
+                                      <td *ngFor="let product of campaignProducts">{{ product }}</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                <ng-container *ngIf="!isCodeDisabled">
+                  <div *ngFor="let product of products let i = index" class="row">
+                    <div class="col-md-6">
+                      <div>
+                        <label>Product {{ product.id }}</label>
+                        <input class="form-control mt-2" type="text" (input)="updateProductValue(i, $event)">
+                      </div>
+                    </div>
+                    <div class="col-md-6" style="margin-top: 7%;">
+                      <div class="checkInput form-check">
+                        <input class="form-check-input" type="checkbox" #checkbox (change)="onCheckboxChange(checkbox, i)"> <label>Add another Product?</label>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                    </div>
+                    <div style="display: flex; justify-content: center; margin-top: 15px;">
+                      <button type="submit" class="btn btn-primary btn-sm " style="width: 180px; ">Update Campaign</button>
+                  </div>
+                    
+                 </form>
+                </div>
+  
+              </div>
+    
+            </div>
+          </div>
+          </div>
+          </div>

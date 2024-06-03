@@ -1,0 +1,276 @@
+<app-base></app-base>
+<div class="listeequipes-container"> 
+  
+  <a class="btn-primary btn" style="color: white; margin-right: 10px;" (click)="toggleColMd4()" href="#">
+    <span class="icon-container">
+      <i class="fas fa-bars fa-lg"></i>
+      <span class="tooltip-text">&nbsp; Managers List</span>
+    </span>
+  </a>
+  <a (click) = "navigateToaddTeam()" class="btn-primary btn" style="color: white;">
+      <span class="">&nbsp; New Member</span>
+  </a>
+
+<div class="listetalents-container" [hidden]="showColMd4">
+    <div class="col-12">
+        <div class="card mb-4 ">
+          <div class="card-header pb-0" >
+            <h6 class="text-center">Agents List</h6>
+          </div>
+    <div class="card-body px-0 pt-0 pb-2">
+      <div class="table-responsive p-0">
+        <table class="table align-items-center justify-content-center mb-0">
+          <thead>
+            <tr>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">FullName</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Phone</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Manager</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" >Products</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sells</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Returned</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">More details</th>
+  
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container  *ngIf="loading;">
+              <tr>
+                <td colspan="8" style="text-align: center;">
+                  <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container  *ngIf="!loading && emptyagents;">
+              <tr>
+                <td colspan="8" style="text-align: center;">
+                  <p>No Agents found. Please check back later.</p>
+                </td>
+              </tr>
+            </ng-container>
+           <ng-container  *ngIf="!loading && !emptyagents; ">
+            <tr *ngFor="let agent of agentList">
+              <td style="word-wrap: break-word; white-space: normal;"> {{agent.firstName}} {{agent.lastName}} </td>
+              <td style="word-wrap: break-word; white-space: normal;"> {{agent.email}} </td>
+              <td style="word-wrap: break-word; white-space: normal;"> {{agent.phone}} </td>
+              <td style="word-wrap: break-word; white-space: normal;">{{agent.manager?.firstName}} {{agent.manager?.lastName}}</td>
+              <td style="word-wrap: break-word; white-space: normal;">{{agent.associatedProds}} 
+                <span style="font-size: 12px;"><b> Products</b></span></td>                     
+              <td style="word-wrap: break-word; white-space: normal;">{{agent.soldProds}} 
+                <span style="font-size: 12px;"><b> Products</b></span></td>                     
+              <td style="word-wrap: break-word; white-space: normal;">{{agent.returnedProds}} 
+                <span style="font-size: 12px;"><b> Products</b></span></td>                     
+              <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.username)" >Profil</td>
+  
+            </tr>
+           </ng-container>
+          </tbody>
+        </table>
+      </div>
+      
+  
+  
+    
+    </div>
+  </div>
+    </div>
+</div>
+
+<div class="containerofboth">
+  
+    <div class="wrapper">
+      <div class="fixed-part">
+      <div class="poss col-md-4"   [hidden]="!showColMd4">
+        <div class="card card-profile">
+          <img src="../../../assets/img/agents.jpg" class="card-img-top" style="max-height: 40%;">
+          <div style="display: flex; gap: 10px;">
+        </div>
+          <div class="card-body pt-0" style="margin-top: 15px;">
+            <div class="row">
+              <div class="col">
+                <div class="d-flex justify-content-center">
+                  <div class="d-grid text-center">
+                    <span class="text-lg font-weight-bolder">{{agentList.length}}</span>
+                    <span class="text-sm opacity-8">Agents</span>
+                  </div>
+                  <div class="d-grid text-center mx-4">
+                    <span class="text-lg font-weight-bolder">{{managerList.length}}</span>
+                    <span class="text-sm opacity-8">Managers</span>
+                  </div>
+                  <div class="d-grid text-center">
+                    <span class="text-lg font-weight-bolder"> {{imanagerList.length}} </span>
+                    <span class="text-sm opacity-8">I.Managers</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+  <div class="radio-container" style="margin-top: 20px;">
+    <label class="radio-label">
+      <input type="radio" class="radio-input" name="managerType" [(ngModel)]="areManagers" [value]="true" checked> Managers
+    </label>
+    <label class="radio-label">
+      <input type="radio" class="radio-input" name="managerType" [(ngModel)]="areManagers" [value]="false"> I.Managers
+    </label>
+  </div>
+  
+<ng-container *ngIf="areManagers; else ImanagersTemplate">
+<div class="equipe-container">
+              <h5>Managers</h5>
+    <table class="table">
+      <thead>
+        <tr>
+          <th >FullName</th>
+          <th >Agents</th>
+          <th >Products</th>
+        </tr>
+      </thead>
+      <tbody style="text-align: center;">
+        <ng-container  *ngIf="loading;">
+          <tr>
+            <td colspan="8" style="text-align: center;">
+              <div class="loading-container">
+                <div class="loading-spinner"></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container  *ngIf="!loading && empptymanagers;">
+          <tr>
+            <td colspan="8" style="text-align: center;">
+              <p>No Managers found. Please check back later.</p>
+            </td>
+          </tr>
+        </ng-container>
+       <ng-container  *ngIf="!loading && !empptymanagers; ">
+        <tr *ngFor="let manager of managerList">
+          <ng-container *ngIf="manager.username">
+          <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
+          <td >{{ countAgentsForManagers(this.agentList, manager.username) }}</td>
+          <td>{{manager.associatedProds}}</td>
+        </ng-container>
+          </tr>   
+       </ng-container>
+          
+      </tbody>
+    </table>
+   
+</div>
+</ng-container> 
+<ng-template #ImanagersTemplate>
+  <div class="equipe-container">
+      <h5>Inventory Managers</h5>
+    <table class="table">
+    <thead>
+        <tr>
+          <th >FullName</th>
+          <th >Email</th>
+        </tr>
+        </thead>
+        <tbody style="text-align: center;">
+          <ng-container  *ngIf="loading;">
+            <tr>
+              <td colspan="8" style="text-align: center;">
+                <div class="loading-container">
+                  <div class="loading-spinner"></div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container  *ngIf="!loading && empptyimanagers;">
+            <tr>
+              <td colspan="8" style="text-align: center;">
+                <p>No I.Managers found. Please check back later.</p>
+              </td>
+            </tr>
+          </ng-container>
+         <ng-container  *ngIf="!loading && !empptyimanagers; ">
+          <tr *ngFor="let manager of imanagerList">
+          <ng-container *ngIf="manager.username">
+          <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
+          <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.email}}</td>
+          </ng-container>
+          </tr>     
+         </ng-container> 
+    </tbody>
+    </table>
+    </div>
+  </ng-template>
+
+    </div>
+          
+        </div>
+        
+      </div>
+    </div>
+    <div class="listetalents-containershown" style="cursor: pointer;"  [hidden]="!showColMd4">
+        <div class="col-12">
+         <div class="card mb-4 ">
+                 <div class="card-header pb-0" >
+                   <h6 class="text-center">Agents List</h6>
+                 </div>
+                 <div class="card-body px-0 pt-0 pb-2">
+             <div class="table-responsive p-0">
+               <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+                 <thead>
+                   <tr>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 15%;">FULLNAME</th>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 25%;">Email</th>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 25%;">Phone</th>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">CAMPAIGNS</th>
+                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width: 10%;">MORE DETAILS</th>
+         
+         
+         
+                   </tr>
+                 </thead>
+                 <tbody>
+                  <ng-container  *ngIf="loading;">
+                    <tr>
+                      <td colspan="8" style="text-align: center;">
+                        <div class="loading-container">
+                          <div class="loading-spinner"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loading && emptyagents;">
+                    <tr>
+                      <td colspan="8" style="text-align: center;">
+                        <p>No Agents found. Please check back later.</p>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container  *ngIf="!loading && !emptyagents; ">
+                   <tr *ngFor="let agent of agentList">
+                     <td style="word-wrap: break-word; white-space: normal;"> {{agent.firstName}} {{agent.lastName}} </td>
+                     <td style="word-wrap: break-word; white-space: normal;">{{agent.email}}</td>
+                     <td style="word-wrap: break-word; white-space: normal;">{{agent.phone}}</td>
+                     <td style="word-wrap: break-word; white-space: normal;">
+                      <div style="max-height: 50px; overflow-y: auto;">
+                        <ul style="list-style-type: none;">
+                              <li>mehdi 
+                              </li>
+                                                  
+                        </ul>
+                      </div>
+                    </td>        
+                     <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.username)">Profil</td>
+                   </tr>
+                 </ng-container>
+                 </tbody>
+               </table>
+             </div>
+                 </div>
+         </div>
+        </div>
+       </div>
+
+</div>
+</div>
+
+
+</div>

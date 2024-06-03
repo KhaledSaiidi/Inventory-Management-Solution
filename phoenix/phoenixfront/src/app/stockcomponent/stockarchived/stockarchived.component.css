@@ -1,0 +1,58 @@
+.listeequipes-container{
+    position: absolute;
+    top: 130px;
+      left: 290px; 
+      width: calc(100% - 300px);
+      height: 100%;
+      
+    }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.loading-spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.search-container {
+  position: relative;
+  width: 560px;
+  margin-bottom: 15px;
+}
+
+.rounded-input {
+  border-radius: 20px;
+  padding-left: 30px;
+  transition: border-color 0.3s; /* Add transition for smooth effect */
+  border: 1px solid #ccc; /* Initial border color */
+}
+
+.rounded-input:focus,
+.rounded-input:hover {
+  border-color: blue; /* Border color on focus or hover */
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #ccc; 
+  cursor: pointer;
+}
+

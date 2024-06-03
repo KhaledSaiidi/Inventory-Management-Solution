@@ -1,0 +1,44 @@
+{
+  "realm" : "phoenixstock",
+  "users" : [ {
+    "id" : "5262f92e-0462-48f7-97f5-be7dcdf6a4f5",
+    "createdTimestamp" : 1702069331448,
+    "username" : "khaled",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "khaled",
+    "lastName" : "saidi",
+    "email" : "saiidiikhaled@gmail.com",
+    "credentials" : [ {
+      "id" : "a27013c2-81c9-450e-97e5-26efcf25b6ba",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1702069345008,
+      "secretData" : "{\"value\":\"5hN2NMxfRIL2D6T8cL7x1q9Ldnk8NoWz2JpHSAJca9U=\",\"salt\":\"Mf9YPIiRxr/eBUeb3cAVww==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-phoenixstock" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "9c9a3b2a-794b-4de3-89f1-14faf40099e8",
+    "createdTimestamp" : 1702069249436,
+    "username" : "service-account-frontclient",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "serviceAccountClientId" : "frontclient",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-phoenixstock" ],
+    "clientRoles" : {
+      "frontclient" : [ "uma_protection" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}

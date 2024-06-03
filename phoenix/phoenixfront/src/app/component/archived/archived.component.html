@@ -1,0 +1,97 @@
+<app-base></app-base>
+<div class="listeequipes-container">     
+    <div class="equipe-container">
+        <div class="listetalents-containershown">
+            <div class="col-12">
+             <div class="card mb-4 ">
+                     <div class="card-header pb-0" >
+                       <h6 class="text-center">Campaigns List</h6>
+                     </div>
+                     <div class="card-body px-0 pt-0 pb-2">
+                 <div class="table-responsive p-0">
+                   <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+                     <thead>
+                       <tr>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">REFERENCE</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NAME</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PRODUCT Types</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">CLIENT</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">START DATE</th>
+                         <ng-container *ngIf="isManager">
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Actions</th>
+                        </ng-container>
+                       </tr>
+                     </thead>
+                     <tbody>
+                      <ng-container  *ngIf="loading;">
+                        <tr>
+                          <td colspan="7" style="text-align: center;">
+                            <div class="loading-container">
+                              <div class="loading-spinner"></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && emptyCamp;">
+                        <tr>
+                          <td colspan="7" style="text-align: center;">
+                            <p>No Archived Campaigns found. Please check back later.</p>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-container  *ngIf="!loading && !emptyCamp; ">
+                       <tr *ngFor="let onecamp of campaigns let i = index"
+                        (mouseenter)="selectedRowIndex = i"
+                        (mouseleave)="selectedRowIndex = null"
+                       >
+                         <td (click)="navigateToStockInfo(onecamp.reference)" style="word-wrap: break-word; white-space: normal; cursor: pointer;" (mouseover)="showTooltip(onecamp)" 
+                         (mouseout)="hideTooltip()"> {{onecamp.reference}} </td>
+                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;"  (mouseover)="showTooltip(onecamp)" 
+                         (mouseout)="hideTooltip()">{{onecamp.campaignName}}</td>
+                         <td style="word-wrap: break-word; white-space: normal;">
+                          <div style="max-height: 70px; overflow-y: auto;">
+                            <ul *ngFor="let product of onecamp.products">
+                              <li>{{product}}</li>
+                            </ul>
+                          </div>
+                        </td>
+                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;">{{onecamp.client?.companyName}}</td> 
+                         <td style="word-wrap: break-word; white-space: normal;"> {{ onecamp.startDate | date: 'medium' | slice: 0:12 }}</td>
+                         <ng-container *ngIf="isManager">
+                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" ><a (click)="confirmArchiveDeletion(onecamp.reference)">delete</a></td>
+                        </ng-container>
+                        </tr>
+                     </ng-container>
+                     </tbody>
+                   </table>
+                 </div>
+                 
+                </div>  
+                   
+             </div>
+             
+            </div>
+            
+           </div>
+           <ng-container *ngIf="enable === true" style="width: 1000px; height: 1000px;">
+            <div class="tooltip-container" style="position: relative;top: -150px; left: 200px; width: 50%;">
+              <div class="tooltip card" id="tooltip" 
+              [style.bottom]="selectedRowIndex !== null ? (selectedRowIndex * -70) + 'px' : null"
+              [style.left]="selectedRowIndex !== null ? '10%' : null"
+              style="position: absolute; background-color: white;
+               box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);">
+            
+            <div class="popup" style="margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;">
+              <div class="popup-content" >
+                <h6 style="text-align: center;"> <b>{{ campaigndto?.campaignName}} </b></h6>
+                <p style="font-size: 14px; word-wrap: break-word;">
+                  {{campaigndto?.campaignDescription}} <br>
+                </p>
+              </div>
+            </div>
+              </div>
+            </div>
+          </ng-container>  
+    </div>
+    
+</div>
