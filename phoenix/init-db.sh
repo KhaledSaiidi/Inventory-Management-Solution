@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+mysql -uroot -p"$MYSQL_ROOT_PASSWORD" <<-EOSQL
+    CREATE DATABASE IF NOT EXISTS keycloakDB;
+    CREATE DATABASE IF NOT EXISTS notificationDB;
+    CREATE DATABASE IF NOT EXISTS stockDB;
+EOSQL

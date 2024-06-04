@@ -1,26 +1,25 @@
 version: '3.8'
 
 services:
+  eureka-server:
+    build:
+      context: ./discovery-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+
   configserver:
     build:
       context: ./config-server
       dockerfile: Dockerfile
     environment:
-      eureka.instance.hostname: configserver
-      KEYCLOAK_ISSUER: keycloak:8181
-      KAFKA_HOST: kafka:9092
-      MYSQL_HOST: mysql:3306
+      EUREKA_INSTANCE_HOSTNAME: eureka-server
+      KEYCLOAK_ISSUER: keycloak
+      KAFKA_HOST: kafka
+      MYSQL_HOST: mysql
+      NGINX_HOST: frontapp
     ports:
       - "8888:8888"
-
-  eureka-server:
-    build:
-      context: ./discovery-server
-      dockerfile: Dockerfile
-    environment:
-      CONFIG_HOST: configserver
-    ports:
-      - "8761:8761"
 
   gateway:
     build:
@@ -30,6 +29,9 @@ services:
       CONFIG_HOST: configserver
     ports:
       - "9000:9000"
+    depends_on:
+      - configserver
+      - eureka-server
 
   keycloak:
     build:
@@ -41,6 +43,8 @@ services:
       KEYCLOAK_PASSWORD: admin
     ports:
       - "8181:8080"
+    depends_on:
+      - mysql
 
   kafka:
     image: wurstmeister/kafka
@@ -54,15 +58,15 @@ services:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
+
+##  chmod +x init-db.sh
   mysql:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: univeralmm
-      MYSQL_DATABASE_1: keycloakDB
-      MYSQL_DATABASE_2: notificationDB
-      MYSQL_DATABASE_3: stockDB
     volumes:
-      - ./keycloakdb.sql:/docker-entrypoint-initdb.d/keycloakDB.sql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - ./keycloakdb.sql:/docker-entrypoint-initdb.d/keycloakdb.sql
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
@@ -73,6 +77,11 @@ services:
       dockerfile: Dockerfile
     environment:
       CONFIG_HOST: configserver
+    depends_on:
+      - configserver
+      - mysql
+      - gateway
+      - eureka-server
 
   notification:
     build:
@@ -80,6 +89,11 @@ services:
       dockerfile: Dockerfile
     environment:
       CONFIG_HOST: configserver
+    depends_on:
+      - configserver
+      - mysql
+      - gateway
+      - eureka-server
 
   stock:
     build:
@@ -87,6 +101,11 @@ services:
       dockerfile: Dockerfile
     environment:
       CONFIG_HOST: configserver
+    depends_on:
+      - configserver
+      - mysql
+      - gateway
+      - eureka-server
 
   frontapp:
     build:

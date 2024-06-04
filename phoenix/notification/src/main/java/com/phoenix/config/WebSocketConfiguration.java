@@ -1,5 +1,6 @@
 package com.phoenix.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -10,6 +11,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
+    @Value("${angular-nginx-server}")
+    private String nginx;
+
     @Override
     public void configureMessageBroker (MessageBrokerRegistry registry) {
       registry.enableSimpleBroker("/topic");
@@ -19,7 +23,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
     registry.addEndpoint("/notif-websocket")
-            .setAllowedOrigins("http://localhost:8100", "http://192.168.0.4:8100", "http://localhost:4200")
+            .setAllowedOrigins("http://localhost:8100", "http://192.168.0.4:8100", "http://nginx:4200")
             .withSockJS();
     }
 
