@@ -1,15 +1,15 @@
-// This file can be replaced during build by using the `fileReplacements` array.
+ // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
   production: false,
-  keycloak: {    
-    url: 'http://localhost:8181',
+  keycloak: {
+    url: 'http://keycloak:8181',
     realm: 'phoenixstock',
     clientId: 'front-client'
   },
-  url: 'http://localhost:9000'
+  url: 'http://api-gateway:9000'
 };
 /*
  * For easier debugging in development mode, you can import the following file

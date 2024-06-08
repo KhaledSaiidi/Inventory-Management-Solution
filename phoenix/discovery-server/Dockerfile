@@ -5,10 +5,8 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the built jar file
-COPY target/discovery-server-*.jar /app/discovery-server.jar
+COPY target/*.jar /app/discovery-server.jar
 
-# Define environment variables
-ENV CONFIG_HOST=${CONFIG_HOST}
 
 # Expose the port on which the app runs
 EXPOSE 8761

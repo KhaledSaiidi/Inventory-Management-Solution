@@ -1,10 +1,10 @@
 export const environment = {
   production: true,
   keycloak: {
-    url: 'http://__KEYCLOAK_HOSTNAME__:8181',
+    url: 'http://keycloak:8181',
     realm: 'phoenixstock',
     clientId: 'front-client'
   },
-  url: 'http://__API_HOSTNAME__:9000'
+  url: 'http://api-gateway:9000'
 };
 

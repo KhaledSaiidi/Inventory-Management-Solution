@@ -1,119 +1,171 @@
 version: '3.8'
 
 services:
-  eureka-server:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: universalmm
+      MYSQL_USER: universal
+      MYSQL_PASSWORD: universal
+    volumes:
+      - mysql_data:/var/lib/mysql:rw
+      - ./keycloakdb.sql:/docker-entrypoint-initdb.d/keycloakdb.sql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    ports:
+      - "3306:3306"
+    networks:
+      - universal-mm-net
+    command: --default-authentication-plugin=caching_sha2_password
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -u root -puniversalmm || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:21.1.1
+    command: ["start-dev", "--http-port=8181", "--import-realm"]
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
+      DB_DATABASE: keycloakdb
+      DB_USER: universal
+      DB_PASSWORD: universal
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8181:8181"
+    networks:
+      universal-mm-net:
+        aliases:
+          - keycloak
+    volumes:
+      - ./realms/:/opt/keycloak/data/import/
+      - ./themes/:/opt/keycloak/themes/
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    ports:
+      - "9092:9092"
+    networks:
+      - universal-mm-net
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - universal-mm-net
+
+  server-discovery:
     build:
       context: ./discovery-server
       dockerfile: Dockerfile
+    container_name: server-discovery
     ports:
       - "8761:8761"
+    networks:
+      universal-mm-net:
+        aliases:
+          - server-discovery
 
   configserver:
     build:
       context: ./config-server
       dockerfile: Dockerfile
-    environment:
-      EUREKA_INSTANCE_HOSTNAME: eureka-server
-      KEYCLOAK_ISSUER: keycloak
-      KAFKA_HOST: kafka
-      MYSQL_HOST: mysql
-      NGINX_HOST: frontapp
+    container_name: configserver
     ports:
       - "8888:8888"
+    networks:
+      - universal-mm-net
+    depends_on:
+      - mysql
+      - keycloak
+      - server-discovery
 
-  gateway:
+  api-gateway:
     build:
       context: ./gateway
       dockerfile: Dockerfile
-    environment:
-      CONFIG_HOST: configserver
+    container_name: api-gateway
     ports:
       - "9000:9000"
+    networks:
+      - universal-mm-net
     depends_on:
       - configserver
-      - eureka-server
+      - server-discovery
+      - keycloak
 
-  keycloak:
-    build:
-      context: ./keycloakauthServer
-      dockerfile: Dockerfile
-    environment:
-      MYSQL_HOST: mysql
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-    ports:
-      - "8181:8080"
-    depends_on:
-      - mysql
-
-  kafka:
-    image: wurstmeister/kafka
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    ports:
-      - "9092:9092"
-
-  zookeeper:
-    image: wurstmeister/zookeeper
-    ports:
-      - "2181:2181"
-
-##  chmod +x init-db.sh
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: univeralmm
-    volumes:
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-      - ./keycloakdb.sql:/docker-entrypoint-initdb.d/keycloakdb.sql
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-
-  keycloakuser:
+  keycloakuser-service:
     build:
       context: ./keycloakuser
       dockerfile: Dockerfile
-    environment:
-      CONFIG_HOST: configserver
+    container_name: keycloakuser-service
+    networks:
+      - universal-mm-net
     depends_on:
       - configserver
-      - mysql
-      - gateway
-      - eureka-server
+      - api-gateway
+      - server-discovery
+      - keycloak
 
-  notification:
+  notification-service:
     build:
       context: ./notification
       dockerfile: Dockerfile
-    environment:
-      CONFIG_HOST: configserver
+    container_name: notification-service
+    networks:
+      - universal-mm-net
     depends_on:
       - configserver
-      - mysql
-      - gateway
-      - eureka-server
+      - api-gateway
+      - server-discovery
+      - keycloak
 
-  stock:
+  stock-service:
     build:
       context: ./stock
       dockerfile: Dockerfile
-    environment:
-      CONFIG_HOST: configserver
+    container_name: stock-service
+    networks:
+      - universal-mm-net
     depends_on:
       - configserver
-      - mysql
-      - gateway
-      - eureka-server
+      - api-gateway
+      - server-discovery
+      - keycloak
 
   frontapp:
     build:
       context: ./phoenixfront
       dockerfile: Dockerfile
+    container_name: frontapp
     environment:
-      KEYCLOAK_HOSTNAME: keycloak
-      API_HOSTNAME: gateway
+      NPM_CONFIG_TIMEOUT: 100000
     ports:
-      - "80:80"
-    command: [ "/bin/sh", "-c", "sed -i 's|__KEYCLOAK_HOSTNAME__|'${KEYCLOAK_HOSTNAME}'|g' /usr/share/nginx/html/main.*.js && sed -i 's|__API_HOSTNAME__|'${API_HOSTNAME}'|g' /usr/share/nginx/html/main.*.js && nginx -g 'daemon off;'" ]
+      - "4200:80"
+    networks:
+      - universal-mm-net
+    depends_on:
+      - api-gateway
+      - keycloak
+    command: ["/bin/sh", "-c", "nginx -g 'daemon off;'"]
+
+volumes:
+  mysql_data:
+
+networks:
+  universal-mm-net:

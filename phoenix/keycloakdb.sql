@@ -1,11 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Jun 03, 2024 at 05:33 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -17,15 +9,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `keycloakdb`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `admin_event_entity`
---
 
 CREATE TABLE `admin_event_entity` (
   `ID` varchar(36) NOT NULL,
@@ -2827,7 +2810,7 @@ CREATE TABLE `scope_policy` (
 -- Table structure for table `t_campaign`
 --
 
-CREATE TABLE `t_campaign` (
+CREATE TABLE IF NOT EXISTS `t_campaign` (
   `reference` varchar(255) NOT NULL,
   `campaign_description` varchar(255) DEFAULT NULL,
   `campaign_name` varchar(255) DEFAULT NULL,
@@ -2849,7 +2832,7 @@ INSERT INTO `t_campaign` (`reference`, `campaign_description`, `campaign_name`, 
 -- Table structure for table `t_campaignarchive`
 --
 
-CREATE TABLE `t_campaignarchive` (
+CREATE TABLE IF NOT EXISTS `t_campaignarchive` (
   `reference` varchar(255) NOT NULL,
   `campaign_description` varchar(255) DEFAULT NULL,
   `campaign_name` varchar(255) DEFAULT NULL,
@@ -2872,7 +2855,7 @@ INSERT INTO `t_campaignarchive` (`reference`, `campaign_description`, `campaign_
 -- Table structure for table `t_client`
 --
 
-CREATE TABLE `t_client` (
+CREATE TABLE IF NOT EXISTS `t_client` (
   `reference` varchar(255) NOT NULL,
   `company_name` varchar(255) DEFAULT NULL,
   `companyemail` varchar(255) DEFAULT NULL,
@@ -2899,7 +2882,7 @@ INSERT INTO `t_client` (`reference`, `company_name`, `companyemail`, `companypho
 -- Table structure for table `t_user`
 --
 
-CREATE TABLE `t_user` (
+CREATE TABLE IF NOT EXISTS `t_user` (
   `username` varchar(255) NOT NULL,
   `date_debut_contrat` date DEFAULT NULL,
   `date_fin_contrat` date DEFAULT NULL,
