@@ -2334,5 +2334,22 @@
   },
   "clientPolicies": {
     "policies": []
-  }
+  },
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["MANAGER", "IMANAGER", "AGENT"],
+      "clientRoles": {
+        "realm-management": ["admin"]
+      }
+    }
+  ]
 }

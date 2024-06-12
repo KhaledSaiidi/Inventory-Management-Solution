@@ -18,7 +18,6 @@ COPY wait-for-keycloak.sh /usr/local/bin/wait-for-keycloak.sh
 RUN chmod +x /usr/local/bin/wait-for-eureka.sh
 RUN chmod +x /usr/local/bin/wait-for-keycloak.sh
 
-
 # Expose the port on which the app runs
 EXPOSE 8888
 
