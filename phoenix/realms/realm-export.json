@@ -687,9 +687,7 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:8100/home",
-        "http://localhost:8100/*",
-        "http://localhost:4200/*"
+        "http://localhost:9002/*"
       ],
       "webOrigins": [
         "*"

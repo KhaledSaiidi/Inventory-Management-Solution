@@ -11,8 +11,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
-    @Value("${angular-nginx-server}")
-    private String nginx;
+    @Value("${originUrl}")
+    private String originUrl;
 
     @Override
     public void configureMessageBroker (MessageBrokerRegistry registry) {
@@ -23,10 +23,9 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
     registry.addEndpoint("/notif-websocket")
-            .setAllowedOrigins("http://localhost:8100", "http://192.168.0.4:8100", "http://nginx:4200")
+            .setAllowedOrigins(originUrl)
             .withSockJS();
     }
-
 
 
 }

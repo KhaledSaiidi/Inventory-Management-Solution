@@ -39,6 +39,8 @@ services:
       - KC_DB_URL_HOST=mysql
       - KC_DB_URL_PORT=3306
       - KC_DB_SCHEMA=keycloakdb
+      - PROXY_ADDRESS_FORWARDING=true
+      - KEYCLOAK_FRONTEND_URL=http://localhost:9002
     ports:
       - "8181:8181"
     networks:
@@ -72,6 +74,8 @@ services:
     networks:
       - universal-mm-net
     environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_MESSAGE_MAX_BYTES: 200000000 # 200 MB
@@ -106,6 +110,9 @@ services:
       - "8888:8888"
     networks:
       - universal-mm-net
+    environment:
+      - KEYCLOAK_HOSTNAME=keycloak
+      - FRONTAPP_HOSTNAME=frontapp
     depends_on:
       keycloak:
         condition: service_started
@@ -126,6 +133,8 @@ services:
       - "9000:9000"
     networks:
       - universal-mm-net
+    environment:
+      - KEYCLOAK_HOSTNAME=keycloak
     depends_on:
       - configserver
       - server-discovery
@@ -139,6 +148,8 @@ services:
     hostname: keycloakuser-service
     networks:
       - universal-mm-net
+    environment:
+      - KEYCLOAK_HOSTNAME=keycloak
     depends_on:
       - configserver
       - api-gateway
@@ -158,6 +169,10 @@ services:
       - api-gateway
       - server-discovery
       - keycloak
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KEYCLOAK_HOSTNAME=keycloak
+      - FRONTAPP_HOSTNAME=frontapp
 
   stock-service:
     build:
@@ -172,6 +187,9 @@ services:
       - api-gateway
       - server-discovery
       - keycloak
+    environment:
+      - KEYCLOAK_HOSTNAME=keycloak
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
   frontapp:
     build:
@@ -179,12 +197,10 @@ services:
       dockerfile: Dockerfile
     container_name: frontapp
     hostname: frontapp
-    environment:
-      NPM_CONFIG_TIMEOUT: 100000
-      KEYCLOAK_URL: http://keycloak:8181
-      API_URL: http://api-gateway:9000
+    ## environment:
+     ## - NPM_CONFIG_TIMEOUT=100000
     ports:
-      - "4200:80"
+      - "4200:4200"
     networks:
       - universal-mm-net
     depends_on:
@@ -192,6 +208,31 @@ services:
         condition: service_started
       api-gateway:
         condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  proxy:
+    image: nginx:alpine
+    container_name: proxy
+    hostname: proxy
+    depends_on:
+      keycloak:
+        condition: service_started
+      api-gateway:
+        condition: service_started
+      frontapp:
+        condition: service_healthy
+    ports:
+      - 9002:9002
+    networks:
+      - universal-mm-net
+    volumes:
+      - type: bind
+        source: ./proxy/nginx-proxy.conf
+        target: /etc/nginx/conf.d/proxy.conf
 
 volumes:
   mysql_data:

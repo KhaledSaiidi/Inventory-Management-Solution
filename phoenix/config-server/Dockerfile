@@ -21,5 +21,9 @@ RUN chmod +x /usr/local/bin/wait-for-keycloak.sh
 # Expose the port on which the app runs
 EXPOSE 8888
 
+# Set environment variable for Keycloak hostname (default value 'localhost')
+ENV KEYCLOAK_HOSTNAME keycloak
+
+
 # Run the jar file
 ENTRYPOINT ["sh", "-c", "/usr/local/bin/wait-for-eureka.sh && /usr/local/bin/wait-for-keycloak.sh && exec java -jar /app/config-server.jar"]
