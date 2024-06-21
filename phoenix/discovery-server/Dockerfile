@@ -6,8 +6,6 @@ WORKDIR /app
 
 # Copy the built jar file
 COPY target/*.jar /app/discovery-server.jar
-
-
 # Expose the port on which the app runs
 EXPOSE 8761
 

@@ -5,11 +5,11 @@
 export const environment = {
   production: false,
   keycloak: {
-    url: 'http://localhost:9002/auth',
+    url: 'KEYCLOAK_PLACEHOLDER',
     realm:'phoenixstock',
     clientId:'front-client'
   },
-  url: 'http://localhost:9002/api'
+  url: 'API_GATEWAY_PLACEHOLDER'
 };
 /*
  * For easier debugging in development mode, you can import the following file

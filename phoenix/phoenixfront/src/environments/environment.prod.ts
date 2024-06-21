@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
   keycloak: {
-    url: 'http://localhost:9002',
+    url: 'KEYCLOAK_PLACEHOLDER',
     realm:'phoenixstock',
     clientId:'front-client'
   },
-  url: 'http://localhost:9002/api'
+  url: 'API_GATEWAY_PLACEHOLDER'
 };

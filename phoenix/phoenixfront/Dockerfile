@@ -13,14 +13,13 @@ RUN npm install
 # Copy the rest of the application source code
 COPY . .
 
-# Replace environment variables in the environment.prod.ts file
-## ARG API_GATEWAY
-## ARG KEYCLOAK
+ARG API_GATEWAY
+ARG KEYCLOAK
 
-## RUN sed -i "s|API_GATEWAY_PLACEHOLDER|${API_GATEWAY}|g" src/environments/environment.prod.ts && \
-   ##  sed -i "s|KEYCLOAK_PLACEHOLDER|${KEYCLOAK}|g" src/environments/environment.prod.ts && \
-    ## sed -i "s|API_GATEWAY_PLACEHOLDER|${API_GATEWAY}|g" src/environments/environment.ts && \
-    ## sed -i "s|KEYCLOAK_PLACEHOLDER|${KEYCLOAK}|g" src/environments/environment.ts
+RUN sed -i "s|API_GATEWAY_PLACEHOLDER|${API_GATEWAY}|g" src/environments/environment.prod.ts && \
+    sed -i "s|KEYCLOAK_PLACEHOLDER|${KEYCLOAK}|g" src/environments/environment.prod.ts && \
+    sed -i "s|API_GATEWAY_PLACEHOLDER|${API_GATEWAY}|g" src/environments/environment.ts && \
+    sed -i "s|KEYCLOAK_PLACEHOLDER|${KEYCLOAK}|g" src/environments/environment.ts
 
 # Build the Angular application
 RUN npm run build -- --configuration production

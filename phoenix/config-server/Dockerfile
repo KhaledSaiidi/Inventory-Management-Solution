@@ -11,12 +11,12 @@ WORKDIR /app
 COPY target/*.jar /app/config-server.jar
 
 # Copy the wait-for scripts
-COPY wait-for-eureka.sh /usr/local/bin/wait-for-eureka.sh
 COPY wait-for-keycloak.sh /usr/local/bin/wait-for-keycloak.sh
+COPY wait-for-eureka.sh /usr/local/bin/wait-for-eureka.sh
 
 # Make the scripts executable
-RUN chmod +x /usr/local/bin/wait-for-eureka.sh
 RUN chmod +x /usr/local/bin/wait-for-keycloak.sh
+RUN chmod +x /usr/local/bin/wait-for-eureka.sh
 
 # Expose the port on which the app runs
 EXPOSE 8888
@@ -26,4 +26,4 @@ ENV KEYCLOAK_HOSTNAME keycloak
 
 
 # Run the jar file
-ENTRYPOINT ["sh", "-c", "/usr/local/bin/wait-for-eureka.sh && /usr/local/bin/wait-for-keycloak.sh && exec java -jar /app/config-server.jar"]
+ENTRYPOINT ["sh", "-c", "/usr/local/bin/wait-for-keycloak.sh && /usr/local/bin/wait-for-eureka.sh && exec java -jar /app/config-server.jar"]
