@@ -138,7 +138,7 @@ public class UserServices implements IUserServices {
             user.setManager(manager);
         }
         List<AgentProdDto> agentProdDtos =  webClientBuilder.build().get()
-                .uri("http://stock-service:8081/stock/getAssignedByusername/{username}", userId)
+                .uri("http://stock-service/stock/getAssignedByusername/{username}", userId)
                 .retrieve()
                 .bodyToFlux(AgentProdDto.class)
                 .collectList()
@@ -155,7 +155,7 @@ public class UserServices implements IUserServices {
             if (userDto.getFirstName() != null || userDto.getLastName() != null) {
                 System.out.println("agentProdDtos changes : " + agentProdDtos );
                 webClientBuilder.build().put()
-                        .uri("http://stock-service:8081/stock/UpdateAgentsbyUserssignementByusername")
+                        .uri("http://stock-service/stock/UpdateAgentsbyUserssignementByusername")
                         .body(BodyInserters.fromValue(agentProdDtos))
                         .exchangeToMono(response -> {
                             if (response.statusCode().is2xxSuccessful()) {
@@ -180,7 +180,7 @@ public class UserServices implements IUserServices {
             UserMysql userMysql = userOptional.get();
             webClientBuilder.build()
                     .delete()
-                    .uri("http://stock-service:8081/stock/deleteAgentwithUsername/" + userId)
+                    .uri("http://stock-service/stock/deleteAgentwithUsername/" + userId)
                     .retrieve()
                     .toBodilessEntity()
                     .block();

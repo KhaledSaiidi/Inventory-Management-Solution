@@ -90,7 +90,7 @@ public class CampaignServices implements ICampaignServices{
         if (campaigndto.getProducts() != null){
             campaign.setProducts(campaigndto.getProducts());
             List<StockDto> optionalstocksDto = webClientBuilder.build().get()
-                .uri("http://stock-service:8081/stock/returnstockBycampaignRef/{campreference}", reference)
+                .uri("http://stock-service/stock/returnstockBycampaignRef/{campreference}", reference)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<StockDto>>() {
                 })
@@ -99,7 +99,7 @@ public class CampaignServices implements ICampaignServices{
             for (StockDto stockDto : optionalstocksDto) {
                 stockDto.setProductTypes(campaigndto.getProducts());
                 webClientBuilder.build().put()
-                        .uri("http://stock-service:8081/stock/UpdateStock/{reference}", stockDto.getStockReference())
+                        .uri("http://stock-service/stock/UpdateStock/{reference}", stockDto.getStockReference())
                         .bodyValue(stockDto)
                         .exchange()
                         .subscribe();
@@ -134,7 +134,7 @@ public class CampaignServices implements ICampaignServices{
             iCampaignArchiveRepository.save(campaignArchive);
             webClientBuilder.build()
                     .post()
-                    .uri("http://stock-service:8081/stock/archive/" + campaignReference)
+                    .uri("http://stock-service/stock/archive/" + campaignReference)
                     .retrieve()
                     .toBodilessEntity()
                     .block();
@@ -149,7 +149,7 @@ public class CampaignServices implements ICampaignServices{
             CampaignArchive campaignarchive = optionalArchiveCampaign.get();
             webClientBuilder.build()
                     .delete()
-                    .uri("http://stock-service:8081/stock/deletearchive/" + campaignReference)
+                    .uri("http://stock-service/stock/deletearchive/" + campaignReference)
                     .retrieve()
                     .toBodilessEntity()
                     .block();

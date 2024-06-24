@@ -63,7 +63,7 @@ public class StockService implements IStockService {
     @Override
     public void addStock(StockDto stockDto, String campaignReference) {
         Campaigndto campaigndto = webClientBuilder.build().get()
-                .uri("http://keycloakuser-service:8081/people/getCampaignByReference/{campaignReference}", campaignReference)
+                .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", campaignReference)
                 .retrieve()
                 .bodyToMono(Campaigndto.class)
                 .block();
@@ -97,7 +97,7 @@ public class StockService implements IStockService {
         List<StockDto> stockDtos = iStockMapper.toDtoList(stocks);
         List<Mono<Campaigndto>> campaignMonos = stockDtos.stream()
                 .map(stockDto -> webClientBuilder.build().get()
-                        .uri("http://keycloakuser-service:8081/people/getCampaignByReference/{campaignReference}", stockDto.getCampaignRef())
+                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stockDto.getCampaignRef())
                         //   .header(HttpHeaders.AUTHORIZATION, "Bearer " + authorizationUtils.addAuthorizationHeader())
                         .retrieve()
                         .bodyToMono(Campaigndto.class))
@@ -152,7 +152,7 @@ public class StockService implements IStockService {
         }
         Stock stock = stockOptional.get();
         Campaigndto campaigndto = webClientBuilder.build().get()
-                .uri("http://keycloakuser-service:8081/people/getCampaignByReference/{campaignReference}", stock.getCampaignRef())
+                .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stock.getCampaignRef())
                 .retrieve()
                 .bodyToMono(Campaigndto.class)
                 .block();
@@ -246,7 +246,7 @@ public class StockService implements IStockService {
         List<String> liststockreferences = new ArrayList<>();
         for (Stock stock : liststock) {
             Campaigndto campaigndto = webClientBuilder.build().get()
-                    .uri("http://keycloakuser-service:8081/people/getCampaignByReference/{campaignReference}", stock.getCampaignRef())
+                    .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", stock.getCampaignRef())
                     .retrieve()
                     .bodyToMono(Campaigndto.class)
                     .block();

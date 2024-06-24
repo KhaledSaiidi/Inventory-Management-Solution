@@ -286,7 +286,7 @@ public class ProductService implements IProductService{
                 if (product.getStock() != null) {
                     StockDto stockDto = iStockMapper.toDto(product.getStock());
                     Campaigndto campaigndto = webClientBuilder.build().get()
-                            .uri("http://keycloakuser-service:8081/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
+                            .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
                             .retrieve()
                             .bodyToMono(Campaigndto.class)
                             .block();
@@ -473,7 +473,7 @@ public class ProductService implements IProductService{
     private List<Userdto> getAllmanagers() {
         String token = tokenFetcher.getToken();
         List<Userdto> userdtos = webClientBuilder.build().get()
-                .uri("http://keycloakuser-service:8081/people/allusers")
+                .uri("http://keycloakuser-service/people/allusers")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .retrieve()
                 .bodyToFlux(Userdto.class)
@@ -557,7 +557,7 @@ public class ProductService implements IProductService{
                 if (product.getStock() != null) {
                     StockDto stockDto = iStockMapper.toDto(product.getStock());
                     Campaigndto campaigndto = webClientBuilder.build().get()
-                            .uri("http://keycloakuser-service:8081/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
+                            .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
                             .retrieve()
                             .bodyToMono(Campaigndto.class)
                             .block();

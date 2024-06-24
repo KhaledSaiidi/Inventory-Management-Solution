@@ -2347,7 +2347,7 @@
       ],
       "realmRoles": ["MANAGER", "IMANAGER", "AGENT", "default-roles-phoenixstock"],
       "clientRoles": {
-        "realm-management": ["admin"]
+        "realm-management": ["realm-admin"]
       }
     }
   ]

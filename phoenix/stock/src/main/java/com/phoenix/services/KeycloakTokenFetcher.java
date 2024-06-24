@@ -19,7 +19,7 @@ public class KeycloakTokenFetcher {
     private final RestTemplate restTemplate;
 
     public String getToken() {
-        String tokenUrl = "http://localhost:8181/realms/phoenixstock/protocol/openid-connect/token";
+        String tokenUrl = "http://keycloak:8181/realms/phoenixstock/protocol/openid-connect/token";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

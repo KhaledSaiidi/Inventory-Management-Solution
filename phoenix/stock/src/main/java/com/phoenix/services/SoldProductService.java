@@ -201,7 +201,7 @@ public class SoldProductService  implements IsoldProductService{
             if(soldproduct.getStock() != null){
                 StockDto stockDto = iStockMapper.toDto(soldproduct.getStock());
                 Campaigndto campaigndto = webClientBuilder.build().get()
-                        .uri("http://keycloakuser-service:8081/people/getCampaignByReference/{campaignReference}", soldproduct.getStock().getCampaignRef())
+                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", soldproduct.getStock().getCampaignRef())
                         .retrieve()
                         .bodyToMono(Campaigndto.class)
                         .block();
@@ -450,7 +450,7 @@ public class SoldProductService  implements IsoldProductService{
 
     private UserMysqldto fetchUserDetails(String username) {
             UserMysqldto userMysqldto = webClientBuilder.build().get()
-                    .uri("http://keycloakuser-service:8081/people/userdetailsforTopSale/{username}", username)
+                    .uri("http://keycloakuser-service/people/userdetailsforTopSale/{username}", username)
                     .retrieve()
                     .bodyToMono(UserMysqldto.class)
                     .block();

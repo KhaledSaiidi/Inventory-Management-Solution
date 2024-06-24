@@ -65,13 +65,20 @@ public class Controller {
         UserRepresentation userRep = iMapper.mapUserRep(userdto);
         Keycloak keycloak = keycloakUtil.getKeycloakInstance();
         Response response = keycloak.realm(realm).users().create(userRep);
-        if (response.getStatus() == 201) { // User created successfully
+        System.out.println("Keycloak response status: " + response.getStatus());
+        if (response.getStatus() == 201 || response.getStatus() == 200) { // User created successfully
             iUserServices.addUser(userdto);
             String userId = keycloak.realm(realm).users().search(userdto.getUsername()).get(0).getId();
             iUserServices.assignRoles(userId, userdto.getRealmRoles());
             return Response.ok(userdto).build();
         } else {
-            return Response.status(response.getStatus()).entity(response.getEntity()).build(); // Return Keycloak's error response
+            String errorMessage;
+            try {
+                errorMessage = response.readEntity(String.class); // Read the response entity as a String
+            } catch (Exception e) {
+                errorMessage = "Error creating user.";
+            }
+            return Response.status(response.getStatus()).entity(errorMessage).build(); // Return Keycloak's error response
         }
     }
 
