@@ -687,8 +687,9 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:9002/*",
-        "http://proxy:9002/*"
+        "http://proxy/*",
+        "http://unistock-keeper.com/*",
+        "unistock-keeper.com/*"
       ],
       "webOrigins": [
         "*"
@@ -706,7 +707,7 @@
       "attributes": {
         "oidc.ciba.grant.enabled": "false",
         "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "http://localhost:8100/login##http://localhost:8100/*##http://proxy:9002/*",
+        "post.logout.redirect.uris": "http://localhost:8100/login##http://localhost:8100/*##http://unistock-keeper.com/*",
         "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false"

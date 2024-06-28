@@ -5,11 +5,12 @@
 export const environment = {
   production: false,
   keycloak: {
-    url: 'http://proxy',
+    url: 'http://proxy:9002', // Use environment variable
     realm:'phoenixstock',
     clientId:'front-client'
   },
-  url: 'http://proxy/api'
+    url: '/api' // Use environment variable
+  //url: 'http://proxy:9002/api'
 };
 /*
  * For easier debugging in development mode, you can import the following file

@@ -64,7 +64,7 @@ public class Controller {
         return ResponseEntity.ok(productDto);
     }
 
-    @GetMapping("getStockByReference/{reference}")
+    @GetMapping("/getStockByReference/{reference}")
     public ResponseEntity<StockDto> getStockByReference(@PathVariable String reference) {
         StockDto stockDto = iStockService.getstockByReference(reference);
         if (stockDto != null) {
@@ -74,12 +74,12 @@ public class Controller {
         }
     }
 
-    @GetMapping("getProductsByStockReference/{stockreference}")
+    @GetMapping("/getProductsByStockReference/{stockreference}")
     public List<ProductDto> getProductsByStockReference(@PathVariable String stockreference) {
         List<ProductDto> productDtos = iProductService.getProductsBystockReference(stockreference);
         return productDtos;
     }
-    @GetMapping("getProductsPaginatedByStockReference/{stockreference}")
+    @GetMapping("/getProductsPaginatedByStockReference/{stockreference}")
     public ResponseEntity<Page<ProductDto>> getProductsPaginatedByStockReference(
             @PathVariable String stockreference,
             @RequestParam int page,
@@ -97,14 +97,14 @@ public class Controller {
         return productDto;
     }
 
-    @GetMapping("getProductByserialNumber/{serialNumber}")
+    @GetMapping("/getProductByserialNumber/{serialNumber}")
     public ProductDto getProductByserialNumber(@PathVariable String serialNumber) {
         ProductDto productDto = iProductService.getProductByserialNumber(serialNumber);
         return productDto;
     }
 
 
-    @GetMapping("getUncheckedHistorybyStockreference/{stockreference}")
+    @GetMapping("/getUncheckedHistorybyStockreference/{stockreference}")
     public List<UncheckHistory> getUncheckedHistorybyStockreference(@PathVariable String stockreference) {
         List<UncheckHistory> uncheckHistories = iStockService.getUncheckedHistorybyStockreference(stockreference);
         return uncheckHistories;
@@ -116,7 +116,7 @@ public class Controller {
         return stockDto;
     }
 
-    @GetMapping("returnstockBycampaignRef/{campreference}")
+    @GetMapping("/returnstockBycampaignRef/{campreference}")
     public List<StockDto> getStocksByCampaignRef(@PathVariable String campreference) {
         return iStockService.getStocksByCampaignRef(campreference);
     }
@@ -141,7 +141,7 @@ public class Controller {
         iAgentProdService.assignAgentandManager(agentProd, managerProd);
     }
 
-    @GetMapping("getProductsPaginatedByusername/{username}")
+    @GetMapping("/getProductsPaginatedByusername/{username}")
     public ResponseEntity<Page<ProductDto>> getProductsPaginatedByusername(
             @PathVariable String username,
             @RequestParam int page,
@@ -167,7 +167,7 @@ public class Controller {
     public void detachManagerFromProduct(@PathVariable String serialNumber) {
         iAgentProdService.detachManagerFromProduct(serialNumber);
     }
-    @GetMapping("getAssignedByusername/{username}")
+    @GetMapping("/getAssignedByusername/{username}")
     public  List<AgentProdDto> getAssignedByusername(@PathVariable String username) {
         List<AgentProdDto> agentProdDtos = iAgentProdService.getAssignementByusername(username);
         return agentProdDtos;
@@ -178,7 +178,7 @@ public class Controller {
         iAgentProdService.UpdateAgentsbyUserssignementByusername(agentProdDtos);
     }
 
-    @GetMapping("getStocksByStocksReferences")
+    @GetMapping("/getStocksByStocksReferences")
     public List<String> getStocksByStocksReferences() {
         List<String> liststockreferences = iStockService.getAllstockReferences();
         return liststockreferences;
@@ -199,7 +199,7 @@ public class Controller {
     }
 
 
-    @GetMapping("getSoldProductsPaginatedByStockReference/{stockreference}")
+    @GetMapping("/getSoldProductsPaginatedByStockReference/{stockreference}")
     public ResponseEntity<Page<SoldProductDto>> getSoldProductsPaginatedByStockReference(
             @PathVariable String stockreference,
             @RequestParam int page,
@@ -210,7 +210,7 @@ public class Controller {
         return ResponseEntity.ok(soldproductPage);
     }
 
-    @GetMapping("getSoldProductsByusername/{username}")
+    @GetMapping("/getSoldProductsByusername/{username}")
     public ResponseEntity<Page<SoldProductDto>> getSoldProductsByusername(
             @PathVariable String username,
             @RequestParam int page,
@@ -247,7 +247,7 @@ public class Controller {
     }
 
 
-    @GetMapping("getReturnedProductsPaginatedByStockReference/{stockreference}")
+    @GetMapping("/getReturnedProductsPaginatedByStockReference/{stockreference}")
     public ResponseEntity<Page<ProductDto>> getReturnedProductsPaginatedByStockReference(
             @PathVariable String stockreference,
             @RequestParam int page,
@@ -268,7 +268,7 @@ public class Controller {
         return iAgentProdService.productsInPossession(username);
     }
 
-    @GetMapping("getProductsReturnedPaginatedByusername/{username}")
+    @GetMapping("/getProductsReturnedPaginatedByusername/{username}")
     public ResponseEntity<Page<ProductDto>> getProductsReturnedPaginatedByusername(
             @PathVariable String username,
             @RequestParam int page,
@@ -277,12 +277,12 @@ public class Controller {
         Page<ProductDto> productPage = iProductService.getProductsReturnedPaginatedByusername(pageable, username);
         return ResponseEntity.ok(productPage);
     }
-    @PutMapping("checkReturn/{serialNumber}")
+    @PutMapping("/checkReturn/{serialNumber}")
     public void checkReturn(@PathVariable("serialNumber") String serialNumber) {
         iProductService.checkReturn(serialNumber);
     }
 
-    @GetMapping("getThelast2ReturnedProdsByusername/{username}")
+    @GetMapping("/getThelast2ReturnedProdsByusername/{username}")
     public ResponseEntity<List<ProductDto>> getThelast2ReturnedProdsByusername(@PathVariable String username) {
         List<ProductDto> productDtos = iProductService.getThelast2ReturnedProdsByusername(username);
         if (productDtos != null) {
@@ -292,7 +292,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("getThelast2SoldProdsByusername/{username}")
+    @GetMapping("/getThelast2SoldProdsByusername/{username}")
     public ResponseEntity<List<SoldProductDto>> getThelast2SoldProdsByusername(@PathVariable String username) {
         List<SoldProductDto> soldProductDtos = isoldProductService.getThelast2SoldProdsByusername(username);
         if (soldProductDtos != null) {
@@ -302,7 +302,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("getThelastMonthlyReturnedProds")
+    @GetMapping("/getThelastMonthlyReturnedProds")
     public ResponseEntity<List<ProductDto>> getThelastMonthlyReturnedProds() {
         List<ProductDto> productDtos = iProductService.getThelastMonthlyReturnedProds();
         if (productDtos != null) {
@@ -312,7 +312,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("getUserStat/{username}")
+    @GetMapping("/getUserStat/{username}")
     public ResponseEntity<List<Integer>> getUserStat(@PathVariable String username) {
         List<Integer> userStat = iProductService.getUserStat(username);
         if (userStat != null) {
@@ -322,7 +322,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("getlastMonthlySoldProds")
+    @GetMapping("/getlastMonthlySoldProds")
     public ResponseEntity<List<TopSalesDto>> getlastMonthlySoldProds() {
         List<TopSalesDto> salesByagentMap = isoldProductService.getlastMonthlySoldProds();
         if (salesByagentMap != null) {
@@ -394,7 +394,7 @@ public class Controller {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("getArchivedStocksByCampaign/{reference}")
+    @GetMapping("/getArchivedStocksByCampaign/{reference}")
     public ResponseEntity<List<ArchivedStockDTO>> getArchivedStocksByCampaign(@PathVariable String reference) {
         List<ArchivedStockDTO> archivedStockDTOS = archiveStock.archivedStocks(reference);
         if (archivedStockDTOS != null) {
@@ -405,7 +405,7 @@ public class Controller {
     }
 
 
-    @GetMapping("getArchivedProductsPaginatedBystockReference/{stockreference}")
+    @GetMapping("/getArchivedProductsPaginatedBystockReference/{stockreference}")
     public ResponseEntity<Page<ArchivedProductsDTO>> getArchivedProductsPaginatedBystockReference(
             @PathVariable String stockreference,
             @RequestParam int page,
@@ -417,7 +417,7 @@ public class Controller {
     }
 
 
-    @GetMapping("getReturnedArchivedProductsPaginatedBystockReference/{stockreference}")
+    @GetMapping("/getReturnedArchivedProductsPaginatedBystockReference/{stockreference}")
     public ResponseEntity<Page<ArchivedProductsDTO>> getReturnedArchivedProductsPaginatedBystockReference(
             @PathVariable String stockreference,
             @RequestParam int page,
@@ -428,7 +428,7 @@ public class Controller {
         return ResponseEntity.ok(productPage);
     }
 
-    @GetMapping("getArchivedSoldProductsPaginatedBystockReference/{stockreference}")
+    @GetMapping("/getArchivedSoldProductsPaginatedBystockReference/{stockreference}")
     public ResponseEntity<Page<ArchivedSoldProductsDTO>> getArchivedSoldProductsPaginatedBystockReference(
             @PathVariable String stockreference,
             @RequestParam int page,
@@ -453,7 +453,7 @@ public class Controller {
     }
 
 
-    @GetMapping("getThelast4ReturnedProdsByusername/{username}")
+    @GetMapping("/getThelast4ReturnedProdsByusername/{username}")
     public ResponseEntity<List<ProductDto>> getThelast4ReturnedProdsByusername(@PathVariable String username) {
         List<ProductDto> productDtos = iProductService.getThelast4ReturnedProdsByusername(username);
         if (productDtos != null) {
@@ -463,7 +463,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("getThelast4SoldProdsByusername/{username}")
+    @GetMapping("/getThelast4SoldProdsByusername/{username}")
     public ResponseEntity<List<SoldProductDto>> getThelast4SoldProdsByusername(@PathVariable String username) {
         List<SoldProductDto> soldProductDtos = isoldProductService.getThelast4SoldProdsByusername(username);
         if (soldProductDtos != null) {

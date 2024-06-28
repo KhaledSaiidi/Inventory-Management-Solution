@@ -82,7 +82,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("userdetails/{username}")
+    @GetMapping("/userdetails/{username}")
     public ResponseEntity<UserMysqldto> getUserByUsername(@PathVariable String username) {
         UserMysqldto userDto = iUserServices.getUserByUsername(username);
         System.out.println("userDto: " + userDto);
@@ -93,7 +93,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("userdetailsforTopSale/{username}")
+    @GetMapping("/userdetailsforTopSale/{username}")
     public ResponseEntity<UserMysqldto> userdetailsforTopSale(@PathVariable String username) {
         UserMysqldto userDto = iUserServices.getUserByUsername(username);
         userDto.setImage(null);
@@ -267,7 +267,7 @@ public class Controller {
         return icampaignService.getCampaignStatistics();
     }
 
-    @GetMapping("getArchivedCampaign/{ref}")
+    @GetMapping("/getArchivedCampaign/{ref}")
     public ResponseEntity<Campaigndto> getArchivedCampaign(@PathVariable String ref) {
         Campaigndto campaigndto = icampaignService.getArchivedCampaign(ref);
 

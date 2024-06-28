@@ -24,3 +24,12 @@ COPY --from=build /app/dist/phoenixfront /usr/share/nginx/html
 
 # Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy the custom script
+COPY replace-env.sh /usr/share/nginx/html/replace-env.sh
+
+# Ensure the script is executable
+RUN chmod +x /usr/share/nginx/html/replace-env.sh
+
+# Set the script as the entrypoint
+ENTRYPOINT ["/usr/share/nginx/html/replace-env.sh"]

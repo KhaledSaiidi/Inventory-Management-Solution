@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
   keycloak: {
-    url: 'http://proxy',
+    url: '__KEYCLOAK_URL__',
     realm:'phoenixstock',
     clientId:'front-client'
   },
-  url: 'http://proxy/api'
+  url: '/api'
 };
