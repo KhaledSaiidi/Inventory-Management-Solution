@@ -51,10 +51,12 @@ com\phoenix\dto\SoldProductDto.class
 com\phoenix\mapper\IProductMapper.class
 com\phoenix\services\AgentProdService.class
 com\phoenix\mapperToArchive\ProdToArchivedProd.class
+com\phoenix\dto\ParsedSoldProducts.class
 com\phoenix\archiverepo\IArchivedSoldProductsRepo.class
 com\phoenix\config\CustomPortConfiguration.class
 com\phoenix\config\WebClientConfig.class
 com\phoenix\dto\AgentProdDto.class
+com\phoenix\services\ProductService$1.class
 com\phoenix\services\IProductService.class
 com\phoenix\mapper\IAgentProdMapper.class
 com\phoenix\controller\ScheduledTasks.class
@@ -68,6 +70,7 @@ com\phoenix\services\SoldProductService.class
 com\phoenix\services\KeycloakTokenFetcher$TokenResponse.class
 com\phoenix\model\UncheckHistory.class
 com\phoenix\model\SerialNumbersCsvRepresentation$SerialNumbersCsvRepresentationBuilder.class
+com\phoenix\services\SoldProductService$1.class
 com\phoenix\dto\StockDto.class
 com\phoenix\services\ProductService.class
 com\phoenix\services\IAgentProdService.class

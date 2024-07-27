@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -277,4 +274,10 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/usersMap")
+    public Map<String, String> getUsernameByFirstAndLastName() {
+        return iUserServices.getUsernameByFirstAndLastName();
+    }
+
 }

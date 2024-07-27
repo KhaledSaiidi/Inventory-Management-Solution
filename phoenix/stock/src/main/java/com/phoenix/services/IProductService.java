@@ -39,4 +39,7 @@ public interface IProductService {
 
     List<ProductDto> getThelast4ReturnedProdsByusername(String username);
 
+    Page<ProductDto> getProductsPaginated(Pageable pageable, String searchTerm);
+
+    Page<ProductDto> getReturnedProductsPaginated(Pageable pageable, String searchTerm);
 }

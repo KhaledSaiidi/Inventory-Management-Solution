@@ -8,14 +8,14 @@
             <div class="card">
               <div class="card-header pb-0">
                 <div class="d-flex align-items-center">
-                  <p class="mb-0">Client Information</p>
+                  <p class="mb-0">Supplier Information</p>
                 </div>
               </div>
                 
               <div class="card-body">
                 <div class="d-flex align-items-center">
                   <input type="checkbox"  [checked]="isEditable" (change)="toggleEditable()" id="editableCheckbox" class="custom-checkbox">
-                  <label for="editableCheckbox" class="mb-0">Would you like to update your client informations?</label>
+                  <label for="editableCheckbox" class="mb-0">Would you like to update your Supplier informations?</label>
                 </div>     
                 <br>           
                 <form  [formGroup]="clientForm" (ngSubmit)="onSubmit()">
@@ -77,7 +77,7 @@
                     </div>
                   </div>
                   <div style="display: flex; justify-content: center;">
-                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Update Client</button>
+                    <button type="submit" class="btn btn-primary btn-sm " style="width: 160px; ">Update Supplier</button>
                 </div>
                   
                </form>

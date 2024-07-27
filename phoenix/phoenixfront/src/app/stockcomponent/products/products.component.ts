@@ -100,7 +100,7 @@ export class ProductsComponent implements OnInit{
   totalPages: number = 0;
   totalElements: number = 0;
   currentPage: number = 0;
-  pageSize: number = 20;
+  pageSize: number = 50;
   filterfinishforProds: Productdto[] = [];
   pagedProducts: Productdto[][] = [];
   searchTerm: string = '';
@@ -235,18 +235,24 @@ onPageChange(newPage: number): void {
       );
     }
 
+    loadingForUpload: boolean = false;
+
     uploadFile(): void {
       if (this.selectedFile) {
+        this.loadingForUpload = true;
         this.stockservice.addProdbyuploadFile(this.selectedFile, this.stockreference).subscribe(
           result => {
+            this.loadingForUpload = false;
             location.reload();
           },
           error => {
             console.error('Error uploading file:', error);
+            this.loadingForUpload = false;
           }
         );
       } else {
         console.error('No file selected.');
+        this.loadingForUpload = false;
       }
   
     }
@@ -451,6 +457,7 @@ onPageChange(newPage: number): void {
     selectedTabMessages() {
       this.selectedTab = 2;
       this.searchTerm = '';
+      this.getReturnedProductsByStockReference(this.stockreference, 0, this.searchTerm);
     }
 
 
@@ -522,18 +529,22 @@ onPageChange(newPage: number): void {
   
       uploadFileTocheckSell(): void {
         if (this.selectedFile) {
+          this.loadingForUpload = true;
           this.stockservice.uploadcsvTocheckSell(this.selectedFile, this.stockreference).subscribe(
             result => {
               console.log(result);
+              this.loadingForUpload = false;
               location.reload();
 
             },
             error => {
               console.error('Error uploading file:', error);
+              this.loadingForUpload = false;
             }
           ); 
         } else {
           console.error('No file selected.');
+          this.loadingForUpload = false;
         }
       }
   

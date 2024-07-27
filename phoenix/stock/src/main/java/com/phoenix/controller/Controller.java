@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -186,8 +187,8 @@ public class Controller {
 
     @PostMapping("/stockcheck/{stockReference}")
     public ResponseEntity<String> checkProducts(@PathVariable String stockReference, @RequestBody Set<String> prodsRef) {
-            iProductService.checkProds(stockReference, prodsRef);
-            return ResponseEntity.ok("Products checked successfully.");
+        iProductService.checkProds(stockReference, prodsRef);
+        return ResponseEntity.ok("Products checked successfully.");
     }
 
 
@@ -222,11 +223,11 @@ public class Controller {
 
 
     @PostMapping(value = "/uploadcsvTocheckSell/{stockReference}", consumes = {"multipart/form-data"})
-    public List<String> uploadcsvTocheckSell(
+    public void uploadcsvTocheckSell(
             @PathVariable String stockReference,
             @RequestPart("file")MultipartFile file
     )throws IOException {
-        return isoldProductService.uploadcsvTocheckSell(file, stockReference);
+        isoldProductService.uploadcsvTocheckSell(file, stockReference);
     }
 
     @GetMapping("/products-info")
@@ -305,10 +306,10 @@ public class Controller {
     @GetMapping("/getThelastMonthlyReturnedProds")
     public ResponseEntity<List<ProductDto>> getThelastMonthlyReturnedProds() {
         List<ProductDto> productDtos = iProductService.getThelastMonthlyReturnedProds();
-        if (productDtos != null) {
-            return ResponseEntity.ok(productDtos);
+        if (productDtos == null) {
+            return ResponseEntity.ok(Collections.emptyList());
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(productDtos);
         }
     }
 
@@ -471,6 +472,35 @@ public class Controller {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/getAllProductsPaginated")
+    public ResponseEntity<Page<ProductDto>> getAllProductsPaginated(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDto> productPage = iProductService.getProductsPaginated(pageable, searchTerm);
+        return ResponseEntity.ok(productPage);
+    }
+
+    @GetMapping("/getAllReturnedProductsPaginated")
+    public ResponseEntity<Page<ProductDto>> getAllReturnedProductsPaginated(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDto> productPage = iProductService.getReturnedProductsPaginated(pageable, searchTerm);
+        return ResponseEntity.ok(productPage);
+    }
+    @GetMapping("/getAllSoldProductsPaginated")
+    public ResponseEntity<Page<SoldProductDto>> getAllSoldProductsPaginated(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SoldProductDto> soldProductPage = isoldProductService.getSoldProductsPaginated(pageable, searchTerm);
+        return ResponseEntity.ok(soldProductPage);
     }
 
 }

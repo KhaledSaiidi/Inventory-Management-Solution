@@ -9,38 +9,38 @@
   </div>
 </ion-header>
 
-<ion-content fullscreen>
-  <ion-card>
+<ion-content fullscreen style="--background: #ffffff;">
+  <ion-card style="--background: #ffffff;">
     <ion-card-header>
-      <ion-card-title class="smaller-title">Notification Type</ion-card-title>
+      <ion-card-title class="smaller-title" style="color: black;">Notification Type</ion-card-title>
     </ion-card-header>
     <ion-card-content class="custom-card-content">
-      <ion-item lines="none">
+      <ion-item lines="none" style="--background: #ffffff;color: black;">
         <ion-label>Restock</ion-label>
         <ion-toggle slot="end" [(ngModel)]="isRestock" (ionChange)="handleRestockChange()"></ion-toggle>
       </ion-item>
-      <ion-item lines="none">
+      <ion-item lines="none" style="--background: #ffffff;color: black;">
         <ion-label>Complaint</ion-label>
         <ion-toggle slot="end" [(ngModel)]="isComplaint" (ionChange)="handleComplaintChange()"></ion-toggle>
       </ion-item>
     </ion-card-content>
   </ion-card>
 
-  <ng-container *ngIf="isRestock">
-    <form *ngIf="notifForm" [formGroup]="notifForm" (ngSubmit)="onSubmit()">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title class="smaller-title">Restocking Request</ion-card-title>
+  <ng-container *ngIf="isRestock" style="--background: #ffffff;">
+    <form *ngIf="notifForm" [formGroup]="notifForm" (ngSubmit)="onSubmit()" style="--background: #ffffff;">
+    <ion-card style="--background: #ffffff;">
+      <ion-card-header style="--background: #ffffff;">
+        <ion-card-title class="smaller-title" style="color: black;">Restocking Request</ion-card-title>
       </ion-card-header>
-      <ion-card-content class="custom-card-content">
-        <ion-list>
-          <ion-item>
+      <ion-card-content class="custom-card-content" style="--background: #ffffff !important;">
+        <ion-list style="background-color: #ffffff;">
+          <ion-item style="--background: #ffffff;color: black;">
             <ion-select placeholder="Select Stock" formControlName="stock" id="stock">
               <ion-select-option *ngFor="let stockref of stocksReferences">{{stockref}}</ion-select-option>
             </ion-select>
           </ion-item>
         
-          <ion-item>
+          <ion-item style="--background: #ffffff;color: black;">
             <ion-select placeholder="Select Senior Advisor" formControlName="manager" id="manager">
               <ion-select-option *ngFor="let manager of managerList" [value]="manager.username">
                 {{manager.firstName?.toUpperCase()}} - {{manager.lastName?.toUpperCase()}}
@@ -48,11 +48,11 @@
             </ion-select>
           </ion-item>
         
-          <ion-item>
+          <ion-item style="--background: #ffffff;color: black;">
             <ion-input label="Quantity" formControlName="quantity" type="number"></ion-input>
           </ion-item>
         
-          <ion-item>
+          <ion-item style="--background: #ffffff;color: black;">
             <ion-label position="stacked" style="font-size: 16px;" for="text">Comment</ion-label>
             <ion-textarea rows="3" placeholder="Write a comment" formControlName="text" id="text"></ion-textarea>
           </ion-item>
@@ -67,20 +67,20 @@
 
   <ng-container *ngIf="isComplaint">
     <form [formGroup]="notifFormC" (ngSubmit)="onSubmitC()">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title class="smaller-title">Complaint</ion-card-title>
+    <ion-card style="--background: #ffffff;">
+      <ion-card-header style="--background: #ffffff;">
+        <ion-card-title class="smaller-title" style="color: black;">Complaint</ion-card-title>
       </ion-card-header>
-      <ion-card-content class="custom-card-content">
-        <ion-list>        
-          <ion-item>
+      <ion-card-content class="custom-card-content" style="--background: #ffffff;">
+        <ion-list style="background-color: #ffffff;">        
+          <ion-item style="--background: #ffffff;color: black;">
             <ion-select placeholder="Select Manager" formControlName="managers" id="managers" multiple>
               <ion-select-option *ngFor="let manager of managerList" [value]="manager.username">
                 {{manager.firstName?.toUpperCase()}} - {{manager.lastName?.toUpperCase()}}
               </ion-select-option>
             </ion-select>
           </ion-item>        
-          <ion-item>
+          <ion-item style="--background: #ffffff;color: black;">
             <ion-label position="stacked" style="font-size: 16px;" for="complaintText">Comment</ion-label>
             <ion-textarea rows="6" formControlName="complaintText" id="complaintText" placeholder="Write a comment"></ion-textarea>
           </ion-item>

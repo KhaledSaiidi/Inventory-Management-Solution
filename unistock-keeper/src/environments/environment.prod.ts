@@ -1,10 +1,10 @@
 export const environment = {
   production: true,
   keycloak: {
-    url: 'http://localhost:8181',
+    url: 'https://unistock-keeper.com',
     realm: 'phoenixstock',
     clientId: 'front-client'
   },
-  url: 'http://localhost:9000'
+  url: 'https://unistock-keeper.com/api'
 };
 

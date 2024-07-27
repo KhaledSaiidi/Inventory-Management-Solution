@@ -18,7 +18,7 @@ public interface IsoldProductService {
     Page<SoldProductDto> getSoldProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm);
 
     Page<SoldProductDto> getSoldProductsByusername(Pageable pageable, String username);
-    List<String> uploadcsvTocheckSell(MultipartFile file, String stockReference) throws IOException;
+    void uploadcsvTocheckSell(MultipartFile file, String stockReference) throws IOException;
     Map<String, Integer> getSoldProductsInfosBystockReference(String stockreference);
     void returnProduct(String prodRef, AgentProdDto returnagentProd);
     List<SoldProductDto> getThelast2SoldProdsByusername(String username);
@@ -28,5 +28,6 @@ public interface IsoldProductService {
     void deleteSoldProduct(String ref);
 
     List<SoldProductDto> getThelast4SoldProdsByusername(String username);
+    Page<SoldProductDto> getSoldProductsPaginated(Pageable pageable, String searchTerm);
 
 }

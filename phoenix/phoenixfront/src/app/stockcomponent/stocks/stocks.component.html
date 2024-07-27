@@ -23,6 +23,7 @@
                    <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
                      <thead>
                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Live sheet N°</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">stock Reference</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Product Types</th>
@@ -60,6 +61,12 @@
                       </ng-container>
                       <ng-container  *ngIf="!loading && !emptyStock; ">
                       <tr *ngFor="let stock of filterfinishforStocks">
+                        <td style="word-wrap: break-word; white-space: normal;"
+                        [ngClass]="{ 'red-text': stock.notes === null || stock.notes === '' }">
+                      {{ stock.notes ? stock.notes : 'none' }}
+                    </td>
+                    
+
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer;" *ngIf="stock.stockReference">
                           <a (click)="navigateToProducts(stock.stockReference)" >
                             <span [innerHTML]="highlightMatch(stock.stockReference)"></span>

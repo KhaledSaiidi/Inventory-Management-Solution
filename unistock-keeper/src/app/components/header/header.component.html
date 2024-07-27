@@ -23,8 +23,8 @@
       <ion-title class="header-title">Profile</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content fullscreen>
-      <ion-item style="margin-top: 30px;">
+  <ion-content fullscreen style="--background: #ffffff;">
+      <ion-item style="margin-top: 30px; --background: #ffffff;">
         <ion-avatar slot="start" style="height: 80px; width: 80px;">
           <ng-container *ngIf="user?.image; else staticImage">
           <ion-img [src]="getBase64Image()"></ion-img>
@@ -34,11 +34,11 @@
         </ng-template>
         </ion-avatar>
         <ion-label>
-          <h2>{{username.toUpperCase()}}</h2>
-          <p>{{userJobTitle}}</p>
+          <h2 style="color: black;">{{username.toUpperCase()}}</h2>
+          <p style="color: black;">{{userJobTitle}}</p>
         </ion-label>
       </ion-item>
-      <ion-card style="margin-top: 40px;">
+      <ion-card style="margin-top: 40px; --background: #ffffff;">
         <ion-card-header>
          <b>Profile Indicators</b>
         </ion-card-header>
@@ -67,7 +67,7 @@
           </ion-grid>
         </ion-card-content>
       </ion-card>
-      <ion-card style="margin-top: 40px; padding-bottom: 20px;">
+      <ion-card style="margin-top: 40px; padding-bottom: 20px; --background: #ffffff;" >
         <ion-card-header>
           <b>User Profile Information</b>
         </ion-card-header>

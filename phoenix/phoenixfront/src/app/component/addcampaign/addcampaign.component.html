@@ -27,7 +27,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                         <div formGroupName="client">
-                      <label for="client-reference">Client<span style="color: red;">*</span></label>
+                      <label for="client-reference">Supplier<span style="color: red;">*</span></label>
                       <select class="form-control mt-2" formControlName="reference" id="reference">
                         <option *ngFor="let client of clients" [value]="client.reference">  {{client.companyName?.toUpperCase()}}  </option>                      
                     </select>

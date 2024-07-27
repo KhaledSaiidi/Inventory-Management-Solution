@@ -5,6 +5,7 @@ import com.phoenix.dto.Userdto;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IUserServices {
     void assignRoles(String userId, List<String> realmRoles);
@@ -13,4 +14,6 @@ public interface IUserServices {
     List<Userdto> getallUsers();
     Userdto UpdateUser(String userId, Userdto userDto);
     void DeleteUser(String userId);
+    Map<String, String> getUsernameByFirstAndLastName();
+
 }

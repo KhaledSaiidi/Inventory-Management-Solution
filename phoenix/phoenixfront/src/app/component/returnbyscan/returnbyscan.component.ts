@@ -32,7 +32,7 @@ export class ReturnbyscanComponent implements OnInit {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
     });
-    this.getStocksByStocksReferences();
+    this.triggerSnapshot();
     this.listener();
 
     this.firstBarcodeChangeSubject
@@ -81,9 +81,7 @@ onBarcodeChange(newValue: string) {
   }
 
   nostock: boolean = false;
-  stockreference!: string;
   public triggerSnapshot(): void {
-    if(this.stockreference) {
     this.showCamera = true;
     const iframe = this.renderer.createElement('iframe');
     iframe.src = '../../../assets/scan/index.html';
@@ -92,30 +90,7 @@ onBarcodeChange(newValue: string) {
     iframe.style.border = 'none';
     const container = this.renderer.selectRootElement('#scanner-container'); 
     this.renderer.appendChild(container, iframe);
-    } else {
-      this.nostock = true;
-    }
-  }
-
-  stockReferences: string[] = [];
-  getStocksByStocksReferences() {
-    this.stocksService.getStocksByStocksReferences().subscribe(
-      (data) => {
-        this.stockReferences = data as string[];        
-      },
-      (error: any) => {
-        console.error('Error fetching agents:', error);
-      }
-    );
-  }
-
-  selectedStock: string ="Select a stock to proceed !";
-  extractStockReference(selectedValue: string) {
-    const stockReference = selectedValue.split(' ')[0];
-    this.stockreference = stockReference
-    console.log(stockReference);
-  }
-  
+  }  
 
   navigateToUserdetails(userName?: string) {
     if (userName === undefined) {

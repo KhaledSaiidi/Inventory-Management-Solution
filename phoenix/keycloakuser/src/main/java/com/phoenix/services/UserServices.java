@@ -21,10 +21,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -187,5 +184,16 @@ public class UserServices implements IUserServices {
             userRepository.delete(userMysql);
         }
         }
+    @Override
+    public Map<String, String> getUsernameByFirstAndLastName() {
+        List<UserMysql> users = userRepository.findAll();
+        Map<String, String> usersMap = new HashMap<>();
+        for (UserMysql user: users){
+            String username = user.getUsername();
+            String fullname = user.getFirstName().toLowerCase() + user.getLastName().toLowerCase();
+            usersMap.put(username, fullname);
+        }
+        return usersMap;
+    }
 
 }

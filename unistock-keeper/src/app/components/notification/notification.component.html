@@ -1,26 +1,29 @@
 <app-header></app-header>
-<ion-content  scroll-y="true">
-  <ion-list [inset]="true">
+<ion-content  scroll-y="true" style="--background: #ffffff;">
+  <ion-list [inset]="true" style="background-color: #ffffff;">
 
-<ng-container *ngIf="!emptyreclamaations; else noNotifications">
-    <ng-container *ngFor="let notif of reclamations">
-    <ion-item (click)="itemClicked(notif)" [ngStyle]="{'--background': !ifUserSeentrue(notif) ? '#eaf1f9' : 'white'}" >
-      <ion-label>
-        <div class="item-content">
-          <h2>{{ notif.senderReference?.toUpperCase() }} :</h2> 
-          <p class="date">{{ notif.reclamDate|  date:'HH:mm, dd MMM' }}</p>
-        </div>
-        <p class="description">{{ notif.reclamationText }}</p>
-      </ion-label>
-    </ion-item>
-  </ng-container>
-</ng-container>
-<ng-template #noNotifications>
-  <ion-card>
-  <ion-item>
-    <ion-label>
-      <div class="item-content">
-        <h1>Notifications yet..</h1> 
+    <ng-container *ngIf="!emptyreclamaations; else noNotifications" style="background-color: #ffffff;">
+      <ng-container *ngFor="let notif of reclamations">
+        <ion-item 
+          (click)="itemClicked(notif)" 
+          [ngStyle]="{'--background': !ifUserSeentrue(notif) ? '#eaf1f9' : 'white'}" 
+          class="notif-item">
+          <ion-label>
+            <div class="item-content">
+              <h2 style="color: black;">{{ notif.senderReference?.toUpperCase() }} :</h2> 
+              <p class="date" style="color: black;">{{ notif.reclamDate | date: 'HH:mm, dd MMM' }}</p>
+            </div>
+            <p class="description" style="color: black;">{{ notif.reclamationText }}</p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+    </ng-container>    
+<ng-template #noNotifications style="--background: #ffffff;">
+  <ion-card style="--background: #ffffff;">
+  <ion-item style="--background: #ffffff;">
+    <ion-label style="--background: #ffffff;">
+      <div class="item-content" style="background-color: #ffffff;">
+        <h1 style="color: black;">No Notifications yet..</h1> 
       </div>
     </ion-label>
   </ion-item>

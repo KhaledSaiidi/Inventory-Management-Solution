@@ -47,3 +47,24 @@
   .icon-arrowr {
     margin-left: 20%;
   }
+
+  .title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .left-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .title-text {
+    margin-left: 8px;
+    color: black;
+  }
+  
+  .icon-arrowr {
+    margin-left: auto;
+  }
+  

@@ -1,4 +1,5 @@
 {
+  "appId": "com.universalmm.unistock-keeper",
   "name": "unistock-keeper",
   "integrations": {
     "capacitor": {}

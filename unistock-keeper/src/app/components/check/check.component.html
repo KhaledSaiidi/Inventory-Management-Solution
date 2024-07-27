@@ -1,4 +1,4 @@
-<div [ngStyle]="{'background': scanActive ? '#00000000' : '#fff'}">  
+<div [ngStyle]="{'background': scanActive ? 'transparent' : '#fff'}">  
   <div class="input-container text-center mt-3" [ngClass]="{ 'limited-height': scanActive }">
     <h3 [hidden]="scanActive">Scanned Barcodes </h3>
     <div class="col-md-8 input-wrapper" class="input-wrapper" *ngFor="let barcode of barcodes">

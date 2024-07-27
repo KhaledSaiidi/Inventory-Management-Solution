@@ -54,6 +54,8 @@ ngAfterViewInit(): void {
         targetedFormats: ['CODE_128'],
         cameraDirection: 'back'
       };
+      document.body.style.backgroundColor = 'transparent';
+
       const result = await BarcodeScanner.startScan(options);
       console.log("result :" + result);
       if(result.hasContent){

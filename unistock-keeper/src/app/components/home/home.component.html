@@ -3,9 +3,10 @@
   <div class="container">
     <h1 class="scan-text">Scan your product</h1> 
     <img src="./assets/scan.png" alt="Barcode Scanner">
-    <ion-select [(ngModel)]="selectedStock" (ngModelChange)="extractStockReference($event)">
-      <ion-select-option disabled selected>Select a stock to proceed !</ion-select-option>
-      <ion-select-option *ngFor="let stockReference of stockReferences" [value]="stockReference">Stock: {{ stockReference }}</ion-select-option>
+    <ion-select [(ngModel)]="selectedStock" (ngModelChange)="extractStockReference($event)" style="color: black;">
+      <ion-select-option disabled selected style="color: black;">Select a stock to proceed !</ion-select-option>
+      <ion-select-option *ngFor="let stockReference of stockReferences" [value]="stockReference"
+      style="color: black;">Stock: {{ stockReference }}</ion-select-option>
     </ion-select>
     
     <ng-container *ngIf="nostock">

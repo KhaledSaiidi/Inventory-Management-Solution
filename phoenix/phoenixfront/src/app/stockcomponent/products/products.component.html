@@ -1,4 +1,5 @@
 <app-base></app-base>
+<div class="container" [class.blur]="loadingForUpload">
 <div class="listeequipes-container"> 
   <div class="search-wrapper">
   <div class="search-container">
@@ -160,11 +161,12 @@
 
                         <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
                           <ng-container *ngIf="!isEditMode || prod !== selectedProd">
-                            <span style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;" (dblclick)="enableEditMode(prod, i)">
-                              {{ prod.boxNumber ? prod.boxNumber : 'DbClick' }}
+                            <span style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;" 
+                                  (dblclick)="enableEditMode(prod, i)">
+                              <span [innerHTML]="highlightMatch(prod.boxNumber ? prod.boxNumber : 'DbClick')"></span>
                             </span>
                           </ng-container>
-                      
+                                                
                           <ng-container *ngIf="isEditMode && prod === selectedProd" style="align-items: center;">
                             <input [attr.id]="'inputField' + i"  name="editedBoxNumber" style="max-width: 50px;"
                               type="text"
@@ -413,30 +415,6 @@
               </div>   
             </ng-container>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               </div>  
 
              <ng-container *ngIf="enable === true && productdto?.comments != undefined && productdto?.comments != null" style="width: 1000px; height: 1000px;">
@@ -462,4 +440,8 @@
            </div>
     </div>
     
+</div>
+</div>
+<div *ngIf="loadingForUpload" class="spinner-overlay">
+  <div class="spinner"></div>
 </div>

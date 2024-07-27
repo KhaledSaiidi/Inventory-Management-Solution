@@ -539,5 +539,37 @@ getArchivedSoldProductsPaginatedBystockReference(stockReference: string, page: n
     );
 }
 
+getAllProductsPaginated(page: number, size: number, searchTerm: String): Observable<ProductPage> {
+  const apiUrl = this.apiUrl + '/getAllProductsPaginated' + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<ProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
+getAllReturnedProductsPaginated(page: number, size: number, searchTerm: String): Observable<ProductPage> {
+  const apiUrl = this.apiUrl + '/getAllReturnedProductsPaginated' + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<ProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
+getSoldProductsPaginated(page: number, size: number, searchTerm: String): Observable<SoldProductPage> {
+  const apiUrl = this.apiUrl + '/getAllSoldProductsPaginated' + '?page=' + page + '&size=' + size + '&searchTerm=' + searchTerm;
+  return this.http.get<SoldProductPage>(apiUrl)
+    .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
 
 }

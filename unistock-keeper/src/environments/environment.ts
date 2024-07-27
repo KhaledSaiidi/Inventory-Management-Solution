@@ -5,11 +5,11 @@
 export const environment = {
   production: false,
   keycloak: {    
-    url: 'http://192.168.0.7:8181',
+    url: 'https://unistock-keeper.com',
     realm: 'phoenixstock',
     clientId: 'front-client'
   },
-  url: 'http://192.168.0.7:9000'
+  url: 'https://unistock-keeper.com/api'
 };
 /*
  * For easier debugging in development mode, you can import the following file

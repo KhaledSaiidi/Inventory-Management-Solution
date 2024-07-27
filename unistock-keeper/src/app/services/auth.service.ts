@@ -57,7 +57,9 @@ export class AuthService {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
-    const body = `client_id=${environment.keycloak.clientId}&grant_type=password&username=${username}&password=${password}`;
+    const encodedPassword = encodeURIComponent(password);
+
+    const body = `client_id=${environment.keycloak.clientId}&grant_type=password&username=${username}&password=${encodedPassword}`;
     const url = `${environment.keycloak.url}/realms/${environment.keycloak.realm}/protocol/openid-connect/token`;
 
     try {

@@ -19,8 +19,10 @@ import com.phoenix.repository.IStockRepository;
 import com.phoenix.soldproductmapper.ISoldTProductMapper;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +36,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,34 +66,34 @@ public class SoldProductService  implements IsoldProductService{
         if(optionalProduct.isPresent()){
 
 
-        Product product = optionalProduct.get();
-        SoldProduct soldProduct = iSoldTProductMapper.tosoldProduct(product);
+            Product product = optionalProduct.get();
+            SoldProduct soldProduct = iSoldTProductMapper.tosoldProduct(product);
 
-        AgentProd agentsoldProd = iAgentProdMapper.toEntity(agentsoldProdDto);
-        if(product.getAgentProd() != null) {
-            LocalDate affectaiondate = product.getAgentProd().getAffectaiondate();
-            if (affectaiondate != null) {
-                agentsoldProd.setAffectaiondate(product.getAgentProd().getAffectaiondate());
+            AgentProd agentsoldProd = iAgentProdMapper.toEntity(agentsoldProdDto);
+            if(product.getAgentProd() != null) {
+                LocalDate affectaiondate = product.getAgentProd().getAffectaiondate();
+                if (affectaiondate != null) {
+                    agentsoldProd.setAffectaiondate(product.getAgentProd().getAffectaiondate());
+                }
+                LocalDate duesoldDate = product.getAgentProd().getDuesoldDate();
+                if (duesoldDate != null) {
+                    agentsoldProd.setDuesoldDate(product.getAgentProd().getDuesoldDate());
+                }
+                LocalDate receivedDate = product.getAgentProd().getReceivedDate();
+                if (receivedDate != null) {
+                    agentsoldProd.setReceivedDate(product.getAgentProd().getReceivedDate());
+                }
+
             }
-            LocalDate duesoldDate = product.getAgentProd().getDuesoldDate();
-            if (duesoldDate != null) {
-                agentsoldProd.setDuesoldDate(product.getAgentProd().getDuesoldDate());
-            }
-            LocalDate receivedDate = product.getAgentProd().getReceivedDate();
-            if (receivedDate != null) {
-                agentsoldProd.setReceivedDate(product.getAgentProd().getReceivedDate());
-            }
+            iAgentProdRepository.save(agentsoldProd);
 
-        }
-        iAgentProdRepository.save(agentsoldProd);
+            soldProduct.setCheckedSell(false);
+            soldProduct.setAgentWhoSold(agentsoldProd);
+            soldProduct.setSoldDate(soldDate);
 
-        soldProduct.setCheckedSell(false);
-        soldProduct.setAgentWhoSold(agentsoldProd);
-        soldProduct.setSoldDate(soldDate);
-
-        iProductRepository.delete(product);
-        iSoldProductRepository.save(soldProduct);
-        sendNotificationForSell (soldProduct);
+            iProductRepository.delete(product);
+            iSoldProductRepository.save(soldProduct);
+            sendNotificationForSell (soldProduct);
         }
     }
 
@@ -106,7 +111,7 @@ public class SoldProductService  implements IsoldProductService{
         StockEvent stockEvent = new StockEvent();
         stockEvent.setReclamationDtos(reclamationDtos);
         stockProducer.sendMessage(stockEvent);
-        }
+    }
 
     @Override
     public Page<SoldProductDto> getSoldProductsPaginatedBystockReference(Pageable pageable, String stockreference, String searchTerm) {
@@ -237,54 +242,163 @@ public class SoldProductService  implements IsoldProductService{
 
 
     @Override
-    public List<String> uploadcsvTocheckSell(MultipartFile file, String stockReference) throws IOException {
-        Map<String, String> serialNumberStatus = parseCsvCheck(file);
-        List<String> notFoundserialNumbers = new ArrayList<>();
+    @Transactional
+    public void uploadcsvTocheckSell(MultipartFile file, String stockReference) throws IOException {
+        List<ParsedSoldProducts> parsedSoldProducts = parseCsvCheck(file);
         Optional<Stock> stockOptional = iStockRepository.findById(stockReference);
-        if(stockOptional.isPresent()) {
-            Stock stock = stockOptional.get();
-            List<SoldProduct> soldProducts = iSoldProductRepository.findByStock(stock);
-            for (Map.Entry<String, String> entry : serialNumberStatus.entrySet()) {
-                String serialNumber = entry.getKey();
-                String status = entry.getValue();
-                boolean found = false;
-                for (SoldProduct soldproduct : soldProducts) {
-                    if (soldproduct.getSerialNumber().equalsIgnoreCase(serialNumber) && status.equalsIgnoreCase("ACTIVE")) {
-                        soldproduct.setCheckedSell(true);
-                        iSoldProductRepository.save(soldproduct);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    notFoundserialNumbers.add(serialNumber);
-                }
-            }
+        if (stockOptional.isEmpty() || parsedSoldProducts.isEmpty()) {
+            return;
         }
-        return notFoundserialNumbers;
+        Stock stock = stockOptional.get();
+        List<SoldProduct> soldProducts = iSoldProductRepository.findByStock(stock);
+        List<Product> products = iProductRepository.findByStock(stock);
+        Map<String, String> usersMap = webClientBuilder.build().get()
+                .uri("http://keycloakuser-service/people/usersMap")
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {})
+                .block();
+        Map<String, SoldProduct> soldProductMap = soldProducts.stream()
+                .collect(Collectors.toMap(SoldProduct::getSerialNumber, Function.identity()));
+
+        Map<String, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getSerialNumber, Function.identity()));
+
+        for (ParsedSoldProducts parsedProduct : parsedSoldProducts) {
+            processParsedProduct(parsedProduct, soldProductMap, productMap, usersMap);
+        }
     }
 
-    private Map<String, String> parseCsvCheck(MultipartFile file) throws IOException {
+    private List<ParsedSoldProducts> parseCsvCheck(MultipartFile file) throws IOException {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            HeaderColumnNameMappingStrategy<SerialNumbersCsvRepresentation> strategy =
-                    new HeaderColumnNameMappingStrategy<>();
+            HeaderColumnNameMappingStrategy<SerialNumbersCsvRepresentation> strategy = new HeaderColumnNameMappingStrategy<>();
             strategy.setType(SerialNumbersCsvRepresentation.class);
-            CsvToBean<SerialNumbersCsvRepresentation> csvToBean =
-                    new CsvToBeanBuilder<SerialNumbersCsvRepresentation>(reader)
-                            .withMappingStrategy(strategy)
-                            .withIgnoreEmptyLine(true)
-                            .withIgnoreLeadingWhiteSpace(true)
-                            .withSeparator(',')
-                            .build();
+            CsvToBean<SerialNumbersCsvRepresentation> csvToBean = new CsvToBeanBuilder<SerialNumbersCsvRepresentation>(reader)
+                    .withMappingStrategy(strategy)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator(',')
+                    .build();
 
-            return csvToBean.parse()
-                    .stream()
-                    .filter(entry -> !entry.getSerialNumber().isEmpty())
-                    .collect(Collectors.toMap(
-                            SerialNumbersCsvRepresentation::getSerialNumber,
-                            SerialNumbersCsvRepresentation::getStatus,
-                            (existing, replacement) -> existing));
+            List<SerialNumbersCsvRepresentation> serialNumbersCsvList = csvToBean.parse();
+            return serialNumbersCsvList.stream()
+                    .filter(serialNumbersCsv -> !serialNumbersCsv.getSerialNumber().isEmpty())
+                    .map(this::convertToParsedSoldProducts)
+                    .collect(Collectors.toList());
         }
+    }
+
+    private ParsedSoldProducts convertToParsedSoldProducts(SerialNumbersCsvRepresentation serialNumbersCsv) {
+        ParsedSoldProducts parsedSoldProducts = new ParsedSoldProducts();
+        parsedSoldProducts.setSerialNumber(serialNumbersCsv.getSerialNumber());
+        parsedSoldProducts.setStatus(serialNumbersCsv.getStatus());
+        parsedSoldProducts.setAgent(serialNumbersCsv.getAgent());
+
+        if (serialNumbersCsv.getCheckOut() != null && !serialNumbersCsv.getCheckOut().isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[M/d/yyyy][M-d-yyyy][MM/dd/yy]");
+            try {
+                parsedSoldProducts.setCheckOut(LocalDate.parse(serialNumbersCsv.getCheckOut(), formatter));
+            } catch (DateTimeParseException e) {
+                System.err.println("Error parsing date: " + serialNumbersCsv.getCheckOut());
+                parsedSoldProducts.setCheckOut(LocalDate.now());
+            }
+
+        } else {
+            parsedSoldProducts.setCheckOut(LocalDate.now());
+        }
+
+
+        return parsedSoldProducts;
+    }
+
+    private void processParsedProduct(ParsedSoldProducts parsedProduct, Map<String, SoldProduct> soldProductMap,
+                                      Map<String, Product> productMap, Map<String, String> usersMap) {
+        SoldProduct soldProduct = soldProductMap.get(parsedProduct.getSerialNumber());
+        if (soldProduct != null) {
+            updateSoldProduct(parsedProduct, soldProduct);
+            return;
+        }
+
+        Product product = productMap.get(parsedProduct.getSerialNumber());
+        if (product != null && parsedProduct.getStatus() != null) {
+            processProduct(parsedProduct, product, usersMap);
+        }
+    }
+
+    private void updateSoldProduct(ParsedSoldProducts parsedProduct, SoldProduct soldProduct) {
+        if (isProductActive(parsedProduct.getStatus())) {
+            soldProduct.setCheckedSell(true);
+            iSoldProductRepository.save(soldProduct);
+        }
+    }
+
+    private void processProduct(ParsedSoldProducts parsedProduct, Product product, Map<String, String> usersMap) {
+        if (isProductActive(parsedProduct.getStatus())) {
+            String username = resolveUsername(parsedProduct.getAgent(), usersMap);
+            AgentProdDto agentsoldProdDto = createAgentProdDto(parsedProduct, username);
+            SoldProduct soldProduct = iSoldTProductMapper.tosoldProduct(product);
+            AgentProd agentsoldProd = iAgentProdMapper.toEntity(agentsoldProdDto);
+            if(product.getAgentProd() != null) {
+                LocalDate affectaiondate = product.getAgentProd().getAffectaiondate();
+                if (affectaiondate != null) {
+                    agentsoldProd.setAffectaiondate(product.getAgentProd().getAffectaiondate());
+                }
+                LocalDate duesoldDate = product.getAgentProd().getDuesoldDate();
+                if (duesoldDate != null) {
+                    agentsoldProd.setDuesoldDate(product.getAgentProd().getDuesoldDate());
+                }
+                LocalDate receivedDate = product.getAgentProd().getReceivedDate();
+                if (receivedDate != null) {
+                    agentsoldProd.setReceivedDate(product.getAgentProd().getReceivedDate());
+                }
+            }
+            iAgentProdRepository.save(agentsoldProd);
+            soldProduct.setCheckedSell(true);
+            soldProduct.setAgentWhoSold(agentsoldProd);
+            soldProduct.setSoldDate(parsedProduct.getCheckOut());
+            iProductRepository.delete(product);
+            iSoldProductRepository.save(soldProduct);
+        }
+    }
+
+    private boolean isProductActive(String status) {
+        return status.equalsIgnoreCase("ACTIVE") || status.equalsIgnoreCase("YES") || status.equalsIgnoreCase("Y");
+    }
+    private String resolveUsername(String agent, Map<String, String> usersMap) {
+        String firstName = getFirstName(agent);
+        String lastName = getLastName(agent);
+        String fullName = firstName + lastName;
+
+        return usersMap.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(fullName))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(firstName);
+    }
+
+
+    private AgentProdDto createAgentProdDto(ParsedSoldProducts parsedProduct, String username) {
+        AgentProdDto agentProdDto = new AgentProdDto();
+        agentProdDto.setFirstname(getFirstName(parsedProduct.getAgent()));
+        agentProdDto.setLastname(getLastName(parsedProduct.getAgent()));
+        agentProdDto.setUsername(username);
+        return agentProdDto;
+    }
+
+
+    private String getFirstName(String fullName) {
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            String[] parts = fullName.split("\\s+");
+            return parts.length > 0 ? parts[0].toLowerCase() : "";
+        }
+        return "";
+    }
+
+    private String getLastName(String fullName) {
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            String[] parts = fullName.split("\\s+");
+            return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : "";
+        }
+        return "";
     }
 
 
@@ -395,8 +509,8 @@ public class SoldProductService  implements IsoldProductService{
         for (SoldProduct soldProduct : monthlySoldProducts) {
             String username = soldProduct.getAgentWhoSold().getUsername();
             System.out.println("username :" + username);
-            String fullName = (fetchUserDetails(username).getFirstName() + " " +
-                    fetchUserDetails(username).getLastName()).toUpperCase();
+            String fullName = (soldProduct.getAgentWhoSold().getFirstname() + " " +
+                    soldProduct.getAgentWhoSold().getLastname()).toUpperCase();
             Optional<TopSalesDto> optionalDto = salesByAgent.stream()
                     .filter(dto -> dto.getFullname().equals(fullName))
                     .findFirst();
@@ -414,8 +528,8 @@ public class SoldProductService  implements IsoldProductService{
 
         for (SoldProduct soldProduct : lastMonthlySoldProducts) {
             String username = soldProduct.getAgentWhoSold().getUsername();
-            String fullName = (fetchUserDetails(username).getFirstName() + " " +
-                    fetchUserDetails(username).getLastName()).toUpperCase();
+            String fullName = (soldProduct.getAgentWhoSold().getFirstname() + " " +
+                    soldProduct.getAgentWhoSold().getLastname()).toUpperCase();
             Optional<TopSalesDto> optionalDto = salesByAgent.stream()
                     .filter(dto -> dto.getFullname().equals(fullName))
                     .findFirst();
@@ -444,18 +558,6 @@ public class SoldProductService  implements IsoldProductService{
         salesList.sort(Comparator.comparingInt(TopSalesDto::getTotalsales).reversed());
 
         return salesList;
-    }
-
-
-
-    private UserMysqldto fetchUserDetails(String username) {
-            UserMysqldto userMysqldto = webClientBuilder.build().get()
-                    .uri("http://keycloakuser-service/people/userdetailsforTopSale/{username}", username)
-                    .retrieve()
-                    .bodyToMono(UserMysqldto.class)
-                    .block();
-            System.out.println("userMysqldto :" + userMysqldto);
-            return userMysqldto;
     }
 
     @Override
@@ -544,6 +646,48 @@ public class SoldProductService  implements IsoldProductService{
         }
 
         return uniqueSoldProducts;
+    }
+
+    @Override
+    public Page<SoldProductDto> getSoldProductsPaginated(Pageable pageable, String searchTerm) {
+        List<SoldProduct> soldproducts  = iSoldProductRepository.findAll();
+        List<SoldProductDto> soldProductDtos = iSoldProductDtoMapper.toDtoList(soldproducts);
+        for (int i = 0; i < soldProductDtos.size(); i++) {
+            SoldProduct soldproduct = soldproducts.get(i);
+            SoldProductDto soldproductDto = soldProductDtos.get(i);
+            if (soldproduct.getStock() != null) {
+                StockDto stockDto = iStockMapper.toDto(soldproduct.getStock());
+                soldproductDto.setStock(stockDto);
+            }
+            if(soldproduct.getAgentAssociatedProd() != null){
+                AgentProdDto agentProdDto = iAgentProdMapper.toDto(soldproduct.getAgentAssociatedProd());
+                soldproductDto.setAgentAssociatedProd(agentProdDto);
+            }
+            if(soldproduct.getManagerSoldProd() != null){
+                AgentProdDto managerProdDto = iAgentProdMapper.toDto(soldproduct.getManagerSoldProd());
+                soldproductDto.setManagerSoldProd(managerProdDto);
+            }
+            if(soldproduct.getAgentWhoSold() != null){
+                AgentProdDto agentSoldProdDto = iAgentProdMapper.toDto(soldproduct.getAgentWhoSold());
+                soldproductDto.setAgentWhoSold(agentSoldProdDto);
+            }
+        }
+        if (!searchTerm.isEmpty()) {
+            soldProductDtos = soldProductDtos.parallelStream()
+                    .filter(soldProductDto -> filterBySearchTerm(soldProductDto, searchTerm))
+                    .collect(Collectors.toList());
+        }
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<SoldProductDto> pageContent;
+        if (soldProductDtos.size() < startItem) {
+            pageContent = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, soldProductDtos.size());
+            pageContent = soldProductDtos.subList(startItem, toIndex);
+        }
+        return new PageImpl<>(pageContent, pageable, soldProductDtos.size());
     }
 
 }

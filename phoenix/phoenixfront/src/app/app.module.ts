@@ -46,6 +46,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { StockarchivedComponent } from './stockcomponent/stockarchived/stockarchived.component';
 import { ProdarchivedComponent } from './stockcomponent/prodarchived/prodarchived.component';
 import { environment } from 'src/environments/environment';
+import { NavigateprodsComponent } from './stockcomponent/navigateprods/navigateprods.component';
 
 const appRoute: Routes = [
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
@@ -77,6 +78,7 @@ const appRoute: Routes = [
   {path:'complaint', component: ComplaintComponent, canActivate: [AuthGuard]},
   {path:'stockarchive', component: StockarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'archivedproducts', component: ProdarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
+  {path:'navigateprods', component: NavigateprodsComponent, canActivate: [AuthGuard]},
   { path: '**', pathMatch: 'full', redirectTo: '/dashboard' },
 ]
 
@@ -143,7 +145,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     ScannersComponent,
     ConfiramtionDialogComponent,
     StockarchivedComponent,
-    ProdarchivedComponent
+    ProdarchivedComponent,
+    NavigateprodsComponent
   ],
   imports: [
     BrowserModule,

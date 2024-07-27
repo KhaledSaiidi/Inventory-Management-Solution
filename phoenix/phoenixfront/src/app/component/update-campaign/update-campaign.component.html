@@ -50,7 +50,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                             <div>
-                              <label>Client</label>
+                              <label>Supplier</label>
                               <span class="form-control" type="text" style="background-color: rgba(211, 211, 211, 0.4); margin-top: 10px;"> {{campaigndto.client?.companyName}} </span>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                         <div class="col-md-6">
                           <div formGroupName="client">
                               <div>
-                            <label for="client-reference">Client</label>
+                            <label for="client-reference">Supplier</label>
                             <select class="form-control mt-2" class="form-control mt-2" formControlName="reference" id="reference">
                               <option *ngFor="let client of clients" [value]="client.reference">  {{client.companyName}}  </option>                      
                           </select>

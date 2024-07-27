@@ -59,6 +59,9 @@ private initializeWebSocket(): void {
     window.location.href = '/stocks';
   }
 
+  navigateToProds(){
+    window.location.href = '/navigateprods';
+  }
   refreshnotifications(){
     this.getreclamations();
   }

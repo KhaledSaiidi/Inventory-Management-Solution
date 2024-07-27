@@ -25,6 +25,7 @@ C:\Users\khale\Desktop\Inventory-Management-Solution\phoenix\stock\src\main\java
 C:\Users\khale\Desktop\Inventory-Management-Solution\phoenix\stock\src\main\java\com\phoenix\dto\StockDto.java
 C:\Users\khale\Desktop\Inventory-Management-Solution\phoenix\stock\src\main\java\com\phoenix\archivedmodel\ArchivedProducts.java
 C:\Users\khale\Desktop\Inventory-Management-Solution\phoenix\stock\src\main\java\com\phoenix\mapperToArchive\IStockToArchivedStock.java
+C:\Users\khale\Desktop\Inventory-Management-Solution\phoenix\stock\src\main\java\com\phoenix\dto\ParsedSoldProducts.java
 C:\Users\khale\Desktop\Inventory-Management-Solution\phoenix\stock\src\main\java\com\phoenix\model\AgentProd.java
 C:\Users\khale\Desktop\Inventory-Management-Solution\phoenix\stock\src\main\java\com\phoenix\kafka\StockProducer.java
 C:\Users\khale\Desktop\Inventory-Management-Solution\phoenix\stock\src\main\java\com\phoenix\model\Stock.java

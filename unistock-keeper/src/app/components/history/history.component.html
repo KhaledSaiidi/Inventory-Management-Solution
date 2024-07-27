@@ -1,22 +1,25 @@
 <app-header></app-header>
 
-<ion-content>
+<ion-content style="--background: #ffffff;">
 <div class="container">
 
-  <ion-card>
+  <ion-card style="--background: #ffffff;">
     <ion-card-header (click) ="showsells()" class="card-header">
       <ion-card-title>
-        <ion-icon name="cart-outline" class="icon-sold"></ion-icon>
-        &nbsp; Last sells
-        <ng-container *ngIf="showsell">
-        <ion-icon name="chevron-down-outline" class="icon-arrow"></ion-icon>
-      </ng-container>
-      <ng-container *ngIf="!showsell">
-        <ion-icon name="chevron-up-outline" class="icon-arrow"></ion-icon>
-        <br>
-      </ng-container>
+        <div class="title-container">
+          <div class="left-content">
+            <ion-icon name="cart-outline" class="icon-sold"></ion-icon>
+            <p class="title-text">Last sells</p>
+          </div>
+          <ng-container *ngIf="showsell">
+            <ion-icon name="chevron-down-outline" class="icon-arrow"></ion-icon>
+          </ng-container>
+          <ng-container *ngIf="!showsell">
+            <ion-icon name="chevron-up-outline" class="icon-arrow"></ion-icon>
+          </ng-container>
+        </div>
       </ion-card-title>
-    </ion-card-header>
+          </ion-card-header>
     <ng-container *ngIf="showsell">
     <ng-container *ngIf="!emptylastsells">
     <ion-card-content class="card-content">
@@ -58,19 +61,22 @@
   </ng-container>
 </ng-container>
   </ion-card>
-  <ion-card style="margin-top: 40px;">
+  <ion-card style="margin-top: 40px; --background: #ffffff;">
       <ion-card-header (click) ="showreturns()">
         <ion-card-title>
-          <ion-icon name="return-down-back-outline" class="icon-returned"></ion-icon>
-          &nbsp; Last Returns
-          <ng-container *ngIf="showreturn">
-            <ion-icon name="chevron-down-outline" class="icon-arrowr"></ion-icon>
-          </ng-container>
-          <ng-container *ngIf="!showreturn">
-            <ion-icon name="chevron-up-outline" class="icon-arrowr"></ion-icon>
-            <br>
-          </ng-container>    
-        </ion-card-title>
+          <div class="title-container">
+            <div class="left-content">
+              <ion-icon name="return-down-back-outline" class="icon-returned"></ion-icon>
+              <p class="title-text">Last Returns</p>
+            </div>
+            <ng-container *ngIf="showreturn">
+              <ion-icon name="chevron-down-outline" class="icon-arrowr"></ion-icon>
+            </ng-container>
+            <ng-container *ngIf="!showreturn">
+              <ion-icon name="chevron-up-outline" class="icon-arrowr"></ion-icon>
+            </ng-container>
+          </div>
+        </ion-card-title>        
       </ion-card-header>
       <ng-container *ngIf="showreturn">
       <ng-container *ngIf="emptylastReturnss">

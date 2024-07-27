@@ -52,6 +52,7 @@ export class ReturnComponent  implements AfterViewInit , OnDestroy{
           targetedFormats: ['CODE_128'],
           cameraDirection: 'back'
         };
+        document.body.style.backgroundColor = 'transparent';
         const result = await BarcodeScanner.startScan(options);
         console.log("result :" + result);
         if(result.hasContent && result.content.length >= 5) {
