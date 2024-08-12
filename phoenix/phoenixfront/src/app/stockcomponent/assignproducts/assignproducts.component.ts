@@ -86,14 +86,12 @@ export class AssignproductsComponent implements OnInit {
       this.router.navigate(['/products'], { queryParams: { id: ref } });     
     }
     allmembers: Userdto[] = [];
-    agentList: Userdto[] = [];
     managerList: Userdto[] = [];  
     getUserscategorized() {
       this.agentsService.getagents().subscribe(
         (data) => {
           this.allmembers = data as Userdto[];
           if(this.allmembers.length > 0){
-          this.agentList = this.allmembers.filter(user => user.realmRoles?.includes('AGENT'));
           this.managerList = this.allmembers.filter(user => user.realmRoles?.includes('MANAGER'));
           }
         },

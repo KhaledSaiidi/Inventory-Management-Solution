@@ -67,7 +67,10 @@ public class ReclamationService implements IReclamationService, ApplicationListe
     public List<ReclamationDto> get30NewestReclamationsforReceiver(String receiverReference) {
         List<Reclamation> reclamationsRelated = iReclamationRepository.findAll()
                 .stream()
-                .filter(reclamation -> reclamation.getReceiverReference().contains(receiverReference))
+                .filter(reclamation ->
+                        reclamation.getReceiverReference().stream()
+                                .map(String::toLowerCase)
+                                .anyMatch(reference -> reference.contains(receiverReference.toLowerCase())))
                 .collect(Collectors.toList());
 
         List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamationsRelated);
@@ -80,7 +83,10 @@ public class ReclamationService implements IReclamationService, ApplicationListe
     public List<ReclamationDto> getAllReclamationsForReceiver(String receiverReference){
         List<Reclamation> reclamationsRelated = iReclamationRepository.findAll()
                 .stream()
-                .filter(reclamation -> reclamation.getReceiverReference().contains(receiverReference))
+                .filter(reclamation ->
+                        reclamation.getReceiverReference().stream()
+                                .map(String::toLowerCase)
+                                .anyMatch(reference -> reference.contains(receiverReference.toLowerCase())))
                 .collect(Collectors.toList());
         List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamationsRelated);
         reclamationDtos.sort(Comparator.comparing(ReclamationDto::getReclamDate).reversed());
@@ -91,7 +97,7 @@ public class ReclamationService implements IReclamationService, ApplicationListe
     public List<ReclamationDto> getAllReclamationsForsender(String senderReference){
         List<Reclamation> reclamationsRelated = iReclamationRepository.findAll()
                 .stream()
-                .filter(reclamation -> reclamation.getSenderReference().equals(senderReference))
+                .filter(reclamation -> reclamation.getSenderReference().equalsIgnoreCase(senderReference.toLowerCase()))
                 .collect(Collectors.toList());
         List<ReclamationDto> reclamationDtos = iReclamationMapper.toDtoList(reclamationsRelated);
         reclamationDtos.sort(Comparator.comparing(ReclamationDto::getReclamDate).reversed());
@@ -118,7 +124,7 @@ public class ReclamationService implements IReclamationService, ApplicationListe
             if(vuedPersons == null){
                 vuedPersons = new ArrayList<>();
             }
-            vuedPersons.add(username);
+            vuedPersons.add(username.toLowerCase());
             reclamation.setVuedreceivers(vuedPersons);
         }
         iReclamationRepository.saveAll(reclamations);

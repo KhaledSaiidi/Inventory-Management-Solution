@@ -571,7 +571,7 @@ checkReturn(serialNumber: string | undefined){
     associatedProds: number = 0;
     returnedProds: number = 0;
     soldProds: number = 0;
-
+    isLoading: boolean = true;
     getUserStat(username: string) {
       this.stockservice.getUserStat(username)
         .subscribe(
@@ -579,9 +579,11 @@ checkReturn(serialNumber: string | undefined){
             this.associatedProds = stats[0];
             this.returnedProds = stats[1];
             this.soldProds = stats[2];
+            this.isLoading = false;
                   },
           (error) => {
             console.error('Error fetching last stats :', error);
+            this.isLoading = false;
           }
         );
     }  

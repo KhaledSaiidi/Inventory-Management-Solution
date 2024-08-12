@@ -26,9 +26,12 @@
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Phone</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Manager</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" >Products</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sells</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Returned</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+              style="max-width: 60px; text-align: center;">Products</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+              style="max-width: 60px; text-align: center;">Sells</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+              style="max-width: 60px; text-align: center;">Returned</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">More details</th>
   
             </tr>
@@ -56,12 +59,30 @@
               <td style="word-wrap: break-word; white-space: normal;"> {{agent.email}} </td>
               <td style="word-wrap: break-word; white-space: normal;"> {{agent.phone}} </td>
               <td style="word-wrap: break-word; white-space: normal;">{{agent.manager?.firstName}} {{agent.manager?.lastName}}</td>
-              <td style="word-wrap: break-word; white-space: normal;">{{agent.associatedProds}} 
-                <span style="font-size: 12px;"><b> Products</b></span></td>                     
-              <td style="word-wrap: break-word; white-space: normal;">{{agent.soldProds}} 
-                <span style="font-size: 12px;"><b> Products</b></span></td>                     
-              <td style="word-wrap: break-word; white-space: normal;">{{agent.returnedProds}} 
-                <span style="font-size: 12px;"><b> Products</b></span></td>                     
+              <td style="word-wrap: break-word; white-space: normal; text-align: center;">
+                <ng-container *ngIf="isLoading(agent.username); else showAssociatedProds">
+                  <div class="loading-indicator"></div>
+                </ng-container>
+                <ng-template #showAssociatedProds>
+                  {{agent.associatedProds}}
+                </ng-template>
+              </td>
+              <td style="word-wrap: break-word; white-space: normal; text-align: center;">
+                <ng-container *ngIf="isLoading(agent.username); else showSoldProds">
+                  <div class="loading-indicator"></div>
+                </ng-container>
+                <ng-template #showSoldProds>
+                  {{agent.soldProds}}
+                </ng-template>
+              </td>
+              <td style="word-wrap: break-word; white-space: normal; text-align: center;">
+                <ng-container *ngIf="isLoading(agent.username); else showReturnedProds">
+                  <div class="loading-indicator"></div>
+                </ng-container>
+                <ng-template #showReturnedProds>
+                  {{agent.returnedProds}}
+                </ng-template>
+              </td>
               <td style="cursor: pointer; word-wrap: break-word; white-space: normal;" (click) = "navigateToUserInfos(agent.username)" >Profil</td>
   
             </tr>
@@ -150,7 +171,14 @@
           <ng-container *ngIf="manager.username">
           <td style="cursor: pointer;" (click) = "navigateToUserInfos(manager.username)">{{manager.firstName}} {{manager.lastName}} </td>
           <td >{{ countAgentsForManagers(this.agentList, manager.username) }}</td>
-          <td>{{manager.associatedProds}}</td>
+          <td style="word-wrap: break-word; white-space: normal; text-align: center;">
+            <ng-container *ngIf="isLoading(manager.username); else showAssociatedProds">
+              <div class="loading-indicator"></div>
+            </ng-container>
+            <ng-template #showAssociatedProds>
+              {{manager.associatedProds}}
+            </ng-template>
+          </td>
         </ng-container>
           </tr>   
        </ng-container>

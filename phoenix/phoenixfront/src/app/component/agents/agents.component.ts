@@ -23,10 +23,12 @@ export class AgentsComponent implements OnInit {
   ngOnInit(): void{
     this.getUserscategorized();
   }
+
   loading: boolean = true;
   emptyagents: boolean = true;
   empptyimanagers: boolean = true;
   empptymanagers: boolean = true;
+  loadingStates: Map<string, boolean> = new Map();
   getUserscategorized() {
     this.agentsService.getagents().subscribe(
       (data) => {
@@ -36,27 +38,13 @@ export class AgentsComponent implements OnInit {
         this.agentList = this.allmembers.filter(user => user.realmRoles?.includes('AGENT'));
         this.managerList = this.allmembers.filter(user => user.realmRoles?.includes('MANAGER'));
         this.imanagerList = this.allmembers.filter(user => user.realmRoles?.includes('IMANAGER'));
-        console.log(this.managerList);
-        console.log(this.imanagerList);
-        if(this.imanagerList.length > 0){
-          this.empptyimanagers = false;
-          console.log("emptyStock: " + this.emptyagents);
-        }
-        if(this.managerList.length > 0){
-          this.empptymanagers = false;
-          for (let agent of this.managerList) {
-            this.getUserStat(agent);
-          }
 
-          console.log("emptyStock: " + this.emptyagents);
-        }
-        if(this.agentList.length > 0){
-          this.emptyagents = false;
-          for (let agent of this.agentList) {
-            this.getUserStat(agent);
-          }
-          console.log("emptyStock: " + this.emptyagents);
-        }
+        this.empptyimanagers = this.imanagerList.length === 0;
+        this.emptyagents = this.agentList.length === 0;
+        this.empptymanagers = this.managerList.length === 0;
+        this.processUsers(this.agentList);
+        this.processUsers(this.managerList);
+       
         }
         
       },
@@ -67,6 +55,13 @@ export class AgentsComponent implements OnInit {
     );
   }
 
+  processUsers(users: Userdto[]) {
+    users.forEach(user => {
+      this.loadingStates.set(user.username || '', true);
+      this.getUserStat(user);
+    });
+  }
+
   getUserStat(user: Userdto) {
     if(user.username){
     this.stockservice.getUserStat(user.username)
@@ -75,14 +70,22 @@ export class AgentsComponent implements OnInit {
           user.associatedProds = stats[0];
           user.returnedProds = stats[1];
           user.soldProds = stats[2];
+          this.loadingStates.set(user.username || '', false);
                 },
         (error) => {
           console.error('Error fetching last stats :', error);
+          this.loadingStates.set(user.username || '', false);
         }
       );
     }
   }  
 
+  isLoading(username: string |  undefined): boolean {
+    if(username == undefined) {
+      return false;
+    }
+    return this.loadingStates.get(username) === true;
+  }
 
   countAgentsForManagers(userList: Userdto[], managerUsername: string): number {
     let count = 0;

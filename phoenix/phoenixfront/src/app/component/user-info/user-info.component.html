@@ -28,24 +28,32 @@
                 </p>
               </div>
             </div>
-            <div class="col-auto my-auto" style="text-align: center; align-items: center;">
-              <div class="h-100">
-                <span class="font-weight-bolder">{{associatedProds}}</span>
-                <br> <span class="text-sm opacity-8">Associated Products</span>
+            <ng-container *ngIf="isLoading; else dataTemplate">
+              <div class="loading-stat">
+                <div class="loading-stat-pinner"></div>
               </div>
-            </div>
-            <div class="col-auto my-auto" style="text-align: center; align-items: center;">
-              <div class="h-100">
-                <span class="font-weight-bolder">{{soldProds}}</span>
-                <br> <span class="text-sm opacity-8"> Sold Products</span>
-              </div>
-            </div>
-            <div class="col-auto my-auto" style="text-align: center; align-items: center;">
-              <div class="h-100">
-                <span class="font-weight-bolder">{{returnedProds}}</span>
-                <br> <span class="text-sm opacity-8"> Returned Products</span>
-              </div>
-            </div>
+            </ng-container>
+            
+            <ng-template #dataTemplate>
+                <div class="col-auto my-auto" style="text-align: center; align-items: center;">
+                  <div class="h-100">
+                    <span class="font-weight-bolder">{{associatedProds}}</span>
+                    <br> <span class="text-sm opacity-8">Associated Products</span>
+                  </div>
+                </div>
+                <div class="col-auto my-auto" style="text-align: center; align-items: center;">
+                  <div class="h-100">
+                    <span class="font-weight-bolder">{{soldProds}}</span>
+                    <br> <span class="text-sm opacity-8">Sold Products</span>
+                  </div>
+                </div>
+                <div class="col-auto my-auto" style="text-align: center; align-items: center;">
+                  <div class="h-100">
+                    <span class="font-weight-bolder">{{returnedProds}}</span>
+                    <br> <span class="text-sm opacity-8">Returned Products</span>
+                  </div>
+                </div>
+            </ng-template>
             
     <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
       <div class="nav-wrapper position-relative end-0" style="height: 100%;">

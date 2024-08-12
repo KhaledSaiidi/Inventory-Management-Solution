@@ -85,3 +85,30 @@
     color: green; /* Color change on hover */
     transform: scale(1.1); /* Scale up on hover */
 }
+
+  /* Container for the loading indicator */
+  .loading-stat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 30%;
+    margin-top: 15px;
+  }
+  
+  /* Spinner styling */
+  .loading-stat-pinner {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 20%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Spinner animation */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  

@@ -81,8 +81,13 @@ private initializeWebSocket(): void {
     if(this.reclamations.length > 0){
       this.emptyreclamaations =false;
       this.reclamations.forEach(reclamation => {
-        if (!reclamation.vuedreceivers || !reclamation.vuedreceivers.includes(this.username)) {
-            this.notificationnumber++;
+        const lowerCaseUsername = this.username.toLowerCase();
+        const vuedreceivers = reclamation.vuedreceivers 
+        ? reclamation.vuedreceivers.map(receiver => receiver.toLowerCase()) 
+        : [];
+
+        if (!vuedreceivers.includes(lowerCaseUsername)) {
+          this.notificationnumber++;
             this.reclamationsnotSeen.push(reclamation);
         }
     }); 

@@ -19,8 +19,11 @@ public class ReclamationMapper implements IReclamationMapper {
         reclamationDto.setReclamationType(reclamation.getReclamationType());
         reclamationDto.setReclamationText(reclamation.getReclamationText());
         reclamationDto.setSenderReference(reclamation.getSenderReference());
-
-        reclamationDto.setReceiverReference(reclamation.getReceiverReference());
+        reclamationDto.setReceiverReference(
+                reclamation.getReceiverReference().stream()
+                        .map(String::toLowerCase)
+                        .collect(Collectors.toList())
+        );
         reclamationDto.setVuedreceivers(reclamation.getVuedreceivers());
         reclamationDto.setReclamDate(reclamation.getReclamDate());
         return reclamationDto;
@@ -32,7 +35,11 @@ public class ReclamationMapper implements IReclamationMapper {
         reclamation.setReclamationType(reclamationDto.getReclamationType());
         reclamation.setReclamationText(reclamationDto.getReclamationText());
         reclamation.setSenderReference(reclamationDto.getSenderReference());
-        reclamation.setReceiverReference(reclamationDto.getReceiverReference());
+        reclamation.setReceiverReference(
+                reclamationDto.getReceiverReference().stream()
+                        .map(String::toLowerCase)
+                        .collect(Collectors.toList())
+        );
         reclamation.setVuedreceivers(reclamationDto.getVuedreceivers());
         reclamation.setReclamDate(reclamationDto.getReclamDate());
         return reclamation;

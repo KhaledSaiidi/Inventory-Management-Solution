@@ -418,19 +418,18 @@ public class ProductService implements IProductService{
     public Page<ProductDto> getProductsPaginatedByusername(Pageable pageable, String username) {
         List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
         List<Product> products = new ArrayList<>();
+        List<String> encounteredSerialNumbers = new ArrayList<>();
         for (AgentProd agentProd: agentProds){
-            Optional<Product> optionalProduct = iProductRepository.findByAgentProd(agentProd);
+            Optional<Product> optionalProduct1 = iProductRepository.findByAgentProd(agentProd);
+            Optional<Product> optionalProduct2 = iProductRepository.findByManagerProd(agentProd);
+            Optional<Product> optionalProduct = optionalProduct1.or(() -> optionalProduct2);
+
             if(optionalProduct.isPresent()){
                 Product product = optionalProduct.get();
-                products.add(product);
-            }
-        }
-        if(products.isEmpty()){
-            for (AgentProd agentProd: agentProds){
-                Optional<Product> optionalProduct = iProductRepository.findByManagerProd(agentProd);
-                if(optionalProduct.isPresent()){
-                    Product product = optionalProduct.get();
+                String serialNumber = product.getSerialNumber();
+                if (!encounteredSerialNumbers.contains(serialNumber)) {
                     products.add(product);
+                    encounteredSerialNumbers.add(serialNumber);
                 }
             }
         }
@@ -439,9 +438,12 @@ public class ProductService implements IProductService{
                 .map(iProductMapper::toDto)
                 .collect(Collectors.toList());
 
-        for (int i = 0; i < productDtos.size(); i++) {
-            Product product = products.get(i);
-            ProductDto productDto = productDtos.get(i);
+        for (ProductDto productDto : productDtos) {
+            Optional<Product> optionalProduct = iProductRepository.findById(productDto.getSerialNumber());
+            if (optionalProduct.isEmpty()) {
+                continue;
+            }
+            Product product = optionalProduct.get();
             if (product.getStock() != null) {
                 StockDto stockDto = iStockMapper.toDto(product.getStock());
                 Campaigndto campaigndto = webClientBuilder.build().get()
@@ -460,8 +462,15 @@ public class ProductService implements IProductService{
                 AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
                 productDto.setManagerProd(managerProdDto);
             }
-
         }
+        productDtos.sort(Comparator.comparingInt(dto -> {
+            try {
+                return Integer.parseInt(dto.getBoxNumber());
+            } catch (NumberFormatException e) {
+                return Integer.MAX_VALUE;
+            }
+        }));
+
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
@@ -577,6 +586,13 @@ public class ProductService implements IProductService{
                     .filter(productDto -> filterBySearchTerm(productDto, searchTerm))
                     .collect(Collectors.toList());
         }
+        productDtos.sort(Comparator.comparingInt(dto -> {
+            try {
+                return Integer.parseInt(dto.getBoxNumber());
+            } catch (NumberFormatException e) {
+                return Integer.MAX_VALUE;
+            }
+        }));
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
@@ -690,19 +706,17 @@ public class ProductService implements IProductService{
     public Page<ProductDto> getProductsReturnedPaginatedByusername(Pageable pageable, String username) {
         List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
         List<Product> products = new ArrayList<>();
+        List<String> encounteredSerialNumbers = new ArrayList<>();
         for (AgentProd agentProd: agentProds){
-            Optional<Product> optionalProduct = iProductRepository.findByAgentReturnedProd(agentProd);
+            Optional<Product> optionalProduct1 = iProductRepository.findByAgentReturnedProd(agentProd);
+            Optional<Product> optionalProduct2 = iProductRepository.findByManagerProd(agentProd);
+            Optional<Product> optionalProduct = optionalProduct1.or(() -> optionalProduct2);
             if(optionalProduct.isPresent()){
                 Product product = optionalProduct.get();
-                products.add(product);
-            }
-        }
-        if(products.isEmpty()){
-            for (AgentProd agentProd: agentProds){
-                Optional<Product> optionalProduct = iProductRepository.findByManagerProd(agentProd);
-                if(optionalProduct.isPresent()){
-                    Product product = optionalProduct.get();
+                String serialNumber = product.getSerialNumber();
+                if (!encounteredSerialNumbers.contains(serialNumber)) {
                     products.add(product);
+                    encounteredSerialNumbers.add(serialNumber);
                 }
             }
         }
@@ -710,9 +724,12 @@ public class ProductService implements IProductService{
                 .filter(Product::isReturned)
                 .map(iProductMapper::toDto)
                 .collect(Collectors.toList());
-        for (int i = 0; i < productDtos.size(); i++) {
-            Product product = products.get(i);
-            ProductDto productDto = productDtos.get(i);
+        for (ProductDto productDto : productDtos) {
+            Optional<Product> optionalProduct = iProductRepository.findById(productDto.getSerialNumber());
+            if (optionalProduct.isEmpty()) {
+                continue;
+            }
+            Product product = optionalProduct.get();
             if (product.getStock() != null) {
                 StockDto stockDto = iStockMapper.toDto(product.getStock());
                 Campaigndto campaigndto = webClientBuilder.build().get()
@@ -740,6 +757,13 @@ public class ProductService implements IProductService{
                 productDto.setManagerProd(managerProdDto);
             }
         }
+        productDtos.sort(Comparator.comparingInt(dto -> {
+            try {
+                return Integer.parseInt(dto.getBoxNumber());
+            } catch (NumberFormatException e) {
+                return Integer.MAX_VALUE;
+            }
+        }));
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
@@ -752,6 +776,7 @@ public class ProductService implements IProductService{
         }
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
+
     @Override
     public void checkReturn(String serialNumber) {
         Product existingProduct = iProductRepository.findById(serialNumber)
@@ -820,39 +845,37 @@ public class ProductService implements IProductService{
 
     @Override
     public List<Integer> getUserStat(String username) {
+        username = username.toLowerCase();
         List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
-        int associatedProducts = 0;
-        int returneddProducts = 0;
-        int soldProducts = 0;
         Set<String> encounteredAssociatedSerialNumbers = new HashSet<>();
         Set<String> encounteredReturnedSerialNumbers = new HashSet<>();
         Set<String> encounteredSoldSerialNumbers = new HashSet<>();
 
         for (AgentProd agentProd : agentProds) {
-            Optional<Product> optionalReturnedProduct = iProductRepository.findByAgentReturnedProd(agentProd);
-            if (optionalReturnedProduct.isEmpty()) {
-                optionalReturnedProduct = iProductRepository.findByManagerProd(agentProd);
-            }
+            Optional<Product> optionalReturnedProduct1 = iProductRepository.findByAgentReturnedProd(agentProd);
+            Optional<Product> optionalReturnedProduct2 = iProductRepository.findByManagerProd(agentProd);
+            Optional<Product> optionalReturnedProduct = optionalReturnedProduct1.or(() -> optionalReturnedProduct2);
             if (optionalReturnedProduct.isPresent()) {
                 Product returnedproduct = optionalReturnedProduct.get();
                 if(returnedproduct.isReturned()){
                     encounteredReturnedSerialNumbers.add(returnedproduct.getSerialNumber());
                 }
             }
-            Optional<Product> optionalAssociatedProduct = iProductRepository.findByAgentProd(agentProd);
-            if (optionalAssociatedProduct.isEmpty()) {
-                optionalAssociatedProduct = iProductRepository.findByManagerProd(agentProd);
-            }
+
+            Optional<Product> optionalAssociatedProduct1 = iProductRepository.findByAgentProd(agentProd);
+            Optional<Product> optionalAssociatedProduct2 = iProductRepository.findByManagerProd(agentProd);
+            Optional<Product> optionalAssociatedProduct = optionalAssociatedProduct1.or(() -> optionalAssociatedProduct2);
             if (optionalAssociatedProduct.isPresent()) {
                 Product associatedProduct = optionalAssociatedProduct.get();
                 if(!associatedProduct.isReturned()) {
                     encounteredAssociatedSerialNumbers.add(associatedProduct.getSerialNumber());
                 }
             }
-            Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findByAgentWhoSold(agentProd);
-            if (optionalSoldProduct.isEmpty()) {
-                optionalSoldProduct = iSoldProductRepository.findByManagerSoldProd(agentProd);
-            }
+
+            Optional<SoldProduct> optionalSoldProduct1 = iSoldProductRepository.findByAgentWhoSold(agentProd);
+            Optional<SoldProduct> optionalSoldProduct2 = iSoldProductRepository.findByManagerSoldProd(agentProd);
+            Optional<SoldProduct> optionalSoldProduct = optionalSoldProduct1.or(() -> optionalSoldProduct2);
+
             if (optionalSoldProduct.isPresent()) {
                 SoldProduct soldProduct = optionalSoldProduct.get();
                 encounteredSoldSerialNumbers.add(soldProduct.getSerialNumber());
@@ -862,7 +885,6 @@ public class ProductService implements IProductService{
         statList.add(encounteredAssociatedSerialNumbers.size());
         statList.add(encounteredReturnedSerialNumbers.size());
         statList.add(encounteredSoldSerialNumbers.size());
-
         return statList;
     }
 
@@ -1045,6 +1067,13 @@ public class ProductService implements IProductService{
                     .filter(productDto -> filterBySearchTerm(productDto, searchTerm))
                     .collect(Collectors.toList());
         }
+        productDtos.sort(Comparator.comparingInt(dto -> {
+            try {
+                return Integer.parseInt(dto.getBoxNumber());
+            } catch (NumberFormatException e) {
+                return Integer.MAX_VALUE;
+            }
+        }));
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;

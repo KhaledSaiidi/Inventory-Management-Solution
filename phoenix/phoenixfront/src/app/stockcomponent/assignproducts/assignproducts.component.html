@@ -63,7 +63,7 @@
                                         <label for="agent">AGENT ASSIGNED</label>
                                         <select class="form-control mt-2" formControlName="agent" id="agent" name="agent">
                                           <option disabled selected> Assign an agent </option>  
-                                          <option *ngFor="let agent of agentList" [ngValue]="agent"> {{agent.firstName?.toLowerCase()}} {{agent.lastName?.toLowerCase()}} </option>  
+                                          <option *ngFor="let agent of allmembers" [ngValue]="agent"> {{agent.firstName?.toLowerCase()}} {{agent.lastName?.toLowerCase()}} </option>  
                                       </select>   
                                     </div>
 

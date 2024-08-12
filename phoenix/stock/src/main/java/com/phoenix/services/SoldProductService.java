@@ -183,19 +183,17 @@ public class SoldProductService  implements IsoldProductService{
     public Page<SoldProductDto> getSoldProductsByusername(Pageable pageable, String username) {
         List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
         List<SoldProduct> soldproducts = new ArrayList<>();
+        List<String> encounteredSerialNumbers = new ArrayList<>();
         for (AgentProd agentProd: agentProds){
-            Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findByAgentWhoSold(agentProd);
+            Optional<SoldProduct> optionalSoldProduct1 = iSoldProductRepository.findByAgentWhoSold(agentProd);
+            Optional<SoldProduct> optionalSoldProduct2 = iSoldProductRepository.findByManagerSoldProd(agentProd);
+            Optional<SoldProduct> optionalSoldProduct = optionalSoldProduct1.or(() -> optionalSoldProduct2);
             if(optionalSoldProduct.isPresent()){
                 SoldProduct soldproduct = optionalSoldProduct.get();
-                soldproducts.add(soldproduct);
-            }
-        }
-        if(soldproducts.isEmpty()){
-            for (AgentProd agentProd: agentProds){
-                Optional<SoldProduct> optionalSoldProduct = iSoldProductRepository.findByManagerSoldProd(agentProd);
-                if(optionalSoldProduct.isPresent()){
-                    SoldProduct soldproduct = optionalSoldProduct.get();
+                String serialNumber = soldproduct.getSerialNumber();
+                if (!encounteredSerialNumbers.contains(serialNumber)) {
                     soldproducts.add(soldproduct);
+                    encounteredSerialNumbers.add(serialNumber);
                 }
             }
         }
