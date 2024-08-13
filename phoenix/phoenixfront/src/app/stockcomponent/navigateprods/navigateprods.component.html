@@ -87,7 +87,7 @@
                       <td style="word-wrap: break-word; white-space: normal;" *ngIf="!prod.simNumber">
                       </td>
                       <td style="word-wrap: break-word; white-space: normal;">
-                        {{prod.stock?.stockReference + " - " + prod.stock?.notes}}
+                        {{ prod.stock?.stockReference + " - " + (prod.stock?.notes ? prod.stock?.notes : "none") }}
                       </td>
                       <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
                           <span style="font-size: 20px;" [style.color]="prod.checkedExistence ? 'green' : 'red'">
@@ -95,17 +95,19 @@
                             </span></td>
 
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && prod.managerProd.firstname && prod.managerProd.lastname"><span [innerHTML]="highlightMatch(prod.managerProd.firstname.toUpperCase() + ' ' +prod.managerProd.lastname.toUpperCase())"></span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && (!prod.managerProd.firstname || !prod.managerProd.lastname) && prod.managerProd.username"><span [innerHTML]="highlightMatch(prod.managerProd.username.toUpperCase())"></span></td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.managerProd"></td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && prod.agentProd.firstname && prod.agentProd.lastname"><span [innerHTML]="highlightMatch(prod.agentProd.firstname.toUpperCase() + ' ' +  prod.agentProd.lastname.toUpperCase())"> </span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && (!prod.agentProd.firstname || !prod.agentProd.lastname) && prod.agentProd.username"><span [innerHTML]="highlightMatch(prod.agentProd.username.toUpperCase())"></span></td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentProd"></td>
-
                       <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
                             <span style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;"
                                   [innerHTML]="highlightMatch(prod.boxNumber ? prod.boxNumber : '')"></span>
-
                       </td>
-                      <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>
-                    </tr>
+                      <td style="word-wrap: break-word; white-space: normal;">
+                        {{ prod.productType ? prod.productType : 'N.D' }}
+                      </td>
+                </tr>
                     <tr>
                       <td colspan="10" style="margin-right: 5px;">
                         <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>
@@ -168,7 +170,7 @@
                         <span [innerHTML]="highlightMatch(prod.simNumber)"></span>
                       </td>
                       <td style="word-wrap: break-word; white-space: normal;">
-                        {{prod.stock?.stockReference + " - " + prod.stock?.notes}}
+                        {{ prod.stock?.stockReference + " - " + (prod.stock?.notes ? prod.stock?.notes : "none") }}
                       </td>
 
                       <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
@@ -177,8 +179,18 @@
                             </span></td>
                       <td style="word-wrap: break-word; white-space: normal;">{{prod.soldDate}}</td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerSoldProd && prod.managerSoldProd.firstname && prod.managerSoldProd.lastname"><span [innerHTML]="highlightMatch(prod.managerSoldProd.firstname.toUpperCase() + ' ' +  prod.managerSoldProd.lastname.toUpperCase())"></span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerSoldProd && (!prod.managerSoldProd.firstname || !prod.managerSoldProd.lastname) && prod.managerSoldProd.username"><span [innerHTML]="highlightMatch(prod.managerSoldProd.username.toUpperCase())"></span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.managerSoldProd"></td>
+
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentAssociatedProd && prod.agentAssociatedProd.firstname && prod.agentAssociatedProd.lastname"><span [innerHTML]="highlightMatch(prod.agentAssociatedProd.firstname.toUpperCase() +' ' +prod.agentAssociatedProd.lastname.toUpperCase())"></span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentAssociatedProd && (!prod.agentAssociatedProd.firstname || !prod.agentAssociatedProd.lastname) && prod.agentAssociatedProd.username"><span [innerHTML]="highlightMatch(prod.agentAssociatedProd.username.toUpperCase())"></span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentAssociatedProd"></td>
+                    
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentWhoSold && prod.agentWhoSold.firstname && prod.agentWhoSold.lastname"><span [innerHTML]="highlightMatch(prod.agentWhoSold.firstname.toUpperCase() + ' '+ prod.agentWhoSold.lastname.toUpperCase())"></span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentWhoSold && (!prod.agentWhoSold.firstname || !prod.agentWhoSold.lastname) && prod.agentWhoSold.username"><span [innerHTML]="highlightMatch(prod.agentWhoSold.username.toUpperCase())"></span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentWhoSold"></td>
+
+                      
                       <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>
                     </tr>
                     <tr>
@@ -244,21 +256,27 @@
                         <span [innerHTML]="highlightMatch(prod.simNumber)"></span>
                       </td>
                       <td style="word-wrap: break-word; white-space: normal;">
-                        {{prod.stock?.stockReference + " - " + prod.stock?.notes}}
+                        {{ prod.productType ? prod.productType : 'N.D' }}
                       </td>
-                      <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
+                  <td style="word-wrap: break-word; white-space: normal; max-width: 50px; align-items: center;">
                           <span style="font-size: 20px;" [style.color]="prod.returnedstatus ? 'green' : 'red'">
                             {{prod.returnedstatus ? '&#10003;' : '&#10008;'}}
                             </span></td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && prod.managerProd.firstname && prod.managerProd.lastname"><span [innerHTML]="highlightMatch(prod.managerProd.firstname.toUpperCase() + ' ' +prod.managerProd.lastname.toUpperCase())"></span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && (!prod.managerProd.firstname || !prod.managerProd.lastname) && prod.managerProd.username"><span [innerHTML]="highlightMatch(prod.managerProd.username.toUpperCase())"></span></td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.managerProd"></td>
+
+
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && prod.agentProd.firstname && prod.agentProd.lastname"><span [innerHTML]="highlightMatch(prod.agentProd.firstname.toUpperCase() + ' ' +  prod.agentProd.lastname.toUpperCase())"> </span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && (!prod.agentProd.firstname || !prod.agentProd.lastname) && prod.agentProd.username"><span [innerHTML]="highlightMatch(prod.agentProd.username.toUpperCase())"></span></td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentProd"></td>
 
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentwhoSoldProd && prod.agentwhoSoldProd.firstname && prod.agentwhoSoldProd.lastname"><span [innerHTML]="highlightMatch(prod.agentwhoSoldProd.firstname.toUpperCase() + ' ' +  prod.agentwhoSoldProd.lastname.toUpperCase())"> </span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentwhoSoldProd && (!prod.agentwhoSoldProd.firstname || !prod.agentwhoSoldProd.lastname) && prod.agentwhoSoldProd.username"><span [innerHTML]="highlightMatch(prod.agentwhoSoldProd.username.toUpperCase())"></span></td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentwhoSoldProd"></td>
 
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentReturnedProd && prod.agentReturnedProd.firstname && prod.agentReturnedProd.lastname"><span [innerHTML]="highlightMatch(prod.agentReturnedProd.firstname.toUpperCase() + ' ' +  prod.agentReturnedProd.lastname.toUpperCase())"> </span></td>
+                      <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentReturnedProd && (!prod.agentReturnedProd.firstname || !prod.agentReturnedProd.lastname) && prod.agentReturnedProd.username"><span [innerHTML]="highlightMatch(prod.agentReturnedProd.username.toUpperCase())"></span></td>
                       <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentReturnedProd"></td>
 
                       <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
@@ -266,8 +284,10 @@
                               {{ prod.boxNumber ? prod.boxNumber : '' }}
                             </span>
                       </td>
-                      <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>
-                    </tr>
+                      <td style="word-wrap: break-word; white-space: normal;">
+                        {{ prod.productType ? prod.productType : 'N.D' }}
+                      </td>
+                </tr>
                     <tr>
                       <td colspan="13" style="margin-right: 5px;">
                         <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>
@@ -281,31 +301,6 @@
               </div>
             </div>
           </ng-container>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         </div>
 
         <ng-container *ngIf="enable === true && productdto?.comments != undefined && productdto?.comments != null" style="width: 1000px; height: 1000px;">

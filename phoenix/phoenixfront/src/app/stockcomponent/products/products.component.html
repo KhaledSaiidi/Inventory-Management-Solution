@@ -143,6 +143,7 @@
                             <td></td>
                           </ng-container>                   
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && prod.managerProd.firstname && prod.managerProd.lastname"><span [innerHTML]="highlightMatch(prod.managerProd.firstname.toUpperCase() + ' ' +prod.managerProd.lastname.toUpperCase())"></span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && (!prod.managerProd.firstname || !prod.managerProd.lastname) && prod.managerProd.username"><span [innerHTML]="highlightMatch(prod.managerProd.username.toUpperCase())"></span></td>
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.managerProd"></td>  
 
                         <ng-container *ngIf="prod.agentProd">
@@ -157,6 +158,7 @@
                       </ng-container>                   
                                   
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && prod.agentProd.firstname && prod.agentProd.lastname"><span [innerHTML]="highlightMatch(prod.agentProd.firstname.toUpperCase() + ' ' +  prod.agentProd.lastname.toUpperCase())"> </span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && (!prod.agentProd.firstname || !prod.agentProd.lastname) && prod.agentProd.username"><span [innerHTML]="highlightMatch(prod.agentProd.username.toUpperCase())"></span></td>
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentProd"></td>  
 
                         <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
@@ -177,8 +179,10 @@
                               (keydown.shift.TAB)="handleShiftTabKey($event)"/>
                             </ng-container>                        
                           </td>  
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>
-                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a (click)="navigateToUpdateProduct(stockreference, prod.serialNumber)"><i class="fa fas fa-edit"></i></a></td>
+                          <td style="word-wrap: break-word; white-space: normal;">
+                            {{ prod.productType ? prod.productType : 'N.D' }}
+                          </td>
+                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a (click)="navigateToUpdateProduct(stockreference, prod.serialNumber)"><i class="fa fas fa-edit"></i></a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i (click)="confirmProductDeletion(prod)" class="fa fas fa-trash"></i></a></td>
                        </tr>
                        <tr>
@@ -246,12 +250,23 @@
                           <span style="font-size: 20px;" [style.color]="prod.checkedSell ? 'green' : 'red'">
                             {{prod.checkedSell ? '&#10003;' : '&#10008;'}}
                             </span></td> 
-                            <td style="word-wrap: break-word; white-space: normal;">{{prod.soldDate}}</td>
+                        <td style="word-wrap: break-word; white-space: normal;">{{prod.soldDate}}</td>
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerSoldProd && prod.managerSoldProd.firstname && prod.managerSoldProd.lastname"><span [innerHTML]="highlightMatch(prod.managerSoldProd.firstname.toUpperCase() + ' ' +  prod.managerSoldProd.lastname.toUpperCase())"></span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerSoldProd && (!prod.managerSoldProd.firstname || !prod.managerSoldProd.lastname) && prod.managerSoldProd.username"><span [innerHTML]="highlightMatch(prod.managerSoldProd.username.toUpperCase())"></span></td>
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.managerSoldProd"></td>  
+
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentAssociatedProd && prod.agentAssociatedProd.firstname && prod.agentAssociatedProd.lastname"><span [innerHTML]="highlightMatch(prod.agentAssociatedProd.firstname.toUpperCase() +' ' +prod.agentAssociatedProd.lastname.toUpperCase())"></span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentAssociatedProd && (!prod.agentAssociatedProd.firstname || !prod.agentAssociatedProd.lastname) && prod.agentAssociatedProd.username"><span [innerHTML]="highlightMatch(prod.agentAssociatedProd.username.toUpperCase())"></span></td>
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentAssociatedProd"></td>  
+
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentWhoSold && prod.agentWhoSold.firstname && prod.agentWhoSold.lastname"><span [innerHTML]="highlightMatch(prod.agentWhoSold.firstname.toUpperCase() + ' '+ prod.agentWhoSold.lastname.toUpperCase())"></span></td>  
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>
-                        <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: center;"><a><i (click)="confirmSoldProductDeletion(prod)" class="fa fas fa-trash"></i></a></td>
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentWhoSold && (!prod.agentWhoSold.firstname || !prod.agentWhoSold.lastname) && prod.agentWhoSold.username"><span [innerHTML]="highlightMatch(prod.agentWhoSold.username.toUpperCase())"></span></td>
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentWhoSold"></td>  
+
+                        <td style="word-wrap: break-word; white-space: normal;">
+                          {{ prod.productType ? prod.productType : 'N.D' }}
+                        </td>
+                      <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: center;"><a><i (click)="confirmSoldProductDeletion(prod)" class="fa fas fa-trash"></i></a></td>
                        </tr>
                        <tr>
                         <td colspan="12" style="margin-right: 5px;">
@@ -266,25 +281,6 @@
                  </div>
               </div>   
             </ng-container>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             <ng-container *ngIf="selectedTab === 2">
               <div class="card-header pb-0" style="display: flex; justify-content: space-between; align-items: center;">
@@ -312,7 +308,7 @@
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Returned</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 60px;">Box</th>
                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
-                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="2" style="text-align: center;">Actions</th>
+                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" colspan="3" style="text-align: center;">Actions</th>
                        </tr>
                      </thead>
                      <tbody>
@@ -358,6 +354,7 @@
                             <td></td>
                           </ng-container>                   
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && prod.managerProd.firstname && prod.managerProd.lastname"><span [innerHTML]="highlightMatch(prod.managerProd.firstname.toUpperCase() + ' ' +prod.managerProd.lastname.toUpperCase())"></span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.managerProd && (!prod.managerProd.firstname || !prod.managerProd.lastname) && prod.managerProd.username"><span [innerHTML]="highlightMatch(prod.managerProd.username.toUpperCase())"></span></td>
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.managerProd"></td>  
 
                         <ng-container *ngIf="prod.agentProd">
@@ -372,12 +369,15 @@
                       </ng-container>                   
                                   
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && prod.agentProd.firstname && prod.agentProd.lastname"><span [innerHTML]="highlightMatch(prod.agentProd.firstname.toUpperCase() + ' ' +  prod.agentProd.lastname.toUpperCase())"> </span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentProd && (!prod.agentProd.firstname || !prod.agentProd.lastname) && prod.agentProd.username"><span [innerHTML]="highlightMatch(prod.agentProd.username.toUpperCase())"></span></td>
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentProd"></td>  
 
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentwhoSoldProd && prod.agentwhoSoldProd.firstname && prod.agentwhoSoldProd.lastname"><span [innerHTML]="highlightMatch(prod.agentwhoSoldProd.firstname.toUpperCase() + ' ' +  prod.agentwhoSoldProd.lastname.toUpperCase())"> </span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentwhoSoldProd && (!prod.agentwhoSoldProd.firstname || !prod.agentwhoSoldProd.lastname) && prod.agentwhoSoldProd.username"><span [innerHTML]="highlightMatch(prod.agentwhoSoldProd.username.toUpperCase())"></span></td>
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentwhoSoldProd"></td>  
 
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentReturnedProd && prod.agentReturnedProd.firstname && prod.agentReturnedProd.lastname"><span [innerHTML]="highlightMatch(prod.agentReturnedProd.firstname.toUpperCase() + ' ' +  prod.agentReturnedProd.lastname.toUpperCase())"> </span></td>  
+                        <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="prod.agentReturnedProd && (!prod.agentReturnedProd.firstname || !prod.agentReturnedProd.lastname) && prod.agentReturnedProd.username"><span [innerHTML]="highlightMatch(prod.agentReturnedProd.username.toUpperCase())"></span></td>
                         <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;" *ngIf="!prod.agentReturnedProd"></td>  
 
                         <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
@@ -397,10 +397,16 @@
                               (keydown.shift.TAB)="handleShiftTabKey($event)"/>
                             </ng-container>                        
                           </td>  
-                        <td style="word-wrap: break-word; white-space: normal;">{{prod.productType}}</td>
+                          <td style="word-wrap: break-word; white-space: normal;">
+                            {{ prod.productType ? prod.productType : 'N.D' }}
+                          </td>
                          <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a (click)="navigateToUpdateProduct(stockreference, prod.serialNumber)"><i class="fa fas fa-edit"></i></a></td>
                         <td style="word-wrap: break-word; white-space: normal; cursor: pointer; text-align: right;"><a><i (click)="confirmReturnProductDeletion(prod)" class="fa fas fa-trash"></i></a></td>
-                       </tr>
+                        <ng-container *ngIf="isManager">
+                          <td style="word-wrap: break-word; white-space: normal;  text-align: right;"><a (click)="checkReturn(prod.serialNumber)"><i style="cursor: pointer;" class="fa fas fa-check-circle return-icon"></i></a></td>
+                        </ng-container>
+           
+                      </tr>
                        <tr>
                         <td colspan="13" style="margin-right: 5px;">
                           <app-custom-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-custom-pagination>                    

@@ -675,5 +675,24 @@ onPageChange(newPage: number): void {
    this.router.navigate(['/checkhistory'], { queryParams: { id: ref } });     
   }
 
+  checkReturn(serialNumber: string | undefined){
+    if(serialNumber){
+      this.stockservice.checkReturn(serialNumber)
+      .subscribe(
+        (response) => {
+          console.log("checked");
+          try {
+            this.getReturnedProductsByStockReference(this.stockreference, 0, this.searchTerm);
+            this.cdRef.detectChanges();
+          } catch (error) {
+            this.returnProds = [];
+          }
+        },
+        (error) => {
+         console.error('Error checking:', error);
+        }
+      );
+      }
+    }
 }
     
