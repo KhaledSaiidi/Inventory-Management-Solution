@@ -5,6 +5,7 @@ import com.phoenix.archivedmodeldto.ArchivedProductsDTO;
 import com.phoenix.archivedmodeldto.ArchivedSoldProductsDTO;
 import com.phoenix.archivedmodeldto.ArchivedStockDTO;
 import com.phoenix.dto.*;
+import com.phoenix.kafka.StockProducer;
 import com.phoenix.model.UncheckHistory;
 import com.phoenix.services.IAgentProdService;
 import com.phoenix.services.IProductService;
@@ -42,6 +43,8 @@ public class Controller {
     @Autowired
     IArchivedService archiveStock;
 
+    @Autowired
+    private StockProducer stockProducer;
 
     @PostMapping("/addStock/{campaignReference}")
     public ResponseEntity<StockDto> addStock(@PathVariable("campaignReference") String campaignReference, @RequestBody StockDto stockdto) {
@@ -501,6 +504,16 @@ public class Controller {
         Pageable pageable = PageRequest.of(page, size);
         Page<SoldProductDto> soldProductPage = isoldProductService.getSoldProductsPaginated(pageable, searchTerm);
         return ResponseEntity.ok(soldProductPage);
+    }
+    @GetMapping("/getAllProductsForAlert")
+    public List<ReclamationDto> checkProductsDueDate() {
+        List<ReclamationDto> reclamationDtos = iProductService.getProductsForAlert();
+        if(!reclamationDtos.isEmpty()){
+            StockEvent stockEvent = new StockEvent();
+            stockEvent.setReclamationDtos(reclamationDtos);
+            stockProducer.sendMessage(stockEvent);
+        }
+        return reclamationDtos;
     }
 
 }

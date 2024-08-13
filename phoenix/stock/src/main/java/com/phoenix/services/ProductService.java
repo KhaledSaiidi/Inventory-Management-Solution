@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
@@ -606,8 +607,8 @@ public class ProductService implements IProductService{
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
 
-
     @Override
+    @Transactional
     public List<ReclamationDto>  getProductsForAlert() {
         LocalDate currentDate = LocalDate.now();
         LocalDate sevenDaysLater = currentDate.plusDays(7);
@@ -615,17 +616,13 @@ public class ProductService implements IProductService{
         List<Product> productsByStock = iProductRepository.findByStockIn(stocksForAlert);
         List<AgentProd> alertsByAgent = iAgentProdRepository.findAgentsDueWithinSevenDays(currentDate, sevenDaysLater);
         List<Userdto> managers = getAllmanagers();
-
         Set<Product> products = new HashSet<>();
         alertsByAgent.forEach(agent -> products.addAll(agent.getProductsAssociated()));
         List<Product> filteredProductsByStock = productsByStock.stream()
                 .filter(stockProduct -> products.stream().noneMatch(product -> Objects.equals(product.getSerialNumber(), stockProduct.getSerialNumber())))
                 .toList();
         products.addAll(filteredProductsByStock);
-
-
-
-        return products.parallelStream()
+        return products.stream()
                 .map(product -> {
                     String serialNumbersExpired = product.getSerialNumber();
                     Date dueDate;
@@ -635,30 +632,40 @@ public class ProductService implements IProductService{
                         dueDate = Date.from(product.getAgentProd().getDuesoldDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
                         agentAsignedToo = product.getAgentProd().getFirstname() + " " + product.getAgentProd().getLastname();
                         agentUsername = product.getAgentProd().getUsername();
-                    } else {
+                    } else if(product.getStock() != null && product.getStock().getDueDate() != null){
                         dueDate = Date.from(product.getStock().getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    } else {
+                        return null;
                     }
-                    System.out.println("agentUsername in getProductsForAlert" + agentUsername);
                     return createReclamationDto(serialNumbersExpired, dueDate, managers, agentAsignedToo, agentUsername);
                 })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
 
     private List<Userdto> getAllmanagers() {
         String token = tokenFetcher.getToken();
-        List<Userdto> userdtos = webClientBuilder.build().get()
-                .uri("http://keycloakuser-service/people/allusers")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .retrieve()
-                .bodyToFlux(Userdto.class)
-                .collectList()
-                .block();
-        assert userdtos != null;
-        List<Userdto> managers = userdtos.stream()
-                .filter(userdto -> userdto.getRealmRoles().contains("MANAGER") || userdto.getRealmRoles().contains("IMANAGER"))
+        List<Userdto> userDtos = null;
+        try {
+            userDtos = webClientBuilder.build().get()
+                    .uri("http://keycloakuser-service/people/allusers")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .retrieve()
+                    .bodyToFlux(Userdto.class)
+                    .timeout(Duration.ofSeconds(10))
+                    .collectList()
+                    .block();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (userDtos == null || userDtos.isEmpty()) {
+            return null;
+        }
+        return userDtos.stream()
+                .filter(userdto -> userdto.getRealmRoles().contains("MANAGER") ||
+                        userdto.getRealmRoles().contains("IMANAGER"))
                 .collect(Collectors.toList());
-        return managers;
     }
     private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers, String agentAsignedToo, String agentUsername) {
         List<String> usernames = new ArrayList<>(managers.stream()
@@ -666,15 +673,16 @@ public class ProductService implements IProductService{
                 .toList());
         if (!agentUsername.isEmpty()) {
             usernames.add(agentUsername.toLowerCase());
-            System.out.println("agentUsername in createReclamationDto" + agentUsername);
         }
-        System.out.println("usernames in createReclamationDto" + usernames);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
         String formattedDueDate = sdf.format(dueDate);
         Date now = new Date();
         long differenceMillis = dueDate.getTime() - now.getTime();
         long differenceDays = (differenceMillis / (1000 * 60 * 60 * 24)) + 1;
+        if (differenceDays < 0) {
+            differenceDays = Math.abs(differenceDays);
+        }
         ReclamationDto reclamationDto = new ReclamationDto();
         reclamationDto.setSenderReference("UniStock Keeper");
         if(!agentAsignedToo.isEmpty()) {
@@ -695,12 +703,12 @@ public class ProductService implements IProductService{
                     " day(s). " +
                     " Please check the situation, especially as the product is not assigned to any agent. The product will expire on " +
                     formattedDueDate);
-
         }
         reclamationDto.setReceiverReference(usernames);
         reclamationDto.setReclamationType(ReclamType.stockExpirationReminder);
         return reclamationDto;
     }
+
 
     @Override
     public Page<ProductDto> getProductsReturnedPaginatedByusername(Pageable pageable, String username) {
