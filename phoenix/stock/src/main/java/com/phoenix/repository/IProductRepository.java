@@ -42,4 +42,13 @@ public interface IProductRepository extends JpaRepository<Product, String> {
             "AND MONTH(p.checkin) = :month")
     int countReturnedProductsByMonth(@Param("month") int month);
 
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN FETCH p.managerProd m " +
+            "LEFT JOIN FETCH p.agentProd a " +
+            "LEFT JOIN FETCH p.agentReturnedProd r " +
+            "WHERE LOWER(m.username) = LOWER(:username) " +
+            "OR LOWER(a.username) = LOWER(:username) " +
+            "OR LOWER(r.username) = LOWER(:username)")
+    List<Product> findProductsByUsername(@Param("username") String username);
+
 }

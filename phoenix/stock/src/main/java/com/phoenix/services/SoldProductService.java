@@ -181,60 +181,53 @@ public class SoldProductService  implements IsoldProductService{
 
     @Override
     public Page<SoldProductDto> getSoldProductsByusername(Pageable pageable, String username) {
-        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
-        List<SoldProduct> soldproducts = new ArrayList<>();
-        List<String> encounteredSerialNumbers = new ArrayList<>();
-        for (AgentProd agentProd: agentProds){
-            Optional<SoldProduct> optionalSoldProduct1 = iSoldProductRepository.findByAgentWhoSold(agentProd);
-            Optional<SoldProduct> optionalSoldProduct2 = iSoldProductRepository.findByManagerSoldProd(agentProd);
-            Optional<SoldProduct> optionalSoldProduct = optionalSoldProduct1.or(() -> optionalSoldProduct2);
-            if(optionalSoldProduct.isPresent()){
-                SoldProduct soldproduct = optionalSoldProduct.get();
-                String serialNumber = soldproduct.getSerialNumber();
-                if (!encounteredSerialNumbers.contains(serialNumber)) {
-                    soldproducts.add(soldproduct);
-                    encounteredSerialNumbers.add(serialNumber);
-                }
-            }
-        }
-        List<SoldProductDto> soldproductDtos = iSoldProductDtoMapper.toDtoList(soldproducts);
-        for (int i = 0; i < soldproducts.size(); i++) {
-            SoldProduct soldproduct = soldproducts.get(i);
-            SoldProductDto soldProductDto = soldproductDtos.get(i);
-            if(soldproduct.getStock() != null){
-                StockDto stockDto = iStockMapper.toDto(soldproduct.getStock());
-                Campaigndto campaigndto = webClientBuilder.build().get()
-                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", soldproduct.getStock().getCampaignRef())
-                        .retrieve()
-                        .bodyToMono(Campaigndto.class)
-                        .block();
-                stockDto.setCampaigndto(campaigndto);
-                soldProductDto.setStock(stockDto);
-            }
-            if(soldproduct.getAgentWhoSold() != null){
-                AgentProdDto agentProdDto = iAgentProdMapper.toDto(soldproduct.getAgentWhoSold());
-                soldProductDto.setAgentWhoSold(agentProdDto);
-            }
-            if(soldproduct.getManagerSoldProd() != null){
-                AgentProdDto managerProdDto = iAgentProdMapper.toDto(soldproduct.getManagerSoldProd());
-                soldProductDto.setManagerSoldProd(managerProdDto);
-            }
-            if(soldproduct.getAgentAssociatedProd() != null){
-                AgentProdDto agentAssociatedProd = iAgentProdMapper.toDto(soldproduct.getAgentAssociatedProd());
-                soldProductDto.setAgentAssociatedProd(agentAssociatedProd);
-            }
-        }
+        List<SoldProduct> duplicatedSoldProducts = iSoldProductRepository.findSoldProductsByUsername(username);
+        Set<SoldProduct> soldProducts = new HashSet<>(duplicatedSoldProducts);
+        List<SoldProductDto> soldProductDtos = soldProducts.stream()
+                .map(soldProduct -> {
+                    SoldProductDto soldProductDto = iSoldProductDtoMapper.toDto(soldProduct);
+
+                    // Map Stock to DTO with campaign info
+                    if (soldProduct.getStock() != null) {
+                        StockDto stockDto = iStockMapper.toDto(soldProduct.getStock());
+                        Campaigndto campaigndto = webClientBuilder.build().get()
+                                .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", soldProduct.getStock().getCampaignRef())
+                                .retrieve()
+                                .bodyToMono(Campaigndto.class)
+                                .block();  // Consider async or caching
+                        stockDto.setCampaigndto(campaigndto);
+                        soldProductDto.setStock(stockDto);
+                    }
+
+                    // Map AgentWhoSold, ManagerSoldProd, and AgentAssociatedProd to DTOs
+                    if (soldProduct.getAgentWhoSold() != null) {
+                        soldProductDto.setAgentWhoSold(iAgentProdMapper.toDto(soldProduct.getAgentWhoSold()));
+                    }
+                    if (soldProduct.getManagerSoldProd() != null) {
+                        soldProductDto.setManagerSoldProd(iAgentProdMapper.toDto(soldProduct.getManagerSoldProd()));
+                    }
+                    if (soldProduct.getAgentAssociatedProd() != null) {
+                        soldProductDto.setAgentAssociatedProd(iAgentProdMapper.toDto(soldProduct.getAgentAssociatedProd()));
+                    }
+
+                    return soldProductDto;
+                })
+                .collect(Collectors.toList());
+
+        // Implement pagination in memory
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
+
         List<SoldProductDto> pageContent;
-        if (soldproductDtos.size() < startItem) {
+        if (soldProductDtos.size() < startItem) {
             pageContent = Collections.emptyList();
         } else {
-            int toIndex = Math.min(startItem + pageSize, soldproductDtos.size());
-            pageContent = soldproductDtos.subList(startItem, toIndex);
+            int toIndex = Math.min(startItem + pageSize, soldProductDtos.size());
+            pageContent = soldProductDtos.subList(startItem, toIndex);
         }
-        return new PageImpl<>(pageContent, pageable, soldproductDtos.size());
+
+        return new PageImpl<>(pageContent, pageable, soldProductDtos.size());
     }
 
 

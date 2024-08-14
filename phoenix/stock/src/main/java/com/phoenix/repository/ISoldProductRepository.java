@@ -38,6 +38,12 @@ public interface ISoldProductRepository extends JpaRepository<SoldProduct, Strin
 
     Optional<SoldProduct> findByAgentAssociatedProd(AgentProd agentProd);
 
+    @Query("SELECT sp FROM SoldProduct sp " +
+            "LEFT JOIN FETCH sp.managerSoldProd m " +
+            "LEFT JOIN FETCH sp.agentWhoSold a " +
+            "WHERE LOWER(m.username) = LOWER(:username) " +
+            "OR LOWER(a.username) = LOWER(:username) ")
+    List<SoldProduct> findSoldProductsByUsername(@Param("username") String username);
 
 }
 

@@ -417,53 +417,40 @@ public class ProductService implements IProductService{
 
     @Override
     public Page<ProductDto> getProductsPaginatedByusername(Pageable pageable, String username) {
-        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
-        List<Product> products = new ArrayList<>();
-        List<String> encounteredSerialNumbers = new ArrayList<>();
-        for (AgentProd agentProd: agentProds){
-            Optional<Product> optionalProduct1 = iProductRepository.findByAgentProd(agentProd);
-            Optional<Product> optionalProduct2 = iProductRepository.findByManagerProd(agentProd);
-            Optional<Product> optionalProduct = optionalProduct1.or(() -> optionalProduct2);
-
-            if(optionalProduct.isPresent()){
-                Product product = optionalProduct.get();
-                String serialNumber = product.getSerialNumber();
-                if (!encounteredSerialNumbers.contains(serialNumber)) {
-                    products.add(product);
-                    encounteredSerialNumbers.add(serialNumber);
-                }
-            }
-        }
-        List<ProductDto> productDtos = products.stream()
+        List<Product> duplicatedProducts = iProductRepository.findProductsByUsername(username);
+        Set<Product> products = duplicatedProducts.stream()
                 .filter(product -> !product.isReturned())
-                .map(iProductMapper::toDto)
+                .collect(Collectors.toSet());
+
+        List<ProductDto> productDtos = products.stream()
+                .map(product -> {
+                    ProductDto productDto = iProductMapper.toDto(product);
+
+                    // Map Stock to DTO with campaign info
+                    if (product.getStock() != null) {
+                        StockDto stockDto = iStockMapper.toDto(product.getStock());
+                        Campaigndto campaigndto = webClientBuilder.build().get()
+                                .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
+                                .retrieve()
+                                .bodyToMono(Campaigndto.class)
+                                .block();  // Consider async or caching
+                        stockDto.setCampaigndto(campaigndto);
+                        productDto.setStock(stockDto);
+                    }
+
+                    // Map AgentProd and ManagerProd to DTOs
+                    if (product.getAgentProd() != null) {
+                        productDto.setAgentProd(iAgentProdMapper.toDto(product.getAgentProd()));
+                    }
+                    if (product.getManagerProd() != null) {
+                        productDto.setManagerProd(iAgentProdMapper.toDto(product.getManagerProd()));
+                    }
+
+                    return productDto;
+                })
                 .collect(Collectors.toList());
 
-        for (ProductDto productDto : productDtos) {
-            Optional<Product> optionalProduct = iProductRepository.findById(productDto.getSerialNumber());
-            if (optionalProduct.isEmpty()) {
-                continue;
-            }
-            Product product = optionalProduct.get();
-            if (product.getStock() != null) {
-                StockDto stockDto = iStockMapper.toDto(product.getStock());
-                Campaigndto campaigndto = webClientBuilder.build().get()
-                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
-                        .retrieve()
-                        .bodyToMono(Campaigndto.class)
-                        .block();
-                stockDto.setCampaigndto(campaigndto);
-                productDto.setStock(stockDto);
-            }
-            if (product.getAgentProd() != null) {
-                AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
-                productDto.setAgentProd(agentProdDto);
-            }
-            if (product.getManagerProd() != null) {
-                AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
-                productDto.setManagerProd(managerProdDto);
-            }
-        }
+        // Sort the DTOs by BoxNumber
         productDtos.sort(Comparator.comparingInt(dto -> {
             try {
                 return Integer.parseInt(dto.getBoxNumber());
@@ -472,9 +459,11 @@ public class ProductService implements IProductService{
             }
         }));
 
+        // Implement pagination in memory
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
+
         List<ProductDto> pageContent;
         if (productDtos.size() < startItem) {
             pageContent = Collections.emptyList();
@@ -482,6 +471,7 @@ public class ProductService implements IProductService{
             int toIndex = Math.min(startItem + pageSize, productDtos.size());
             pageContent = productDtos.subList(startItem, toIndex);
         }
+
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
 
@@ -607,6 +597,7 @@ public class ProductService implements IProductService{
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
 
+
     @Override
     @Transactional
     public List<ReclamationDto>  getProductsForAlert() {
@@ -709,62 +700,48 @@ public class ProductService implements IProductService{
         return reclamationDto;
     }
 
-
     @Override
     public Page<ProductDto> getProductsReturnedPaginatedByusername(Pageable pageable, String username) {
-        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
-        List<Product> products = new ArrayList<>();
-        List<String> encounteredSerialNumbers = new ArrayList<>();
-        for (AgentProd agentProd: agentProds){
-            Optional<Product> optionalProduct1 = iProductRepository.findByAgentReturnedProd(agentProd);
-            Optional<Product> optionalProduct2 = iProductRepository.findByManagerProd(agentProd);
-            Optional<Product> optionalProduct = optionalProduct1.or(() -> optionalProduct2);
-            if(optionalProduct.isPresent()){
-                Product product = optionalProduct.get();
-                String serialNumber = product.getSerialNumber();
-                if (!encounteredSerialNumbers.contains(serialNumber)) {
-                    products.add(product);
-                    encounteredSerialNumbers.add(serialNumber);
-                }
-            }
-        }
-        List<ProductDto> productDtos = products.stream()
+        List<Product> duplicatedProducts = iProductRepository.findProductsByUsername(username);
+        Set<Product> returnedProducts = duplicatedProducts.stream()
                 .filter(Product::isReturned)
-                .map(iProductMapper::toDto)
+                .collect(Collectors.toSet());
+
+        List<ProductDto> productDtos = returnedProducts.stream()
+                .map(product -> {
+                    ProductDto productDto = iProductMapper.toDto(product);
+
+                    // Map Stock to DTO with campaign info
+                    if (product.getStock() != null) {
+                        StockDto stockDto = iStockMapper.toDto(product.getStock());
+                        Campaigndto campaigndto = webClientBuilder.build().get()
+                                .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
+                                .retrieve()
+                                .bodyToMono(Campaigndto.class)
+                                .block();  // Consider async or caching
+                        stockDto.setCampaigndto(campaigndto);
+                        productDto.setStock(stockDto);
+                    }
+
+                    // Map AgentProd, AgentReturnedProd, AgentWhoSoldProd, and ManagerProd to DTOs
+                    if (product.getAgentProd() != null) {
+                        productDto.setAgentProd(iAgentProdMapper.toDto(product.getAgentProd()));
+                    }
+                    if (product.getAgentReturnedProd() != null) {
+                        productDto.setAgentReturnedProd(iAgentProdMapper.toDto(product.getAgentReturnedProd()));
+                    }
+                    if (product.getAgentwhoSoldProd() != null) {
+                        productDto.setAgentwhoSoldProd(iAgentProdMapper.toDto(product.getAgentwhoSoldProd()));
+                    }
+                    if (product.getManagerProd() != null) {
+                        productDto.setManagerProd(iAgentProdMapper.toDto(product.getManagerProd()));
+                    }
+
+                    return productDto;
+                })
                 .collect(Collectors.toList());
-        for (ProductDto productDto : productDtos) {
-            Optional<Product> optionalProduct = iProductRepository.findById(productDto.getSerialNumber());
-            if (optionalProduct.isEmpty()) {
-                continue;
-            }
-            Product product = optionalProduct.get();
-            if (product.getStock() != null) {
-                StockDto stockDto = iStockMapper.toDto(product.getStock());
-                Campaigndto campaigndto = webClientBuilder.build().get()
-                        .uri("http://keycloakuser-service/people/getCampaignByReference/{campaignReference}", product.getStock().getCampaignRef())
-                        .retrieve()
-                        .bodyToMono(Campaigndto.class)
-                        .block();
-                stockDto.setCampaigndto(campaigndto);
-                productDto.setStock(stockDto);
-            }
-            if (product.getAgentProd() != null) {
-                AgentProdDto agentProdDto = iAgentProdMapper.toDto(product.getAgentProd());
-                productDto.setAgentProd(agentProdDto);
-            }
-            if (product.getAgentReturnedProd() != null) {
-                AgentProdDto agentReturnedProd = iAgentProdMapper.toDto(product.getAgentReturnedProd());
-                productDto.setAgentReturnedProd(agentReturnedProd);
-            }
-            if (product.getAgentwhoSoldProd() != null) {
-                AgentProdDto agentwhoSoldProd = iAgentProdMapper.toDto(product.getAgentwhoSoldProd());
-                productDto.setAgentwhoSoldProd(agentwhoSoldProd);
-            }
-            if (product.getManagerProd() != null) {
-                AgentProdDto managerProdDto = iAgentProdMapper.toDto(product.getManagerProd());
-                productDto.setManagerProd(managerProdDto);
-            }
-        }
+
+        // Sort the DTOs by BoxNumber
         productDtos.sort(Comparator.comparingInt(dto -> {
             try {
                 return Integer.parseInt(dto.getBoxNumber());
@@ -772,9 +749,12 @@ public class ProductService implements IProductService{
                 return Integer.MAX_VALUE;
             }
         }));
+
+        // Implement pagination in memory
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
+
         List<ProductDto> pageContent;
         if (productDtos.size() < startItem) {
             pageContent = Collections.emptyList();
@@ -782,9 +762,9 @@ public class ProductService implements IProductService{
             int toIndex = Math.min(startItem + pageSize, productDtos.size());
             pageContent = productDtos.subList(startItem, toIndex);
         }
+
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
-
     @Override
     public void checkReturn(String serialNumber) {
         Product existingProduct = iProductRepository.findById(serialNumber)
@@ -854,45 +834,19 @@ public class ProductService implements IProductService{
     @Override
     public List<Integer> getUserStat(String username) {
         username = username.toLowerCase();
-        List<AgentProd> agentProds = iAgentProdRepository.findByUsername(username);
-        Set<String> encounteredAssociatedSerialNumbers = new HashSet<>();
-        Set<String> encounteredReturnedSerialNumbers = new HashSet<>();
-        Set<String> encounteredSoldSerialNumbers = new HashSet<>();
-
-        for (AgentProd agentProd : agentProds) {
-            Optional<Product> optionalReturnedProduct1 = iProductRepository.findByAgentReturnedProd(agentProd);
-            Optional<Product> optionalReturnedProduct2 = iProductRepository.findByManagerProd(agentProd);
-            Optional<Product> optionalReturnedProduct = optionalReturnedProduct1.or(() -> optionalReturnedProduct2);
-            if (optionalReturnedProduct.isPresent()) {
-                Product returnedproduct = optionalReturnedProduct.get();
-                if(returnedproduct.isReturned()){
-                    encounteredReturnedSerialNumbers.add(returnedproduct.getSerialNumber());
-                }
-            }
-
-            Optional<Product> optionalAssociatedProduct1 = iProductRepository.findByAgentProd(agentProd);
-            Optional<Product> optionalAssociatedProduct2 = iProductRepository.findByManagerProd(agentProd);
-            Optional<Product> optionalAssociatedProduct = optionalAssociatedProduct1.or(() -> optionalAssociatedProduct2);
-            if (optionalAssociatedProduct.isPresent()) {
-                Product associatedProduct = optionalAssociatedProduct.get();
-                if(!associatedProduct.isReturned()) {
-                    encounteredAssociatedSerialNumbers.add(associatedProduct.getSerialNumber());
-                }
-            }
-
-            Optional<SoldProduct> optionalSoldProduct1 = iSoldProductRepository.findByAgentWhoSold(agentProd);
-            Optional<SoldProduct> optionalSoldProduct2 = iSoldProductRepository.findByManagerSoldProd(agentProd);
-            Optional<SoldProduct> optionalSoldProduct = optionalSoldProduct1.or(() -> optionalSoldProduct2);
-
-            if (optionalSoldProduct.isPresent()) {
-                SoldProduct soldProduct = optionalSoldProduct.get();
-                encounteredSoldSerialNumbers.add(soldProduct.getSerialNumber());
-            }
-        }
+        List<Product> products = iProductRepository.findProductsByUsername(username);
+        List<SoldProduct> soldProductsDuplicated = iSoldProductRepository.findSoldProductsByUsername(username);
+        Set<Product> associatedProducts = products.stream()
+                .filter(product -> !product.isReturned())
+                .collect(Collectors.toSet());
+        Set<Product> returnedProducts = products.stream()
+                .filter(Product::isReturned)
+                .collect(Collectors.toSet());
+        Set<SoldProduct> soldProducts = new HashSet<>(soldProductsDuplicated);
         List<Integer> statList = new ArrayList<>();
-        statList.add(encounteredAssociatedSerialNumbers.size());
-        statList.add(encounteredReturnedSerialNumbers.size());
-        statList.add(encounteredSoldSerialNumbers.size());
+        statList.add(associatedProducts.size());
+        statList.add(returnedProducts.size());
+        statList.add(soldProducts.size());
         return statList;
     }
 
