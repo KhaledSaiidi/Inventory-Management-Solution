@@ -1,12 +1,21 @@
 <app-base></app-base>
 <div class="listeequipes-container">
-  <div class="search-wrapper">
-    <div class="search-container">
-      <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
-      <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" (keyup)="searchStocks()" style="margin-left: 10px;"
-             placeholder="Search by Serial Number, Sim Number, Box, Date, Manager, Agent...">
+
+
+
+  <div class="d-flex align-items-center">
+    <a class="btn-primary btn" (click)="navigateToexport()" style="color: white;">
+      <span class="">&nbsp; Export Products</span>
+    </a>
+    <div class="search-wrapper">
+      <div class="search-container">
+        <span class="search-icon"><i style="margin-left: 5px;" class="fas fa-search"></i></span>
+        <input class="form-control rounded-input" type="text" [(ngModel)]="searchTerm" (keyup)="searchStocks()" style="margin-left: 10px;"
+               placeholder="Search by Serial Number, Sim Number, Box, Date, Manager, Agent...">
+      </div>
     </div>
-  </div>
+    </div>
+
   <div class="equipe-container">
     <div class="listetalents-containershown">
       <div class="col-12">

@@ -276,6 +276,10 @@ onPageChange(newPage: number): void {
   } 
  
 
+  navigateToexport() {
+    this.router.navigate(['/exportproducts']);
+  }
+  
 
 
 }

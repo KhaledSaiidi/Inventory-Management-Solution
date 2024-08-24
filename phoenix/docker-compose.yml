@@ -9,7 +9,7 @@ services:
       MYSQL_USER: universal
       MYSQL_PASSWORD: universal
     volumes:
-      - mysql_data:/var/lib/mysql:rw
+      - /data:/var/lib/mysql:rw
       - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     ports:
       - "3306:3306"
@@ -36,8 +36,9 @@ services:
       - KC_DB_URL_HOST=mysql
       - KC_DB_URL_PORT=3306
       - KC_DB_SCHEMA=keycloakdb
+      - KC_PROXY=edge
       - PROXY_ADDRESS_FORWARDING=true
-      - KEYCLOAK_FRONTEND_URL=http://unistock-keeper.com
+      - KEYCLOAK_URL=https://unistock-keeper.com
     ports:
       - "8181:8181"
     networks:
@@ -58,6 +59,9 @@ services:
       - "2181:2181"
     networks:
       - universal-mm-net
+    volumes:
+      - /data/zookeeper/data:/data
+      - /data/zookeeper/datalog:/datalog
 
   kafka:
     image: wurstmeister/kafka
@@ -73,9 +77,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_MESSAGE_MAX_BYTES: 200000000 # 200 MB
-      KAFKA_REPLICA_FETCH_MAX_BYTES: 200000000 # 200 MB
-      KAFKA_MAX_REQUEST_SIZE: 200000000 # 200 MB
+      KAFKA_MESSAGE_MAX_BYTES: 1000000000 # 1 GB
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 1000000000 # 1 GB
+      KAFKA_MAX_REQUEST_SIZE: 1000000000 # 1 GB
+    volumes:
+      - /data/kafka:/var/lib/kafka/data
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 9092"]
       interval: 30s
@@ -83,9 +89,7 @@ services:
       retries: 10
 
   server-discovery:
-    build:
-      context: ./discovery-server
-      dockerfile: Dockerfile
+    image: khaledunistock/universal-server-discovery:latest
     container_name: server-discovery
     ports:
       - "8761:8761"
@@ -95,16 +99,14 @@ services:
           - server-discovery
 
   configserver:
-    build:
-      context: ./config-server
-      dockerfile: Dockerfile
+    image: khaledunistock/universal-configserver:latest
     container_name: configserver
     ports:
       - "8888:8888"
     networks:
       - universal-mm-net
     environment:
-      - KEYCLOAK_HOSTNAME=http://unistock-keeper.com
+      - KEYCLOAK_HOSTNAME=https://unistock-keeper.com
     depends_on:
       keycloak:
         condition: service_started
@@ -114,30 +116,26 @@ services:
         condition: service_healthy
 
   api-gateway:
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
+    image: khaledunistock/universal-api-gateway:latest
     container_name: api-gateway
     ports:
       - "9000:9000"
     networks:
       - universal-mm-net
     environment:
-      - KEYCLOAK_HOSTNAME=http://unistock-keeper.com
+      - KEYCLOAK_HOSTNAME=https://unistock-keeper.com
     depends_on:
       - configserver
       - server-discovery
       - keycloak
 
   keycloakuser-service:
-    build:
-      context: ./keycloakuser
-      dockerfile: Dockerfile
+    image: khaledunistock/universal-keycloakuser-service:latest
     container_name: keycloakuser-service
     networks:
       - universal-mm-net
     environment:
-      - KEYCLOAK_HOSTNAME=http://unistock-keeper.com
+      - KEYCLOAK_HOSTNAME=https://unistock-keeper.com
     depends_on:
       - configserver
       - api-gateway
@@ -145,9 +143,7 @@ services:
       - keycloak
 
   notification-service:
-    build:
-      context: ./notification
-      dockerfile: Dockerfile
+    image: khaledunistock/universal-notification-service:latest
     container_name: notification-service
     networks:
       - universal-mm-net
@@ -158,12 +154,10 @@ services:
       - keycloak
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - KEYCLOAK_HOSTNAME=http://unistock-keeper.com
+      - KEYCLOAK_HOSTNAME=https://unistock-keeper.com
 
   stock-service:
-    build:
-      context: ./stock
-      dockerfile: Dockerfile
+    image: khaledunistock/universal-stock-service:latest
     container_name: stock-service
     networks:
       - universal-mm-net
@@ -173,13 +167,11 @@ services:
       - server-discovery
       - keycloak
     environment:
-      - KEYCLOAK_HOSTNAME=http://unistock-keeper.com
+      - KEYCLOAK_HOSTNAME=https://unistock-keeper.com
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
   frontapp:
-    build:
-      context: ./phoenixfront
-      dockerfile: Dockerfile
+    image: khaledunistock/universal-frontapp:latest
     container_name: frontapp
     ports:
       - "4200:4200"
@@ -191,7 +183,7 @@ services:
       api-gateway:
         condition: service_started
     environment:
-      - KEYCLOAK_URL=http://unistock-keeper.com
+      - KEYCLOAK_URL=https://unistock-keeper.com
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4200"]
       interval: 30s
@@ -216,9 +208,6 @@ services:
       - type: bind
         source: ./proxy/nginx-proxy.conf
         target: /etc/nginx/conf.d/proxy.conf
-
-volumes:
-  mysql_data:
 
 networks:
   universal-mm-net:

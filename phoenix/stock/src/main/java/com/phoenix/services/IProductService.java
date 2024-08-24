@@ -42,4 +42,6 @@ public interface IProductService {
     Page<ProductDto> getProductsPaginated(Pageable pageable, String searchTerm);
 
     Page<ProductDto> getReturnedProductsPaginated(Pageable pageable, String searchTerm);
+    List<ProductDto> getProductsToExport(List<String> esns);
+
 }

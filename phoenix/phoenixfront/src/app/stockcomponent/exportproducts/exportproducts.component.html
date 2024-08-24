@@ -1,0 +1,160 @@
+<div class="shadowed" (click)="navigateToProds()">
+    <app-navigateprods></app-navigateprods>
+</div>
+<div class="appform-container">
+    <div class="container-fluid py-4" style="width: 100%;">
+        <div class="row" style="width: 100%;">
+          <div class="col-md-8" style="width: 100%;">
+            <div class="card">
+              <div class="card-header pb-0">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Export Products</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="text-uppercase text-sm">Products ESN: </p>                       
+            <ng-container *ngIf="searchStart">
+                <div class="container">
+                    <div *ngFor="let product of products let i = index" class="row">
+                      <div class="col-md-8">
+                        <div>
+                          <label>Product {{ product.id }}</label>
+                          <input class="form-control mt-2" type="text" (input)="updateProductValue(i, $event)">
+                        </div>
+                      </div>
+                      <div class="col-md-4" style="margin-top: 5%;">
+                        <div class="checkInput form-check">
+                          <input class="form-check-input" type="checkbox" #checkbox (change)="onCheckboxChange(checkbox, i)"> <label>Add another ESN?</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; justify-content: center; margin-top: 15px;">
+                    <button (click)="search()" class="btn btn-primary btn-sm " style="width: 160px;">Search</button>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!searchStart">
+                    <div class="table-responsive p-0" style="max-height:400px; overflow-y:auto;">
+                        <table class="table align-items-center justify-content-center mb-0" style="width: 100%;">
+                          <thead>
+                          <tr>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SIM Number</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stock</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senior Advisor</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Associated</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Sold</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Agent Returned</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="max-width: 60px;">Box</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Produt Type</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Checkout</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Checkin</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                            </tr>
+                            <tr *ngFor="let prod of productsToexport;">
+                              <td style="word-wrap: break-word; white-space: normal;">
+                                {{prod.serialNumber}}
+                              </td>
+                              <td style="word-wrap: break-word; white-space: normal;">
+                                {{prod.simNumber}}
+                              </td>
+                              <td style="word-wrap: break-word; white-space: normal;">
+                                {{ prod.stock?.stockReference + " - " + (prod.stock?.notes ? prod.stock?.notes : "none") }}
+                              </td>        
+                              <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;">
+                                {{
+                                  (prod.managerProd?.firstname || prod.managerProd?.username || prod.managerProd?.lastname)
+                                    ? (prod.managerProd?.firstname 
+                                        ? prod.managerProd?.firstname?.toUpperCase() 
+                                        : (prod.managerProd?.username 
+                                            ? prod.managerProd?.username?.toUpperCase() 
+                                            : '')) 
+                                      + ' ' + 
+                                      (prod.managerProd?.lastname 
+                                        ? prod.managerProd?.lastname?.toUpperCase() 
+                                        : '')
+                                    : 'None'
+                                }}
+                              </td>
+                              <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;">
+                                {{
+                                  (prod.agentProd?.firstname || prod.agentProd?.username || prod.agentProd?.lastname)
+                                    ? (prod.agentProd?.firstname 
+                                        ? prod.agentProd?.firstname?.toUpperCase() 
+                                        : (prod.agentProd?.username 
+                                            ? prod.agentProd?.username?.toUpperCase() 
+                                            : '')) 
+                                      + ' ' + 
+                                      (prod.agentProd?.lastname 
+                                        ? prod.agentProd?.lastname?.toUpperCase() 
+                                        : '')
+                                    : 'None'
+                                }}
+                              </td>
+                              <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;">
+                                {{
+                                  (prod.agentwhoSoldProd?.firstname || prod.agentwhoSoldProd?.username || prod.agentwhoSoldProd?.lastname)
+                                    ? (prod.agentwhoSoldProd?.firstname 
+                                        ? prod.agentwhoSoldProd?.firstname?.toUpperCase() 
+                                        : (prod.agentwhoSoldProd?.username 
+                                            ? prod.agentwhoSoldProd?.username?.toUpperCase() 
+                                            : '')) 
+                                      + ' ' + 
+                                      (prod.agentwhoSoldProd?.lastname 
+                                        ? prod.agentwhoSoldProd?.lastname?.toUpperCase() 
+                                        : '')
+                                    : 'None'
+                                }}
+                              </td>
+                              <td style="word-wrap: break-word; white-space: normal; margin-left: -5px;">
+                                {{
+                                  (prod.agentReturnedProd?.firstname || prod.agentReturnedProd?.username || prod.agentReturnedProd?.lastname)
+                                    ? (prod.agentReturnedProd?.firstname 
+                                        ? prod.agentReturnedProd?.firstname?.toUpperCase() 
+                                        : (prod.agentReturnedProd?.username 
+                                            ? prod.agentReturnedProd?.username?.toUpperCase() 
+                                            : '')) 
+                                      + ' ' + 
+                                      (prod.agentReturnedProd?.lastname 
+                                        ? prod.agentReturnedProd?.lastname?.toUpperCase() 
+                                        : '')
+                                    : 'None'
+                                }}
+                              </td>
+                              <td style="word-wrap: break-word; white-space: normal; max-width: 60px; align-items: center;">
+                                    {{prod.boxNumber ? prod.boxNumber : ''}}
+                              </td>
+                              <td style="word-wrap: break-word; white-space: normal;">
+                                {{ prod.productType ? prod.productType : 'N.D' }}
+                              </td>
+                              <td style="word-wrap: break-word; white-space: normal;">
+                                {{ prod.checkout | date:'dd MMM yyyy' || 'None' }}
+                            </td>
+                              <td style="word-wrap: break-word; white-space: normal;">
+                                {{ prod.checkin | date:'dd MMM yyyy' || 'None' }}
+
+                              </td>
+
+                        </tr>       
+                          
+                          </tbody>
+                        </table>
+                      </div>
+
+                
+                    <div style="display: flex; justify-content: center; margin-top: 15px;">
+                        <button class="btn btn-primary btn-sm " (click)="exportToExcel()" style="width: 160px;">Export Excel</button>
+                      </div>
+    
+                </ng-container>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>

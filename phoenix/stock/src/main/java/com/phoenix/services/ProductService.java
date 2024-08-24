@@ -3,21 +3,17 @@ package com.phoenix.services;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
-import com.phoenix.config.CaseInsensitiveHeaderColumnNameMappingStrategy;
 import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.Campaigndto;
-import com.phoenix.dtokeycloakuser.UserMysqldto;
 import com.phoenix.dtokeycloakuser.Userdto;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
 import com.phoenix.mapper.IStockMapper;
 import com.phoenix.model.*;
 import com.phoenix.repository.*;
+import com.phoenix.soldproductmapper.ISoldTProductMapper;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -39,10 +35,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,6 +59,9 @@ public class ProductService implements IProductService{
     private final KeycloakTokenFetcher tokenFetcher;
 
     private final WebClient.Builder webClientBuilder;
+
+    @Autowired
+    private ISoldTProductMapper iSoldTProductMapper;
 
     @Autowired
     private IStockRepository iStockRepository;
@@ -1047,5 +1045,41 @@ public class ProductService implements IProductService{
             pageContent = productDtos.subList(startItem, toIndex);
         }
         return new PageImpl<>(pageContent, pageable, productDtos.size());
+    }
+
+    @Override
+    public List<ProductDto> getProductsToExport(List<String> serialNumbers) {
+        List<ProductDto> productDtos = new ArrayList<>();
+
+        // Fetch all products and sold products in one go
+        Map<String, Product> productMap = iProductRepository.findAllById(serialNumbers)
+                .stream()
+                .collect(Collectors.toMap(Product::getSerialNumber, Function.identity()));
+
+        Map<String, SoldProduct> soldProductMap = iSoldProductRepository.findAllById(serialNumbers)
+                .stream()
+                .collect(Collectors.toMap(SoldProduct::getSerialNumber, Function.identity()));
+
+        for (String serialNumber : serialNumbers) {
+            Product product = productMap.get(serialNumber);
+            if (product == null) {
+                SoldProduct soldProduct = soldProductMap.get(serialNumber);
+                if (soldProduct == null) {
+                    continue;
+                }
+                product = iSoldTProductMapper.toExportProduct(soldProduct);
+            }
+            ProductDto productDto = iProductMapper.toDto(product);
+
+            Optional.ofNullable(product.getStock()).ifPresent(stock -> productDto.setStock(iStockMapper.toDto(stock)));
+            Optional.ofNullable(product.getAgentProd()).ifPresent(agentProd -> productDto.setAgentProd(iAgentProdMapper.toDto(agentProd)));
+            Optional.ofNullable(product.getAgentwhoSoldProd()).ifPresent(agentWhoSoldProd -> productDto.setAgentwhoSoldProd(iAgentProdMapper.toDto(agentWhoSoldProd)));
+            Optional.ofNullable(product.getAgentReturnedProd()).ifPresent(agentReturnedProd -> productDto.setAgentReturnedProd(iAgentProdMapper.toDto(agentReturnedProd)));
+            Optional.ofNullable(product.getManagerProd()).ifPresent(managerProd -> productDto.setManagerProd(iAgentProdMapper.toDto(managerProd)));
+
+            productDtos.add(productDto);
+        }
+
+        return productDtos;
     }
 }

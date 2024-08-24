@@ -1,0 +1,17 @@
+.appform-container {
+    position: relative;
+    top: 50px;
+    left: 20%; /* adjust this value to match the width of your side nav bar */
+    width: 70%; /* adjust this value to account for the side nav bar */
+    height: 50%;
+  }
+
+  
+  
+  app-navigateprods {
+    opacity: 0.3 !important;
+  }
+  .container {
+    max-height: 400px;
+    overflow-y: auto;
+  }

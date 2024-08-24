@@ -47,6 +47,7 @@ import { StockarchivedComponent } from './stockcomponent/stockarchived/stockarch
 import { ProdarchivedComponent } from './stockcomponent/prodarchived/prodarchived.component';
 import { environment } from 'src/environments/environment';
 import { NavigateprodsComponent } from './stockcomponent/navigateprods/navigateprods.component';
+import { ExportproductsComponent } from './stockcomponent/exportproducts/exportproducts.component';
 
 const appRoute: Routes = [
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
@@ -79,6 +80,7 @@ const appRoute: Routes = [
   {path:'stockarchive', component: StockarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'archivedproducts', component: ProdarchivedComponent, canActivate: [AuthGuard], data: { roles: ["IMANAGER" , "MANAGER" ] }},
   {path:'navigateprods', component: NavigateprodsComponent, canActivate: [AuthGuard]},
+  {path:'exportproducts', component: ExportproductsComponent, canActivate: [AuthGuard]},
   { path: '**', pathMatch: 'full', redirectTo: '/dashboard' },
 ]
 
@@ -146,7 +148,8 @@ export function kcFactory(kcService: KeycloakService, securityService: SecurityS
     ConfiramtionDialogComponent,
     StockarchivedComponent,
     ProdarchivedComponent,
-    NavigateprodsComponent
+    NavigateprodsComponent,
+    ExportproductsComponent
   ],
   imports: [
     BrowserModule,

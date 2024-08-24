@@ -572,4 +572,15 @@ getSoldProductsPaginated(page: number, size: number, searchTerm: String): Observ
     );
 }
 
+
+getProductsToExport(serialNumbers: String[]): Observable<Productdto[]> {
+  return this.http.post<Productdto[]>(`${this.apiUrl}/export`, serialNumbers)
+  .pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error);
+        return throwError(error);
+      })
+    );
+}
+
 }

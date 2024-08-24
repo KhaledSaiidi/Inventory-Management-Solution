@@ -45,5 +45,22 @@ public class SoldTProductMapper implements ISoldTProductMapper {
     }
 
 
+    @Override
+    public Product toExportProduct (SoldProduct soldProduct){
+        Product product = new Product();
+        product.setSerialNumber(soldProduct.getSerialNumber());
+        product.setSimNumber(soldProduct.getSimNumber());
+        product.setCheckout(soldProduct.getSoldDate());
+        product.setBrand(soldProduct.getBrand());
+        product.setProductType(soldProduct.getProductType());
+        product.setProdName(soldProduct.getProdName());
+        product.setComments(soldProduct.getComments());
+        product.setPrice(soldProduct.getPrice());
+        product.setStock(soldProduct.getStock());
+        product.setManagerProd(soldProduct.getManagerSoldProd());
+        product.setAgentProd(soldProduct.getAgentAssociatedProd());
+        product.setAgentwhoSoldProd(soldProduct.getAgentWhoSold());
+        return product;
+    }
 
 }
