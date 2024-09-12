@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Stockdto } from '../models/inventory/Stock';
 import { Observable, Observer, catchError, throwError } from 'rxjs';
@@ -573,9 +573,11 @@ getSoldProductsPaginated(page: number, size: number, searchTerm: String): Observ
 }
 
 
-getProductsToExport(serialNumbers: String[]): Observable<Productdto[]> {
-  return this.http.post<Productdto[]>(`${this.apiUrl}/export`, serialNumbers)
-  .pipe(
+getProductsToExport(serialNumbers: string[]): Observable<Productdto[]> {
+  const params = new HttpParams().set('serialNumbers', serialNumbers.join(','));
+
+  return this.http.get<Productdto[]>(`${this.apiUrl}/export`, { params })
+    .pipe(
       catchError((error) => {
         console.error('An error occurred:', error);
         return throwError(error);

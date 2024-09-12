@@ -1,10 +1,14 @@
 package com.phoenix.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import org.springframework.beans.factory.annotation.Value;
 import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.Campaigndto;
+import com.phoenix.dtokeycloakuser.UserMysqldto;
 import com.phoenix.dtokeycloakuser.Userdto;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
@@ -13,12 +17,15 @@ import com.phoenix.model.*;
 import com.phoenix.repository.*;
 import com.phoenix.soldproductmapper.ISoldTProductMapper;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,40 +46,39 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService{
-    @Autowired
-    private IProductMapper iProductMapper;
-    @Autowired
-    private IProductRepository iProductRepository;
+public class ProductService implements IProductService {
 
-    @Autowired
-    private ISoldProductRepository iSoldProductRepository;
-
-    @Autowired
-    private IStockMapper iStockMapper;
-    @Autowired
-    private IAgentProdMapper iAgentProdMapper;
-    @Autowired
+    private final IProductMapper iProductMapper;
+    private final IProductRepository iProductRepository;
+    private final ISoldProductRepository iSoldProductRepository;
+    private final IStockMapper iStockMapper;
+    private final IAgentProdMapper iAgentProdMapper;
     private final KeycloakTokenFetcher tokenFetcher;
-
     private final WebClient.Builder webClientBuilder;
+    private final IStockRepository iStockRepository;
+    private final IUncheckHistoryRepository iUncheckHistoryRepository;
+    private final IAgentProdRepository iAgentProdRepository;
+    private final IAgentProdService iAgentProdService;
+    private final ISoldTProductMapper iSoldTProductMapper;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    @Autowired
-    private ISoldTProductMapper iSoldTProductMapper;
+    @Value("${server-url}")
+    private String keycloakServerUrl;
+    @Value("${realm}")
+    private String keycloakRealm;
+    @Value("${client-id}")
+    private String clientId;
+    @Value("${grant-type}")
+    private String grantType;
+    @Value("${name}")
+    private String username;
+    @Value("${password}")
+    private String password;
 
-    @Autowired
-    private IStockRepository iStockRepository;
-
-    @Autowired
-    private IUncheckHistoryRepository iUncheckHistoryRepository;
-    @Autowired
-    private IAgentProdRepository iAgentProdRepository;
-
-    @Autowired
-    private IAgentProdService iAgentProdService;
     @Override
     public void addProduct(ProductDto productDto) {
         Product product = iProductMapper.toEntity(productDto);
@@ -83,7 +89,7 @@ public class ProductService implements IProductService{
         }
         product.setStock(stock);
         iProductRepository.save(product);
-        if(product.getPrice() != null) {
+        if (product.getPrice() != null) {
             stock.setStockValue(stock.getStockValue().add(product.getPrice()));
         }
         stock.setChecked(false);
@@ -110,7 +116,7 @@ public class ProductService implements IProductService{
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
         Stock stock = stockOptional.get();
-        List<Product> products  = iProductRepository.findByStockAndReturned(stock, false);
+        List<Product> products = iProductRepository.findByStockAndReturned(stock, false);
         List<ProductDto> productDtos = iProductMapper.toDtoList(products);
         for (int i = 0; i < productDtos.size(); i++) {
             Product product = products.get(i);
@@ -151,6 +157,7 @@ public class ProductService implements IProductService{
         }
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
+
     private boolean filterBySearchTerm(ProductDto productDto, String searchTerm) {
         String searchString = searchTerm.toLowerCase();
         StringBuilder searchFields = new StringBuilder();
@@ -181,17 +188,39 @@ public class ProductService implements IProductService{
         Product product = iProductRepository.findById(serialNumber).orElse(null);
         Stock stock = product.getStock();
         BigDecimal tochangeValue = BigDecimal.ZERO;
-        if (product == null) {return null;}
-        if (productDto.getSimNumber() != null) {product.setSimNumber(productDto.getSimNumber());}
-        if (productDto.getCheckin() != null) {product.setCheckin(productDto.getCheckin());}
-        if (productDto.getBoxNumber() != null) {product.setBoxNumber(productDto.getBoxNumber());}
-        if (productDto.getBrand() != null) {product.setBrand(productDto.getBrand());}
-        if (productDto.getProductType() != null) {product.setProductType(productDto.getProductType());}
-        if (productDto.getProdName() != null) {product.setProdName(productDto.getProdName());}
-        if (productDto.getComments() != null) {product.setComments(productDto.getComments());}
-        if (productDto.getPrice() != null) {product.setPrice(productDto.getPrice());}
-        if (productDto.isReturned()) {product.setReturned(productDto.isReturned());}
-        if (productDto.isCheckedExistence()) {product.setCheckedExistence(productDto.isCheckedExistence());}
+        if (product == null) {
+            return null;
+        }
+        if (productDto.getSimNumber() != null) {
+            product.setSimNumber(productDto.getSimNumber());
+        }
+        if (productDto.getCheckin() != null) {
+            product.setCheckin(productDto.getCheckin());
+        }
+        if (productDto.getBoxNumber() != null) {
+            product.setBoxNumber(productDto.getBoxNumber());
+        }
+        if (productDto.getBrand() != null) {
+            product.setBrand(productDto.getBrand());
+        }
+        if (productDto.getProductType() != null) {
+            product.setProductType(productDto.getProductType());
+        }
+        if (productDto.getProdName() != null) {
+            product.setProdName(productDto.getProdName());
+        }
+        if (productDto.getComments() != null) {
+            product.setComments(productDto.getComments());
+        }
+        if (productDto.getPrice() != null) {
+            product.setPrice(productDto.getPrice());
+        }
+        if (productDto.isReturned()) {
+            product.setReturned(productDto.isReturned());
+        }
+        if (productDto.isCheckedExistence()) {
+            product.setCheckedExistence(productDto.isCheckedExistence());
+        }
         if (productDto.getPrice() != null) {
             tochangeValue = product.getPrice();
             product.setPrice(productDto.getPrice());
@@ -214,17 +243,14 @@ public class ProductService implements IProductService{
         Product product = productOptional.get();
         ProductDto productDto = iProductMapper.toDto(product);
         productDto.setStock(iStockMapper.toDto(product.getStock()));
-        if(product.getAgentProd() != null) {
+        if (product.getAgentProd() != null) {
             productDto.setAgentProd(iAgentProdMapper.toDto(product.getAgentProd()));
         }
-        if(product.getManagerProd() != null) {
+        if (product.getManagerProd() != null) {
             productDto.setManagerProd(iAgentProdMapper.toDto(product.getManagerProd()));
         }
         return productDto;
     }
-
-
-
 
 
     @Override
@@ -232,9 +258,9 @@ public class ProductService implements IProductService{
     public Integer addProductsByupload(MultipartFile file, String stockReference) throws IOException {
         List<ProductDto> productDtos = new ArrayList<>(parseCsv(file, stockReference));
         Optional<Stock> optionalstock = iStockRepository.findById(stockReference);
-        if(optionalstock.isEmpty())
-        {return  null;}
-        else {
+        if (optionalstock.isEmpty()) {
+            return null;
+        } else {
             Stock stock = optionalstock.get();
             List<Product> products = iProductMapper.toEntityList(productDtos);
             products.forEach(product -> product.setStock(stock));
@@ -305,6 +331,7 @@ public class ProductService implements IProductService{
             return productDtos;
         }
     }
+
     public void parseCsvForAssigning(MultipartFile file, String stockReference) throws IOException {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             HeaderColumnNameMappingStrategy<ProductDtosCsvRepresentation> strategy =
@@ -322,7 +349,8 @@ public class ProductService implements IProductService{
             Map<String, String> usersMap = webClientBuilder.build().get()
                     .uri("http://keycloakuser-service/people/usersMap")
                     .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {})
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {
+                    })
                     .block();
 
             for (ProductDtosCsvRepresentation csvLine : csvLines) {
@@ -508,7 +536,7 @@ public class ProductService implements IProductService{
                     prodsrefNotInProducts.add(prodRef);
                 }
             }
-            if(!prodsrefNotInProducts.isEmpty()) {
+            if (!prodsrefNotInProducts.isEmpty()) {
                 LocalDate now = LocalDate.now();
                 UncheckHistory uncheckHistory = new UncheckHistory(prodsrefNotInProducts, now, stock.getStockReference());
                 iUncheckHistoryRepository.save(uncheckHistory);
@@ -527,7 +555,7 @@ public class ProductService implements IProductService{
         }
         Stock stock = stockOptional.get();
         List<Product> products = iProductRepository.findByStock(stock);
-        if(!products.isEmpty()) {
+        if (!products.isEmpty()) {
             long checked = products.stream().filter(Product::isCheckedExistence).count();
             long returned = products.stream().filter(product -> product.isReturned()).count();
 
@@ -548,7 +576,7 @@ public class ProductService implements IProductService{
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
         Stock stock = stockOptional.get();
-        List<Product> products  = iProductRepository.findByStockAndReturned(stock, true);
+        List<Product> products = iProductRepository.findByStockAndReturned(stock, true);
         List<ProductDto> productDtos = iProductMapper.toDtoList(products);
         for (int i = 0; i < productDtos.size(); i++) {
             Product product = products.get(i);
@@ -598,7 +626,7 @@ public class ProductService implements IProductService{
 
     @Override
     @Transactional
-    public List<ReclamationDto>  getProductsForAlert() {
+    public List<ReclamationDto> getProductsForAlert() {
         LocalDate currentDate = LocalDate.now();
         LocalDate sevenDaysLater = currentDate.plusDays(7);
         List<Stock> stocksForAlert = iStockRepository.findStocksDueWithinSevenDays(currentDate, sevenDaysLater);
@@ -621,7 +649,7 @@ public class ProductService implements IProductService{
                         dueDate = Date.from(product.getAgentProd().getDuesoldDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
                         agentAsignedToo = product.getAgentProd().getFirstname() + " " + product.getAgentProd().getLastname();
                         agentUsername = product.getAgentProd().getUsername();
-                    } else if(product.getStock() != null && product.getStock().getDueDate() != null){
+                    } else if (product.getStock() != null && product.getStock().getDueDate() != null) {
                         dueDate = Date.from(product.getStock().getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
                     } else {
                         return null;
@@ -634,9 +662,16 @@ public class ProductService implements IProductService{
 
 
     private List<Userdto> getAllmanagers() {
-        String token = tokenFetcher.getToken();
+        String token = authenticateWithKeycloak();
         List<Userdto> userDtos = null;
+
+        if (token == null) {
+            System.out.println("Failed to get token from Keycloak.");
+            return null;
+        }
+
         try {
+            // Fetch all users using the token
             userDtos = webClientBuilder.build().get()
                     .uri("http://keycloakuser-service/people/allusers")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -648,14 +683,48 @@ public class ProductService implements IProductService{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         if (userDtos == null || userDtos.isEmpty()) {
             return null;
         }
+
         return userDtos.stream()
                 .filter(userdto -> userdto.getRealmRoles().contains("MANAGER") ||
                         userdto.getRealmRoles().contains("IMANAGER"))
                 .collect(Collectors.toList());
     }
+    private String authenticateWithKeycloak() {
+        try {
+            String tokenUrl = keycloakServerUrl + "/realms/" + keycloakRealm + "/protocol/openid-connect/token";
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
+            String body = "client_id=" + clientId + "&grant_type=" + grantType + "&username=" + username + "&password=" + password;
+            HttpEntity<String> request = new HttpEntity<>(body, headers);
+            ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, request, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return extractAccessTokenFromResponse(response.getBody());
+            } else {
+                System.err.println("Failed to authenticate with Keycloak. Status: " + response.getStatusCode());
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private String extractAccessTokenFromResponse(String response) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(response);
+            System.out.println("token is: " + jsonNode.get("access_token").asText());
+            return jsonNode.get("access_token").asText();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers, String agentAsignedToo, String agentUsername) {
         List<String> usernames = new ArrayList<>(managers.stream()
                 .map(Userdto::getUsername)
@@ -674,7 +743,7 @@ public class ProductService implements IProductService{
         }
         ReclamationDto reclamationDto = new ReclamationDto();
         reclamationDto.setSenderReference("UniStock Keeper");
-        if(!agentAsignedToo.isEmpty()) {
+        if (!agentAsignedToo.isEmpty()) {
             reclamationDto.setReclamationText("The expiration date for this product " +
                     "'" + serialNumbersExpired + "'" +
                     " assigned to " +
@@ -763,6 +832,7 @@ public class ProductService implements IProductService{
 
         return new PageImpl<>(pageContent, pageable, productDtos.size());
     }
+
     @Override
     public void checkReturn(String serialNumber) {
         Product existingProduct = iProductRepository.findById(serialNumber)
@@ -797,7 +867,6 @@ public class ProductService implements IProductService{
     }
 
 
-
     @Override
     public List<ProductDto> getThelastMonthlyReturnedProds() {
         List<AgentProd> agentProds = iAgentProdRepository.findAll();
@@ -822,7 +891,7 @@ public class ProductService implements IProductService{
             });
         }
         productDtos.sort(Comparator.comparing(ProductDto::getCheckin).reversed());
-        if(productDtos.isEmpty()){
+        if (productDtos.isEmpty()) {
             return null;
         }
         return productDtos;
@@ -881,9 +950,9 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<Integer> getProductsReturnedCount(){
+    public List<Integer> getProductsReturnedCount() {
         List<Integer> productsReturnedCount = new ArrayList<>();
-        for(int i = 1 ; i <= 12 ; i++){
+        for (int i = 1; i <= 12; i++) {
             int productsMonthReturned = iProductRepository.countReturnedProductsByMonth(i);
             productsReturnedCount.add(productsMonthReturned);
         }
@@ -894,7 +963,7 @@ public class ProductService implements IProductService{
     public void deleteProduct(String ref) {
         Optional<Product> optionalProduct = iProductRepository.findById(ref);
         System.out.println("optionalProduct is : " + optionalProduct);
-        if(optionalProduct.isPresent()){
+        if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
             System.out.println("Product is : " + product);
             iProductRepository.delete(product);
@@ -1082,4 +1151,5 @@ public class ProductService implements IProductService{
 
         return productDtos;
     }
+
 }

@@ -516,8 +516,8 @@ public class Controller {
         return reclamationDtos;
     }
 
-    @PostMapping("/export")
-    public ResponseEntity<List<ProductDto>> getProductsToExport(@RequestBody List<String> serialNumbers) {
+    @GetMapping("/export")
+    public ResponseEntity<List<ProductDto>> getProductsToExport(@RequestParam List<String> serialNumbers) {
         List<ProductDto> productDtos = iProductService.getProductsToExport(serialNumbers);
         if (productDtos.isEmpty()) {
             return ResponseEntity.noContent().build();

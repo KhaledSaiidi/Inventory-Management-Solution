@@ -2,13 +2,11 @@ package com.phoenix.services;
 
 import com.phoenix.dto.ReclamationDto;
 import com.phoenix.dto.StockEvent;
-import com.phoenix.dtokeycloakuser.Campaigndto;
 import com.phoenix.kafka.KafkaMessageArrivedEvent;
 import com.phoenix.kafka.NotificationConsumer;
 import com.phoenix.mapper.IReclamationMapper;
 import com.phoenix.model.Reclamation;
 import com.phoenix.repository.IReclamationRepository;
-import com.phoenix.stockdto.StockDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +14,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -130,4 +130,35 @@ public class ReclamationService implements IReclamationService, ApplicationListe
         iReclamationRepository.saveAll(reclamations);
     }
 
+
+    @Override
+    public void deleteOldMatchingReclamations() {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
+        List<Reclamation> oldReclamations = iReclamationRepository.findAllByReclamDateBefore(sevenDaysAgo);
+        for (Reclamation reclamation : oldReclamations) {
+            if (areListsEqualIgnoreCase(reclamation.getReceiverReference(), reclamation.getVuedreceivers())) {
+                iReclamationRepository.delete(reclamation);
+            }
+        }
     }
+
+    private boolean areListsEqualIgnoreCase(List<String> list1, List<String> list2) {
+        if (list1 == null || list2 == null) {
+            return false;
+        }
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+        List<String> sortedList1 = list1.stream()
+                .map(str -> str.toLowerCase(Locale.ROOT))
+                .sorted()
+                .toList();
+        List<String> sortedList2 = list2.stream()
+                .map(str -> str.toLowerCase(Locale.ROOT))
+                .sorted()
+                .toList();
+        return sortedList1.equals(sortedList2);
+    }
+
+
+}

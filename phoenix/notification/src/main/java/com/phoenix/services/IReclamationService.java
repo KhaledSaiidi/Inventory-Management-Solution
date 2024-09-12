@@ -11,5 +11,6 @@ public interface IReclamationService {
     List<ReclamationDto> getAllReclamationsForReceiver(String receiverReference);
     List<ReclamationDto> getAllReclamationsForsender(String senderReference);
     void terminatenotif(String username, List<ReclamationDto> reclamationsnotSeen);
+    void deleteOldMatchingReclamations();
 
 }

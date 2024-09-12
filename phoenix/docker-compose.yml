@@ -157,7 +157,9 @@ services:
       - KEYCLOAK_HOSTNAME=https://unistock-keeper.com
 
   stock-service:
-    image: khaledunistock/universal-stock-service:latest
+    build:
+      context: ./stock
+      dockerfile: Dockerfile
     container_name: stock-service
     networks:
       - universal-mm-net
@@ -171,7 +173,9 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
   frontapp:
-    image: khaledunistock/universal-frontapp:latest
+    build:
+      context: ./phoenixfront
+      dockerfile: Dockerfile
     container_name: frontapp
     ports:
       - "4200:4200"
