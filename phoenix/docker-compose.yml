@@ -99,7 +99,9 @@ services:
           - server-discovery
 
   configserver:
-    image: khaledunistock/universal-configserver:latest
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
     container_name: configserver
     ports:
       - "8888:8888"
@@ -143,7 +145,9 @@ services:
       - keycloak
 
   notification-service:
-    image: khaledunistock/universal-notification-service:latest
+    build:
+      context: ./notification
+      dockerfile: Dockerfile
     container_name: notification-service
     networks:
       - universal-mm-net

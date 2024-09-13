@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class ScheduledTasks {
 
     private final IReclamationService iReclamationService;
-    @Scheduled(cron = "45 23 * * *") // Runs at 11:45 PM every day
+    @Scheduled(cron = "0 45 23 * * *") // Runs at 11:45 PM every day
     public void deleteOldMatchingReclamations() {
         iReclamationService.deleteOldMatchingReclamations();
     }
