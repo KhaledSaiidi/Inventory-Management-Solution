@@ -6,7 +6,6 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.Campaigndto;
 import com.phoenix.dtokeycloakuser.Userdto;
@@ -61,18 +60,6 @@ public class ProductService implements IProductService {
     private final ISoldTProductMapper iSoldTProductMapper;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${server-url}")
-    private String keycloakServerUrl;
-    @Value("${realm}")
-    private String keycloakRealm;
-    @Value("${client-id}")
-    private String clientId;
-    @Value("${grant-type}")
-    private String grantType;
-    @Value("${name}")
-    private String username;
-    @Value("${password}")
-    private String password;
 
     @Override
     public void addProduct(ProductDto productDto) {
@@ -696,18 +683,10 @@ public class ProductService implements IProductService {
 
     private List<Userdto> getAllmanagers() {
         log.info("Fetching all managers");
-        String token = authenticateWithKeycloak();
         List<Userdto> userDtos = null;
-
-        if (token == null) {
-            log.warn("Authentication token is null, unable to fetch managers.");
-            return null;
-        }
-
         try {
             userDtos = webClientBuilder.build().get()
-                    .uri("http://keycloakuser-service/people/allusers")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .uri("http://api-gateway/people/allusers")
                     .retrieve()
                     .bodyToFlux(Userdto.class)
                     .timeout(Duration.ofSeconds(10))
@@ -729,41 +708,6 @@ public class ProductService implements IProductService {
         log.info("Found {} manager(s)", managers.size());
 
         return managers;
-    }
-    private String authenticateWithKeycloak() {
-        log.info("Authenticating with Keycloak");
-        try {
-            String tokenUrl = keycloakServerUrl + "/realms/" + keycloakRealm + "/protocol/openid-connect/token";
-            HttpHeaders headers = new HttpHeaders();
-            headers.set(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
-            String body = "client_id=" + clientId + "&grant_type=" + grantType + "&username=" + username + "&password=" + password;
-            HttpEntity<String> request = new HttpEntity<>(body, headers);
-            ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, request, String.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                log.info("Successfully authenticated and received token");
-                return extractAccessTokenFromResponse(response.getBody());
-            } else {
-                log.warn("Failed to authenticate with Keycloak, status: {}", response.getStatusCode());
-                return null;
-            }
-        } catch (Exception e) {
-            log.error("Error during Keycloak authentication: {}", e.getMessage(), e);
-            return null;
-        }
-    }
-    private String extractAccessTokenFromResponse(String response) {
-        log.info("Extracting access token from response");
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode jsonNode = objectMapper.readTree(response);
-            String accessToken = jsonNode.get("access_token").asText();
-            log.info("Successfully extracted access token");
-            return accessToken;
-        } catch (Exception e) {
-            log.error("Error extracting access token from response: {}", e.getMessage(), e);
-            return null;
-        }
     }
 
     private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers, String agentAsignedToo, String agentUsername) {

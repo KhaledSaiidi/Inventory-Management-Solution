@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests(auth -> auth
-                        .requestMatchers( "/eureka/**")
+                        .requestMatchers( "/eureka/**", "/allusers/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

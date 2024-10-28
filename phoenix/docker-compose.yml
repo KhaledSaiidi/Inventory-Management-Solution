@@ -119,7 +119,9 @@ services:
         condition: service_healthy
 
   api-gateway:
-    image: khaledunistock/universal-api-gateway:latest
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
     container_name: api-gateway
     ports:
       - "9000:9000"
@@ -133,7 +135,9 @@ services:
       - keycloak
 
   keycloakuser-service:
-    image: khaledunistock/universal-keycloakuser-service:latest
+    build:
+      context: ./keycloakuser
+      dockerfile: Dockerfile
     container_name: keycloakuser-service
     networks:
       - universal-mm-net

@@ -21,7 +21,8 @@ public class SecurityConfig {
         serverHttpSecurity
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange ->
-                        exchange.pathMatchers("/eureka/**", "/notification/notif-websocket/**")
+                        exchange.pathMatchers("/eureka/**", "/notification/notif-websocket/**"
+                                , "/people/allusers/**")
                                 .permitAll()
                                 .anyExchange()
                                 .authenticated())
