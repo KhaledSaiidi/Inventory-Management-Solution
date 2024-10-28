@@ -76,20 +76,6 @@ public class StockService implements IStockService {
         iStockRepository.save(stock);
 
     }
- /*   private String addAuthorizationHeader() {
-        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Jwt jwt = authentication.getToken();
-            if (jwt != null) {
-                System.out.println("jwt is :" + jwt);
-                String token = jwt.getTokenValue();
-                System.out.println("Token is : " +token);
-
-                return token;
-            }
-        }
-        return null;
-    } */
 
     @Override
     public Page<StockDto> getStocks(String searchTerm, Pageable pageable) {

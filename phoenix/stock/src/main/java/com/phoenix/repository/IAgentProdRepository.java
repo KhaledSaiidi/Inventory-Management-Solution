@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface IAgentProdRepository extends JpaRepository<AgentProd , String> {
     List<AgentProd> findByUsername(String username);
-    @Query("SELECT DISTINCT s FROM AgentProd s LEFT JOIN FETCH s.productsAssociated WHERE s.duesoldDate BETWEEN :currentDate AND :sevenDaysLater")
+    @Query("SELECT DISTINCT s FROM AgentProd s LEFT JOIN FETCH s.productsAssociated WHERE s.duesoldDate BETWEEN :currentDate AND :sevenDaysLater OR s.duesoldDate < :currentDate")
     List<AgentProd> findAgentsDueWithinSevenDays(@Param("currentDate") LocalDate currentDate, @Param("sevenDaysLater") LocalDate sevenDaysLater);
 }

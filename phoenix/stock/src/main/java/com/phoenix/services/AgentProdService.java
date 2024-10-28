@@ -169,8 +169,6 @@ public class AgentProdService implements IAgentProdService{
             if (agentProdDto.getFirstname() != null) {agentProd.setFirstname(agentProdDto.getFirstname());}
             if (agentProdDto.getLastname() != null) {agentProd.setLastname(agentProdDto.getLastname());}
         }
-        System.out.println("received one : " + agentProdDtos);
-        System.out.println("executed one : " +agentProds);
         iAgentProdRepository.saveAll(agentProds);
 
     }

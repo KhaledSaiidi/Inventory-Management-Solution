@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import com.phoenix.dto.*;
 import com.phoenix.dtokeycloakuser.Campaigndto;
-import com.phoenix.dtokeycloakuser.UserMysqldto;
 import com.phoenix.dtokeycloakuser.Userdto;
 import com.phoenix.mapper.IAgentProdMapper;
 import com.phoenix.mapper.IProductMapper;
@@ -17,17 +17,13 @@ import com.phoenix.model.*;
 import com.phoenix.repository.*;
 import com.phoenix.soldproductmapper.ISoldTProductMapper;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -50,14 +46,13 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService implements IProductService {
-
     private final IProductMapper iProductMapper;
     private final IProductRepository iProductRepository;
     private final ISoldProductRepository iSoldProductRepository;
     private final IStockMapper iStockMapper;
     private final IAgentProdMapper iAgentProdMapper;
-    private final KeycloakTokenFetcher tokenFetcher;
     private final WebClient.Builder webClientBuilder;
     private final IStockRepository iStockRepository;
     private final IUncheckHistoryRepository iUncheckHistoryRepository;
@@ -629,49 +624,87 @@ public class ProductService implements IProductService {
     public List<ReclamationDto> getProductsForAlert() {
         LocalDate currentDate = LocalDate.now();
         LocalDate sevenDaysLater = currentDate.plusDays(7);
-        List<Stock> stocksForAlert = iStockRepository.findStocksDueWithinSevenDays(currentDate, sevenDaysLater);
-        List<Product> productsByStock = iProductRepository.findByStockIn(stocksForAlert);
-        List<AgentProd> alertsByAgent = iAgentProdRepository.findAgentsDueWithinSevenDays(currentDate, sevenDaysLater);
+        log.debug("Fetching stocks due within seven days from {} to {}", currentDate, sevenDaysLater);
+        List<Stock> stocksForAlert;
+        try {
+            stocksForAlert = iStockRepository.findStocksDueWithinSevenDays(currentDate, sevenDaysLater);
+            log.info("Successfully fetched {} stocks due for alert", stocksForAlert.size());
+        } catch (Exception e) {
+            log.error("Error fetching stocks for alert: ", e);
+            return Collections.emptyList();
+        }
+
+        List<Product> productsByStock;
+        try {
+            productsByStock = iProductRepository.findByStockIn(stocksForAlert);
+            log.info("Successfully fetched {} products by stock", productsByStock.size());
+        } catch (Exception e) {
+            log.error("Error fetching products by stock: ", e);
+            return Collections.emptyList();
+        }
+
+        List<AgentProd> alertsByAgent;
+        try {
+            alertsByAgent = iAgentProdRepository.findAgentsDueWithinSevenDays(currentDate, sevenDaysLater);
+        } catch (Exception e) {
+            log.error("Error fetching alertsByAgent for alert: ", e);
+            return Collections.emptyList();
+        }
         List<Userdto> managers = getAllmanagers();
+        assert managers != null;
+        log.debug("Retrieved {} managers", managers.size());
+
         Set<Product> products = new HashSet<>();
-        alertsByAgent.forEach(agent -> products.addAll(agent.getProductsAssociated()));
+        alertsByAgent.forEach(agent -> {
+            products.addAll(agent.getProductsAssociated());
+            log.debug("Agent {} has {} associated products", agent.getUsername(), agent.getProductsAssociated().size());
+        });
         List<Product> filteredProductsByStock = productsByStock.stream()
                 .filter(stockProduct -> products.stream().noneMatch(product -> Objects.equals(product.getSerialNumber(), stockProduct.getSerialNumber())))
                 .toList();
         products.addAll(filteredProductsByStock);
-        return products.stream()
+        log.info("Total products for alert after filtering: {}", products.size());
+
+        List<ReclamationDto> reclamationDtos = products.stream()
                 .map(product -> {
                     String serialNumbersExpired = product.getSerialNumber();
                     Date dueDate;
-                    String agentAsignedToo = "";
+                    String agentAssignedTo = "";
                     String agentUsername = "";
+
                     if (product.getAgentProd() != null) {
                         dueDate = Date.from(product.getAgentProd().getDuesoldDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                        agentAsignedToo = product.getAgentProd().getFirstname() + " " + product.getAgentProd().getLastname();
+                        agentAssignedTo = product.getAgentProd().getFirstname() + " " + product.getAgentProd().getLastname();
                         agentUsername = product.getAgentProd().getUsername();
                     } else if (product.getStock() != null && product.getStock().getDueDate() != null) {
                         dueDate = Date.from(product.getStock().getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
                     } else {
+                        log.warn("Product with serial number {} has no agent or due date assigned", serialNumbersExpired);
                         return null;
                     }
-                    return createReclamationDto(serialNumbersExpired, dueDate, managers, agentAsignedToo, agentUsername);
+
+                    log.debug("Creating reclamation DTO for product with serial number {}", serialNumbersExpired);
+                    return createReclamationDto(serialNumbersExpired, dueDate, managers, agentAssignedTo, agentUsername);
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
+        log.info("Total reclamation DTOs created: {}", reclamationDtos.size());
+        return reclamationDtos;
     }
 
 
     private List<Userdto> getAllmanagers() {
+        log.info("Fetching all managers");
         String token = authenticateWithKeycloak();
         List<Userdto> userDtos = null;
 
         if (token == null) {
-            System.out.println("Failed to get token from Keycloak.");
+            log.warn("Authentication token is null, unable to fetch managers.");
             return null;
         }
 
         try {
-            // Fetch all users using the token
             userDtos = webClientBuilder.build().get()
                     .uri("http://keycloakuser-service/people/allusers")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -680,20 +713,25 @@ public class ProductService implements IProductService {
                     .timeout(Duration.ofSeconds(10))
                     .collectList()
                     .block();
+            log.info("Fetched {} user(s) from keycloakuser-service", userDtos.size());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error fetching users from keycloakuser-service: {}", e.getMessage(), e);
         }
 
         if (userDtos == null || userDtos.isEmpty()) {
+            log.warn("No managers found");
             return null;
         }
-
-        return userDtos.stream()
+        List<Userdto> managers = userDtos.stream()
                 .filter(userdto -> userdto.getRealmRoles().contains("MANAGER") ||
                         userdto.getRealmRoles().contains("IMANAGER"))
-                .collect(Collectors.toList());
+                .toList();
+        log.info("Found {} manager(s)", managers.size());
+
+        return managers;
     }
     private String authenticateWithKeycloak() {
+        log.info("Authenticating with Keycloak");
         try {
             String tokenUrl = keycloakServerUrl + "/realms/" + keycloakRealm + "/protocol/openid-connect/token";
             HttpHeaders headers = new HttpHeaders();
@@ -703,34 +741,40 @@ public class ProductService implements IProductService {
             ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, request, String.class);
 
             if (response.getStatusCode() == HttpStatus.OK) {
+                log.info("Successfully authenticated and received token");
                 return extractAccessTokenFromResponse(response.getBody());
             } else {
-                System.err.println("Failed to authenticate with Keycloak. Status: " + response.getStatusCode());
+                log.warn("Failed to authenticate with Keycloak, status: {}", response.getStatusCode());
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error during Keycloak authentication: {}", e.getMessage(), e);
             return null;
         }
     }
     private String extractAccessTokenFromResponse(String response) {
+        log.info("Extracting access token from response");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode jsonNode = objectMapper.readTree(response);
-            System.out.println("token is: " + jsonNode.get("access_token").asText());
-            return jsonNode.get("access_token").asText();
+            String accessToken = jsonNode.get("access_token").asText();
+            log.info("Successfully extracted access token");
+            return accessToken;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error extracting access token from response: {}", e.getMessage(), e);
             return null;
         }
     }
 
     private ReclamationDto createReclamationDto(String serialNumbersExpired, Date dueDate, List<Userdto> managers, String agentAsignedToo, String agentUsername) {
+        log.info("Creating reclamation DTO for serial numbers: {}", serialNumbersExpired);
+
         List<String> usernames = new ArrayList<>(managers.stream()
                 .map(Userdto::getUsername)
                 .toList());
         if (!agentUsername.isEmpty()) {
             usernames.add(agentUsername.toLowerCase());
+            log.info("Added agent username: {}", agentUsername.toLowerCase());
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
@@ -738,34 +782,55 @@ public class ProductService implements IProductService {
         Date now = new Date();
         long differenceMillis = dueDate.getTime() - now.getTime();
         long differenceDays = (differenceMillis / (1000 * 60 * 60 * 24)) + 1;
-        if (differenceDays < 0) {
+        boolean isExpired = differenceDays < 0;
+
+        if (isExpired) {
             differenceDays = Math.abs(differenceDays);
         }
+
         ReclamationDto reclamationDto = new ReclamationDto();
         reclamationDto.setSenderReference("UniStock Keeper");
+
+        String expirationMessage;
+        String dueDateMessage;
+        String expirationDiff;
+
+        if (isExpired) {
+            dueDateMessage = " Please check the situation, the product has expired " + formattedDueDate;
+            expirationMessage = "Product already expired ";
+            expirationDiff = " since ";
+
+        } else {
+            dueDateMessage = " Please check the situation, the product will expire on " + formattedDueDate;
+            expirationMessage = "The expiration date for this product ";
+            expirationDiff = " in ";
+
+        }
         if (!agentAsignedToo.isEmpty()) {
-            reclamationDto.setReclamationText("The expiration date for this product " +
+            reclamationDto.setReclamationText(expirationMessage  +
                     "'" + serialNumbersExpired + "'" +
                     " assigned to " +
                     agentAsignedToo +
-                    " in " +
+                    expirationDiff +
                     +differenceDays +
                     " day(s). " +
-                    " Please check the situation, the product will expire on " +
-                    formattedDueDate);
+                    " Please check the situation, " +
+                    dueDateMessage);
         } else {
-            reclamationDto.setReclamationText("The expiration date for this product " +
+            reclamationDto.setReclamationText(expirationMessage  +
                     "'" + serialNumbersExpired +
-                    " in " +
+                    expirationDiff +
                     +differenceDays +
                     " day(s). " +
-                    " Please check the situation, especially as the product is not assigned to any agent. The product will expire on " +
-                    formattedDueDate);
+                    " Please check the situation, especially as the product is not assigned to any agent. " +
+                    dueDateMessage);
         }
         reclamationDto.setReceiverReference(usernames);
         reclamationDto.setReclamationType(ReclamType.stockExpirationReminder);
+        log.info("Reclamation DTO created successfully for serial numbers: {}", serialNumbersExpired);
         return reclamationDto;
     }
+
 
     @Override
     public Page<ProductDto> getProductsReturnedPaginatedByusername(Pageable pageable, String username) {
@@ -962,10 +1027,8 @@ public class ProductService implements IProductService {
     @Override
     public void deleteProduct(String ref) {
         Optional<Product> optionalProduct = iProductRepository.findById(ref);
-        System.out.println("optionalProduct is : " + optionalProduct);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
-            System.out.println("Product is : " + product);
             iProductRepository.delete(product);
         }
     }

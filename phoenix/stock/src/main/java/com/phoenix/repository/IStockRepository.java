@@ -3,6 +3,7 @@ package com.phoenix.repository;
 import com.phoenix.model.Stock;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -41,7 +42,7 @@ public interface IStockRepository extends JpaRepository<Stock, String>{
         return stocks;
     }
 
-    @Query("SELECT s FROM Stock s WHERE s.dueDate BETWEEN :currentDate AND :sevenDaysLater")
-    List<Stock> findStocksDueWithinSevenDays(LocalDate currentDate, LocalDate sevenDaysLater);
+    @Query("SELECT s FROM Stock s WHERE s.dueDate BETWEEN :currentDate AND :sevenDaysLater OR s.dueDate < :currentDate")
+    List<Stock> findStocksDueWithinSevenDays(@Param("currentDate") LocalDate currentDate, @Param("sevenDaysLater") LocalDate sevenDaysLater);
 
 }

@@ -289,7 +289,6 @@ public class SoldProductService  implements IsoldProductService{
             try {
                 parsedSoldProducts.setCheckOut(LocalDate.parse(serialNumbersCsv.getCheckOut(), formatter));
             } catch (DateTimeParseException e) {
-                System.err.println("Error parsing date: " + serialNumbersCsv.getCheckOut());
                 parsedSoldProducts.setCheckOut(LocalDate.now());
             }
 
@@ -499,7 +498,6 @@ public class SoldProductService  implements IsoldProductService{
 
         for (SoldProduct soldProduct : monthlySoldProducts) {
             String username = soldProduct.getAgentWhoSold().getUsername();
-            System.out.println("username :" + username);
             String fullName = (soldProduct.getAgentWhoSold().getFirstname() + " " +
                     soldProduct.getAgentWhoSold().getLastname()).toUpperCase();
             Optional<TopSalesDto> optionalDto = salesByAgent.stream()
